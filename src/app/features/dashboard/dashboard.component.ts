@@ -37,7 +37,7 @@ import { AuthService } from '../../core/services/auth.service';
             </p>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-raised-button color="primary" routerLink="/pts20/forms">View Forms</button>
+            <button mat-raised-button color="primary" routerLink="/pts20/forms">View Form</button>
             <button mat-button routerLink="/pts20/form/new">New Form</button>
           </mat-card-actions>
         </mat-card>
