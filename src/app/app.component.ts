@@ -65,6 +65,10 @@ import { AuthService } from './core/services/auth.service';
             <mat-icon matListItemIcon>assessment</mat-icon>
             <span matListItemTitle>Tender Risk</span>
           </a>
+          <a mat-list-item routerLink="/pts-risk/gammon-entity">
+            <mat-icon matListItemIcon>account_circle</mat-icon>
+            <span matListItemTitle>Gammon Entity</span>
+          </a>
           <a mat-list-item routerLink="/pts-risk/business-unit">
             <mat-icon matListItemIcon>business</mat-icon>
             <span matListItemTitle>Business Units</span>
@@ -72,6 +76,18 @@ import { AuthService } from './core/services/auth.service';
           <a mat-list-item routerLink="/pts-risk/currency">
             <mat-icon matListItemIcon>attach_money</mat-icon>
             <span matListItemTitle>Currency</span>
+          </a>
+          <a mat-list-item routerLink="/pts-risk/priority-level">
+            <mat-icon matListItemIcon>arrow_upward</mat-icon>
+            <span matListItemTitle>Priority Level</span>
+          </a>
+          <a mat-list-item routerLink="/pts-risk/risk-assessment-criteria">
+            <mat-icon matListItemIcon>bar_chart</mat-icon>
+            <span matListItemTitle>Risk Assessment Criteria</span>
+          </a>
+          <a mat-list-item routerLink="/pts-risk/system-config">
+            <mat-icon matListItemIcon>build</mat-icon>
+            <span matListItemTitle>System Config</span>
           </a>
           <a mat-list-item routerLink="/pts-risk/market-sector">
             <mat-icon matListItemIcon>trending_up</mat-icon>
@@ -106,7 +122,7 @@ import { AuthService } from './core/services/auth.service';
       }
 
       .main-content {
-        padding: 20px;
+        padding: 0;
         height: 100%;
         overflow: auto;
       }
