@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ExcomDecisionPopupComponent } from '../excom-decision-popup/excom-decision-popup.component';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -24,6 +26,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatSelectModule,
     FormsModule,
     MatIconModule,
+    ExcomDecisionPopupComponent,
   ],
   template: `
     <div class="container">
@@ -102,7 +105,7 @@ import { MatIconModule } from '@angular/material/icon';
             <ng-container matColumnDef="excomDecision">
               <th mat-header-cell *matHeaderCellDef>EXCOM Decision</th>
               <td mat-cell *matCellDef="let element">
-                <button mat-icon-button color="primary" aria-label="Edit EXCOM Decision">
+                <button mat-icon-button color="primary" aria-label="Edit EXCOM Decision" (click)="openExcomDecisionPopup()">
                   <mat-icon style="color: #1976d2;">edit</mat-icon>
                 </button>
               </td>
@@ -272,6 +275,15 @@ import { MatIconModule } from '@angular/material/icon';
   ],
 })
 export class TenderListComponent {
+  constructor(private dialog: MatDialog) {}
+
+  openExcomDecisionPopup(): void {
+    this.dialog.open(ExcomDecisionPopupComponent, {
+      width: '900px',
+      maxWidth: 'none',
+      disableClose: false,
+    });
+  }
   displayedColumns: string[] = [
     'status',
     'division',

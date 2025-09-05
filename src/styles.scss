@@ -1,3 +1,17 @@
+// Force Angular Material select dropdown panel to overlay and be fully opaque
+::ng-deep .cdk-overlay-pane .mat-select-panel {
+  background: #fff !important;
+  opacity: 1 !important;
+  border: 1px solid #e0e0e0 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18) !important;
+  z-index: 9999 !important;
+}
+// Also ensure options are solid
+::ng-deep .cdk-overlay-pane .mat-select-panel .mat-option {
+  background: #fff !important;
+  opacity: 1 !important;
+}
+
 /* You can add global styles to this file, and also import other style files */
 
 // Import Material Design CSS
