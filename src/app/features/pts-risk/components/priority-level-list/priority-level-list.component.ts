@@ -5,34 +5,33 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-gammon-entity-list',
+  selector: 'app-priority-level-list',
   standalone: true,
   imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule],
   template: `
     <div class="container">
       <mat-card>
         <mat-card-header>
-          <mat-card-title>Gammon Entity Management</mat-card-title>
+          <mat-card-title>Priority Level Management</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
-
             <!-- ID Column -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
               <td mat-cell *matCellDef="let element">{{ element.id }}</td>
             </ng-container>
 
-            <!-- Name Column -->
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef>Name</th>
-              <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+            <!-- Title Column -->
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef>Title</th>
+              <td mat-cell *matCellDef="let element">{{ element.title }}</td>
             </ng-container>
 
-            <!-- Short Name Column -->
-            <ng-container matColumnDef="shortname">
-              <th mat-header-cell *matHeaderCellDef>Short Name</th>
-              <td mat-cell *matCellDef="let element">{{ element.shortname }}</td>
+            <!-- Ranking Column -->
+            <ng-container matColumnDef="ranking">
+              <th mat-header-cell *matHeaderCellDef>Ranking</th>
+              <td mat-cell *matCellDef="let element">{{ element.ranking }}</td>
             </ng-container>
 
             <!-- Status Column -->
@@ -40,8 +39,8 @@ import { MatButtonModule } from '@angular/material/button';
               <th mat-header-cell *matHeaderCellDef>Status</th>
               <td mat-cell *matCellDef="let element">{{ element.status }}</td>
             </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr mat-header-row *matHeaderRowDef="diaplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: diaplayedColumns"></tr>
           </table>
         </mat-card-content>
       </mat-card>
@@ -114,12 +113,12 @@ import { MatButtonModule } from '@angular/material/button';
     `,
   ],
 })
-export class GammonEntityListComponent {
-  displayedColumns: string[] = ['id', 'name', 'shortname', 'status'];
+export class PriorityLevelListComponent {
+  diaplayedColumns: string[] = ['id', 'title', 'ranking', 'status'];
 
   dataSource = [
-    { id: 1, name: 'Entity One', shortname: 'E1', status: 'Active' },
-    { id: 2, name: 'Entity Two', shortname: 'E2', status: 'Inactive' },
-    { id: 3, name: 'Entity Three', shortname: 'E3', status: 'Active' },
+    { id: 1, title: 'High', ranking: 1, status: 'Active' },
+    { id: 2, title: 'Medium', ranking: 2, status: 'Active' },
+    { id: 3, title: 'Low', ranking: 3, status: 'Inactive' },
   ];
 }
