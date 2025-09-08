@@ -31,7 +31,7 @@ export class ExcomDecisionPopupComponent {
   tenderForm: FormGroup;
   excomDecisionPriorityLevelIdControl: FormControl;
   excomDecisionNotesControl: FormControl;
-  excomDecisionNotesMaxLength = 500;
+  excomDecisionNotesMaxLength = 1000;
   priorityLevelOptions = [
     { id: 1, title: 'For EXCOM Review' },
     { id: 2, title: 'No go' },

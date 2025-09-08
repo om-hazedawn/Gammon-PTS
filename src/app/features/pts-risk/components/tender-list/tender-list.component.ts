@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ExcomDecisionPopupComponent } from '../excom-decision-popup/excom-decision-popup.component';
+import { AddTenderPopupComponent } from '../add-tender-popup/add-tender-popup.component';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -11,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MarketIntelligencepopup } from '../market-intelligencepopup/market-intelligencepopup.component';
 
 @Component({
   selector: 'app-tender-list',
@@ -26,7 +28,6 @@ import { MatIconModule } from '@angular/material/icon';
     MatSelectModule,
     FormsModule,
     MatIconModule,
-    ExcomDecisionPopupComponent,
   ],
   template: `
     <div class="container">
@@ -34,6 +35,7 @@ import { MatIconModule } from '@angular/material/icon';
         <mat-card-header>
           <mat-card-title>Tender Risk Management</mat-card-title>
           <mat-card-subtitle>Risk assessment for tenders</mat-card-subtitle>
+          <button mat-raised-button class="action-btn" style="margin-left: auto;" (click)="openAddTenderPopup()">Add New Tender</button>
         </mat-card-header>
         <mat-card-content>
           <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
@@ -115,7 +117,7 @@ import { MatIconModule } from '@angular/material/icon';
             <ng-container matColumnDef="marketIntelligence">
               <th mat-header-cell *matHeaderCellDef>Market<br />Intelligence</th>
               <td mat-cell *matCellDef="let element">
-                <button mat-icon-button color="primary" aria-label="Edit Market Intelligence">
+                <button mat-icon-button color="primary" aria-label="Edit Market Intelligence" (click)="openMarketIntelligencePopup()">
                   <mat-icon style="color: #1976d2;">edit</mat-icon>
                 </button>
               </td>
@@ -163,13 +165,36 @@ import { MatIconModule } from '@angular/material/icon';
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
           </table>
+            <!-- Button Row Below Table -->
+            <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 24px; gap: 24px;">
+              <div style="flex: 1; display: flex; justify-content: center; gap: 12px;">
+                <button mat-raised-button color="accent" class="action-btn">Generate Snapshot</button>
+                <button mat-raised-button color="primary" class="action-btn">Generate Monthly Snapshot</button>
+              </div>
+              <button mat-raised-button color="primary" class="action-btn">Export Excel</button>
+            </div>
         </mat-card-content>
       </mat-card>
     </div>
   `,
   styles: [
     `
-      .container {
+  .container {
+      mat-card-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1976d2;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+        text-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+      }
+      mat-card-subtitle {
+        font-size: 1.15rem;
+        font-weight: 400;
+        color: #555;
+        margin-bottom: 12px;
+        letter-spacing: 0.5px;
+      }
         padding: 0;
         margin: 0;
         width: 100%;
@@ -275,6 +300,13 @@ import { MatIconModule } from '@angular/material/icon';
   ],
 })
 export class TenderListComponent {
+  openAddTenderPopup(): void {
+    this.dialog.open(AddTenderPopupComponent, {
+      width: '1000px',
+      maxWidth: '90vw',
+      disableClose: false,
+    });
+  }
   constructor(private dialog: MatDialog) {}
 
   openExcomDecisionPopup(): void {
@@ -284,6 +316,14 @@ export class TenderListComponent {
       disableClose: false,
     });
   }
+  openMarketIntelligencePopup(): void {
+    this.dialog.open(MarketIntelligencepopup, {
+      width: '900px',
+      maxWidth: 'none',
+      disableClose: false,
+    });
+  }
+
   displayedColumns: string[] = [
     'status',
     'division',
