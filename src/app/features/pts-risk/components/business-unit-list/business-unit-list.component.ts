@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-
+import { MatDialog } from '@angular/material/dialog';
+import { BusinessUnitPopupComponent } from '../business-unitpopup/business-unitpopup.component';
 @Component({
   selector: 'app-business-unit-list',
   standalone: true,
@@ -14,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
         <mat-card-header>
           <mat-card-title>Business Unit Management</mat-card-title>
         </mat-card-header>
+        <button mat-raised-button class="action-btn add-btn" (click)="openAddBusinessUnitPopup()">Add</button>
         <mat-card-content>
           <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
             <!-- ID Column -->
@@ -50,6 +52,21 @@ import { MatButtonModule } from '@angular/material/button';
   `,
   styles: [
     `
+      .add-btn {
+        background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+        color: #fff;
+        font-weight: 600;
+        border-radius: 24px;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15);
+        padding: 8px 28px;
+        margin-left: auto;
+        margin-bottom: 16px;
+        transition: background 0.2s, box-shadow 0.2s;
+      }
+      .add-btn:hover {
+        background: linear-gradient(90deg, #1565c0 60%, #1976d2 100%);
+        box-shadow: 0 4px 16px rgba(25, 118, 210, 0.25);
+      }
       .container {
         padding: 0;
         margin: 0;
@@ -116,6 +133,14 @@ import { MatButtonModule } from '@angular/material/button';
   ],
 })
 export class BusinessUnitListComponent {
+  constructor(private dialog: MatDialog) {}
+  
+  openAddBusinessUnitPopup() {
+    this.dialog.open(BusinessUnitPopupComponent, {
+      width: '600px',
+      disableClose: true,
+    });
+  }
   displayedColumns: string[] = [
     'id',
     'name',
