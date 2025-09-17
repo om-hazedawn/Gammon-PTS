@@ -1,0 +1,19 @@
+{
+  "name": "PTS UI (Node 20)",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "workspaceFolder": "/workspaces/gammon-pts-frontend/${localWorkspaceFolderBasename}",
+  "remoteUser": "node",
+  "containerEnv": {
+  "NG_CLI_ANALYTICS": "false"
+  },
+  "features": {},
+  "postCreateCommand": "npm install && npm install -g @angular/cli",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Angular.ng-template",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  }
+}

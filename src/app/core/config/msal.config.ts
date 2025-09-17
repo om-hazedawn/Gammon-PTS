@@ -50,6 +50,6 @@ export const graphScopes: PopupRequest = {
 
 // API Scopes for PTS Backend
 export const ptsApiScopes: RedirectRequest = {
-  scopes: [`api://${environment.msalConfig.clientId}/access_as_user`],
+  scopes: [`api://${environment.msalConfig.clientId}/user_impersonation`],
   redirectUri: environment.msalConfig.redirectUri,
 };

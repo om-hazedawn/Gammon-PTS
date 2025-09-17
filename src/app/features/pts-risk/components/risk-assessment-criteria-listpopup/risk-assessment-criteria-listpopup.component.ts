@@ -47,6 +47,19 @@ import { MatRadioModule } from '@angular/material/radio';
             <mat-hint>
               {{ tenderForm.get('Code')?.value?.length || 0 }} / {{ Codelength }}
             </mat-hint>
+
+            @if (codeControl.invalid && (codeControl.dirty || codeControl.touched)) {
+              <mat-error>
+                <i class="fas fa-exclamation mx-1"></i>
+                @if (codeControl.errors && codeControl.errors['required']) {
+                  <span>This field is required.</span>
+                }
+                @if (codeControl.hasError('error422')) {
+                  <span>{{ codeControl.getError('error422') }}</span>
+                }
+              </mat-error>
+            }
+            
           </mat-form-field>
         </div>
 
@@ -63,14 +76,27 @@ import { MatRadioModule } from '@angular/material/radio';
               {{ tenderForm.get('Title')?.value?.length || 0 }} /
               {{ TitleLength }}
             </mat-hint>
+
+            @if (titleControl.invalid && (titleControl.dirty || titleControl.touched)) {
+              <mat-error>
+                <i class="fas fa-exclamation mx-1"></i>
+                @if (titleControl.errors && titleControl.errors['required']) {
+                  <span>This field is required.</span>
+                }
+                @if (titleControl.hasError('error422')) {
+                  <span>{{ titleControl.getError('error422') }}</span>
+                }
+              </mat-error>
+            }
+
           </mat-form-field>
         </div>
 
         <div style="width: 100%; margin-bottom: 16px;">
           <mat-label>Status</mat-label>
-          <mat-radio-group style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;">
-            <mat-radio-button value="China">Active</mat-radio-button>
-            <mat-radio-button value="Hongkong">Inactive</mat-radio-button>
+          <mat-radio-group formControlName="Status" style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;">
+            <mat-radio-button value="ACTIVE">Active</mat-radio-button>
+            <mat-radio-button value="INACTIVE">Inactive</mat-radio-button>
           </mat-radio-group>
         </div>
       </div>
@@ -84,7 +110,9 @@ import { MatRadioModule } from '@angular/material/radio';
         >
           Save
         </button>
-        <mat-spinner *ngIf="isBusy()" diameter="20"></mat-spinner>
+        @if (isBusy()) {
+          <mat-spinner diameter="20"></mat-spinner>
+        }
       </div>
     </form>
   `,
@@ -109,7 +137,7 @@ export class RiskAssessmentCriteriaListPopupComponent {
     this.tenderForm = this.fb.group({
       Code: new FormControl('', [Validators.required, Validators.maxLength(this.Codelength)]),
       Title: new FormControl('', [Validators.required, Validators.maxLength(this.TitleLength)]),
-      status: new FormControl('', [Validators.required]),
+      Status: new FormControl('', [Validators.required]),
     });
   }
 
@@ -126,5 +154,17 @@ export class RiskAssessmentCriteriaListPopupComponent {
         this.dialogRef.close(this.tenderForm.value);
       }, 1000);
     }
+  }
+
+  get codeControl(): FormControl {
+    return this.tenderForm.get('Code') as FormControl;
+  }
+
+  get titleControl(): FormControl {
+    return this.tenderForm.get('Title') as FormControl;
+  }
+
+  get statusControl(): FormControl {
+    return this.tenderForm.get('Status') as FormControl;
   }
 }

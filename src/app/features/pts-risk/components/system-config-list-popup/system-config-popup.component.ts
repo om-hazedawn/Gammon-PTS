@@ -47,6 +47,18 @@ import { MatRadioModule } from '@angular/material/radio';
             <mat-hint>
               {{ tenderForm.get('Key')?.value?.length || 0 }} / {{ Keylength }}
             </mat-hint>
+
+            @if (keyControl.invalid && (keyControl.dirty || keyControl.touched)) {
+              <mat-error>
+                <i class="fas fa-exclamation mx-1"></i>
+                @if (keyControl.errors && keyControl.errors['required']) {
+                  <span>This field is required.</span>
+                }
+                @if (keyControl.hasError('error422')) {
+                  <span>{{ keyControl.getError('error422') }}</span>
+                }
+              </mat-error>
+            }
           </mat-form-field>
         </div>
 
@@ -63,6 +75,19 @@ import { MatRadioModule } from '@angular/material/radio';
               {{ tenderForm.get('Description')?.value?.length || 0 }} /
               {{ descriptionLength }}
             </mat-hint>
+
+            @if (descriptionControl.invalid && (descriptionControl.dirty || descriptionControl.touched)) {
+              <mat-error>
+                <i class="fas fa-exclamation mx-1"></i>
+                @if (descriptionControl.errors && descriptionControl.errors['required']) {
+                  <span>This field is required.</span>
+                }
+                @if (descriptionControl.hasError('error422')) {
+                  <span>{{ descriptionControl.getError('error422') }}</span>
+                }
+              </mat-error>
+            }
+
           </mat-form-field>
         </div>
 
@@ -79,13 +104,26 @@ import { MatRadioModule } from '@angular/material/radio';
               {{ tenderForm.get('Value')?.value?.length || 0 }} /
               {{ ValueLength }}
             </mat-hint>
+
+            @if (valueControl.invalid && (valueControl.dirty || valueControl.touched)) {
+            <mat-error>
+              <i class="fas fa-exclamation mx-1"></i>
+              @if (valueControl.errors && valueControl.errors['required']) {
+                <span>This field is required.</span>
+              }
+              @if (valueControl.hasError('error422')) {
+                <span>{{ valueControl.getError('error422') }}</span>
+              }
+            </mat-error>
+            }
+
           </mat-form-field>
         </div>
         <div style="width: 100%; margin-bottom: 16px;">
           <mat-label>Status</mat-label>
-          <mat-radio-group style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;">
-            <mat-radio-button value="China">Active</mat-radio-button>
-            <mat-radio-button value="Hongkong">Inactive</mat-radio-button>
+          <mat-radio-group formControlName="Status" style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;">
+            <mat-radio-button value="ACTIVE">Active</mat-radio-button>
+            <mat-radio-button value="INACTIVE">Inactive</mat-radio-button>
           </mat-radio-group>
         </div>
       </div>
@@ -99,7 +137,9 @@ import { MatRadioModule } from '@angular/material/radio';
         >
           Save
         </button>
-        <mat-spinner *ngIf="isBusy()" diameter="20"></mat-spinner>
+        @if (isBusy()) {
+          <mat-spinner diameter="20"></mat-spinner>
+        }
       </div>
     </form>
   `,
@@ -126,7 +166,7 @@ export class SystemConfigPopupComponent {
       Key: new FormControl('', [Validators.required, Validators.maxLength(this.Keylength)]),
       Description: new FormControl('', [Validators.required, Validators.maxLength(this.descriptionLength)]),
       Value: new FormControl('', [Validators.required, Validators.maxLength(this.ValueLength)]),
-      status: new FormControl('', [Validators.required]),
+      Status: new FormControl('', [Validators.required]),
     });
   }
 
@@ -144,4 +184,17 @@ export class SystemConfigPopupComponent {
       }, 1000);
     }
   }
+
+  get keyControl(): FormControl {
+    return this.tenderForm.get('Key') as FormControl;
+  }
+
+  get descriptionControl(): FormControl {
+    return this.tenderForm.get('Description') as FormControl;
+  }
+
+  get valueControl(): FormControl {
+    return this.tenderForm.get('Value') as FormControl;
+  }
+
 }
