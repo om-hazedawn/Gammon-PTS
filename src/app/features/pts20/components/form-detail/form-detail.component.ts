@@ -267,18 +267,138 @@ import { MatRadioModule } from '@angular/material/radio';
               <h3>Contract</h3>
               <div formGroupName="contract">
                 <div class="form-row">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Contract Type</mat-label>
-                    <mat-select formControlName="contractType">
-                      <mat-option value="lump-sum">Lump Sum</mat-option>
-                      <mat-option value="measurement">Measurement</mat-option>
-                      <mat-option value="design-build">Design & Build</mat-option>
+                  <div class="mb-4">
+                    <label class="font-bold">Form of Contract:</label>
+                  </div>
+                  <mat-form-field appearance="outline" class="flex-1 min-w-[200px]">
+                    <mat-label>Type</mat-label>
+                    <mat-select formControlName="Type">
+                      <mat-option value="A">A</mat-option>
+                      <mat-option value="B">B</mat-option>
                     </mat-select>
                   </mat-form-field>
-                  <mat-form-field appearance="outline">
-                    <mat-label>Contract Duration (months)</mat-label>
-                    <input matInput type="number" formControlName="contractDuration" />
+
+                  <!-- Description -->
+                  <mat-form-field appearance="outline" class="flex-1 min-w-[250px]">
+                    <mat-label>Description</mat-label>
+                    <input matInput formControlName="Description" />
                   </mat-form-field>
+
+                  <!-- Degree of risk -->
+                  <mat-form-field appearance="outline" class="w-32">
+                    <mat-label>Degree of Risk</mat-label>
+                    <mat-select formControlName="DegreeRiskType">
+                      <mat-option value="M">M</mat-option>
+                      <mat-option value="H">H</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="form-row">
+                  <div class="mb-2 font-bold">Liquidated damages:</div>
+
+                  <!-- Row 2 -->
+                  <div class="flex flex-wrap gap-4 items-center mb-4">
+                    <!-- Rate of Damages -->
+                    <mat-form-field appearance="outline" class="flex-1 min-w-[250px]">
+                      <mat-label>Rate of Damages</mat-label>
+                      <input
+                        matInput
+                        formControlName="RateOfDamages"
+                        placeholder="Details of Rate of Damage e.g. $300k/Day"
+                      />
+                    </mat-form-field>
+                  </div>
+
+                  <!-- Row 3 -->
+
+                  <!-- Limit of Liability -->
+                  <mat-form-field appearance="outline" class="flex-1 min-w-[250px]">
+                    <mat-label>Limit of Liability</mat-label>
+                    <input matInput formControlName="LimitOfLiability" />
+                  </mat-form-field>
+
+                  <!-- Degree of risk -->
+                  <mat-form-field appearance="outline" class="w-32">
+                    <mat-label>Degree of Risk</mat-label>
+                    <mat-select formControlName="DegreeRiskLimit">
+                      <mat-option value="M">M</mat-option>
+                      <mat-option value="H">H</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="w-32">
+                    <mat-label>Measurement Details</mat-label>
+                    <mat-select formControlName="MeasurementDetails">
+                      <mat-option value="M">M</mat-option>
+                      <mat-option value="H">H</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="w-32">
+                    <mat-label>Degree of Risk</mat-label>
+                    <mat-select formControlName="DegreeRiskType">
+                      <mat-option value="M">M</mat-option>
+                      <mat-option value="H">H</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="flex-1 min-w-[250px]">
+                    <mat-label>Fluctuations</mat-label>
+                    <input matInput formControlName="Fluctuations" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="w-32">
+                    <mat-label>Degree of Risk</mat-label>
+                    <mat-select formControlName="DegreeRiskType">
+                      <mat-option value="M">M</mat-option>
+                      <mat-option value="H">H</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="mb-2 font-bold">Clauses provided:</div>
+
+                <!-- Adverse Physical Conditions (vertical) -->
+                <div class="clause-block">
+                  <mat-radio-group formControlName="Adverse" class="flex flex-col gap-2">
+                    <label class="block mb-1">Adverse Physical Conditions:</label>
+                    <mat-radio-button value="yes">Yes</mat-radio-button>
+                    <mat-radio-button value="no">No</mat-radio-button>
+                    <mat-radio-button value="na">N.A.</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+
+                <!-- Time Extension For Weather (vertical) -->
+                <div class="clause-block">
+                  <mat-radio-group formControlName="TimeExtension" class="flex flex-col gap-2 mt-4">
+                    <label class="block mb-1">Time Extension For Weather:</label>
+                    <mat-radio-button value="yes">Yes</mat-radio-button>
+                    <mat-radio-button value="no">No</mat-radio-button>
+                    <mat-radio-button value="na">N.A.</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+
+                <div class="form-row">
+                  <!-- Weather Extension Description -->
+                  <mat-form-field appearance="outline">
+                    <mat-label>Weather Extension Description</mat-label>
+                    <input matInput formControlName="WeatherExtention" required />
+                  </mat-form-field>
+
+                  <!-- Degree of Risk -->
+                  <mat-form-field appearance="outline" class="w-32">
+                    <mat-label>Degree of Risk</mat-label>
+                    <mat-select formControlName="DegreeRiskType">
+                      <mat-option value="M">M</mat-option>
+                      <mat-option value="H">H</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  
                 </div>
               </div>
             </div>
@@ -521,6 +641,8 @@ export class FormDetailComponent implements OnInit {
       maintenanceValue: [''],
       maintenanceStatus: [''],
 
+      /*page 2*/
+
       Client: [''],
       ContractPeriod: [''],
       FinantialStanding: [''],
@@ -534,6 +656,20 @@ export class FormDetailComponent implements OnInit {
       contract: this.fb.group({
         contractType: [''],
         contractDuration: [''],
+        Type: [''],
+        Description: [''],
+        DegreeName: [''],
+        DegreeRiskType: [''],
+        DegreeRiskLimit: [''],
+        RateOfDamages: [''],
+        LimitOfLiability: [''],
+
+        MeasurementDetails: [''],
+        Fluctuations: [''],
+
+        Adverse: [''],
+        TimeExtension: [''],
+        WeatherExtention: [''],
       }),
     });
   }
