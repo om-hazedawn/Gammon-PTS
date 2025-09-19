@@ -11,6 +11,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatRadioModule } from '@angular/material/radio';
+import { months } from 'moment';
 @Component({
   selector: 'app-form-detail',
   standalone: true,
@@ -455,11 +456,188 @@ import { MatRadioModule } from '@angular/material/radio';
               </div>
             </div>
 
+            <div *ngIf="currentStep === 3" class="section">
+              <h3>Payment</h3>
+              <div formGroupName="payment">
+                <div class="form-row">
+                  <div class="mb-4">
+                    <label class="font-bold">Certification of Period:</label>
+                  </div>
+                  <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
+                    <mat-label>Period</mat-label>
+                    <input matInput formControlName="Period" type="number" />
+                  </mat-form-field>
+
+                  <!-- Description -->
+                  <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+                    <mat-select formControlName="Months" placeholder="Select Months">
+                      <mat-option value="1">days</mat-option>
+                      <mat-option value="2">weeks</mat-option>
+                      <mat-option value="3">months</mat-option>
+                      <mat-option value="4">years</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <!-- Degree of risk -->
+                  <mat-form-field appearance="fill" class="w-32">
+                    <mat-label>Degree of Risk</mat-label>
+                    <mat-select formControlName="DegreeRiskType">
+                      <mat-option value="M">M</mat-option>
+                      <mat-option value="H">H</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <div class="mb-4">
+                    <label class="font-bold">Retention Amount:</label>
+                  </div>
+                  <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
+                    <mat-label>Retention</mat-label>
+                    <input matInput formControlName="Retention" />
+                  </mat-form-field>
+
+                  <!-- Description -->
+                  <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+                    <mat-select formControlName="Percent" placeholder="Select Percent">
+                      <mat-option value="1">%</mat-option>
+                      <mat-option value="2">Amount</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <!-- Degree of risk -->
+                  <mat-form-field appearance="fill" class="w-32">
+                    <mat-label>Degree Name</mat-label>
+                    <mat-select formControlName="DegreeRiskType2">
+                      <mat-option value="M">M</mat-option>
+                      <mat-option value="H">H</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="form-row">
+                  <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
+                    <mat-label>Remarks</mat-label>
+                    <input matInput formControlName="Remarks" />
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+                    <mat-label>Remarks</mat-label>
+                    <input matInput formControlName="Remarks2" />
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <div class="mb-4">
+                    <label class="font-bold">Payment Period:</label>
+                  </div>
+                  <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
+                    <mat-label>Payment Period</mat-label>
+                    <input matInput formControlName="PaymentPeriod" type="number" />
+                  </mat-form-field>
+
+                  <!-- Description -->
+                  <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+                    <mat-select formControlName="Months2" placeholder="Select Months">
+                      <mat-option value="1">days</mat-option>
+                      <mat-option value="2">weeks</mat-option>
+                      <mat-option value="3">months</mat-option>
+                      <mat-option value="4">years</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <!-- Degree of risk -->
+                  <mat-form-field appearance="fill" class="w-32">
+                    <mat-label>Degree of Risk</mat-label>
+                    <mat-select formControlName="DegreeRiskType3">
+                      <mat-option value="M">M</mat-option>
+                      <mat-option value="H">H</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <div class="mb-4">
+                    <label class="font-bold"> Limit of Retention:</label>
+                  </div>
+                  <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
+                    <input matInput formControlName="LimitofRetention" />
+                  </mat-form-field>
+
+                  <!-- Description -->
+                  <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+                    <mat-select formControlName="Percent">
+                      <mat-option value="1">L</mat-option>
+                      <mat-option value="2">L/M</mat-option>
+                      <mat-option value="3">M</mat-option>
+                      <mat-option value="4">L/H</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <div class="mb-4">
+                    <label class="font-bold">Cash Profile:</label>
+                  </div>
+                  <mat-label>Max Exposure (Amount)</mat-label>
+                  <div style="width: 200px;">
+                    <mat-form-field appearance="fill">
+                      <input matInput formControlName="MaxExposureAmount" type="number" />
+                    </mat-form-field>
+                  </div>
+                  <label>for</label>
+                  <div style="width: 200px;">
+                    <mat-form-field appearance="fill">
+                      <input matInput formControlName="MaxExposureMonths" type="number" />
+                    </mat-form-field>
+                  </div>
+                  <label>months</label>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Peak deficit</mat-label>
+                    <input matInput formControlName="PaymentPeriod" />
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Peak Surplus</mat-label>
+                    <input matInput formControlName="PaymentPeriod" />
+                  </mat-form-field>
+                  <div style="width: 200px;">
+                    <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+                      <mat-label>Risk Level</mat-label>
+                      <mat-select formControlName="RiskLevel">
+                        <mat-option value="L">L</mat-option>
+                        <mat-option value="L/M">L/M</mat-option>
+                        <mat-option value="M">M</mat-option>
+                        <mat-option value="L/H">L/H</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Average deficit</mat-label>
+                    <input matInput formControlName="AverageDeficit" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="fill">
+                    <mat-label>Average Surplus</mat-label>
+                    <input matInput formControlName="AverageSurplus" />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="currentStep === 4" class="section">
+              <h3>Bonds</h3>
+              <div formGroupName="Bonds">
+                <div class="form-row">
+                  <h2>hi</h2>
+                </div>
+              </div>
+            </div>
+
             <!-- Placeholder Sections -->
-            <div *ngIf="currentStep > 2" class="section">
+            <!-- <div *ngIf="currentStep > 4" class="section">
               <h3>{{ steps[currentStep - 1] }}</h3>
               <p>Content for {{ steps[currentStep - 1] }} will be added later.</p>
-            </div>
+            </div> -->
 
             <!-- Navigation Buttons -->
             <div class="actions">
@@ -725,6 +903,31 @@ export class FormDetailComponent implements OnInit {
         DesignResponsibility: [''],
         BIMRequired: [''],
         DFMARequired: [''],
+      }),
+
+      payment: this.fb.group({
+        Period: [''],
+        Months: [''],
+        DegreeRiskType: [''],
+        DegreeRiskType2: [''],
+        Remarks: [''],
+        Retention: [''],
+        Percent: [''],
+        Remarks2: [''],
+
+        PaymentPeriod: [''],
+        Months2: [''],
+        LimitofRetention: [''],
+        LimitofRetentionselect: [''],
+        DegreeRiskType3: [''],
+
+        MaxExposureAmount: [''],
+        MaxExposureMonths: [''],
+        PeakDeficit: [''],
+        PeakSurplus: [''],
+        RiskLevel: [''],
+        AverageSurplus: [''],
+        AverageDeficit: [''],
       }),
     });
   }
