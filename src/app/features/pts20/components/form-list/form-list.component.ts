@@ -38,36 +38,59 @@ import { RouterLink } from '@angular/router';
               <td mat-cell *matCellDef="let form">{{ form.id }}</td>
             </ng-container>
 
+            <ng-container matColumnDef="tenderStatus">
+              <th mat-header-cell *matHeaderCellDef>Tender Status</th>
+              <td mat-cell *matCellDef="let form">{{ form.tenderStatus }}</td>
+            </ng-container>
+
             <ng-container matColumnDef="tenderNo">
               <th mat-header-cell *matHeaderCellDef>Tender No</th>
               <td mat-cell *matCellDef="let form">{{ form.tenderNo }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="projectName">
-              <th mat-header-cell *matHeaderCellDef>Project Name</th>
-              <td mat-cell *matCellDef="let form">{{ form.projectName }}</td>
+            <ng-container matColumnDef="businessUnit">
+              <th mat-header-cell *matHeaderCellDef>Business Unit</th>
+              <td mat-cell *matCellDef="let form">{{ form.businessUnit }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="status">
-              <th mat-header-cell *matHeaderCellDef>Status</th>
-              <td mat-cell *matCellDef="let form">{{ form.status }}</td>
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef>Title</th>
+              <td mat-cell *matCellDef="let form">{{ form.title }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="createdDate">
-              <th mat-header-cell *matHeaderCellDef>Created Date</th>
-              <td mat-cell *matCellDef="let form">{{ form.createdDate | date }}</td>
+            <ng-container matColumnDef="country">
+              <th mat-header-cell *matHeaderCellDef>Country</th>
+              <td mat-cell *matCellDef="let form">{{ form.country }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef>Actions</th>
-              <td mat-cell *matCellDef="let form">
-                <button mat-icon-button [routerLink]="['/pts20/form', form.id]">
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button (click)="viewPDF(form.id)">
-                  <mat-icon>picture_as_pdf</mat-icon>
-                </button>
-              </td>
+            <ng-container matColumnDef="client">
+              <th mat-header-cell *matHeaderCellDef>Client</th>
+              <td mat-cell *matCellDef="let form">{{ form.client }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="approximateValueContractPeriod">
+              <th mat-header-cell *matHeaderCellDef>Contract Value/Period</th>
+              <td mat-cell *matCellDef="let form">{{ form.approximateValueContractPeriod }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="bidType">
+              <th mat-header-cell *matHeaderCellDef>Bid Type</th>
+              <td mat-cell *matCellDef="let form">{{ form.bidType }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="dueDate">
+              <th mat-header-cell *matHeaderCellDef>Due Date</th>
+              <td mat-cell *matCellDef="let form">{{ form.dueDate | date }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="keyDates">
+              <th mat-header-cell *matHeaderCellDef>Key Dates</th>
+              <td mat-cell *matCellDef="let form">{{ form.keyDates }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="attachment">
+              <th mat-header-cell *matHeaderCellDef>Attachment</th>
+              <td mat-cell *matCellDef="let form">{{ form.attachment }}</td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -100,29 +123,49 @@ import { RouterLink } from '@angular/router';
 export class FormListComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
+    'tenderStatus',
     'tenderNo',
-    'projectName',
-    'status',
-    'createdDate',
-    'actions',
+    'businessUnit',
+    'title',
+    'country',
+    'client',
+    'approximateValueContractPeriod',
+    'bidType',
+    'dueDate',
+    'keyDates',
+    'attachment'
   ];
 
   // Mock data - will be replaced with actual service calls
   forms = [
     {
       id: 1,
+      tenderStatus: 'Draft',
       tenderNo: 'T2024001',
-      projectName: 'Sample Construction Project',
-      status: 'Draft',
-      createdDate: new Date(),
+      businessUnit: 'Unit A',
+      title: 'Project Alpha',
+      country: 'HKG',
+      client: 'Client X',
+      approximateValueContractPeriod: '1,000,000 / 12 months',
+      bidType: 'Solo Bid',
+      dueDate: '2024-09-30',
+      keyDates: '2024-08-15',
+      attachment: 'specs.pdf'
     },
     {
       id: 2,
+      tenderStatus: 'Submitted',
       tenderNo: 'T2024002',
-      projectName: 'Infrastructure Development',
-      status: 'Submitted',
-      createdDate: new Date(2024, 7, 15),
-    },
+      businessUnit: 'Unit B',
+      title: 'Project Beta',
+      country: 'SGP',
+      client: 'Client Y',
+      approximateValueContractPeriod: '2,500,000 / 24 months',
+      bidType: 'Joint Venture',
+      dueDate: '2024-10-15',
+      keyDates: '2024-09-01',
+      attachment: 'documents.pdf'
+    }
   ];
 
   ngOnInit(): void {
@@ -133,4 +176,5 @@ export class FormListComponent implements OnInit {
     // TODO: Implement PDF generation
     console.log('View PDF for form:', formId);
   }
+  
 }

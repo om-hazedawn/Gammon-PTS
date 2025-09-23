@@ -58,8 +58,7 @@ import { MatRadioModule } from '@angular/material/radio';
           <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
             <!-- Step 1: Project Section -->
             <div *ngIf="currentStep === 1" class="section">
-              
-               <h2 class="text-lg font-bold mb-4 text-[#1976d2]">Project</h2>
+              <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Project</h2>
 
               <div class="form-row">
                 <mat-form-field appearance="fill" class="w-64">
@@ -266,7 +265,7 @@ import { MatRadioModule } from '@angular/material/radio';
 
             <!-- Step 2: Contract Section -->
             <div *ngIf="currentStep === 2" class="section">
-              <h2 class="text-lg font-bold mb-4 text-[#1976d2]">Contract</h2>
+              <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Contract</h2>
               <div formGroupName="contract">
                 <div class="form-row">
                   <div class="mb-4">
@@ -457,7 +456,7 @@ import { MatRadioModule } from '@angular/material/radio';
             </div>
 
             <div *ngIf="currentStep === 3" class="section">
-              <h2 class="text-lg font-bold mb-4 text-[#1976d2]">Payment</h2>
+              <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Payment</h2>
               <div formGroupName="payment">
                 <div class="form-row">
                   <div class="mb-4">
@@ -626,7 +625,7 @@ import { MatRadioModule } from '@angular/material/radio';
 
             <div *ngIf="currentStep === 4" class="section">
               <div class="p-4 bg-white shadow rounded-lg">
-                <h2 class="text-lg font-bold mb-4 text-[#1976d2]">Bonds</h2>
+                <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Bonds</h2>
 
                 <div formGroupName="Bonds" class="space-y-6">
                   <!-- Tender Bond -->
@@ -638,8 +637,8 @@ import { MatRadioModule } from '@angular/material/radio';
                         <input matInput type="number" formControlName="TenderValue" />
                       </mat-form-field>
 
-                       <mat-form-field appearance="fill" style="max-width: 60px">
-                         <mat-select formControlName="tenderUnit">
+                      <mat-form-field appearance="fill" style="max-width: 60px">
+                        <mat-select formControlName="tenderUnit">
                           <mat-option value="%">%</mat-option>
                           <mat-option value="$">$</mat-option>
                         </mat-select>
@@ -883,19 +882,23 @@ import { MatRadioModule } from '@angular/material/radio';
                 </div>
               </div>
             </div>
-            
+
             <div *ngIf="currentStep === 5" class="section">
               <div class="p-4 bg-white shadow rounded-lg">
-                <h2 class="text-lg font-bold mb-4 text-[#1976d2]">Warranties & Guarantees</h2>
+                <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">
+                  Warranties & Guarantees
+                </h2>
 
                 <div formGroupName="Warranties" class="space-y-8">
                   <!-- Parent Company Guarantee -->
                   <div class="form-row">
                     <div class="w-40 font-semibold">Parent Company Guarantee:</div>
                     <div class="flex flex-wrap gap-6 flex-1">
-
                       <div class="radio-group-container min-w-[200px]">
-                        <mat-radio-group formControlName="ParentCompanyGuarantee" class="flex gap-6">
+                        <mat-radio-group
+                          formControlName="ParentCompanyGuarantee"
+                          class="flex gap-6"
+                        >
                           <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
                           <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
                           <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
@@ -907,7 +910,7 @@ import { MatRadioModule } from '@angular/material/radio';
                         <input matInput formControlName="ParentCompanyDetails" />
                       </mat-form-field>
 
-                      <mat-form-field appearance="fill" class="w-40">
+                      <mat-form-field appearance="fill" style="max-width: 250px">
                         <mat-label>Degree of Risk</mat-label>
                         <mat-select formControlName="ParentCompanyRisk">
                           <mat-option value="H">High</mat-option>
@@ -918,123 +921,123 @@ import { MatRadioModule } from '@angular/material/radio';
                     </div>
                   </div>
 
-                  
                   <div class="form-row">
-                   <div class="w-40 font-semibold">Parent Company Undertaking:</div>
-                   <div class="flex flex-wrap gap-6 flex-1">
-                     <div class="radio-group-container min-w-[200px]">
-                       <mat-radio-group formControlName="ParentCompanyUndertaking" class="flex gap-6">
-                         <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
-                         <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
-                         <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
-                       </mat-radio-group>
-                     </div>
+                    <div class="w-40 font-semibold">Parent Company Undertaking:</div>
+                    <div class="flex flex-wrap gap-6 flex-1">
+                      <div class="radio-group-container min-w-[200px]">
+                        <mat-radio-group
+                          formControlName="ParentCompanyUndertaking"
+                          class="flex gap-6"
+                        >
+                          <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
+                          <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
+                          <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
 
-                     <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
-                       <mat-label>Details</mat-label>
-                       <input matInput formControlName="ParentCompanyUndertakingDetails" />
-                     </mat-form-field>
+                      <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+                        <mat-label>Details</mat-label>
+                        <input matInput formControlName="ParentCompanyUndertakingDetails" />
+                      </mat-form-field>
 
-                     <mat-form-field appearance="fill" class="w-40">
-                       <mat-label>Degree of Risk</mat-label>
-                       <mat-select formControlName="ParentCompanyUndertakingRisk">
-                         <mat-option value="H">High</mat-option>
-                         <mat-option value="M">Medium</mat-option>
-                         <mat-option value="L">Low</mat-option>
-                       </mat-select>
-                     </mat-form-field>
-                   </div>
-                 </div>
+                      <mat-form-field appearance="fill" style="max-width: 250px">
+                        <mat-label>Degree of Risk</mat-label>
+                        <mat-select formControlName="ParentCompanyUndertakingRisk">
+                          <mat-option value="H">High</mat-option>
+                          <mat-option value="M">Medium</mat-option>
+                          <mat-option value="L">Low</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
 
-                 <div class="form-row">
-                   <div class="w-40 font-semibold">Collateral Warranties:</div>
-                   <div class="flex flex-wrap gap-6 flex-1">
-                     <div class="radio-group-container min-w-[200px]">
-                       <mat-radio-group formControlName="CollateralWarranties" class="flex gap-6">
-                         <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
-                         <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
-                         <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
-                       </mat-radio-group>
-                     </div>
+                  <div class="form-row">
+                    <div class="w-40 font-semibold">Collateral Warranties:</div>
+                    <div class="flex flex-wrap gap-6 flex-1">
+                      <div class="radio-group-container min-w-[200px]">
+                        <mat-radio-group formControlName="CollateralWarranties" class="flex gap-6">
+                          <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
+                          <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
+                          <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
 
-                     <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
-                       <mat-label>Details</mat-label>
-                       <input matInput formControlName="CollateralWarrantiesDetails" />
-                     </mat-form-field>
+                      <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+                        <mat-label>Details</mat-label>
+                        <input matInput formControlName="CollateralWarrantiesDetails" />
+                      </mat-form-field>
 
-                     <mat-form-field appearance="fill" class="w-40">
-                       <mat-label>Degree of Risk</mat-label>
-                       <mat-select formControlName="CollateralWarrantiesRisk">
-                         <mat-option value="H">High</mat-option>
-                         <mat-option value="M">Medium</mat-option>
-                         <mat-option value="L">Low</mat-option>
-                       </mat-select>
-                     </mat-form-field>
-                   </div>
-                 </div>
+                      <mat-form-field appearance="fill" style="max-width: 250px">
+                        <mat-label>Degree of Risk</mat-label>
+                        <mat-select formControlName="CollateralWarrantiesRisk">
+                          <mat-option value="H">High</mat-option>
+                          <mat-option value="M">Medium</mat-option>
+                          <mat-option value="L">Low</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
 
-                 <div class="form-row">
-                   <div class="w-40 font-semibold">Other Contingent Liabilities:</div>
-                   <div class="flex flex-wrap gap-6 flex-1">
-                     <div class="radio-group-container min-w-[200px]">
-                       <mat-radio-group formControlName="OtherContingent" class="flex gap-6">
-                         <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
-                         <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
-                         <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
-                       </mat-radio-group>
-                     </div>
+                  <div class="form-row">
+                    <div class="w-40 font-semibold">Other Contingent Liabilities:</div>
+                    <div class="flex flex-wrap gap-6 flex-1">
+                      <div class="radio-group-container min-w-[200px]">
+                        <mat-radio-group formControlName="OtherContingent" class="flex gap-6">
+                          <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
+                          <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
+                          <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
 
-                     <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
-                       <mat-label>Details</mat-label>
-                       <input matInput formControlName="OtherContingentDetails" />
-                     </mat-form-field>
+                      <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+                        <mat-label>Details</mat-label>
+                        <input matInput formControlName="OtherContingentDetails" />
+                      </mat-form-field>
 
-                     <mat-form-field appearance="fill" class="w-40">
-                       <mat-label>Degree of Risk</mat-label>
-                       <mat-select formControlName="OtherContingentRisk">
-                         <mat-option value="H">High</mat-option>
-                         <mat-option value="M">Medium</mat-option>
-                         <mat-option value="L">Low</mat-option>
-                       </mat-select>
-                     </mat-form-field>
-                   </div>
-                 </div>
+                      <mat-form-field appearance="fill" style="max-width: 250px">
+                        <mat-label>Degree of Risk</mat-label>
+                        <mat-select formControlName="OtherContingentRisk">
+                          <mat-option value="H">High</mat-option>
+                          <mat-option value="M">Medium</mat-option>
+                          <mat-option value="L">Low</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
 
-                 <div class="form-row">
-                   <div class="w-40 font-semibold">Provided by Employer:</div>
-                   <div class="flex flex-wrap gap-6 flex-1">
-                     <div class="radio-group-container min-w-[200px]">
-                       <mat-radio-group formControlName="ProvidedByEmployer" class="flex gap-6">
-                         <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
-                         <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
-                         <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
-                       </mat-radio-group>
-                     </div>
+                  <div class="form-row">
+                    <div class="w-40 font-semibold">Provided by Employer:</div>
+                    <div class="flex flex-wrap gap-6 flex-1">
+                      <div class="radio-group-container min-w-[200px]">
+                        <mat-radio-group formControlName="ProvidedByEmployer" class="flex gap-6">
+                          <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
+                          <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
+                          <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
 
-                     <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
-                       <mat-label>Details</mat-label>
-                       <input matInput formControlName="ProvidedByEmployerDetails" />
-                     </mat-form-field>
+                      <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+                        <mat-label>Details</mat-label>
+                        <input matInput formControlName="ProvidedByEmployerDetails" />
+                      </mat-form-field>
 
-                     <mat-form-field appearance="fill" class="w-40">
-                       <mat-label>Degree of Risk</mat-label>
-                       <mat-select formControlName="ProvidedByEmployerRisk">
-                         <mat-option value="H">High</mat-option>
-                         <mat-option value="M">Medium</mat-option>
-                         <mat-option value="L">Low</mat-option>
-                       </mat-select>
-                     </mat-form-field>
-                   </div>
-                 </div>
-
-               </div>
+                      <mat-form-field appearance="fill" style="max-width: 250px">
+                        <mat-label>Degree of Risk</mat-label>
+                        <mat-select formControlName="ProvidedByEmployerRisk">
+                          <mat-option value="H">High</mat-option>
+                          <mat-option value="M">Medium</mat-option>
+                          <mat-option value="L">Low</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            
             <div *ngIf="currentStep === 6" class="section">
               <div class="p-4 bg-white shadow rounded-lg">
-                <h2 class="text-lg font-bold mb-4 text-[#1976d2]">Insurance</h2>
+                <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Insurance</h2>
 
                 <div formGroupName="Insurance" class="space-y-6">
                   <!-- Provided by Employer -->
@@ -1054,7 +1057,7 @@ import { MatRadioModule } from '@angular/material/radio';
                         <input matInput formControlName="ProvidedByEmployerDetails" />
                       </mat-form-field>
 
-                      <mat-form-field appearance="fill" class="w-40">
+                      <mat-form-field appearance="fill" style="max-width: 250px">
                         <mat-label>Degree of Risk</mat-label>
                         <mat-select formControlName="ProvidedByEmployerRisk">
                           <mat-option value="H">High</mat-option>
@@ -1074,7 +1077,7 @@ import { MatRadioModule } from '@angular/material/radio';
                         <input matInput formControlName="ThirdPartyDetails" />
                       </mat-form-field>
 
-                      <mat-form-field appearance="fill" class="w-40">
+                      <mat-form-field appearance="fill" style="max-width: 250px">
                         <mat-label>Degree of Risk</mat-label>
                         <mat-select formControlName="ThirdPartyRisk">
                           <mat-option value="H">High</mat-option>
@@ -1102,7 +1105,7 @@ import { MatRadioModule } from '@angular/material/radio';
                         <input matInput formControlName="OnerousRequirementsDetails" />
                       </mat-form-field>
 
-                      <mat-form-field appearance="fill" class="w-40">
+                      <mat-form-field appearance="fill" style="max-width: 250px">
                         <mat-label>Degree of Risk</mat-label>
                         <mat-select formControlName="OnerousRequirementsRisk">
                           <mat-option value="H">High</mat-option>
@@ -1130,7 +1133,7 @@ import { MatRadioModule } from '@angular/material/radio';
                         <input matInput formControlName="ShortfallInCoverDetails" />
                       </mat-form-field>
 
-                      <mat-form-field appearance="fill" class="w-40">
+                      <mat-form-field appearance="fill" style="max-width: 250px">
                         <mat-label>Degree of Risk</mat-label>
                         <mat-select formControlName="ShortfallInCoverRisk">
                           <mat-option value="H">High</mat-option>
@@ -1144,20 +1147,22 @@ import { MatRadioModule } from '@angular/material/radio';
               </div>
             </div>
 
-             <div *ngIf="currentStep === 7" class="section">
+            <div *ngIf="currentStep === 7" class="section">
               <div class="p-4 bg-white shadow rounded-lg">
-                <h2 class="text-lg font-bold mb-4 text-[#1976d2]">Other issue</h2>
+                <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Other issue</h2>
 
                 <div formGroupName="OtherIssue" class="space-y-6">
                   <div class="form-row">
-                    <div class="w-40 font-semibold">New Plant Requirements and value of Investment Required:</div>
+                    <div class="w-40 font-semibold">
+                      New Plant Requirements and value of Investment Required:
+                    </div>
                     <div class="flex flex-wrap items-center gap-8 flex-1">
-                       <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
-                         <mat-label>Details</mat-label>
-                         <textarea matInput formControlName="NewPlantDetails" rows="2"></textarea>
-                       </mat-form-field>
+                      <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+                        <mat-label>Details</mat-label>
+                        <textarea matInput formControlName="NewPlantDetails" rows="2"></textarea>
+                      </mat-form-field>
 
-                      <mat-form-field appearance="fill" class="w-40">
+                      <mat-form-field appearance="fill" style="max-width: 250px">
                         <mat-label>Degree of Risk</mat-label>
                         <mat-select formControlName="NewPlantRisk">
                           <mat-option value="H">High</mat-option>
@@ -1172,7 +1177,7 @@ import { MatRadioModule } from '@angular/material/radio';
                   <div class="form-row">
                     <div class="w-40 font-semibold">PFI or PPP Bid:</div>
                     <div class="flex flex-wrap gap-8 flex-1">
-                       <div class="radio-group-container min-w-[200px]">
+                      <div class="radio-group-container min-w-[200px]">
                         <mat-radio-group formControlName="PFIorPPPBid" class="flex gap-6">
                           <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
                           <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
@@ -1180,7 +1185,7 @@ import { MatRadioModule } from '@angular/material/radio';
                         </mat-radio-group>
                       </div>
 
-                      <mat-form-field appearance="fill" class="w-40">
+                      <mat-form-field appearance="fill" style="max-width: 250px">
                         <mat-label>Degree of Risk</mat-label>
                         <mat-select formControlName="pfiOrPPPBidRisk">
                           <mat-option value="H">High</mat-option>
@@ -1203,7 +1208,7 @@ import { MatRadioModule } from '@angular/material/radio';
                         </mat-radio-group>
                       </div>
 
-                      <mat-form-field appearance="fill" class="w-40">
+                      <mat-form-field appearance="fill" style="max-width: 250px">
                         <mat-label>Degree of Risk</mat-label>
                         <mat-select formControlName="FinancingRequiredRisk">
                           <mat-option value="H">High</mat-option>
@@ -1218,13 +1223,12 @@ import { MatRadioModule } from '@angular/material/radio';
                   <div class="form-row">
                     <div class="w-40 font-semibold">Foreign Currency Content:</div>
                     <div class="flex flex-wrap gap-8 flex-1">
-
                       <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
                         <mat-label>Details</mat-label>
                         <input matInput formControlName="ForeignCurrencyContentDetails" />
                       </mat-form-field>
 
-                      <mat-form-field appearance="fill" class="w-40">
+                      <mat-form-field appearance="fill" style="max-width: 250px">
                         <mat-label>Degree of Risk</mat-label>
                         <mat-select formControlName="ForeignCurrencyContentRisk">
                           <mat-option value="H">High</mat-option>
@@ -1235,6 +1239,484 @@ import { MatRadioModule } from '@angular/material/radio';
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <div *ngIf="currentStep === 8" class="section">
+              <div class="p-4 bg-white shadow rounded-lg">
+                <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Consultant</h2>
+                <div formGroupName="Consultant & Competitor" class="space-y-6">
+                  <div class="form-row">
+                    <div class="w-40 font-semibold">Civil & Structural:</div>
+                    <div class="flex flex-wrap gap-8 flex-1">
+                      <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+                        <mat-label>Details</mat-label>
+                        <input matInput formControlName="CivilStructuralDetails" />
+                      </mat-form-field>
+
+                      <mat-form-field appearance="fill" style="max-width: 250px">
+                        <mat-label>Degree of Risk</mat-label>
+                        <mat-select formControlName="CivilStructuralRisk">
+                          <mat-option value="H">High</mat-option>
+                          <mat-option value="M">Medium</mat-option>
+                          <mat-option value="L">Low</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="w-40 font-semibold">Architect:</div>
+                    <div class="flex flex-wrap gap-8 flex-1">
+                      <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+                        <mat-label>Details</mat-label>
+                        <input matInput formControlName="ArchitectDetails" />
+                      </mat-form-field>
+
+                      <mat-form-field appearance="fill" style="max-width: 250px">
+                        <mat-label>Degree of Risk</mat-label>
+                        <mat-select formControlName="ArchitectRisk">
+                          <mat-option value="H">High</mat-option>
+                          <mat-option value="M">Medium</mat-option>
+                          <mat-option value="L">Low</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="w-40 font-semibold">E&M:</div>
+                    <div class="flex flex-wrap gap-8 flex-1">
+                      <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+                        <mat-label>Details</mat-label>
+                        <input matInput formControlName="EMDetails" />
+                      </mat-form-field>
+
+                      <mat-form-field appearance="fill" style="max-width: 250px">
+                        <mat-label>Degree of Risk</mat-label>
+                        <mat-select formControlName="EMRisk">
+                          <mat-option value="H">High</mat-option>
+                          <mat-option value="M">Medium</mat-option>
+                          <mat-option value="L">Low</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="w-40 font-semibold">Quantity Surveyor</div>
+                    <div class="flex flex-wrap gap-8 flex-1">
+                      <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+                        <mat-label>Details</mat-label>
+                        <input matInput formControlName="QuantitySurveyorDetails" />
+                      </mat-form-field>
+
+                      <mat-form-field appearance="fill" style="max-width: 250px">
+                        <mat-label>Degree of Risk</mat-label>
+                        <mat-select formControlName="QuantitySurveyorRisk">
+                          <mat-option value="H">High</mat-option>
+                          <mat-option value="M">Medium</mat-option>
+                          <mat-option value="L">Low</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="w-40 font-semibold">Other</div>
+                    <div class="flex flex-wrap gap-8 flex-1">
+                      <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+                        <mat-label>Details</mat-label>
+                        <input matInput formControlName="OtherDetails" />
+                      </mat-form-field>
+
+                      <mat-form-field appearance="fill" style="max-width: 250px">
+                        <mat-label>Degree of Risk</mat-label>
+                        <mat-select formControlName="OtherRisk">
+                          <mat-option value="H">High</mat-option>
+                          <mat-option value="M">Medium</mat-option>
+                          <mat-option value="L">Low</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <h2 class="text-lg font-bold mb-4 text-[#1976d2]">Competitors</h2>
+
+                  <div class="form-row">
+                    <div class="w-40 font-semibold">Competitor</div>
+                    <div class="flex flex-wrap gap-8 flex-1">
+                      <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+                        <mat-label>Details</mat-label>
+                        <input matInput formControlName="competitorDetails" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="currentStep === 9" class="section">
+              <div class="p-6 bg-white shadow-lg rounded-lg">
+                <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Evaluation</h2>
+                <div formGroupName="Evaluation" class="space-y-6">
+                  <!-- First Row -->
+                  <div class="grid grid-cols-2 gap-6">
+                    <!-- Contract Conditions Group -->
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Acceptability of Contract Conditions:</div>
+                        <mat-radio-group formControlName="AcceptibilityRadio" class="flex gap-4">
+                          <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="No" color="warn">No</mat-radio-button>
+                          <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Remark</mat-label>
+                        <input matInput formControlName="AcceptibilityRemark" />
+                      </mat-form-field>
+                    </div>
+
+                    <!-- Payment Terms Group -->
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Payment Terms Evaluation:</div>
+                        <mat-radio-group formControlName="PaymentTermsRadio" class="flex gap-4">
+                          <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="No" color="warn">No</mat-radio-button>
+                          <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Remark</mat-label>
+                        <input matInput formControlName="PaymentTermsRemark" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <!-- Second Row -->
+                  <div class="grid grid-cols-2 gap-6">
+                    <!-- Bonds and Guarantees Group -->
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Bonds and Guarantees</div>
+                        <mat-radio-group
+                          formControlName="BondandGuaranteesRadio"
+                          class="flex gap-4"
+                        >
+                          <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="No" color="warn">No</mat-radio-button>
+                          <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Remark</mat-label>
+                        <input matInput formControlName="BondandGuaranteesRemark" />
+                      </mat-form-field>
+                    </div>
+
+                    <!-- Contract Value Group -->
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">The value & extent of the contract</div>
+                        <mat-radio-group formControlName="ContractValueRadio" class="flex gap-4">
+                          <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="No" color="warn">No</mat-radio-button>
+                          <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Remark</mat-label>
+                        <input matInput formControlName="ContractValueRemark" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <!-- Third Row -->
+                  <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Plant & special equipment requirement</div>
+                        <mat-radio-group formControlName="PlantEquipmentRadio" class="flex gap-4">
+                          <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="No" color="warn">No</mat-radio-button>
+                          <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Remark</mat-label>
+                        <input matInput formControlName="PlantEquipmentRemark" />
+                      </mat-form-field>
+                    </div>
+
+                    <!-- Contract Value Group -->
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">The availability of site management</div>
+                        <mat-radio-group formControlName="SiteManagementRadio" class="flex gap-4">
+                          <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="No" color="warn">No</mat-radio-button>
+                          <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Remark</mat-label>
+                        <input matInput formControlName="SiteManagementRemark" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <!-- Fourth Row -->
+                  <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">The Company's current workload</div>
+                        <mat-radio-group formControlName="CurrentWorkloadRadio" class="flex gap-4">
+                          <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="No" color="warn">No</mat-radio-button>
+                          <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Remark</mat-label>
+                        <input matInput formControlName="CurrentWorkloadRemark" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">The time allowed to tender</div>
+                        <mat-radio-group formControlName="TimeAllowedRadio" class="flex gap-4">
+                          <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="No" color="warn">No</mat-radio-button>
+                          <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Remark</mat-label>
+                        <input matInput formControlName="TimeAllowedRemark" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <!-- Fifth Row -->
+                  <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">The previous record of the consultants</div>
+                        <mat-radio-group formControlName="previousRecordRadio" class="flex gap-4">
+                          <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="No" color="warn">No</mat-radio-button>
+                          <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Remark</mat-label>
+                        <input matInput formControlName="previousRecordRemark" />
+                      </mat-form-field>
+                    </div>
+
+                    <!-- Contract Value Group -->
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Health Safety & Environment</div>
+                        <mat-radio-group
+                          formControlName="HealthSafetyEnvironmentRadio"
+                          class="flex gap-4"
+                        >
+                          <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="No" color="warn">No</mat-radio-button>
+                          <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Remark</mat-label>
+                        <input matInput formControlName="HealthSafetyEnvironmentRemark" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <!-- Sixth Row -->
+                  <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">The Competition</div>
+                        <mat-radio-group formControlName="CompetitionRadio" class="flex gap-4">
+                          <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+                          <mat-radio-button value="No" color="warn">No</mat-radio-button>
+                          <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Remark</mat-label>
+                        <input matInput formControlName="CompetitionRemark" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="w-40 font-semibold">Evaluation Comments</div>
+                    <div class="flex-1">
+                      <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Comments</mat-label>
+                        <textarea matInput formControlName="EvaluationComments"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="currentStep === 10" class="section">
+              <div class="p-6 bg-white shadow-lg rounded-lg">
+                <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Distribution</h2>
+
+                <div formGroupName="Distribution" class="space-y-6">
+                  <!-- First Row -->
+                  <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Chief Executive</div>
+                        <mat-form-field appearance="fill" class="w-full">
+                          <input matInput formControlName="ChiefExecutive" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Division Commercial Manager</div>
+                        <mat-form-field appearance="fill" class="w-full">
+                          <input matInput formControlName="DivisionCommercialManager" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Second Row -->
+                  <!-- Second Row -->
+                  <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Executive Director</div>
+                        <mat-form-field appearance="fill" class="w-full">
+                          <input matInput formControlName="ExecutiveDirector" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Insurance Manager</div>
+                        <mat-form-field appearance="fill" class="w-full">
+                          <input matInput formControlName="InsuranceManager" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Third Row -->
+                  <!-- Third Row -->
+                  <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Director</div>
+                        <mat-form-field appearance="fill" class="w-full">
+                          <input matInput formControlName="Director" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Head of Lambeth</div>
+                        <mat-form-field appearance="fill" class="w-full">
+                          <input matInput formControlName="HeadofLambeth" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <!--forth Row -->
+                  <!-- Fourth Row -->
+                  <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Bid Manager</div>
+                        <mat-form-field appearance="fill" class="w-full">
+                          <input matInput formControlName="BidManager" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Head of Procurement</div>
+                        <mat-form-field appearance="fill" class="w-full">
+                          <input matInput formControlName="HeadOfProcurement" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Fifth Row -->
+                  <!-- Fifth Row -->
+                  <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Finance Director</div>
+                        <mat-form-field appearance="fill" class="w-full">
+                          <input matInput formControlName="FinanceDirector" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Risk & Opportunity Manager</div>
+                        <mat-form-field appearance="fill" class="w-full">
+                          <input matInput formControlName="RiskOpportunityManager" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Sixth Row -->
+                  <!-- Sixth Row -->
+                  <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">Commercial Director</div>
+                        <mat-form-field appearance="fill" class="w-full">
+                          <input matInput formControlName="CommercialDirector" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">HSEQ</div>
+                        <mat-form-field appearance="fill" class="w-full">
+                          <input matInput formControlName="HSEQ" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Seventh Row -->
+                  <!-- Seventh Row -->
+                  <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div class="flex items-center gap-4">
+                        <div class="w-40 font-semibold">General Counsel - Legal</div>
+                        <mat-form-field appearance="fill" class="w-full">
+                          <input matInput formControlName="GeneralCounselLegal" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="currentStep === 11" class="section">
+              <div class="p-6 bg-white shadow-lg rounded-lg">
+                <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Attachment</h2>
               </div>
             </div>
 
@@ -1280,6 +1762,29 @@ import { MatRadioModule } from '@angular/material/radio';
   `,
   styles: [
     `
+      .evaluation-item {
+        background: white;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .evaluation-item:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .mat-radio-button.mat-accent .mat-radio-inner-circle {
+        background-color: #1976d2;
+      }
+
+      .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+        border-color: #1976d2;
+      }
+
+      .mat-radio-button .mat-radio-label-content {
+        font-size: 14px;
+        padding-left: 8px;
+      }
+
       .header-icons {
         display: flex;
         align-items: center;
@@ -1448,10 +1953,10 @@ export class FormDetailComponent implements OnInit {
     'Contract',
     'Payment',
     'Bonds',
-    'Warranty and Guarantees',
+    'Warranty & Guarantees',
     'Insurances',
     'Other Issues',
-    'Consultant',
+    'Consultant & Competitor',
     'Evaluation',
     'Distribution',
     'Attachment',
@@ -1472,14 +1977,14 @@ export class FormDetailComponent implements OnInit {
     { warrantyType: 'Collateral Warranties' },
     { warrantyType: 'Other Contingent Liabilities' },
     { warrantyType: 'Provided by Employer' },
-  ]
+  ];
 
   Insurance = [
     { insuranceType: 'Provided by Employer' },
     { insuranceType: 'Min Amount of Third Party Liability' },
     { insuranceType: 'Onerous Requirements' },
     { insuranceType: 'Shortfall in Cover' },
-  ]
+  ];
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute, private router: Router) {
     this.initializeForm();
@@ -1594,7 +2099,7 @@ export class FormDetailComponent implements OnInit {
         TenderExpiry: [''],
         TenderRemark: [''],
         TenderRisk: ['M'],
-        
+
         // Performance Bond
         PerformanceValue: [''],
         performanceUnit: ['%'],
@@ -1633,7 +2138,7 @@ export class FormDetailComponent implements OnInit {
         OtherCallBasis: [''],
         OtherExpiry: [''],
         OtherRemark: [''],
-        OtherRisk: ['M']
+        OtherRisk: ['M'],
       }),
 
       Warranties: this.fb.group({
@@ -1660,7 +2165,7 @@ export class FormDetailComponent implements OnInit {
         // Provided by Employer
         ProvidedByEmployer: [''],
         ProvidedByEmployerDetails: [''],
-        ProvidedByEmployerRisk: ['M']
+        ProvidedByEmployerRisk: ['M'],
       }),
 
       Insurance: this.fb.group({
@@ -1683,7 +2188,7 @@ export class FormDetailComponent implements OnInit {
         // Shortfall in Cover
         ShortfallInCover: [''],
         ShortfallInCoverDetails: [''],
-        ShortfallInCoverRisk: ['M']
+        ShortfallInCoverRisk: ['M'],
       }),
 
       OtherIssue: this.fb.group({
@@ -1695,7 +2200,7 @@ export class FormDetailComponent implements OnInit {
         PFIorPPPBid: [''],
         PFIorPPPBidDetails: [''],
         pfiOrPPPBidRisk: ['M'],
-        
+
         // Financing Required
         FinancingRequired: [''],
         FinancingRequiredDetails: [''],
@@ -1703,7 +2208,92 @@ export class FormDetailComponent implements OnInit {
 
         // Foreign Currency Content
         ForeignCurrencyContentDetails: [''],
-        ForeignCurrencyContentRisk: ['M']
+        ForeignCurrencyContentRisk: ['M'],
+      }),
+
+      'Consultant & Competitor': this.fb.group({
+        // Civil & Structural
+        CivilStructuralDetails: [''],
+        CivilStructuralRisk: [''],
+
+        // Architect
+        ArchitectDetails: [''],
+        ArchitectRisk: [''],
+
+        // E&M
+        EMDetails: [''],
+        EMRisk: [''],
+
+        // Quantity Surveyor
+        QuantitySurveyorDetails: [''],
+        QuantitySurveyorRisk: [''],
+
+        // Other
+        OtherDetails: [''],
+        OtherRisk: [''],
+
+        // Competitor
+        competitorDetails: [''],
+      }),
+
+      // Add Evaluation form group
+      Evaluation: this.fb.group({
+        AcceptibilityRadio: [''],
+        AcceptibilityRemark: [''],
+
+        PaymentTermsRadio: [''],
+        PaymentTermsRemark: [''],
+
+        BondandGuaranteesRadio: [''],
+        BondandGuaranteesRemark: [''],
+
+        ContractValueRadio: [''],
+        ContractValueRemark: [''],
+
+        PlantEquipmentRadio: [''],
+        PlantEquipmentRemark: [''],
+
+        SiteManagementRadio: [''],
+        SiteManagementRemark: [''],
+
+        CurrentWorkloadRadio: [''],
+        CurrentWorkloadRemark: [''],
+
+        TimeAllowedRadio: [''],
+        TimeAllowedRemark: [''],
+
+        previousRecordRadio: [''],
+        previousRecordRemark: [''],
+
+        HealthSafetyEnvironmentRadio: [''],
+        HealthSafetyEnvironmentRemark: [''],
+
+        CompetitionRadio: [''],
+        CompetitionRemark: [''],
+
+        EvaluationComments: [''],
+      }),
+
+      Distribution: this.fb.group({
+        ChiefExecutive: [''],
+        DivisionCommercialManager: [''],
+
+        ExecutiveDirector: [''],
+        InsuranceManager: [''],
+
+        Director: [''],
+        HeadofLambeth: [''],
+
+        BidManager: [''],
+        HeadOfProcurement: [''],
+
+        FinanceDirector: [''],
+        RiskOpportunityManager: [''],
+
+        CommercialDirector: [''],
+        HSEQ: [''],
+
+        GeneralCounselLegal: [''],
       }),
     });
   }
