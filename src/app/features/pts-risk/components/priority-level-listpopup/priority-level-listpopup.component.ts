@@ -40,13 +40,21 @@ import { MatRadioModule } from '@angular/material/radio';
           <mat-form-field appearance="fill" style="flex: 1;">
             <input
               matInput
-              formControlName="Title"
+              formControlName="title"
               placeholder="Enter title"
-              [maxlength]="TitleLength"
+              [maxlength]="titleLength"
             />
             <mat-hint>
-              {{ tenderForm.get('Title')?.value?.length || 0 }} / {{ TitleLength }}
+              {{ tenderForm.get('title')?.value?.length || 0 }} / {{ titleLength }}
             </mat-hint>
+            @if (titleControl.invalid && (titleControl.dirty || titleControl.touched)) {
+              <mat-error>
+                <i class="fas fa-exclamation mx-1"></i>
+                @if (titleControl.errors && titleControl.errors['required']) {
+                  <span>This field is required.</span>
+                }
+              </mat-error>
+            }
           </mat-form-field>
         </div>
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
@@ -54,24 +62,26 @@ import { MatRadioModule } from '@angular/material/radio';
           <mat-form-field appearance="fill" style="flex: 1;">
             <input
               matInput
-              formControlName="Ranking"
+              formControlName="ranking"
               placeholder="Enter ranking"
               type="number"
-              [maxlength]="RankingLength"
             />
-            <mat-hint>
-              {{ tenderForm.get('Ranking')?.value?.length || 0 }} / {{ RankingLength }}
-            </mat-hint>
+            @if (rankingControl.invalid && (rankingControl.dirty || rankingControl.touched)) {
+              <mat-error>
+                <i class="fas fa-exclamation mx-1"></i>
+                @if (rankingControl.errors && rankingControl.errors['required']) {
+                  <span>This field is required.</span>
+                }
+              </mat-error>
+            }
           </mat-form-field>
         </div>
 
         <div style="width: 100%; margin-bottom: 16px;">
             <mat-label>Status</mat-label>
-            <mat-radio-group
-              style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;"
-            >
-              <mat-radio-button value="China">Active</mat-radio-button>
-              <mat-radio-button value="Hongkong">Inactive</mat-radio-button>
+          <mat-radio-group formControlName="status" style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;">
+            <mat-radio-button value="ACTIVE">Active</mat-radio-button>
+            <mat-radio-button value="INACTIVE">Inactive</mat-radio-button>
             </mat-radio-group>
           </div>
         
@@ -86,7 +96,9 @@ import { MatRadioModule } from '@angular/material/radio';
         >
           Save
         </button>
-        <mat-spinner *ngIf="isBusy()" diameter="20"></mat-spinner>
+        @if (isBusy()) {
+          <mat-spinner diameter="20"></mat-spinner>
+        }
       </div>
     </form>
   `,
@@ -103,8 +115,7 @@ import { MatRadioModule } from '@angular/material/radio';
 })
 export class PriorityLevelListPopupComponent {
   tenderForm: FormGroup;
-  TitleLength = 50;
-  RankingLength = 10;
+  titleLength = 50;
   busy = false;
 
   constructor(
@@ -112,14 +123,12 @@ export class PriorityLevelListPopupComponent {
     private fb: FormBuilder
   ) {
     this.tenderForm = this.fb.group({
-      Title: new FormControl('', [
+      title: new FormControl('', [
         Validators.required,
-        Validators.maxLength(this.TitleLength),
+        Validators.maxLength(this.titleLength),
       ]),
-      Ranking: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(this.RankingLength),
-      ]),
+      ranking: new FormControl('', [
+        Validators.required,      ]),
       status: new FormControl('', [Validators.required]),
     });
   }
@@ -137,5 +146,17 @@ export class PriorityLevelListPopupComponent {
         this.dialogRef.close(this.tenderForm.value);
       }, 1000);
     }
+  }
+
+  get rankingControl(): FormControl {
+    return this.tenderForm.get('ranking') as FormControl;
+  }
+
+  get titleControl(): FormControl {
+    return this.tenderForm.get('title') as FormControl;
+  }
+
+  get statusControl(): FormControl {
+    return this.tenderForm.get('status') as FormControl;
   }
 }

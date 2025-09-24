@@ -40,13 +40,21 @@ import { MatRadioModule } from '@angular/material/radio';
           <mat-form-field appearance="fill" style="flex: 1;">
             <input
               matInput
-              formControlName="Name"
+              formControlName="name"
               placeholder="Enter name"
-              [maxlength]="NameLength"
+              [maxlength]="nameLength"
             />
             <mat-hint>
-              {{ tenderForm.get('Name')?.value?.length || 0 }} / {{ NameLength }}
+              {{ tenderForm.get('name')?.value?.length || 0 }} / {{ nameLength }}
             </mat-hint>
+            @if (nameControl.invalid && (nameControl.dirty || nameControl.touched)) {
+              <mat-error>
+                <i class="fas fa-exclamation mx-1"></i>
+                @if (nameControl.errors && nameControl.errors['required']) {
+                  <span>This field is required.</span>
+                }
+              </mat-error>
+            }
           </mat-form-field>
         </div>
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
@@ -56,11 +64,19 @@ import { MatRadioModule } from '@angular/material/radio';
               matInput
               formControlName="shortName"
               placeholder="Enter short name"
-              [maxlength]="ShortNameLength"
+              [maxlength]="shortNameLength"
             />
             <mat-hint>
-              {{ tenderForm.get('shortName')?.value?.length || 0 }} / {{ ShortNameLength }}
+              {{ tenderForm.get('shortName')?.value?.length || 0 }} / {{ shortNameLength }}
             </mat-hint>
+            @if (shortNameControl.invalid && (shortNameControl.dirty || shortNameControl.touched)) {
+              <mat-error>
+                <i class="fas fa-exclamation mx-1"></i>
+                @if (shortNameControl.errors && shortNameControl.errors['required']) {
+                  <span>This field is required.</span>
+                }
+              </mat-error>
+            }
           </mat-form-field>
         </div>
 
@@ -71,21 +87,27 @@ import { MatRadioModule } from '@angular/material/radio';
               matInput
               formControlName="tailThreshold"
               placeholder="Enter tail threshold"
-              [maxlength]="TailThresholdLength"
+              [maxlength]="tailThresholdLength"
             />
             <mat-hint>
-              {{ tenderForm.get('tailThreshold')?.value?.length || 0 }} / {{ TailThresholdLength }}
+              {{ tenderForm.get('tailThreshold')?.value?.length || 0 }} / {{ tailThresholdLength }}
             </mat-hint>
+            @if (tailThresholdControl.invalid && (tailThresholdControl.dirty || tailThresholdControl.touched)) {
+              <mat-error>
+                <i class="fas fa-exclamation mx-1"></i>
+                @if (tailThresholdControl.errors && tailThresholdControl.errors['required']) {
+                  <span>This field is required.</span>
+                }
+              </mat-error>
+            }
           </mat-form-field>
         </div>
 
         <div style="width: 100%; margin-bottom: 16px;">
             <mat-label>Status</mat-label>
-            <mat-radio-group
-              style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;"
-            >
-              <mat-radio-button value="China">Active</mat-radio-button>
-              <mat-radio-button value="Hongkong">Inactive</mat-radio-button>
+          <mat-radio-group formControlName="status" style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;">
+            <mat-radio-button value="ACTIVE">Active</mat-radio-button>
+            <mat-radio-button value="INACTIVE">Inactive</mat-radio-button>
             </mat-radio-group>
           </div>
         
@@ -100,7 +122,9 @@ import { MatRadioModule } from '@angular/material/radio';
         >
           Save
         </button>
-        <mat-spinner *ngIf="isBusy()" diameter="20"></mat-spinner>
+        @if (isBusy()) {
+          <mat-spinner diameter="20"></mat-spinner>
+        }
       </div>
     </form>
   `,
@@ -117,22 +141,22 @@ import { MatRadioModule } from '@angular/material/radio';
 })
 export class BusinessUnitPopupComponent {
   tenderForm: FormGroup;
-  NameLength = 50;
-  ShortNameLength = 10;
-  TailThresholdLength = 10;
+  nameLength = 50;
+  shortNameLength = 10;
+  tailThresholdLength = 10;
   busy = false;
 
   constructor(public dialogRef: MatDialogRef<BusinessUnitPopupComponent>, private fb: FormBuilder) {
     this.tenderForm = this.fb.group({
-      name: new FormControl('', [Validators.required, Validators.maxLength(this.NameLength)]),
+      name: new FormControl('', [Validators.required, Validators.maxLength(this.nameLength)]),
       shortName: new FormControl('', [
         Validators.required,
-        Validators.maxLength(this.ShortNameLength),
+        Validators.maxLength(this.shortNameLength),
       ]),
       status: new FormControl('', [Validators.required]),
       tailThreshold: new FormControl('', [
         Validators.required,
-        Validators.maxLength(this.TailThresholdLength),
+        Validators.maxLength(this.tailThresholdLength),
       ]),
     });
   }
@@ -150,5 +174,21 @@ export class BusinessUnitPopupComponent {
         this.dialogRef.close(this.tenderForm.value);
       }, 1000);
     }
+  }
+
+  get nameControl(): FormControl {
+    return this.tenderForm.get('name') as FormControl;
+  }
+
+  get shortNameControl(): FormControl {
+    return this.tenderForm.get('shortName') as FormControl;
+  }
+
+  get statusControl(): FormControl {
+    return this.tenderForm.get('status') as FormControl;
+  }
+
+  get tailThresholdControl(): FormControl {
+    return this.tenderForm.get('tailThreshold') as FormControl;
   }
 }

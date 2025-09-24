@@ -40,26 +40,21 @@ import { MatRadioModule } from '@angular/material/radio';
           <mat-form-field appearance="fill" style="flex: 1;">
             <input
               matInput
-              formControlName="Code"
+              formControlName="code"
               placeholder="Enter Code"
-              [maxlength]="Codelength"
+              [maxlength]="codeLength"
             />
             <mat-hint>
-              {{ tenderForm.get('Code')?.value?.length || 0 }} / {{ Codelength }}
+              {{ tenderForm.get('code')?.value?.length || 0 }} / {{ codeLength }}
             </mat-hint>
-
             @if (codeControl.invalid && (codeControl.dirty || codeControl.touched)) {
               <mat-error>
                 <i class="fas fa-exclamation mx-1"></i>
                 @if (codeControl.errors && codeControl.errors['required']) {
                   <span>This field is required.</span>
                 }
-                @if (codeControl.hasError('error422')) {
-                  <span>{{ codeControl.getError('error422') }}</span>
-                }
               </mat-error>
             }
-            
           </mat-form-field>
         </div>
 
@@ -68,27 +63,22 @@ import { MatRadioModule } from '@angular/material/radio';
           <mat-form-field appearance="fill" style="flex: 1;">
             <input
               matInput
-              formControlName="Title"
+              formControlName="title"
               placeholder="Enter Title"
-              [maxlength]="TitleLength"
+              [maxlength]="titleLength"
             />
             <mat-hint>
-              {{ tenderForm.get('Title')?.value?.length || 0 }} /
-              {{ TitleLength }}
+              {{ tenderForm.get('title')?.value?.length || 0 }} /
+              {{ titleLength }}
             </mat-hint>
-
             @if (titleControl.invalid && (titleControl.dirty || titleControl.touched)) {
               <mat-error>
                 <i class="fas fa-exclamation mx-1"></i>
                 @if (titleControl.errors && titleControl.errors['required']) {
                   <span>This field is required.</span>
                 }
-                @if (titleControl.hasError('error422')) {
-                  <span>{{ titleControl.getError('error422') }}</span>
-                }
               </mat-error>
             }
-
           </mat-form-field>
         </div>
 
@@ -129,15 +119,15 @@ import { MatRadioModule } from '@angular/material/radio';
 })
 export class RiskAssessmentCriteriaListPopupComponent {
   tenderForm: FormGroup;
-  Codelength = 2;
-  TitleLength = 50;
+  codeLength = 2;
+  titleLength = 50;
   busy = false;
 
   constructor(public dialogRef: MatDialogRef<RiskAssessmentCriteriaListPopupComponent>, private fb: FormBuilder) {
     this.tenderForm = this.fb.group({
-      Code: new FormControl('', [Validators.required, Validators.maxLength(this.Codelength)]),
-      Title: new FormControl('', [Validators.required, Validators.maxLength(this.TitleLength)]),
-      Status: new FormControl('', [Validators.required]),
+      code: new FormControl('', [Validators.required, Validators.maxLength(this.codeLength)]),
+      title: new FormControl('', [Validators.required, Validators.maxLength(this.titleLength)]),
+      status: new FormControl('', [Validators.required]),
     });
   }
 
@@ -157,14 +147,14 @@ export class RiskAssessmentCriteriaListPopupComponent {
   }
 
   get codeControl(): FormControl {
-    return this.tenderForm.get('Code') as FormControl;
+    return this.tenderForm.get('code') as FormControl;
   }
 
   get titleControl(): FormControl {
-    return this.tenderForm.get('Title') as FormControl;
+    return this.tenderForm.get('title') as FormControl;
   }
 
   get statusControl(): FormControl {
-    return this.tenderForm.get('Status') as FormControl;
+    return this.tenderForm.get('status') as FormControl;
   }
 }

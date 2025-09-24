@@ -40,13 +40,21 @@ import { MatRadioModule } from '@angular/material/radio';
           <mat-form-field appearance="fill" style="flex: 1;">
             <input
               matInput
-              formControlName="Code"
+              formControlName="code"
               placeholder="Enter Code"
-              [maxlength]="Codelength"
+              [maxlength]="codelength"
             />
             <mat-hint>
-              {{ tenderForm.get('Code')?.value?.length || 0 }} / {{ Codelength }}
+              {{ tenderForm.get('code')?.value?.length || 0 }} / {{ codelength }}
             </mat-hint>
+            @if (codeControl.invalid && (codeControl.dirty || codeControl.touched)) {
+              <mat-error>
+                <i class="fas fa-exclamation mx-1"></i>
+                @if (codeControl.errors && codeControl.errors['required']) {
+                  <span>This field is required.</span>
+                }
+              </mat-error>
+            }
           </mat-form-field>
         </div>
 
@@ -56,22 +64,25 @@ import { MatRadioModule } from '@angular/material/radio';
             <input
               matInput
               type="number"
-              formControlName="ExchangeRateToHKD"
+              formControlName="exchangeRateToHKD"
               placeholder="Enter Exchange Rate"
-              [maxlength]="ExchangeRateToHKDlength"
             />
-            <mat-hint>
-              {{ tenderForm.get('ExchangeRateToHKD')?.value?.length || 0 }} /
-              {{ ExchangeRateToHKDlength }}
-            </mat-hint>
+            @if (exchangeRateControl.invalid && (exchangeRateControl.dirty || exchangeRateControl.touched)) {
+              <mat-error>
+                <i class="fas fa-exclamation mx-1"></i>
+                @if (exchangeRateControl.errors && exchangeRateControl.errors['required']) {
+                  <span>This field is required.</span>
+                }
+              </mat-error>
+            }
           </mat-form-field>
         </div>
 
         <div style="width: 100%; margin-bottom: 16px;">
           <mat-label>Status</mat-label>
-          <mat-radio-group style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;">
-            <mat-radio-button value="China">Active</mat-radio-button>
-            <mat-radio-button value="Hongkong">Inactive</mat-radio-button>
+          <mat-radio-group formControlName="status" style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;">
+            <mat-radio-button value="ACTIVE">Active</mat-radio-button>
+            <mat-radio-button value="INACTIVE">Inactive</mat-radio-button>
           </mat-radio-group>
         </div>
       </div>
@@ -85,7 +96,9 @@ import { MatRadioModule } from '@angular/material/radio';
         >
           Save
         </button>
-        <mat-spinner *ngIf="isBusy()" diameter="20"></mat-spinner>
+        @if (isBusy()) {
+          <mat-spinner diameter="20"></mat-spinner>
+        }
       </div>
     </form>
   `,
@@ -102,14 +115,13 @@ import { MatRadioModule } from '@angular/material/radio';
 })
 export class CurrencyListPopupComponent {
   tenderForm: FormGroup;
-  Codelength = 3;
-  ExchangeRateToHKDlength = 10;
+  codelength = 3;
   busy = false;
 
   constructor(public dialogRef: MatDialogRef<CurrencyListPopupComponent>, private fb: FormBuilder) {
     this.tenderForm = this.fb.group({
-      Code: new FormControl('', [Validators.required, Validators.maxLength(this.Codelength)]),
-      ExchangeRateToHKD: new FormControl('', [Validators.required]),
+      code: new FormControl('', [Validators.required, Validators.maxLength(this.codelength)]),
+      exchangeRateToHKD: new FormControl('', [Validators.required]),
       status: new FormControl('', [Validators.required]),
     });
   }
@@ -127,5 +139,17 @@ export class CurrencyListPopupComponent {
         this.dialogRef.close(this.tenderForm.value);
       }, 1000);
     }
+  }
+
+  get codeControl(): FormControl {
+    return this.tenderForm.get('code') as FormControl;
+  }
+
+  get exchangeRateControl(): FormControl {
+    return this.tenderForm.get('exchangeRateToHKD') as FormControl;
+  }
+
+  get statusControl(): FormControl {
+    return this.tenderForm.get('status') as FormControl;
   }
 }

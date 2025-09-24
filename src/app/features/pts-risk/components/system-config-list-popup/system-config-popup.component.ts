@@ -40,12 +40,12 @@ import { MatRadioModule } from '@angular/material/radio';
           <mat-form-field appearance="fill" style="flex: 1;">
             <input
               matInput
-              formControlName="Key"
+              formControlName="key"
               placeholder="Enter Key"
-              [maxlength]="Keylength"
+              [maxlength]="keyLength"
             />
             <mat-hint>
-              {{ tenderForm.get('Key')?.value?.length || 0 }} / {{ Keylength }}
+              {{ tenderForm.get('key')?.value?.length || 0 }} / {{ keyLength }}
             </mat-hint>
 
             @if (keyControl.invalid && (keyControl.dirty || keyControl.touched)) {
@@ -53,9 +53,6 @@ import { MatRadioModule } from '@angular/material/radio';
                 <i class="fas fa-exclamation mx-1"></i>
                 @if (keyControl.errors && keyControl.errors['required']) {
                   <span>This field is required.</span>
-                }
-                @if (keyControl.hasError('error422')) {
-                  <span>{{ keyControl.getError('error422') }}</span>
                 }
               </mat-error>
             }
@@ -67,12 +64,12 @@ import { MatRadioModule } from '@angular/material/radio';
           <mat-form-field appearance="fill" style="flex: 1;">
             <input
               matInput
-              formControlName="Description"
+              formControlName="description"
               placeholder="Enter Description"
               [maxlength]="descriptionLength"
             />
             <mat-hint>
-              {{ tenderForm.get('Description')?.value?.length || 0 }} /
+              {{ tenderForm.get('description')?.value?.length || 0 }} /
               {{ descriptionLength }}
             </mat-hint>
 
@@ -81,9 +78,6 @@ import { MatRadioModule } from '@angular/material/radio';
                 <i class="fas fa-exclamation mx-1"></i>
                 @if (descriptionControl.errors && descriptionControl.errors['required']) {
                   <span>This field is required.</span>
-                }
-                @if (descriptionControl.hasError('error422')) {
-                  <span>{{ descriptionControl.getError('error422') }}</span>
                 }
               </mat-error>
             }
@@ -96,13 +90,13 @@ import { MatRadioModule } from '@angular/material/radio';
           <mat-form-field appearance="fill" style="flex: 1;">
             <input
               matInput
-              formControlName="Value"
+              formControlName="value"
               placeholder="Enter Value"
-              [maxlength]="ValueLength"
+              [maxlength]="valueLength"
             />
             <mat-hint>
-              {{ tenderForm.get('Value')?.value?.length || 0 }} /
-              {{ ValueLength }}
+              {{ tenderForm.get('value')?.value?.length || 0 }} /
+              {{ valueLength }}
             </mat-hint>
 
             @if (valueControl.invalid && (valueControl.dirty || valueControl.touched)) {
@@ -111,9 +105,6 @@ import { MatRadioModule } from '@angular/material/radio';
               @if (valueControl.errors && valueControl.errors['required']) {
                 <span>This field is required.</span>
               }
-              @if (valueControl.hasError('error422')) {
-                <span>{{ valueControl.getError('error422') }}</span>
-              }
             </mat-error>
             }
 
@@ -121,7 +112,7 @@ import { MatRadioModule } from '@angular/material/radio';
         </div>
         <div style="width: 100%; margin-bottom: 16px;">
           <mat-label>Status</mat-label>
-          <mat-radio-group formControlName="Status" style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;">
+          <mat-radio-group formControlName="status" style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;">
             <mat-radio-button value="ACTIVE">Active</mat-radio-button>
             <mat-radio-button value="INACTIVE">Inactive</mat-radio-button>
           </mat-radio-group>
@@ -156,17 +147,17 @@ import { MatRadioModule } from '@angular/material/radio';
 })
 export class SystemConfigPopupComponent {
   tenderForm: FormGroup;
-  Keylength = 30;
+  keyLength = 30;
   descriptionLength = 50;
-  ValueLength = 20;
+  valueLength = 20;
   busy = false;
 
   constructor(public dialogRef: MatDialogRef<SystemConfigPopupComponent>, private fb: FormBuilder) {
     this.tenderForm = this.fb.group({
-      Key: new FormControl('', [Validators.required, Validators.maxLength(this.Keylength)]),
-      Description: new FormControl('', [Validators.required, Validators.maxLength(this.descriptionLength)]),
-      Value: new FormControl('', [Validators.required, Validators.maxLength(this.ValueLength)]),
-      Status: new FormControl('', [Validators.required]),
+      key: new FormControl('', [Validators.required, Validators.maxLength(this.keyLength)]),
+      description: new FormControl('', [Validators.required, Validators.maxLength(this.descriptionLength)]),
+      value: new FormControl('', [Validators.required, Validators.maxLength(this.valueLength)]),
+      status: new FormControl('', [Validators.required]),
     });
   }
 
@@ -186,15 +177,15 @@ export class SystemConfigPopupComponent {
   }
 
   get keyControl(): FormControl {
-    return this.tenderForm.get('Key') as FormControl;
+    return this.tenderForm.get('key') as FormControl;
   }
 
   get descriptionControl(): FormControl {
-    return this.tenderForm.get('Description') as FormControl;
+    return this.tenderForm.get('description') as FormControl;
   }
 
   get valueControl(): FormControl {
-    return this.tenderForm.get('Value') as FormControl;
+    return this.tenderForm.get('value') as FormControl;
   }
 
 }
