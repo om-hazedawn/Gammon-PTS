@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GammonEntitynewpopupComponent } from '../gammon-entitynewpopup/gammon-entitynewpopup.component';
 import { MatDialog } from '@angular/material/dialog';
+import { GammonEntityApiService, GammonEntity } from '../../../../core/services/gammon-entity-api.service';
 @Component({
   selector: 'app-gammon-entity-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatProgressSpinnerModule],
   template: `
     <div class="container">
       <mat-card>
@@ -17,7 +19,13 @@ import { MatDialog } from '@angular/material/dialog';
         </mat-card-header>
          <button mat-raised-button class="action-btn add-btn" (click)="openAddGammonPopup()">Add</button>
         <mat-card-content>
-          <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
+          <div *ngIf="loading" class="loading-spinner">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+          <div *ngIf="error" class="error-message">
+            {{ error }}
+          </div>
+          <table *ngIf="!loading && !error" mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
 
             <!-- ID Column -->
             <ng-container matColumnDef="id">
@@ -32,9 +40,9 @@ import { MatDialog } from '@angular/material/dialog';
             </ng-container>
 
             <!-- Short Name Column -->
-            <ng-container matColumnDef="shortname">
+            <ng-container matColumnDef="shortName">
               <th mat-header-cell *matHeaderCellDef>Short Name</th>
-              <td mat-cell *matCellDef="let element">{{ element.shortname }}</td>
+              <td mat-cell *matCellDef="let element">{{ element.shortName }}</td>
             </ng-container>
 
             <!-- Status Column -->
@@ -51,6 +59,23 @@ import { MatDialog } from '@angular/material/dialog';
   `,
   styles: [
     `
+      .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+      }
+
+      .error-message {
+        color: #f44336;
+        text-align: center;
+        padding: 1rem;
+        font-size: 16px;
+        background-color: #ffebee;
+        border-radius: 4px;
+        margin: 1rem;
+      }
+
       .add-btn {
         background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
         color: #fff;
@@ -131,8 +156,34 @@ import { MatDialog } from '@angular/material/dialog';
     `,
   ],
 })
-export class GammonEntityListComponent {
-  constructor(private dialog: MatDialog) {}
+export class GammonEntityListComponent implements OnInit {
+  loading = false;
+  error: string | null = null;
+  
+  constructor(
+    private dialog: MatDialog,
+    private gammonEntityService: GammonEntityApiService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadGammonEntities();
+  }
+
+  loadGammonEntities(): void {
+    this.loading = true;
+    this.error = null;
+    this.gammonEntityService.getGammonEntities().subscribe({
+      next: (data) => {
+        this.dataSource = data;
+        this.loading = false;
+      },
+      error: (error) => {
+        this.error = 'Failed to load entities. Please try again later.';
+        this.loading = false;
+        console.error('Error loading entities:', error);
+      }
+    });
+  }
 
   openAddGammonPopup(): void { 
     this.dialog.open(GammonEntitynewpopupComponent, {
@@ -140,11 +191,6 @@ export class GammonEntityListComponent {
       disableClose: false,
     });
   }
-  displayedColumns: string[] = ['id', 'name', 'shortname', 'status'];
-
-  dataSource = [
-    { id: 1, name: 'Entity One', shortname: 'E1', status: 'Active' },
-    { id: 2, name: 'Entity Two', shortname: 'E2', status: 'Inactive' },
-    { id: 3, name: 'Entity Three', shortname: 'E3', status: 'Active' },
-  ];
+  displayedColumns: string[] = ['id', 'name', 'shortName', 'status'];
+  dataSource: GammonEntity[] = [];
 }

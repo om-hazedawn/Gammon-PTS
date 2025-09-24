@@ -65,7 +65,8 @@
               "buildTarget": "new-pts-ui:build:production"
             },
             "development": {
-              "buildTarget": "new-pts-ui:build:development"
+              "buildTarget": "new-pts-ui:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
