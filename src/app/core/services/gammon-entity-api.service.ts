@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 export interface GammonEntity {
   id: number;
@@ -22,9 +23,11 @@ interface ApiResponse {
   providedIn: 'root'
 })
 export class GammonEntityApiService {
-  private apiUrl = 'api/ptsrisk/GammonEntity/api/GammonEntity';
+  private apiUrl: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.apiUrl = `${environment.apiUrl}/ptsrisk/GammonEntity/api/GammonEntity`;
+  }
 
   getGammonEntities(): Observable<GammonEntity[]> {
     return this.http.get<ApiResponse>(this.apiUrl)
