@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { GammonEntity } from '../../../../core/services/gammon-entity-api.service';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -32,8 +33,8 @@ import { MatRadioModule } from '@angular/material/radio';
     MatRadioModule,
   ],
   template: `
-    <h3 mat-dialog-title>Tender-Lost tender market intelligence</h3>
-    <form [formGroup]="tenderForm" (ngSubmit)="handleSubmit()">
+    <h3 mat-dialog-title>{{ data.mode === 'edit' ? 'Edit' : 'Add' }} Entity</h3>
+    <form [formGroup]="entityForm" (ngSubmit)="handleSubmit()">
       <div mat-dialog-content>
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
           <label style="width: 200px; font-weight: 500;">Name</label>
@@ -42,19 +43,10 @@ import { MatRadioModule } from '@angular/material/radio';
               matInput
               formControlName="name"
               placeholder="Enter name"
-              [maxlength]="nameLength"
             />
-            <mat-hint>
-              {{ tenderForm.get('name')?.value?.length || 0 }} / {{ nameLength }}
-            </mat-hint>
-            @if (nameControl.invalid && (nameControl.dirty || nameControl.touched)) {
-              <mat-error>
-                <i class="fas fa-exclamation mx-1"></i>
-                @if (nameControl.errors && nameControl.errors['required']) {
-                  <span>This field is required.</span>
-                }
-              </mat-error>
-            }
+            <mat-error *ngIf="nameControl.invalid && (nameControl.dirty || nameControl.touched)">
+              Name is required
+            </mat-error>
           </mat-form-field>
         </div>
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
@@ -64,44 +56,26 @@ import { MatRadioModule } from '@angular/material/radio';
               matInput
               formControlName="shortName"
               placeholder="Enter short name"
-              [maxlength]="shortNameLength"
             />
-            <mat-hint>
-              {{ tenderForm.get('shortName')?.value?.length || 0 }} / {{ shortNameLength }}
-            </mat-hint>
-            @if (shortNameControl.invalid && (shortNameControl.dirty || shortNameControl.touched)) {
-              <mat-error>
-                <i class="fas fa-exclamation mx-1"></i>
-                @if (shortNameControl.errors && shortNameControl.errors['required']) {
-                  <span>This field is required.</span>
-                }
-              </mat-error>
-            }
+            <mat-error *ngIf="shortNameControl.invalid && (shortNameControl.dirty || shortNameControl.touched)">
+              Short name is required
+            </mat-error>
           </mat-form-field>
         </div>
-
         <div style="width: 100%; margin-bottom: 16px;">
-            <mat-label>Status</mat-label>
+          <mat-label>Status</mat-label>
           <mat-radio-group formControlName="status" style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;">
             <mat-radio-button value="ACTIVE">Active</mat-radio-button>
             <mat-radio-button value="INACTIVE">Inactive</mat-radio-button>
-            </mat-radio-group>
-          </div>
-        
+          </mat-radio-group>
+        </div>
       </div>
       <div mat-dialog-actions align="end">
-        <button mat-button type="button" (click)="dialogRef.close()">Close</button>
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="!tenderForm.valid || isBusy()"
-        >
-          Save
+        <button mat-button type="button" (click)="dialogRef.close()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="entityForm.invalid || isBusy">
+          {{ data.mode === 'edit' ? 'Save Changes' : 'Create' }}
         </button>
-        @if (isBusy()) {
-          <mat-spinner diameter="20"></mat-spinner>
-        }
+        <mat-spinner *ngIf="isBusy" diameter="20"></mat-spinner>
       </div>
     </form>
   `,
@@ -117,52 +91,41 @@ import { MatRadioModule } from '@angular/material/radio';
   ],
 })
 export class GammonEntitynewpopupComponent {
-  tenderForm: FormGroup;
-  nameLength = 50;
-  shortNameLength = 10;
-  busy = false;
+  entityForm: FormGroup;
+  isBusy = false;
 
   constructor(
     public dialogRef: MatDialogRef<GammonEntitynewpopupComponent>,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: { mode: 'edit' | 'add'; entity?: GammonEntity }
   ) {
-    this.tenderForm = this.fb.group({
-      name: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(this.nameLength),
-      ]),
-      shortName: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(this.shortNameLength),
-      ]),
-      Status: new FormControl('', [Validators.required]),
+    this.entityForm = this.fb.group({
+      name: [data.entity?.name || '', Validators.required],
+      shortName: [data.entity?.shortName || '', Validators.required],
+      status: [data.entity?.status || 'ACTIVE', Validators.required]
     });
   }
 
-  isBusy(): boolean {
-    return this.busy;
-  }
-
   handleSubmit(): void {
-    if (this.tenderForm.valid) {
-      this.busy = true;
-      // Simulate save
-      setTimeout(() => {
-        this.busy = false;
-        this.dialogRef.close(this.tenderForm.value);
-      }, 1000);
+    if (this.entityForm.valid) {
+      this.isBusy = true;
+      const formData = this.data.mode === 'edit'
+        ? { ...this.data.entity, ...this.entityForm.value }
+        : { ...this.entityForm.value };
+      this.dialogRef.close(formData);
+      this.isBusy = false;
     }
   }
 
   get nameControl(): FormControl {
-    return this.tenderForm.get('name') as FormControl;
+    return this.entityForm.get('name') as FormControl;
   }
 
   get shortNameControl(): FormControl {
-    return this.tenderForm.get('shortName') as FormControl;
+    return this.entityForm.get('shortName') as FormControl;
   }
 
   get statusControl(): FormControl {
-    return this.tenderForm.get('status') as FormControl;
+    return this.entityForm.get('status') as FormControl;
   }
 }

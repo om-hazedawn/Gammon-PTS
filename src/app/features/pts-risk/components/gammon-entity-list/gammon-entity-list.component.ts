@@ -4,20 +4,34 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { GammonEntitynewpopupComponent } from '../gammon-entitynewpopup/gammon-entitynewpopup.component';
-import { MatDialog } from '@angular/material/dialog';
-import { GammonEntityApiService, GammonEntity } from '../../../../core/services/gammon-entity-api.service';
+import {
+  GammonEntityApiService,
+  GammonEntity,
+} from '../../../../core/services/gammon-entity-api.service';
 @Component({
   selector: 'app-gammon-entity-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatTableModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatDialogModule,
+  ],
   template: `
-    <div class="container">
+    <div class="form-list-container">
       <mat-card>
         <mat-card-header>
           <mat-card-title>Gammon Entity Management</mat-card-title>
         </mat-card-header>
-         <button mat-raised-button class="action-btn add-btn" (click)="openAddGammonPopup()">Add</button>
+        <button mat-raised-button class="action-btn add-btn" (click)="openAddGammonPopup()">
+          Add
+        </button>
         <mat-card-content>
           <div *ngIf="loading" class="loading-spinner">
             <mat-spinner diameter="40"></mat-spinner>
@@ -25,8 +39,13 @@ import { GammonEntityApiService, GammonEntity } from '../../../../core/services/
           <div *ngIf="error" class="error-message">
             {{ error }}
           </div>
-          <table *ngIf="!loading && !error" mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
-
+          <table
+            *ngIf="!loading && !error"
+            mat-table
+            [dataSource]="dataSource"
+            class="mat-elevation-z2"
+            style="width: 100%;"
+          >
             <!-- ID Column -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -51,7 +70,10 @@ import { GammonEntityApiService, GammonEntity } from '../../../../core/services/
               <td mat-cell *matCellDef="let element">{{ element.status }}</td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"
+                (click)="openEditGammonPopup(row)"
+                style="cursor: pointer;">
+            </tr>
           </table>
         </mat-card-content>
       </mat-card>
@@ -91,12 +113,8 @@ import { GammonEntityApiService, GammonEntity } from '../../../../core/services/
         background: linear-gradient(90deg, #1565c0 60%, #1976d2 100%);
         box-shadow: 0 4px 16px rgba(25, 118, 210, 0.25);
       }
-      .container {
-        padding: 0;
-        margin: 0;
-        width: 100%;
-        box-sizing: border-box;
-        overflow-x: auto;
+      .form-list-container {
+        padding: 20px;
       }
       mat-card {
         margin: 0 auto;
@@ -159,10 +177,13 @@ import { GammonEntityApiService, GammonEntity } from '../../../../core/services/
 export class GammonEntityListComponent implements OnInit {
   loading = false;
   error: string | null = null;
-  
+  displayedColumns: string[] = ['id', 'name', 'shortName', 'status'];
+  dataSource: GammonEntity[] = [];
+
   constructor(
     private dialog: MatDialog,
-    private gammonEntityService: GammonEntityApiService
+    private gammonEntityService: GammonEntityApiService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -181,16 +202,71 @@ export class GammonEntityListComponent implements OnInit {
         this.error = 'Failed to load entities. Please try again later.';
         this.loading = false;
         console.error('Error loading entities:', error);
+      },
+    });
+  }
+
+  openAddGammonPopup(): void {
+    const dialogRef = this.dialog.open(GammonEntitynewpopupComponent, {
+      width: '600px',
+      disableClose: false,
+      data: { mode: 'add' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.gammonEntityService.createGammonEntity(result).subscribe({
+          next: () => {
+            this.loadGammonEntities();
+            this.snackBar.open('Entity created successfully', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top'
+            });
+          },
+          error: (error) => {
+            console.error('Error creating entity:', error);
+            this.snackBar.open('Failed to create entity. Please try again.', 'Close', {
+              duration: 5000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar']
+            });
+          }
+        });
       }
     });
   }
 
-  openAddGammonPopup(): void { 
-    this.dialog.open(GammonEntitynewpopupComponent, {
+  openEditGammonPopup(entity: GammonEntity): void {
+    const dialogRef = this.dialog.open(GammonEntitynewpopupComponent, {
       width: '600px',
       disableClose: false,
+      data: { mode: 'edit', entity }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.gammonEntityService.updateGammonEntity(result).subscribe({
+          next: () => {
+            this.loadGammonEntities();
+            this.snackBar.open('Entity updated successfully', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top'
+            });
+          },
+          error: (error) => {
+            console.error('Error updating entity:', error);
+            this.snackBar.open('Failed to update entity. Please try again.', 'Close', {
+              duration: 5000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar']
+            });
+          }
+        });
+      }
     });
   }
-  displayedColumns: string[] = ['id', 'name', 'shortName', 'status'];
-  dataSource: GammonEntity[] = [];
 }

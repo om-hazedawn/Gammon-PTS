@@ -10,7 +10,7 @@ import { SystemConfigPopupComponent } from '../system-config-list-popup/system-c
   standalone: true,
   imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule],
   template: `
-    <div class="container">
+    <div class="form-list-container">
       <mat-card>
         <mat-card-header>
           <mat-card-title>System Configuration</mat-card-title>
@@ -73,12 +73,8 @@ import { SystemConfigPopupComponent } from '../system-config-list-popup/system-c
         background: linear-gradient(90deg, #1565c0 60%, #1976d2 100%);
         box-shadow: 0 4px 16px rgba(25, 118, 210, 0.25);
       }
-      .container {
-        padding: 0;
-        margin: 0;
-        width: 100%;
-        box-sizing: border-box;
-        overflow-x: auto;
+      .form-list-container {
+        padding: 20px;
       }
       mat-card {
         margin: 0 auto;

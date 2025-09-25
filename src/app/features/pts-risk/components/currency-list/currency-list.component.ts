@@ -3,22 +3,29 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { CurrencyListPopupComponent } from '../currency-listpopup/curency-listpopup.component';
-
+import { Currency,CurrencyListApiService } from '../../../../core/services/currency-list-api.service';
 @Component({
   selector: 'app-currency-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule , MatProgressSpinnerModule],
   template: `
-    <div class="container">
+    <div class="form-list-container">
       <mat-card>
         <mat-card-header>
           <mat-card-title>Currency Management</mat-card-title>
         </mat-card-header>
         <button mat-raised-button class="action-btn add-btn" (click)="openAddCurrencylistPopup()">Add</button>
         <mat-card-content>
-          <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
+          <div *ngIf="loading" class="loading-spinner">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+          <div *ngIf="error" class="error-message">
+            {{ error }}
+          </div>
+          <table *ngIf="!loading && !error" mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
             <!-- ID Column -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -32,7 +39,7 @@ import { CurrencyListPopupComponent } from '../currency-listpopup/curency-listpo
             <!-- Exchange Rate To HKD Column -->
             <ng-container matColumnDef="exchangeRate">
               <th mat-header-cell *matHeaderCellDef>Exchange Rate<br />To HKD</th>
-              <td mat-cell *matCellDef="let element">{{ element.exchangeRate }}</td>
+              <td mat-cell *matCellDef="let element">{{ element.exchangeRateToHKD }}</td>
             </ng-container>
             <!-- Status Column -->
             <ng-container matColumnDef="status">
@@ -48,6 +55,21 @@ import { CurrencyListPopupComponent } from '../currency-listpopup/curency-listpo
   `,
   styles: [
     `
+      .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+      }
+      .error-message {
+        color: #f44336;
+        text-align: center;
+        padding: 1rem;
+        font-size: 16px;
+        background-color: #ffebee;
+        border-radius: 4px;
+        margin: 1rem;
+      }
       .add-btn {
         background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
         color: #fff;
@@ -63,12 +85,8 @@ import { CurrencyListPopupComponent } from '../currency-listpopup/curency-listpo
         background: linear-gradient(90deg, #1565c0 60%, #1976d2 100%);
         box-shadow: 0 4px 16px rgba(25, 118, 210, 0.25);
       }
-      .container {
-        padding: 0;
-        margin: 0;
-        width: 100%;
-        box-sizing: border-box;
-        overflow-x: auto;
+      .form-list-container {
+        padding: 20px;
       }
       mat-card {
         margin: 0 auto;
@@ -129,15 +147,8 @@ import { CurrencyListPopupComponent } from '../currency-listpopup/curency-listpo
   ],
 })
 export class CurrencyListComponent {
-
-  constructor(private dialog:MatDialog){}
-
-  openAddCurrencylistPopup(){
-    this.dialog.open(CurrencyListPopupComponent,{
-      width: '600px',
-      disableClose: true,
-    })
-  }
+  loading = false;
+  error : string | null = null;
   displayedColumns: string[] = [
     'id',
     'code',
@@ -145,10 +156,44 @@ export class CurrencyListComponent {
     'status',
   ];
 
-  dataSource = [
-    { id: 1, code: 'HKD', exchangeRate: 1, status: 'Active' },
-    { id: 2, code: 'USD', exchangeRate: 7.8, status: 'Active' },
-    { id: 3, code: 'EUR', exchangeRate: 8.5, status: 'Inactive' },
-    // Add more rows as needed
-  ];
+  dataSource: Currency[] = [];
+
+  constructor(
+    private dialog: MatDialog, 
+    private currencyListApiService: CurrencyListApiService
+  ) {}
+
+  ngOnInit():void{
+    this.loadCurrencies();
+  }
+
+  loadCurrencies():void{
+    this.loading = true;
+    this.error = null;
+    this.currencyListApiService.getCurrencies().subscribe({
+      next: (data : Currency[]) => {
+        this.dataSource = data;
+        this.loading = false;
+      },
+      error: (error) => {
+        this.error = 'Failed to load currencies';
+        this.loading = false;
+        console.error('Error loading currencies:', error);
+      },
+    });
+  }
+
+  openAddCurrencylistPopup(){
+    const dialogRef = this.dialog.open(CurrencyListPopupComponent,{
+      width: '600px',
+      disableClose: true,
+    })
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadCurrencies();
+      }
+    });
+  }
+
 }

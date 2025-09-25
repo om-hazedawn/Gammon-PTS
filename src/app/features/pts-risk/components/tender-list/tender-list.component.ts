@@ -30,7 +30,7 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
     MatIconModule,
   ],
   template: `
-    <div class="container">
+    <div class="form-list-container">
       <mat-card>
         <mat-card-header>
           <mat-card-title>Tender Risk Management</mat-card-title>
@@ -179,7 +179,7 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
   `,
   styles: [
     `
-  .container {
+  .form-list-container {
       mat-card-title {
         font-size: 2rem;
         font-weight: 700;

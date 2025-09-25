@@ -1,23 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { BusinessUnitPopupComponent } from '../business-unitpopup/business-unitpopup.component';
+import { BusinessUnit, BusinessUnitApiService } from '../../../../core/services/business-unit-api.service';
 @Component({
   selector: 'app-business-unit-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatProgressSpinnerModule],
   template: `
-    <div class="container">
+    <div class="form-list-container">
       <mat-card>
         <mat-card-header>
           <mat-card-title>Business Unit Management</mat-card-title>
         </mat-card-header>
         <button mat-raised-button class="action-btn add-btn" (click)="openAddBusinessUnitPopup()">Add</button>
         <mat-card-content>
-          <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
+          <div *ngIf="loading" class="loading-spinner">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+          <div *ngIf="error" class="error-message">
+            {{ error }}
+          </div>
+          <table *ngIf="!loading && !error" mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
             <!-- ID Column -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -52,6 +60,25 @@ import { BusinessUnitPopupComponent } from '../business-unitpopup/business-unitp
   `,
   styles: [
     `
+      .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+      }
+
+      .error-message {
+        color: #f44336;
+        text-align: center;
+        padding: 1rem;
+        font-size: 16px;
+        background-color: #ffebee;
+        border-radius: 4px;
+        margin: 1rem;
+      }
+       .form-list-container {
+        padding: 20px;
+      }
       .add-btn {
         background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
         color: #fff;
@@ -132,15 +159,9 @@ import { BusinessUnitPopupComponent } from '../business-unitpopup/business-unitp
     `,
   ],
 })
-export class BusinessUnitListComponent {
-  constructor(private dialog: MatDialog) {}
-  
-  openAddBusinessUnitPopup() {
-    this.dialog.open(BusinessUnitPopupComponent, {
-      width: '600px',
-      disableClose: true,
-    });
-  }
+export class BusinessUnitListComponent implements OnInit {
+  loading = false;
+  error : string | null = null;
   displayedColumns: string[] = [
     'id',
     'name',
@@ -148,10 +169,43 @@ export class BusinessUnitListComponent {
     'tailThreshold',
     'status',
   ];
+  dataSource: BusinessUnit[] = [];
 
-  dataSource = [
-    { id: 1, name: 'Unit A', shortName: 'UA', tailThreshold: 10, status: 'Active' },
-    { id: 2, name: 'Unit B', shortName: 'UB', tailThreshold: 20, status: 'Inactive' },
-    // Add more rows as needed
-  ];
+  constructor(
+    private dialog: MatDialog,
+    private businessUnitApiService: BusinessUnitApiService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadBusinessUnits();
+  }
+
+  loadBusinessUnits(): void {
+    this.loading = true;
+    this.error = null;
+    this.businessUnitApiService.getBusinessUnits().subscribe({
+      next: (data: BusinessUnit[]) => {
+        this.dataSource = data;
+        this.loading = false;
+      },
+      error: (error) => {
+        this.error = 'Failed to load business units. Please try again later.';
+        this.loading = false;
+        console.error('Error loading business units:', error);
+      },
+    });
+  }
+
+  openAddBusinessUnitPopup(): void {
+    const dialogRef = this.dialog.open(BusinessUnitPopupComponent, {
+      width: '600px',
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadBusinessUnits();
+      }
+    });
+  }
 }

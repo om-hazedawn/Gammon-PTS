@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
   standalone: true,
   imports: [CommonModule, MatCardModule],
   template: `
-    <div class="container">
+    <div class="form-list-container">
       <mat-card>
         <mat-card-header>
           <mat-card-title>Market Sector Management</mat-card-title>
@@ -20,7 +20,7 @@ import { MatCardModule } from '@angular/material/card';
   `,
   styles: [
     `
-      .container {
+      .form-list-container {
         padding: 20px;
       }
     `,

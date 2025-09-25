@@ -4,21 +4,33 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RiskAssessmentCriteriaListPopupComponent } from '../risk-assessment-criteria-listpopup/risk-assessment-criteria-listpopup.component';
+import {
+  RiskAssessmentCriteria,
+  RiskAssessmentCriteriaApiService,
+} from '../../../../core/services/risk-assessment-criteria-api.service';
 @Component({
   selector: 'app-risk-assessment-criteria-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatProgressSpinnerModule],
   template: `
-    <div class="container">
+    <div class="form-list-container">
       <mat-card>
         <mat-card-header>
           <mat-card-title>Risk Assessment Criteria</mat-card-title>
         </mat-card-header>
-          <button mat-raised-button class="action-btn add-btn" (click)="openAddrisklistpopup()">Add</button>
+        <button mat-raised-button class="action-btn add-btn" (click)="openAddrisklistpopup()">
+          Add
+        </button>
         <mat-card-content>
-          <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
-
+          <div *ngIf="loading" class="loading-spinner">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+          <div *ngIf="error" class="error-message">
+            {{ error }}
+          </div>
+          <table *ngIf="!loading && !error" mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
             <!-- ID Column -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -42,8 +54,8 @@ import { RiskAssessmentCriteriaListPopupComponent } from '../risk-assessment-cri
               <th mat-header-cell *matHeaderCellDef>Status</th>
               <td mat-cell *matCellDef="let element">{{ element.status }}</td>
             </ng-container>
-            <tr mat-header-row *matHeaderRowDef="dispalayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: dispalayedColumns"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
           </table>
         </mat-card-content>
       </mat-card>
@@ -51,6 +63,21 @@ import { RiskAssessmentCriteriaListPopupComponent } from '../risk-assessment-cri
   `,
   styles: [
     `
+      .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+      }
+      .error-message {
+        color: #f44336;
+        text-align: center;
+        padding: 1rem;
+        font-size: 16px;
+        background-color: #ffebee;
+        border-radius: 4px;
+        margin: 1rem;
+      }
       .add-btn {
         background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
         color: #fff;
@@ -66,12 +93,8 @@ import { RiskAssessmentCriteriaListPopupComponent } from '../risk-assessment-cri
         background: linear-gradient(90deg, #1565c0 60%, #1976d2 100%);
         box-shadow: 0 4px 16px rgba(25, 118, 210, 0.25);
       }
-      .container {
-        padding: 0;
-        margin: 0;
-        width: 100%;
-        box-sizing: border-box;
-        overflow-x: auto;
+      .form-list-container {
+        padding: 20px;
       }
       mat-card {
         margin: 0 auto;
@@ -132,22 +155,47 @@ import { RiskAssessmentCriteriaListPopupComponent } from '../risk-assessment-cri
   ],
 })
 export class RiskAssessmentCriteriaListComponent {
+  loading = false;
+  error: string | null = null;
+  displayedColumns: string[] = ['id', 'code', 'title', 'status'];
+  dataSource: RiskAssessmentCriteria[] = [];
 
-   constructor(private dialog: MatDialog) {}
+  constructor(
+    private dialog: MatDialog,
+    private riskAssessmentCriteriaApiService: RiskAssessmentCriteriaApiService
+  ) {}
 
-    openAddrisklistpopup(): void {
-      this.dialog.open(RiskAssessmentCriteriaListPopupComponent, {
-        width: '600px',
-        disableClose: false,
-      });
-    }
+  ngOnInit(): void {
+    this.loadRiskAssessmentCriteria();
+  }
 
-  dispalayedColumns: string[] = ['id', 'code', 'title', 'status'];
+  loadRiskAssessmentCriteria(): void {
+    this.loading = true;
+    this.error = null;
 
-  dataSource = [
-    { id: 1, code: 'RC1', title: 'Criteria One', status: 'Active' },
-    { id: 2, code: 'RC2', title: 'Criteria Two', status: 'Inactive' },
-    { id: 3, code: 'RC3', title: 'Criteria Three', status: 'Active' },
-  ];
+    this.riskAssessmentCriteriaApiService.getRiskAssessmentCriteria().subscribe({
+      next: (data: RiskAssessmentCriteria[]) => {
+        this.dataSource = data;
+        this.loading = false;
+      },
+      error: (error) => {
+        this.error = 'Failed to load risk assessment criteria';
+        this.loading = false;
+        console.error('Error loading risk assessment criteria:', error);
+      },
+    });
+  }
 
+  openAddrisklistpopup(): void {
+    const dialogRef = this.dialog.open(RiskAssessmentCriteriaListPopupComponent, {
+      width: '600px',
+      disableClose: false,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadRiskAssessmentCriteria();
+      }
+    });
+  }
 }
