@@ -4,13 +4,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar,MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { BusinessUnitPopupComponent } from '../business-unitpopup/business-unitpopup.component';
 import { BusinessUnit, BusinessUnitApiService } from '../../../../core/services/business-unit-api.service';
+import { map, tap } from 'rxjs';
 @Component({
   selector: 'app-business-unit-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatProgressSpinnerModule],
+  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatProgressSpinnerModule, MatSnackBarModule],
   template: `
     <div class="form-list-container">
       <mat-card>
@@ -52,7 +54,9 @@ import { BusinessUnit, BusinessUnitApiService } from '../../../../core/services/
               <td mat-cell *matCellDef="let element">{{ element.status }}</td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"
+              (click)="openEditBusinessUnitPopup(row)"
+               style="cursor: pointer;"></tr>
           </table>
         </mat-card-content>
       </mat-card>
@@ -173,7 +177,8 @@ export class BusinessUnitListComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private businessUnitApiService: BusinessUnitApiService
+    private businessUnitApiService: BusinessUnitApiService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -200,11 +205,62 @@ export class BusinessUnitListComponent implements OnInit {
     const dialogRef = this.dialog.open(BusinessUnitPopupComponent, {
       width: '600px',
       disableClose: true,
+      data: { mode: 'add' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.loadBusinessUnits();
+        this.businessUnitApiService.createBusinessUnit(result).subscribe({
+          next: () => {
+            this.loadBusinessUnits();
+            this.snackBar.open('Business Unit created successfully', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top'
+            });
+          },
+          error: (error) => {
+            console.error('Error creating business unit:', error);
+            this.snackBar.open('Failed to create business unit. Please try again.', 'Close', {
+              duration: 5000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar']
+            });
+          }
+        });
+      }
+    });
+  }
+
+  openEditBusinessUnitPopup(businessUnit: BusinessUnit): void {
+    const dialogRef = this.dialog.open(BusinessUnitPopupComponent, {
+      width: '600px',
+      disableClose: true,
+      data: { mode: 'edit', businessUnit }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.businessUnitApiService.updateBusinessUnit(result).subscribe({
+          next: () => {
+            this.loadBusinessUnits();
+            this.snackBar.open('Business Unit updated successfully', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top'
+            });
+          },
+          error: (error) => {
+            console.error('Error updating business unit:', error);
+            this.snackBar.open('Failed to update business unit. Please try again.', 'Close', {
+              duration: 5000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar']
+            });
+          }
+        });
       }
     });
   }

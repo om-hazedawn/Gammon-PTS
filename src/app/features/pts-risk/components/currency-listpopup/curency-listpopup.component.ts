@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component,Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogRef, MatDialogModule,MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Currency } from '../../../../core/services/currency-list-api.service';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -32,7 +33,7 @@ import { MatRadioModule } from '@angular/material/radio';
     MatRadioModule,
   ],
   template: `
-    <h3 mat-dialog-title>Currency</h3>
+    <h3 mat-dialog-title>{{ data.mode === 'edit' ? 'Edit' : 'Add' }} Currency</h3>
     <form [formGroup]="tenderForm" (ngSubmit)="handleSubmit()">
       <div mat-dialog-content>
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
@@ -94,7 +95,7 @@ import { MatRadioModule } from '@angular/material/radio';
           type="submit"
           [disabled]="!tenderForm.valid || isBusy()"
         >
-          Save
+          {{ data.mode === 'edit' ? 'Save Changes' : 'Create' }}
         </button>
         @if (isBusy()) {
           <mat-spinner diameter="20"></mat-spinner>
@@ -118,11 +119,23 @@ export class CurrencyListPopupComponent {
   codelength = 3;
   busy = false;
 
-  constructor(public dialogRef: MatDialogRef<CurrencyListPopupComponent>, private fb: FormBuilder) {
+  constructor(public dialogRef: MatDialogRef<CurrencyListPopupComponent>, 
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: { mode: 'add' | 'edit'; currency?: Currency }) {
+
+    const currency = data?.currency || {} as Currency;
+
     this.tenderForm = this.fb.group({
-      code: new FormControl('', [Validators.required, Validators.maxLength(this.codelength)]),
-      exchangeRateToHKD: new FormControl('', [Validators.required]),
-      status: new FormControl('', [Validators.required]),
+      code: new FormControl(currency.code || '', [
+        Validators.required, 
+        Validators.maxLength(this.codelength)
+      ]),
+      exchangeRateToHKD: new FormControl(currency.exchangeRateToHKD || '', [
+        Validators.required
+      ]),
+      status: new FormControl(currency.status || 'ACTIVE', [
+        Validators.required
+      ]),
     });
   }
 
@@ -133,11 +146,11 @@ export class CurrencyListPopupComponent {
   handleSubmit(): void {
     if (this.tenderForm.valid) {
       this.busy = true;
-      // Simulate save
-      setTimeout(() => {
-        this.busy = false;
-        this.dialogRef.close(this.tenderForm.value);
-      }, 1000);
+      const currencyData = this.data.mode === 'edit' 
+        ? { ...this.data.currency, ...this.tenderForm.value }
+        : this.tenderForm.value;
+      this.dialogRef.close(currencyData);
+      this.busy = false;
     }
   }
 

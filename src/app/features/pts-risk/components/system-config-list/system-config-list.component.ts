@@ -3,22 +3,34 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { SystemConfigPopupComponent } from '../system-config-list-popup/system-config-popup.component';
+import {
+  SystemConfig,
+  SystemConfigApiService,
+} from '../../../../core/services/system-config-api.service';
 @Component({
   selector: 'app-system-config-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatProgressSpinnerModule],
   template: `
     <div class="form-list-container">
       <mat-card>
         <mat-card-header>
           <mat-card-title>System Configuration</mat-card-title>
         </mat-card-header>
-          <button mat-raised-button class="action-btn add-btn" (click)="openAddSystemConfigPopup()">Add</button>
+        <button mat-raised-button class="action-btn add-btn" (click)="openAddSystemConfigPopup()">
+          Add
+        </button>
         <mat-card-content>
-          <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
-
+          <div *ngIf="loading" class="loading-spinner">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+          <div *ngIf="error" class="error-message">
+            {{ error }}
+          </div>
+          <table *ngIf="!loading && !error" mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
             <!-- ID Column -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -58,6 +70,21 @@ import { SystemConfigPopupComponent } from '../system-config-list-popup/system-c
   `,
   styles: [
     `
+      .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+      }
+      .error-message {
+        color: #f44336;
+        text-align: center;
+        padding: 1rem;
+        font-size: 16px;
+        background-color: #ffebee;
+        border-radius: 4px;
+        margin: 1rem;
+      }
       .add-btn {
         background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
         color: #fff;
@@ -135,18 +162,46 @@ import { SystemConfigPopupComponent } from '../system-config-list-popup/system-c
   ],
 })
 export class SystemConfigListComponent {
+  loading = false;
+  error: string | null = null;
+  displayedColumns: string[] = ['id', 'key', 'description', 'value', 'status'];
+  dataSource: SystemConfig[] = [];
 
-  constructor(private dialog: MatDialog) {}
-  openAddSystemConfigPopup() {
-    this.dialog.open(SystemConfigPopupComponent, {
-      width: '500px',
+  constructor(
+    private dialog: MatDialog,
+    private systemConfigApiServiceSys: SystemConfigApiService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadSystemConfigs();
+  }
+
+  loadSystemConfigs(): void {
+    this.loading = true;
+    this.error = null;
+    this.systemConfigApiServiceSys.getSystemConfigs().subscribe({
+      next: (data: SystemConfig[]) => {
+        this.dataSource = data;
+        this.loading = false;
+      },
+      error: (error) => {
+        this.error = 'Failed to load system configurations. Please try again later.';
+        this.loading = false;
+        console.error('Error loading system configurations:', error);
+      },
     });
   }
-  displayedColumns: string[] = ['id', 'key', 'description', 'value', 'status'];
 
-  dataSource = [
-    { id: 1, key: 'config_1', description: 'Configuration One', value: 'Value 1', status: 'Active' },
-    { id: 2, key: 'config_2', description: 'Configuration Two', value: 'Value 2', status: 'Inactive' },
-    { id: 3, key: 'config_3', description: 'Configuration Three', value: 'Value 3', status: 'Active' },
-  ];
+  openAddSystemConfigPopup() {
+    const dialogRef = this.dialog.open(SystemConfigPopupComponent, {
+      width: '600px',
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadSystemConfigs();
+      }
+    });
+  }
 }

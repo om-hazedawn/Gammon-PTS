@@ -45,4 +45,61 @@ export class CurrencyListApiService {
       })
     );
   }
+
+  getCurrencyById(id: number): Observable<Currency> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.get<{ data: Currency }>(url)
+    .pipe(
+      tap((response) => {
+        console.log('Currency fetched successfully:', response.data);
+      }),
+      map((response) => response.data),
+      catchError((error) => {
+        console.error(`Error fetching currency with ID ${id}:`, error);
+        throw error;
+      })
+    );
+  }
+
+  createCurrency(currency: Partial<Currency>): Observable<Currency> {
+    const requestBody = {
+      code: currency.code,
+      exchangeRateToHKD: currency.exchangeRateToHKD,
+      status: currency.status
+    };
+
+    return this.http.post<{ data: Currency }>(this.apiUrl, requestBody)
+    .pipe(
+      tap((response) => {
+        console.log('Currency created successfully:', response.data);
+      }),
+      map((response) => response.data),
+      catchError((error) => {
+        console.error('Error creating currency:', error);
+        throw error;
+      })
+    );
+  }
+
+  updateCurrency(currency: Currency): Observable<Currency> {
+    const requestBody = {
+      id: currency.id,
+      code: currency.code,
+      exchangeRateToHKD: currency.exchangeRateToHKD,
+      status: currency.status
+    };
+
+    return this.http.put<{ data: Currency }>(this.apiUrl, requestBody)
+    .pipe(
+      tap((response) => {
+        console.log('Currency updated successfully:', response.data);
+      }),
+      map((response) => response.data),
+      catchError((error) => {
+        console.error('Error updating currency:', error);
+        throw error;
+      })
+    );
+  }
+
 }

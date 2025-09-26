@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
+import { BusinessUnit } from '../../../../core/services/business-unit-api.service';
 
 @Component({
   selector: '',
@@ -120,7 +121,7 @@ import { MatRadioModule } from '@angular/material/radio';
           type="submit"
           [disabled]="!tenderForm.valid || isBusy()"
         >
-          Save
+           {{ data.mode === 'edit' ? 'Save Changes' : 'Create' }}
         </button>
         @if (isBusy()) {
           <mat-spinner diameter="20"></mat-spinner>
@@ -146,19 +147,27 @@ export class BusinessUnitPopupComponent {
   tailThresholdLength = 10;
   busy = false;
 
-  constructor(public dialogRef: MatDialogRef<BusinessUnitPopupComponent>, private fb: FormBuilder) {
-    this.tenderForm = this.fb.group({
-      name: new FormControl('', [Validators.required, Validators.maxLength(this.nameLength)]),
-      shortName: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(this.shortNameLength),
-      ]),
-      status: new FormControl('', [Validators.required]),
-      tailThreshold: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(this.tailThresholdLength),
-      ]),
-    });
+  constructor(public dialogRef: MatDialogRef<BusinessUnitPopupComponent>, 
+    private fb: FormBuilder,
+  @Inject(MAT_DIALOG_DATA) public data: { mode: 'edit' | 'add'; businessUnit?: BusinessUnit }) {
+      // Initialize form with default values or existing business unit data
+      const businessUnit = data?.businessUnit || {} as BusinessUnit;
+      
+      this.tenderForm = this.fb.group({
+        name: new FormControl(businessUnit.name || '', [
+          Validators.required,
+          Validators.maxLength(this.nameLength)
+        ]),
+        shortName: new FormControl(businessUnit.shortName || '', [
+          Validators.required,
+          Validators.maxLength(this.shortNameLength),
+        ]),
+        status: new FormControl(businessUnit.status || 'ACTIVE', [Validators.required]),
+        tailThreshold: new FormControl(businessUnit.tailThreshold || '', [
+          Validators.required,
+          Validators.maxLength(this.tailThresholdLength),
+        ]),
+      });
   }
 
   isBusy(): boolean {
@@ -168,11 +177,11 @@ export class BusinessUnitPopupComponent {
   handleSubmit(): void {
     if (this.tenderForm.valid) {
       this.busy = true;
-      // Simulate save
-      setTimeout(() => {
-        this.busy = false;
-        this.dialogRef.close(this.tenderForm.value);
-      }, 1000);
+      const formData = this.data.mode === 'edit'
+        ? { ...this.data.businessUnit, ...this.tenderForm.value }
+        : { ...this.tenderForm.value };
+      this.dialogRef.close(formData);
+      this.busy = false;
     }
   }
 

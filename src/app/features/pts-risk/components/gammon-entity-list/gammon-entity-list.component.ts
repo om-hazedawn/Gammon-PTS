@@ -70,10 +70,12 @@ import {
               <td mat-cell *matCellDef="let element">{{ element.status }}</td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"
-                (click)="openEditGammonPopup(row)"
-                style="cursor: pointer;">
-            </tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumns"
+              (click)="openEditGammonPopup(row)"
+              style="cursor: pointer;"
+            ></tr>
           </table>
         </mat-card-content>
       </mat-card>
@@ -210,10 +212,10 @@ export class GammonEntityListComponent implements OnInit {
     const dialogRef = this.dialog.open(GammonEntitynewpopupComponent, {
       width: '600px',
       disableClose: false,
-      data: { mode: 'add' }
+      data: { mode: 'add' },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.gammonEntityService.createGammonEntity(result).subscribe({
           next: () => {
@@ -221,7 +223,7 @@ export class GammonEntityListComponent implements OnInit {
             this.snackBar.open('Entity created successfully', 'Close', {
               duration: 3000,
               horizontalPosition: 'end',
-              verticalPosition: 'top'
+              verticalPosition: 'top',
             });
           },
           error: (error) => {
@@ -230,9 +232,9 @@ export class GammonEntityListComponent implements OnInit {
               duration: 5000,
               horizontalPosition: 'end',
               verticalPosition: 'top',
-              panelClass: ['error-snackbar']
+              panelClass: ['error-snackbar'],
             });
-          }
+          },
         });
       }
     });
@@ -242,10 +244,10 @@ export class GammonEntityListComponent implements OnInit {
     const dialogRef = this.dialog.open(GammonEntitynewpopupComponent, {
       width: '600px',
       disableClose: false,
-      data: { mode: 'edit', entity }
+      data: { mode: 'edit', entity },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.gammonEntityService.updateGammonEntity(result).subscribe({
           next: () => {
@@ -253,7 +255,7 @@ export class GammonEntityListComponent implements OnInit {
             this.snackBar.open('Entity updated successfully', 'Close', {
               duration: 3000,
               horizontalPosition: 'end',
-              verticalPosition: 'top'
+              verticalPosition: 'top',
             });
           },
           error: (error) => {
@@ -262,9 +264,9 @@ export class GammonEntityListComponent implements OnInit {
               duration: 5000,
               horizontalPosition: 'end',
               verticalPosition: 'top',
-              panelClass: ['error-snackbar']
+              panelClass: ['error-snackbar'],
             });
-          }
+          },
         });
       }
     });

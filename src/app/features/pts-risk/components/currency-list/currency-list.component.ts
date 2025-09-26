@@ -4,20 +4,26 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CurrencyListPopupComponent } from '../currency-listpopup/curency-listpopup.component';
-import { Currency,CurrencyListApiService } from '../../../../core/services/currency-list-api.service';
+import {
+  Currency,
+  CurrencyListApiService,
+} from '../../../../core/services/currency-list-api.service';
 @Component({
   selector: 'app-currency-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule , MatProgressSpinnerModule],
+  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatProgressSpinnerModule, MatSnackBarModule],
   template: `
     <div class="form-list-container">
       <mat-card>
         <mat-card-header>
           <mat-card-title>Currency Management</mat-card-title>
         </mat-card-header>
-        <button mat-raised-button class="action-btn add-btn" (click)="openAddCurrencylistPopup()">Add</button>
+        <button mat-raised-button class="action-btn add-btn" (click)="openAddCurrencylistPopup()">
+          Add
+        </button>
         <mat-card-content>
           <div *ngIf="loading" class="loading-spinner">
             <mat-spinner diameter="40"></mat-spinner>
@@ -25,7 +31,13 @@ import { Currency,CurrencyListApiService } from '../../../../core/services/curre
           <div *ngIf="error" class="error-message">
             {{ error }}
           </div>
-          <table *ngIf="!loading && !error" mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
+          <table
+            *ngIf="!loading && !error"
+            mat-table
+            [dataSource]="dataSource"
+            class="mat-elevation-z2"
+            style="width: 100%;"
+          >
             <!-- ID Column -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -47,7 +59,11 @@ import { Currency,CurrencyListApiService } from '../../../../core/services/curre
               <td mat-cell *matCellDef="let element">{{ element.status }}</td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr 
+            mat-row 
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="openEditCurrencyPopup(row)"
+            style="cursor: pointer;"></tr>
           </table>
         </mat-card-content>
       </mat-card>
@@ -93,7 +109,7 @@ import { Currency,CurrencyListApiService } from '../../../../core/services/curre
         max-width: 100%;
         box-sizing: border-box;
         border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(25, 118, 210, 0.12), 0 1.5px 6px rgba(0,0,0,0.08);
+        box-shadow: 0 8px 32px rgba(25, 118, 210, 0.12), 0 1.5px 6px rgba(0, 0, 0, 0.08);
         overflow-x: auto;
       }
       .mat-card-content {
@@ -109,7 +125,7 @@ import { Currency,CurrencyListApiService } from '../../../../core/services/curre
         display: table;
         margin: 0;
         border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(25, 118, 210, 0.13), 0 1.5px 6px rgba(0,0,0,0.08);
+        box-shadow: 0 4px 16px rgba(25, 118, 210, 0.13), 0 1.5px 6px rgba(0, 0, 0, 0.08);
         border-collapse: separate;
         border-spacing: 0;
       }
@@ -148,30 +164,26 @@ import { Currency,CurrencyListApiService } from '../../../../core/services/curre
 })
 export class CurrencyListComponent {
   loading = false;
-  error : string | null = null;
-  displayedColumns: string[] = [
-    'id',
-    'code',
-    'exchangeRate',
-    'status',
-  ];
+  error: string | null = null;
+  displayedColumns: string[] = ['id', 'code', 'exchangeRate', 'status'];
 
   dataSource: Currency[] = [];
 
   constructor(
     private dialog: MatDialog, 
-    private currencyListApiService: CurrencyListApiService
+    private currencyListApiService: CurrencyListApiService,
+    private snackBar: MatSnackBar  
   ) {}
 
-  ngOnInit():void{
+  ngOnInit(): void {
     this.loadCurrencies();
   }
 
-  loadCurrencies():void{
+  loadCurrencies(): void {
     this.loading = true;
     this.error = null;
     this.currencyListApiService.getCurrencies().subscribe({
-      next: (data : Currency[]) => {
+      next: (data: Currency[]) => {
         this.dataSource = data;
         this.loading = false;
       },
@@ -183,17 +195,71 @@ export class CurrencyListComponent {
     });
   }
 
-  openAddCurrencylistPopup(){
-    const dialogRef = this.dialog.open(CurrencyListPopupComponent,{
+  openAddCurrencylistPopup():void {
+    const dialogRef = this.dialog.open(CurrencyListPopupComponent, {
       width: '600px',
       disableClose: true,
-    })
+      data: { mode: 'add' }
+    });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.loadCurrencies();
+        this.currencyListApiService.createCurrency(result).subscribe({
+          next: () => {
+            this.loadCurrencies();
+            this.snackBar.open('Currency added successfully', 'Close', {
+              duration: 3000,
+              verticalPosition: 'top',
+              horizontalPosition: 'end',
+            });
+          },
+          error: (error) => {
+            console.error('Error adding currency:', error);
+            this.snackBar.open('Failed to add currency. Please try again.', 'Close', {
+              duration: 5000,
+              verticalPosition: 'top',
+              horizontalPosition: 'end',
+              panelClass: ['error-snackbar'],
+            });
+          },
+        });
       }
     });
   }
 
+  openEditCurrencyPopup(currency: Currency): void {
+    const dialogRef = this.dialog.open(CurrencyListPopupComponent, {
+      width: '600px',
+      disableClose: true,
+      data: { mode: 'edit', currency }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const updatedCurrency = {
+          ...result,
+          id: currency.id
+        };
+        this.currencyListApiService.updateCurrency(updatedCurrency).subscribe({
+          next: () => {
+            this.loadCurrencies();
+            this.snackBar.open('Currency updated successfully', 'Close', {
+              duration: 3000,
+              verticalPosition: 'top',
+              horizontalPosition: 'end',
+            });
+          },
+          error: (error) => {
+            console.error('Error updating currency:', error);
+            this.snackBar.open('Failed to update currency. Please try again.', 'Close', {
+              duration: 5000,
+              verticalPosition: 'top',
+              horizontalPosition: 'end',
+              panelClass: ['error-snackbar'],
+            });
+          },
+        });
+      }
+    });
+  }
 }
