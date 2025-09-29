@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SystemConfigPopupComponent } from '../system-config-list-popup/system-config-popup.component';
 import {
@@ -13,7 +14,14 @@ import {
 @Component({
   selector: 'app-system-config-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatTableModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+  ],
   template: `
     <div class="form-list-container">
       <mat-card>
@@ -30,7 +38,13 @@ import {
           <div *ngIf="error" class="error-message">
             {{ error }}
           </div>
-          <table *ngIf="!loading && !error" mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
+          <table
+            *ngIf="!loading && !error"
+            mat-table
+            [dataSource]="dataSource"
+            class="mat-elevation-z2"
+            style="width: 100%;"
+          >
             <!-- ID Column -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -62,7 +76,12 @@ import {
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumns"
+              (click)="openEditSystemConfigPopup(row)"
+              style="cursor: pointer;"
+            ></tr>
           </table>
         </mat-card-content>
       </mat-card>
@@ -169,7 +188,8 @@ export class SystemConfigListComponent {
 
   constructor(
     private dialog: MatDialog,
-    private systemConfigApiServiceSys: SystemConfigApiService
+    private systemConfigApiServiceSys: SystemConfigApiService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -196,11 +216,69 @@ export class SystemConfigListComponent {
     const dialogRef = this.dialog.open(SystemConfigPopupComponent, {
       width: '600px',
       disableClose: true,
+      data: { mode: 'add' },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.loadSystemConfigs();
+        this.systemConfigApiServiceSys.createSystemConfig(result).subscribe({
+          next: () => {
+            this.loadSystemConfigs();
+            this.snackBar.open('System configuration created successfully.', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+            });
+          },
+          error: (error) => {
+            console.error('Error creating system configuration:', error);
+            this.snackBar.open(
+              'Failed to create system configuration. Please try again.',
+              'Close',
+              {
+                duration: 3000,
+                horizontalPosition: 'end',
+                verticalPosition: 'top',
+                panelClass: ['error-snackbar'],
+              }
+            );
+          },
+        });
+      }
+    });
+  }
+
+  openEditSystemConfigPopup(systemConfig: SystemConfig): void {
+    const dialogRef = this.dialog.open(SystemConfigPopupComponent, {
+      width: '600px',
+      disableClose: true,
+      data: { mode: 'edit', systemConfig },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.systemConfigApiServiceSys.updateSystemConfig(result).subscribe({
+          next: () => {
+            this.loadSystemConfigs();
+            this.snackBar.open('System configuration updated successfully.', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+            });
+          },
+          error: (error) => {
+            console.error('Error updating system configuration:', error);
+            this.snackBar.open(
+              'Failed to update system configuration. Please try again.',
+              'Close',
+              {
+                duration: 5000,
+                horizontalPosition: 'end',
+                verticalPosition: 'top',
+                panelClass: ['error-snackbar'],
+              }
+            );
+          },
+        });
       }
     });
   }

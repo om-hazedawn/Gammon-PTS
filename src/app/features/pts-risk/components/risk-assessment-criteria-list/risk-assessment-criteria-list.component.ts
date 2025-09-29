@@ -5,6 +5,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar,MatSnackBarModule } from '@angular/material/snack-bar';
 import { RiskAssessmentCriteriaListPopupComponent } from '../risk-assessment-criteria-listpopup/risk-assessment-criteria-listpopup.component';
 import {
   RiskAssessmentCriteria,
@@ -13,7 +14,7 @@ import {
 @Component({
   selector: 'app-risk-assessment-criteria-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatProgressSpinnerModule],
+  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatProgressSpinnerModule, MatSnackBarModule],
   template: `
     <div class="form-list-container">
       <mat-card>
@@ -55,7 +56,9 @@ import {
               <td mat-cell *matCellDef="let element">{{ element.status }}</td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"
+            (click)="openEditRiskAssessmentCriteriaPopup(row)"
+            style="cursor: pointer;"></tr>
           </table>
         </mat-card-content>
       </mat-card>
@@ -162,7 +165,8 @@ export class RiskAssessmentCriteriaListComponent {
 
   constructor(
     private dialog: MatDialog,
-    private riskAssessmentCriteriaApiService: RiskAssessmentCriteriaApiService
+    private riskAssessmentCriteriaApiService: RiskAssessmentCriteriaApiService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -190,11 +194,60 @@ export class RiskAssessmentCriteriaListComponent {
     const dialogRef = this.dialog.open(RiskAssessmentCriteriaListPopupComponent, {
       width: '600px',
       disableClose: false,
+      data: { mode: 'add' },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.loadRiskAssessmentCriteria();
+        this.riskAssessmentCriteriaApiService.createRiskAssessmentCriteria(result).subscribe({
+          next: (newCriteria) => {
+            this.snackBar.open('Risk Assessment Criteria added successfully', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+            });
+          },
+          error: (error) => {
+            console.error('Error adding risk assessment criteria:', error);
+            this.snackBar.open('Failed to add Risk Assessment Criteria', 'Close', {
+              duration: 5000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
+            });
+          }
+        });
+      }
+  });
+}
+
+  openEditRiskAssessmentCriteriaPopup(criteria: RiskAssessmentCriteria): void {
+    const dialogRef = this.dialog.open(RiskAssessmentCriteriaListPopupComponent, {
+      width: '600px',
+      disableClose: false,
+      data: { mode: 'edit', riskAssessmentCriteria: criteria },
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.riskAssessmentCriteriaApiService.updateRiskAssessmentCriteria(result).subscribe({
+          next: () => {
+            this.loadRiskAssessmentCriteria();
+            this.snackBar.open('Risk Assessment Criteria updated successfully', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+            });
+          },
+          error: (error) => {
+            console.error('Error updating risk assessment criteria:', error);
+            this.snackBar.open('Failed to update Risk Assessment Criteria', 'Close', {
+              duration: 5000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
+           });
+          }
+        });
       }
     });
   }

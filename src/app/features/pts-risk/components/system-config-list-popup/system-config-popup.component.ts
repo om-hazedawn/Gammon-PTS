@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
+import { SystemConfig } from '../../../../core/services/system-config-api.service';
 
 @Component({
   selector: '',
@@ -32,7 +33,7 @@ import { MatRadioModule } from '@angular/material/radio';
     MatRadioModule,
   ],
   template: `
-    <h3 mat-dialog-title>System Config</h3>
+    <h3 mat-dialog-title> {{ data.mode === 'edit' ? 'Edit' : 'Create' }} System Config</h3>
     <form [formGroup]="tenderForm" (ngSubmit)="handleSubmit()">
       <div mat-dialog-content>
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
@@ -126,7 +127,7 @@ import { MatRadioModule } from '@angular/material/radio';
           type="submit"
           [disabled]="!tenderForm.valid || isBusy()"
         >
-          Save
+          {{ data.mode === 'edit' ? 'Save Changes' : 'Create' }}
         </button>
         @if (isBusy()) {
           <mat-spinner diameter="20"></mat-spinner>
@@ -152,12 +153,25 @@ export class SystemConfigPopupComponent {
   valueLength = 20;
   busy = false;
 
-  constructor(public dialogRef: MatDialogRef<SystemConfigPopupComponent>, private fb: FormBuilder) {
-    this.tenderForm = this.fb.group({
-      key: new FormControl('', [Validators.required, Validators.maxLength(this.keyLength)]),
-      description: new FormControl('', [Validators.required, Validators.maxLength(this.descriptionLength)]),
-      value: new FormControl('', [Validators.required, Validators.maxLength(this.valueLength)]),
-      status: new FormControl('', [Validators.required]),
+  constructor(public dialogRef: MatDialogRef<SystemConfigPopupComponent>, 
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: { mode: 'edit' | 'add'; systemConfig?: SystemConfig}) {
+      const systemConfig = data.systemConfig || {} as SystemConfig;
+
+      this.tenderForm = this.fb.group({
+      key: new FormControl(systemConfig.key || '', [
+        Validators.required, 
+        Validators.maxLength(this.keyLength)
+      ]),
+      description: new FormControl(systemConfig.description || '', [
+        Validators.required, 
+        Validators.maxLength(this.descriptionLength)
+      ]),
+      value: new FormControl(systemConfig.value || '', [
+        Validators.required, 
+        Validators.maxLength(this.valueLength)
+      ]),
+      status: new FormControl(systemConfig.status || 'ACTIVE', [Validators.required]),
     });
   }
 
@@ -168,11 +182,11 @@ export class SystemConfigPopupComponent {
   handleSubmit(): void {
     if (this.tenderForm.valid) {
       this.busy = true;
-      // Simulate save
-      setTimeout(() => {
-        this.busy = false;
-        this.dialogRef.close(this.tenderForm.value);
-      }, 1000);
+     const formData = this.data.mode === 'edit'
+        ? {...this.data.systemConfig, ...this.tenderForm.value }
+        : {...this.tenderForm.value};
+      this.dialogRef.close(formData);
+      this.busy = false;
     }
   }
 

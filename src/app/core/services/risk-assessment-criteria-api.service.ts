@@ -46,4 +46,58 @@ export class RiskAssessmentCriteriaApiService {
       })
     );
   }
+
+  getRiskAssessmentCriteriaById(id: number): Observable<RiskAssessmentCriteria> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.get<{ data: RiskAssessmentCriteria }>(url).pipe(
+      tap((response) => {
+        console.log('Risk assessment criteria fetched successfully:', response.data);
+      }),
+      map((response) => response.data),
+      catchError((error) => {
+        console.error(`Error fetching risk assessment criteria with id ${id}:`, error);
+        throw error;
+      })
+    );
+  }
+
+  createRiskAssessmentCriteria(criteria: Partial<RiskAssessmentCriteria>): Observable<RiskAssessmentCriteria> {
+    const requestBody = {
+      code: criteria.code ,
+      title: criteria.title ,
+      status: criteria.status
+    };
+
+    return this.http.post<{ data: RiskAssessmentCriteria }>(this.apiUrl, requestBody).pipe(
+      tap((response) => {
+        console.log('Risk assessment criteria created successfully:', response.data);
+      }),
+      map((response) => response.data),
+      catchError((error) => {
+        console.error('Error creating risk assessment criteria:', error);
+        throw error;
+      })
+    );
+  }
+
+  updateRiskAssessmentCriteria(criteria: RiskAssessmentCriteria): Observable<RiskAssessmentCriteria> {
+    const requestBody = {
+      id: criteria.id,
+      code: criteria.code,
+      title: criteria.title,
+      status: criteria.status
+    };
+
+    return this.http.put<{ data: RiskAssessmentCriteria }>(this.apiUrl, requestBody).pipe(
+      tap((response) => {
+        console.log('Risk assessment criteria updated successfully:', response.data);
+      }),
+      map((response) => response.data),
+      catchError((error) => {
+        console.error('Error updating risk assessment criteria:', error);
+        throw error;
+      })
+    );
+  }
+
 }

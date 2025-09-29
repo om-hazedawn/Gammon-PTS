@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { RiskAssessmentCriteria } from '../../../../core/services/risk-assessment-criteria-api.service';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -32,7 +33,7 @@ import { MatRadioModule } from '@angular/material/radio';
     MatRadioModule,
   ],
   template: `
-    <h3 mat-dialog-title>Currency</h3>
+    <h3 mat-dialog-title>{{ data.mode === 'edit' ? 'Edit' : 'Add' }} Risk Assessment Criteria</h3>
     <form [formGroup]="tenderForm" (ngSubmit)="handleSubmit()">
       <div mat-dialog-content>
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
@@ -84,7 +85,7 @@ import { MatRadioModule } from '@angular/material/radio';
 
         <div style="width: 100%; margin-bottom: 16px;">
           <mat-label>Status</mat-label>
-          <mat-radio-group formControlName="Status" style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;">
+          <mat-radio-group formControlName="status" style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;">
             <mat-radio-button value="ACTIVE">Active</mat-radio-button>
             <mat-radio-button value="INACTIVE">Inactive</mat-radio-button>
           </mat-radio-group>
@@ -98,7 +99,7 @@ import { MatRadioModule } from '@angular/material/radio';
           type="submit"
           [disabled]="!tenderForm.valid || isBusy()"
         >
-          Save
+          {{ data.mode === 'edit' ? 'Save Changes' : 'Create' }}
         </button>
         @if (isBusy()) {
           <mat-spinner diameter="20"></mat-spinner>
@@ -123,11 +124,23 @@ export class RiskAssessmentCriteriaListPopupComponent {
   titleLength = 50;
   busy = false;
 
-  constructor(public dialogRef: MatDialogRef<RiskAssessmentCriteriaListPopupComponent>, private fb: FormBuilder) {
+  constructor(
+    public dialogRef: MatDialogRef<RiskAssessmentCriteriaListPopupComponent>,
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: { mode: 'edit' | 'add'; riskAssessmentCriteria?: RiskAssessmentCriteria }
+  ) {
+    const criteria = data?.riskAssessmentCriteria || ({} as RiskAssessmentCriteria);
+
     this.tenderForm = this.fb.group({
-      code: new FormControl('', [Validators.required, Validators.maxLength(this.codeLength)]),
-      title: new FormControl('', [Validators.required, Validators.maxLength(this.titleLength)]),
-      status: new FormControl('', [Validators.required]),
+      code: new FormControl(criteria.code || '', [
+        Validators.required, 
+        Validators.maxLength(this.codeLength)
+      ]),
+      title: new FormControl(criteria.title || '', [
+        Validators.required,
+        Validators.maxLength(this.titleLength)
+      ]),
+      status: new FormControl(criteria.status || 'ACTIVE', [Validators.required]),
     });
   }
 
@@ -138,11 +151,12 @@ export class RiskAssessmentCriteriaListPopupComponent {
   handleSubmit(): void {
     if (this.tenderForm.valid) {
       this.busy = true;
-      // Simulate save
-      setTimeout(() => {
-        this.busy = false;
-        this.dialogRef.close(this.tenderForm.value);
-      }, 1000);
+      const criteriaData =
+        this.data.mode === 'edit'
+          ? { ...this.data.riskAssessmentCriteria, ...this.tenderForm.value }
+          : this.tenderForm.value;
+      this.dialogRef.close(criteriaData);
+      this.busy = false;
     }
   }
 

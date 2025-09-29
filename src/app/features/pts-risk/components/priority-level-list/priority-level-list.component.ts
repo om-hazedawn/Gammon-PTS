@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PriorityLevelListPopupComponent } from '../priority-level-listpopup/priority-level-listpopup.component';
 import {
@@ -13,7 +14,14 @@ import {
 @Component({
   selector: 'app-priority-level-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatTableModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+  ],
   template: `
     <div class="form-list-container">
       <mat-card>
@@ -30,7 +38,13 @@ import {
           <div *ngIf="error" class="error-message">
             {{ error }}
           </div>
-          <table *ngIf="!loading && !error" mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
+          <table
+            *ngIf="!loading && !error"
+            mat-table
+            [dataSource]="dataSource"
+            class="mat-elevation-z2"
+            style="width: 100%;"
+          >
             <!-- ID Column -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -55,7 +69,11 @@ import {
               <td mat-cell *matCellDef="let element">{{ element.status }}</td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr 
+            mat-row 
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="openEditPriorityLevelPopup(row)"
+            style="cursor: pointer;"></tr>
           </table>
         </mat-card-content>
       </mat-card>
@@ -162,7 +180,8 @@ export class PriorityLevelListComponent {
 
   constructor(
     private dialog: MatDialog,
-    private priorityLevelListApiService: PriorityLevelListApiService
+    private priorityLevelListApiService: PriorityLevelListApiService,
+    private snackbar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -188,12 +207,65 @@ export class PriorityLevelListComponent {
   openAddPriorityLevelPopup(): void {
     const dialogRef = this.dialog.open(PriorityLevelListPopupComponent, {
       width: '600px',
-      disableClose: false,
+      disableClose: true,
+      data: { mode: 'add' },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.loadPriorityLevels();
+        this.priorityLevelListApiService.createPriorityLevel(result).subscribe({
+          next: (newPriorityLevel) => {
+            this.snackbar.open('Priority level added successfully', 'Close', {
+              duration: 3000,
+              verticalPosition: 'top',
+              horizontalPosition: 'end',
+            });
+          },
+          error: (error) => {
+            console.error('Error adding priority level:', error);
+            this.snackbar.open('Failed to add priority level. Please try again.', 'Close', {
+              duration: 3000,
+              verticalPosition: 'top',
+              horizontalPosition: 'end',
+              panelClass: ['error-snackbar'],
+            });
+          },
+        });
+      }
+    });
+  }
+
+  openEditPriorityLevelPopup(priorityLevel: PriorityLevel): void {
+    const dialogRef = this.dialog.open(PriorityLevelListPopupComponent, {
+      width: '600px',
+      disableClose: true,
+      data: { mode: 'edit', priorityLevel },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const updatedPriorityLevel = {
+          ...result,
+          id: priorityLevel.id,
+        };
+        this.priorityLevelListApiService.updatePriorityLevel(updatedPriorityLevel).subscribe({
+          next: () => {
+            this.snackbar.open('Priority level updated successfully', 'Close', {
+              duration: 3000,
+              verticalPosition: 'top',
+              horizontalPosition: 'end',
+            });
+            this.loadPriorityLevels(); // Refresh the list after successful update
+          },
+          error: (error) => {
+            console.error('Error updating priority level:', error);
+            this.snackbar.open('Failed to update priority level. Please try again.', 'Close', {
+              duration: 3000,
+              verticalPosition: 'top',
+              horizontalPosition: 'end',
+              panelClass: ['error-snackbar'],
+            });
+          },
+        });
       }
     });
   }
