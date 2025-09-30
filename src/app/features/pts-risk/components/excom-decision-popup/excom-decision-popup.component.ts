@@ -29,8 +29,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class ExcomDecisionPopupComponent {
   tenderForm: FormGroup;
-  excomDecisionPriorityLevelIdControl: FormControl;
-  excomDecisionNotesControl: FormControl;
   excomDecisionNotesMaxLength = 1000;
   priorityLevelOptions = [
     { id: 1, title: 'For EXCOM Review' },
@@ -43,15 +41,10 @@ export class ExcomDecisionPopupComponent {
   subject = { excomDecisionItem: 'Sample decision item' };
   busy = false;
 
-  constructor(
-    public dialogRef: MatDialogRef<ExcomDecisionPopupComponent>,
-    private fb: FormBuilder
-  ) {
-    this.excomDecisionPriorityLevelIdControl = new FormControl('', [Validators.required]);
-    this.excomDecisionNotesControl = new FormControl('', [Validators.required, Validators.maxLength(this.excomDecisionNotesMaxLength)]);
+  constructor(public dialogRef: MatDialogRef<ExcomDecisionPopupComponent>, private fb: FormBuilder) {
     this.tenderForm = this.fb.group({
-      excomDecisionPriorityLevelId: this.excomDecisionPriorityLevelIdControl,
-      excomDecisionNotes: this.excomDecisionNotesControl
+      excomDecisionPriorityLevelId: new FormControl('', []),
+      excomDecisionNotes: new FormControl('', [Validators.maxLength(this.excomDecisionNotesMaxLength)]),
     });
   }
 
@@ -68,5 +61,13 @@ export class ExcomDecisionPopupComponent {
         this.dialogRef.close(this.tenderForm.value);
       }, 1000);
     }
+  }
+
+  get excomDecisionPriorityLevelIdControl(): FormControl {
+    return this.tenderForm.get('excomDecisionPriorityLevelId') as FormControl;
+  }
+
+  get excomDecisionNotesControl(): FormControl {
+    return this.tenderForm.get('excomDecisionNotes') as FormControl;
   }
 }

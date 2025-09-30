@@ -30,7 +30,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatProgressSpinnerModule,
   ],
   template: `
-    <h3 mat-dialog-title>Tender-Lost tender market intelligence</h3>
+    <h3 mat-dialog-title>Tender - Lost tender market intelligence</h3>
     <form [formGroup]="tenderForm" (ngSubmit)="handleSubmit()">
       <div mat-dialog-content>
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
@@ -43,10 +43,18 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
               maxlength="{{ winningCompetitorMaxLength }}"
             ></textarea>
             <mat-hint>{{ tenderForm.get('winningCompetitor')?.value?.length || 0 }} / {{ winningCompetitorMaxLength }}</mat-hint>
-            <mat-error *ngIf="tenderForm.get('winningCompetitor')?.invalid && (tenderForm.get('winningCompetitor')?.dirty || tenderForm.get('winningCompetitor')?.touched)">
-              <span *ngIf="tenderForm.get('winningCompetitor')?.errors?.['required']">This field is required.</span>
-              <span *ngIf="tenderForm.get('winningCompetitor')?.errors?.['maxlength']">Maximum length exceeded.</span>
-            </mat-error>
+            @if (tenderForm.get('winningCompetitor')?.invalid && (tenderForm.get('winningCompetitor')?.dirty || tenderForm.get('winningCompetitor')?.touched))
+              {
+                <mat-error>
+                  <i class="fas fa-exclamation mx-1"></i>
+                  @if (tenderForm.get('winningCompetitor')?.errors?.['required']) {
+                    <span>This field is required.</span>
+                  }
+                  @if (tenderForm.get('winningCompetitor')?.errors?.['maxlength']) {
+                    <span>Maximum length of {{ winningCompetitorMaxLength }} characters exceeded.</span>
+                  }
+                </mat-error>
+              }
           </mat-form-field>
         </div>
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
@@ -59,12 +67,25 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
               placeholder="Enter margin lost (%)"
               min="0"
               max="100"
+              inputmode="decimal"
+              (keydown)="onNumberKeyDown($event)"
             />
-            <mat-error *ngIf="tenderForm.get('marginLost')?.invalid && (tenderForm.get('marginLost')?.dirty || tenderForm.get('marginLost')?.touched)">
-              <span *ngIf="tenderForm.get('marginLost')?.errors?.['required']">This field is required.</span>
-              <span *ngIf="tenderForm.get('marginLost')?.errors?.['min']">Value must be at least 0.</span>
-              <span *ngIf="tenderForm.get('marginLost')?.errors?.['max']">Value cannot exceed 100.</span>
-            </mat-error>
+            @if (tenderForm.get('marginLost')?.invalid && (tenderForm.get('marginLost')?.dirty || tenderForm.get('marginLost')?.touched))
+              {
+                <mat-error>
+                  <i class="fas fa-exclamation mx-1"></i>
+                  @if (tenderForm.get('marginLost')?.errors?.['min']) {
+                    <span>Value must be at least 0.</span>
+                  }
+                  @if (tenderForm.get('marginLost')?.errors?.['max']) {
+                    <span>Value cannot exceed 100.</span>
+                  }
+                  @if (tenderForm.get('marginLost')?.errors?.['pattern']) {
+                    <span>Only numeric values are allowed.</span>
+                  }
+                </mat-error>
+              }
+
           </mat-form-field>
         </div>
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
@@ -77,9 +98,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
               maxlength="1000"
             ></textarea>
             <mat-hint>{{ tenderForm.get('otherReasonForLoss')?.value?.length || 0 }} / 1000</mat-hint>
-            <mat-error *ngIf="tenderForm.get('otherReasonForLoss')?.invalid && (tenderForm.get('otherReasonForLoss')?.dirty || tenderForm.get('otherReasonForLoss')?.touched)">
-              <span *ngIf="tenderForm.get('otherReasonForLoss')?.errors?.['maxlength']">Maximum length exceeded.</span>
-            </mat-error>
+              @if (tenderForm.get('otherReasonForLoss')?.invalid && (tenderForm.get('otherReasonForLoss')?.dirty || tenderForm.get('otherReasonForLoss')?.touched))
+                {
+                  <mat-error>
+                    <i class="fas fa-exclamation mx-1"></i>
+                    @if (tenderForm.get('otherReasonForLoss')?.errors?.['maxlength']) {
+                      <span>Maximum length of 1000 characters exceeded.</span>
+                    }
+                  </mat-error>
+                }
           </mat-form-field>
         </div>
       </div>
@@ -93,7 +120,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
         >
           Save
         </button>
-        <mat-spinner *ngIf="isBusy()" diameter="20"></mat-spinner>
+        @if (isBusy()) {
+          <mat-spinner diameter="20"></mat-spinner>
+        }
       </div>
     </form>
   `,
@@ -110,20 +139,19 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class MarketIntelligencepopup {
   tenderForm: FormGroup;
-  excomDecisionPriorityLevelIdControl: FormControl;
-  excomDecisionNotesControl: FormControl;
+
   winningCompetitorMaxLength = 300;
   excomDecisionNotesMaxLength = 1000;
   busy = false;
 
   constructor(public dialogRef: MatDialogRef<MarketIntelligencepopup>, private fb: FormBuilder) {
-    this.excomDecisionPriorityLevelIdControl = new FormControl('', [Validators.required]);
-    this.excomDecisionNotesControl = new FormControl('', [Validators.required, Validators.maxLength(this.excomDecisionNotesMaxLength)]);
     this.tenderForm = this.fb.group({
-      excomDecisionPriorityLevelId: this.excomDecisionPriorityLevelIdControl,
-      excomDecisionNotes: this.excomDecisionNotesControl,
       winningCompetitor: new FormControl('', [Validators.required, Validators.maxLength(this.winningCompetitorMaxLength)]),
-      marginLost: new FormControl('', [Validators.required, Validators.min(0), Validators.max(100)]),
+      marginLost: new FormControl('', [
+        Validators.min(0),
+        Validators.max(100),
+        Validators.pattern(/^[0-9]*\.?[0-9]+$/)
+      ]),
       otherReasonForLoss: new FormControl('', [Validators.maxLength(1000)]),
     });
   }
@@ -140,6 +168,44 @@ export class MarketIntelligencepopup {
         this.busy = false;
         this.dialogRef.close(this.tenderForm.value);
       }, 1000);
+    }
+  }
+
+  get winningCompetitorControl(): FormControl {
+    return this.tenderForm.get('winningCompetitor') as FormControl;
+  }
+
+  get marginLostPercentageControl(): FormControl {
+    return this.tenderForm.get('marginLost') as FormControl;
+  }
+
+  get otherReasonsForLossControl(): FormControl {
+    return this.tenderForm.get('otherReasonForLoss') as FormControl;
+  }
+
+  // Prevent non-numeric keys like e, E, +, - in number inputs; allow control/navigation keys
+  onNumberKeyDown(event: KeyboardEvent): void {
+    const allowed = [
+      'Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End'
+    ];
+    if (allowed.includes(event.key)) return;
+
+    // Block scientific notation and signs
+    if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-') {
+      event.preventDefault();
+      return;
+    }
+
+    // Allow digits and a single dot
+    if (!/^[0-9.]$/.test(event.key)) {
+      event.preventDefault();
+      return;
+    }
+
+    // Prevent more than one dot
+    const target = event.target as HTMLInputElement;
+    if (event.key === '.' && target?.value?.includes('.')) {
+      event.preventDefault();
     }
   }
 }

@@ -44,9 +44,11 @@ import { MatRadioModule } from '@angular/material/radio';
               formControlName="name"
               placeholder="Enter name"
             />
-            <mat-error *ngIf="nameControl.invalid && (nameControl.dirty || nameControl.touched)">
-              Name is required
-            </mat-error>
+            @if (nameControl.invalid && (nameControl.dirty || nameControl.touched)) {
+              <mat-error>
+                Name is required
+              </mat-error>
+            }
           </mat-form-field>
         </div>
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
@@ -57,9 +59,11 @@ import { MatRadioModule } from '@angular/material/radio';
               formControlName="shortName"
               placeholder="Enter short name"
             />
-            <mat-error *ngIf="shortNameControl.invalid && (shortNameControl.dirty || shortNameControl.touched)">
-              Short name is required
-            </mat-error>
+            @if (shortNameControl.invalid && (shortNameControl.dirty || shortNameControl.touched)) {
+              <mat-error>
+                Short name is required
+              </mat-error>
+            }
           </mat-form-field>
         </div>
         <div style="width: 100%; margin-bottom: 16px;">
@@ -75,7 +79,9 @@ import { MatRadioModule } from '@angular/material/radio';
         <button mat-raised-button color="primary" type="submit" [disabled]="entityForm.invalid || isBusy">
           {{ data.mode === 'edit' ? 'Save Changes' : 'Create' }}
         </button>
-        <mat-spinner *ngIf="isBusy" diameter="20"></mat-spinner>
+        @if (isBusy) {
+          <mat-spinner diameter="20"></mat-spinner>
+        }
       </div>
     </form>
   `,
