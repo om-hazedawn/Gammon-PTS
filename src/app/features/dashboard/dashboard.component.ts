@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,13 +14,15 @@ import { AuthService } from '../../core/services/auth.service';
     <div class="dashboard-container">
       <div class="header">
         <h1>PTS Dashboard</h1>
-        <div class="user-info" *ngIf="userInfo">
+        @if (userInfo) {
+        <div class="user-info">
           <span>Welcome, {{ userInfo.name || userInfo.username }}</span>
           <button mat-button (click)="logout()">
             <mat-icon>logout</mat-icon>
             Logout
           </button>
         </div>
+        }
       </div>
       <p>Welcome to the Procurement Tender System</p>
 
@@ -37,7 +39,7 @@ import { AuthService } from '../../core/services/auth.service';
             </p>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-raised-button color="primary" routerLink="/pts20/forms">View Form</button>
+            <button mat-raised-button color="primary" routerLink="/pts20/forms">View Forms</button>
             <button mat-button routerLink="/pts20/form/new">New Form</button>
           </mat-card-actions>
         </mat-card>
@@ -120,7 +122,7 @@ import { AuthService } from '../../core/services/auth.service';
     `,
   ],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 

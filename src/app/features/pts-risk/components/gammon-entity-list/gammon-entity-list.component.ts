@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -33,14 +33,18 @@ import {
           Add
         </button>
         <mat-card-content>
-          <div *ngIf="loading" class="loading-spinner">
-            <mat-spinner diameter="40"></mat-spinner>
-          </div>
-          <div *ngIf="error" class="error-message">
-            {{ error }}
-          </div>
+           @if (loading) {
+            <div class="loading-spinner">
+              <mat-spinner diameter="40"></mat-spinner>
+            </div>
+          }
+          @if (error) {
+            <div class="error-message">
+              {{ error }}
+            </div>
+          }
+          @if (!loading && !error) {
           <table
-            *ngIf="!loading && !error"
             mat-table
             [dataSource]="dataSource"
             class="mat-elevation-z2"
@@ -77,6 +81,7 @@ import {
               style="cursor: pointer;"
             ></tr>
           </table>
+          }
         </mat-card-content>
       </mat-card>
     </div>
@@ -176,7 +181,7 @@ import {
     `,
   ],
 })
-export class GammonEntityListComponent implements OnInit {
+export class GammonEntityListComponent {
   loading = false;
   error: string | null = null;
   displayedColumns: string[] = ['id', 'name', 'shortName', 'status'];

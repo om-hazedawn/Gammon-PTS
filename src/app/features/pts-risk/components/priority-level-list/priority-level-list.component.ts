@@ -32,19 +32,16 @@ import {
           Add
         </button>
         <mat-card-content>
-          <div *ngIf="loading" class="loading-spinner">
+          @if (loading) {
+          <div class="loading-spinner">
             <mat-spinner diameter="40"></mat-spinner>
           </div>
-          <div *ngIf="error" class="error-message">
+          } @if (error) {
+          <div class="error-message">
             {{ error }}
           </div>
-          <table
-            *ngIf="!loading && !error"
-            mat-table
-            [dataSource]="dataSource"
-            class="mat-elevation-z2"
-            style="width: 100%;"
-          >
+          } @if (!loading && !error) {
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
             <!-- ID Column -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -69,12 +66,14 @@ import {
               <td mat-cell *matCellDef="let element">{{ element.status }}</td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr 
-            mat-row 
-            *matRowDef="let row; columns: displayedColumns"
-            (click)="openEditPriorityLevelPopup(row)"
-            style="cursor: pointer;"></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumns"
+              (click)="openEditPriorityLevelPopup(row)"
+              style="cursor: pointer;"
+            ></tr>
           </table>
+          }
         </mat-card-content>
       </mat-card>
     </div>

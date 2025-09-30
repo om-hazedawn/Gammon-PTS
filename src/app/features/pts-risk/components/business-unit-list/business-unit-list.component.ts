@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -168,7 +168,7 @@ import { BusinessUnit, BusinessUnitApiService } from '../../../../core/services/
     }
   `]
 })
-export class BusinessUnitListComponent implements OnInit {
+export class BusinessUnitListComponent {
   loading = false;
   error: string | null = null;
   displayedColumns: string[] = [

@@ -26,20 +26,25 @@ import { AuthService } from './core/services/auth.service';
   template: `
     <mat-toolbar color="primary">
       <mat-toolbar-row>
-        <button mat-icon-button (click)="toggleSidenav()" *ngIf="isAuthenticated">
-          <mat-icon>menu</mat-icon>
-        </button>
+        @if (isAuthenticated) {
+          <button mat-icon-button (click)="toggleSidenav()">
+            <mat-icon>menu</mat-icon>
+          </button>
+        }
         <span>PTS - Procurement Tender System</span>
         <span class="spacer"></span>
-        <span *ngIf="isAuthenticated">{{ userDisplayName }}</span>
-        <button mat-icon-button *ngIf="isAuthenticated" (click)="logout()">
-          <mat-icon>logout</mat-icon>
-        </button>
+        @if (isAuthenticated) {
+          <span>{{ userDisplayName }}</span>
+          <button mat-icon-button (click)="logout()">
+            <mat-icon>logout</mat-icon>
+          </button>
+        }
       </mat-toolbar-row>
     </mat-toolbar>
 
     <mat-sidenav-container class="sidenav-container">
-      <mat-sidenav #sidenav mode="side" [opened]="sidenavOpened" *ngIf="isAuthenticated">
+      @if (isAuthenticated) {
+        <mat-sidenav #sidenav mode="side" [opened]="sidenavOpened">
         <mat-nav-list>
           <a mat-list-item routerLink="/dashboard">
             <mat-icon matListItemIcon>dashboard</mat-icon>
@@ -102,7 +107,8 @@ import { AuthService } from './core/services/auth.service';
             <span matListItemTitle>Lookup Tables</span>
           </a>
         </mat-nav-list>
-      </mat-sidenav>
+        </mat-sidenav>
+      }
 
       <mat-sidenav-content>
         <main class="main-content">

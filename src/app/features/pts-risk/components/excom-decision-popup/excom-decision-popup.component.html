@@ -2,46 +2,56 @@
 <form [formGroup]="tenderForm" (ngSubmit)="handleSubmit()">
   <div mat-dialog-content>
     <h3>EXCOM decision item</h3>
-  <div class="app-evaluated-decision">{{ subject.excomDecisionItem }}</div>
-    <div style="display: flex; align-items: center; margin-bottom: 16px;">
-      <label style="width: 200px; font-weight: 500;">EXCOM Decision</label>
-      <mat-form-field appearance="fill" style="flex: 1;">
+    <div class="app-evaluated-decision">{{ subject.excomDecisionItem }}</div>
+    <div style="display: flex; align-items: center; margin-bottom: 16px">
+      <label style="width: 200px; font-weight: 500">EXCOM Decision</label>
+      <mat-form-field appearance="fill" style="flex: 1">
         <mat-select formControlName="excomDecisionPriorityLevelId">
-          <mat-option *ngFor="let option of priorityLevelOptions" [value]="option.id">
+          @for (option of priorityLevelOptions; track option.id) {
+          <mat-option [value]="option.id">
             {{ option.title }}
           </mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>
-    <div style="display: flex; align-items: center; margin-bottom: 16px;">
-      <label style="width: 200px; font-weight: 500;">EXCOM Decision Notes</label>
-      <mat-form-field appearance="fill" style="flex: 1;">
-        <textarea matInput formControlName="excomDecisionNotes" placeholder="Enter comment" maxlength="{{excomDecisionNotesMaxLength}}"></textarea>
-        <mat-hint>{{ excomDecisionNotesControl.value?.length || 0 }} / {{ excomDecisionNotesMaxLength }}</mat-hint>
-        @if (excomDecisionNotesControl.invalid && (excomDecisionNotesControl.dirty || excomDecisionNotesControl.touched))
-          {
-            <mat-error>
-              <i class="fas fa-exclamation mx-1"></i>
-              @if (excomDecisionNotesControl.errors?.['maxlength']) {
-                <span>Maximum length of {{ excomDecisionNotesMaxLength }} characters exceeded.</span>
-              }
-            </mat-error>
+    <div style="display: flex; align-items: center; margin-bottom: 16px">
+      <label style="width: 200px; font-weight: 500">EXCOM Decision Notes</label>
+      <mat-form-field appearance="fill" style="flex: 1">
+        <textarea
+          matInput
+          formControlName="excomDecisionNotes"
+          placeholder="Enter comment"
+          maxlength="{{ excomDecisionNotesMaxLength }}"
+        ></textarea>
+        <mat-hint
+          >{{ excomDecisionNotesControl.value?.length || 0 }} /
+          {{ excomDecisionNotesMaxLength }}</mat-hint
+        >
+        @if (excomDecisionNotesControl.invalid && (excomDecisionNotesControl.dirty ||
+        excomDecisionNotesControl.touched)) {
+        <mat-error>
+          <i class="fas fa-exclamation mx-1"></i>
+          @if (excomDecisionNotesControl.errors?.['maxlength']) {
+          <span>Maximum length of {{ excomDecisionNotesMaxLength }} characters exceeded.</span>
           }
+        </mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
   <div mat-dialog-actions align="end">
     <button mat-button type="button" (click)="dialogRef.close()">Close</button>
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="!tenderForm.valid || isBusy()"
-        >
-          Save
-        </button>
-        @if (isBusy()) {
-          <mat-spinner diameter="20"></mat-spinner>
-        }
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!tenderForm.valid || isBusy()"
+    >
+      Save
+    </button>
+    @if (isBusy()) {
+    <mat-spinner diameter="20"></mat-spinner>
+    }
   </div>
 </form>

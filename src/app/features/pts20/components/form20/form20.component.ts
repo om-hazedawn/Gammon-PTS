@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -54,9 +54,9 @@ import { PtsApiService, Form20, ApiResponse } from '../../../../core/services/pt
                   placeholder="Enter project name"
                   required
                 />
-                <mat-error *ngIf="form20Form.get('projectName')?.hasError('required')">
-                  Project name is required
-                </mat-error>
+                @if (form20Form.get('projectName')?.hasError('required')) {
+                  <mat-error>Project name is required</mat-error>
+                }
               </mat-form-field>
             </div>
 
@@ -69,9 +69,9 @@ import { PtsApiService, Form20, ApiResponse } from '../../../../core/services/pt
                   placeholder="Enter client name"
                   required
                 />
-                <mat-error *ngIf="form20Form.get('clientName')?.hasError('required')">
-                  Client name is required
-                </mat-error>
+                @if (form20Form.get('clientName')?.hasError('required')) {
+                  <mat-error>Client name is required</mat-error>
+                }
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="quarter-width">
@@ -83,17 +83,19 @@ import { PtsApiService, Form20, ApiResponse } from '../../../../core/services/pt
                   placeholder="0.00"
                   required
                 />
-                <mat-error *ngIf="form20Form.get('contractValue')?.hasError('required')">
-                  Contract value is required
-                </mat-error>
+                @if (form20Form.get('contractValue')?.hasError('required')) {
+                  <mat-error>Contract value is required</mat-error>
+                }
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="quarter-width">
                 <mat-label>Currency</mat-label>
                 <mat-select formControlName="currency" required>
-                  <mat-option *ngFor="let currency of currencies" [value]="currency.code">
-                    {{ currency.name }}
-                  </mat-option>
+                  @for (currency of currencies; track currency.code) {
+                    <mat-option [value]="currency.code">
+                      {{ currency.name }}
+                    </mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
             </div>
@@ -109,9 +111,11 @@ import { PtsApiService, Form20, ApiResponse } from '../../../../core/services/pt
               <mat-form-field appearance="outline" class="half-width">
                 <mat-label>Contract Type</mat-label>
                 <mat-select formControlName="contractType">
-                  <mat-option *ngFor="let type of contractTypes" [value]="type.code">
-                    {{ type.name }}
-                  </mat-option>
+                  @for (type of contractTypes; track type.code) {
+                    <mat-option [value]="type.code">
+                      {{ type.name }}
+                    </mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
             </div>
@@ -155,18 +159,21 @@ import { PtsApiService, Form20, ApiResponse } from '../../../../core/services/pt
             [disabled]="form20Form.invalid || loading"
             (click)="onSubmit()"
           >
-            <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+            @if (loading) {
+              <mat-spinner diameter="20"></mat-spinner>
+            }
             {{ isEdit ? 'Update' : 'Save' }}
           </button>
-          <button
-            mat-raised-button
-            color="accent"
-            *ngIf="isEdit && form20Form.value.status === 'Draft'"
-            [disabled]="form20Form.invalid || loading"
-            (click)="onSubmit(true)"
-          >
-            Submit for Approval
-          </button>
+          @if (isEdit && form20Form.value.status === 'Draft') {
+            <button
+              mat-raised-button
+              color="accent"
+              [disabled]="form20Form.invalid || loading"
+              (click)="onSubmit(true)"
+            >
+              Submit for Approval
+            </button>
+          }
         </mat-card-actions>
       </mat-card>
     </div>
@@ -215,7 +222,7 @@ import { PtsApiService, Form20, ApiResponse } from '../../../../core/services/pt
     `,
   ],
 })
-export class Form20Component implements OnInit {
+export class Form20Component {
   private fb = inject(FormBuilder);
   private ptsApi = inject(PtsApiService);
   private route = inject(ActivatedRoute);

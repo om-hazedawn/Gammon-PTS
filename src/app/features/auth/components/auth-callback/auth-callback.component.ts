@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -21,23 +21,27 @@ import { AuthService } from '../../../../core/services/auth.service';
         </mat-card-header>
         <mat-card-content>
           <div class="callback-content">
-            <div *ngIf="isProcessing">
+            @if (isProcessing) {
               <div class="loading-container">
                 <mat-spinner diameter="40"></mat-spinner>
                 <p>Processing authentication response...</p>
               </div>
-            </div>
+            }
 
-            <div *ngIf="isSuccess" class="success-message">
-              <mat-icon color="primary">check_circle</mat-icon>
-              <p>Authentication successful! Redirecting...</p>
-            </div>
+            @if (isSuccess) {
+              <div class="success-message">
+                <mat-icon color="primary">check_circle</mat-icon>
+                <p>Authentication successful! Redirecting...</p>
+              </div>
+            }
 
-            <div *ngIf="errorMessage" class="error-message">
-              <mat-icon color="warn">error</mat-icon>
-              <p>{{ errorMessage }}</p>
-              <button mat-button color="primary" (click)="goToLogin()">Try Again</button>
-            </div>
+            @if (errorMessage) {
+              <div class="error-message">
+                <mat-icon color="warn">error</mat-icon>
+                <p>{{ errorMessage }}</p>
+                <button mat-button color="primary" (click)="goToLogin()">Try Again</button>
+              </div>
+            }
           </div>
         </mat-card-content>
       </mat-card>
@@ -105,7 +109,7 @@ import { AuthService } from '../../../../core/services/auth.service';
     `,
   ],
 })
-export class AuthCallbackComponent implements OnInit {
+export class AuthCallbackComponent {
   isProcessing = true;
   isSuccess = false;
   errorMessage = '';

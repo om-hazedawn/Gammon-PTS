@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -13,7 +13,7 @@ import { AuthService } from '../../../../core/services/auth.service';
   imports: [CommonModule, MatCardModule, MatButtonModule, MatProgressSpinnerModule, MatIconModule],
   template: `
     <div class="login-container">
-      <mat-card class="login-card animate-card">
+      <mat-card class="login-card">
         <mat-card-header>
           <mat-card-title>
             <mat-icon>security</mat-icon>
@@ -24,18 +24,23 @@ import { AuthService } from '../../../../core/services/auth.service';
         <mat-card-content>
           <div class="login-content">
             <p>
-              You need to authenticate with Azure Active Directory to access the Procurement Tender System.
+              You need to authenticate with Azure Active Directory to access the Procurement Tender
+              System.
             </p>
 
-            <div *ngIf="isLoading" class="loading-container">
-              <mat-spinner diameter="40"></mat-spinner>
-              <p>Signing you in...</p>
-            </div>
+            @if (isLoading) {
+              <div class="loading-container">
+                <mat-spinner diameter="40"></mat-spinner>
+                <p>Signing you in...</p>
+              </div>
+            }
 
-            <div *ngIf="errorMessage" class="error-message enhanced-error">
-              <mat-icon color="warn">error</mat-icon>
-              <span>{{ errorMessage }}</span>
-            </div>
+            @if (errorMessage) {
+              <div class="error-message">
+                <mat-icon color="warn">error</mat-icon>
+                <p>{{ errorMessage }}</p>
+              </div>
+            }
           </div>
         </mat-card-content>
         <mat-card-actions>
@@ -44,13 +49,13 @@ import { AuthService } from '../../../../core/services/auth.service';
             color="primary"
             (click)="signIn()"
             [disabled]="isLoading"
-            class="sign-in-button enhanced-btn"
+            class="sign-in-button"
           >
             <mat-icon>login</mat-icon>
             Sign in with Microsoft
           </button>
 
-          <button mat-stroked-button (click)="signInPopup()" [disabled]="isLoading" class="popup-button enhanced-btn">
+          <button mat-button (click)="signInPopup()" [disabled]="isLoading" class="popup-button">
             <mat-icon>open_in_new</mat-icon>
             Sign in (Popup)
           </button>
@@ -73,40 +78,6 @@ import { AuthService } from '../../../../core/services/auth.service';
         max-width: 400px;
         width: 100%;
         text-align: center;
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
-        border-radius: 18px;
-        transition: box-shadow 0.3s;
-      }
-
-      .animate-card {
-        animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1);
-      }
-
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(40px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .logo-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 24px;
-        margin-bottom: 8px;
-      }
-
-      .login-logo {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        box-shadow: 0 2px 8px rgba(31, 38, 135, 0.15);
-        background: #fff;
-        object-fit: contain;
       }
 
       .login-content {
@@ -130,13 +101,6 @@ import { AuthService } from '../../../../core/services/auth.service';
         padding: 12px;
         border-radius: 4px;
         margin: 16px 0;
-        font-weight: 500;
-        box-shadow: 0 2px 8px rgba(244, 67, 54, 0.08);
-      }
-
-      .enhanced-error {
-        font-size: 1.1em;
-        border-left: 4px solid #f44336;
       }
 
       .sign-in-button {
@@ -146,19 +110,6 @@ import { AuthService } from '../../../../core/services/auth.service';
 
       .popup-button {
         width: 100%;
-      }
-
-      .enhanced-btn {
-        font-size: 1.05em;
-        font-weight: 500;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
-        transition: background 0.2s, box-shadow 0.2s;
-      }
-      .enhanced-btn:hover:not([disabled]) {
-        background: #1565c0;
-        color: #fff;
-        box-shadow: 0 4px 16px rgba(25, 118, 210, 0.15);
       }
 
       mat-card-title {
@@ -174,7 +125,7 @@ import { AuthService } from '../../../../core/services/auth.service';
     `,
   ],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   isLoading = false;
   errorMessage = '';
   returnUrl = '/dashboard';
