@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { TenderListApiService, TenderItem } from '../../../../core/services/tender-list-api.service';
 import { ExcomDecisionPopupComponent } from '../excom-decision-popup/excom-decision-popup.component';
 import { AddTenderPopupComponent } from '../add-tender-popup/add-tender-popup.component';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -28,6 +31,7 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
     MatSelectModule,
     FormsModule,
     MatIconModule,
+    MatPaginatorModule,
   ],
   template: `
     <div class="form-list-container">
@@ -42,7 +46,7 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
             <!-- Status Column -->
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef>Status</th>
-              <td mat-cell *matCellDef="let element">{{ element.status }}</td>
+              <td mat-cell *matCellDef="let element">{{ element.tenderStatus }}</td>
             </ng-container>
 
             <!-- Division Column -->
@@ -56,13 +60,13 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
               <th mat-header-cell *matHeaderCellDef>
                 Expected Tender<br />Submission Date
               </th>
-              <td mat-cell *matCellDef="let element">{{ element.expectedDate | date }}</td>
+              <td mat-cell *matCellDef="let element">{{ element.expectedTenderSubmissionDate | date }}</td>
             </ng-container>
 
             <!-- Bidding Gammon Entity Column -->
             <ng-container matColumnDef="entity">
               <th mat-header-cell *matHeaderCellDef>Bidding Gammon Entity</th>
-              <td mat-cell *matCellDef="let element">{{ element.entity }}</td>
+              <td mat-cell *matCellDef="let element">{{ element.biddingGammonEntity?.name }}</td>
             </ng-container>
 
             <!-- Project Name Column -->
@@ -74,7 +78,7 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
             <!-- Currency Column -->
             <ng-container matColumnDef="currency">
               <th mat-header-cell *matHeaderCellDef>Currency</th>
-              <td mat-cell *matCellDef="let element">{{ element.currency }}</td>
+              <td mat-cell *matCellDef="let element">{{ element.currency?.code }}</td>
             </ng-container>
 
             <!-- Estimated Tender Value (Million) Column -->
@@ -82,19 +86,19 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
               <th mat-header-cell *matHeaderCellDef>
                 Estimated Tender Value<br />(Million)
               </th>
-              <td mat-cell *matCellDef="let element">{{ element.estimatedValue }}</td>
+              <td mat-cell *matCellDef="let element">{{ element.estimatedTenderValue }}</td>
             </ng-container>
 
             <!-- Response Column -->
             <ng-container matColumnDef="response">
               <th mat-header-cell *matHeaderCellDef>Response</th>
-              <td mat-cell *matCellDef="let element">{{ element.response }}</td>
+              <td mat-cell *matCellDef="let element">{{ element.standardResponsePriorityLevel?.title }}</td>
             </ng-container>
 
             <!-- Up/Downgrade Column -->
             <ng-container matColumnDef="upDowngrade">
               <th mat-header-cell *matHeaderCellDef>Up/Downgrade</th>
-              <td mat-cell *matCellDef="let element">{{ element.upDowngrade }}</td>
+              <td mat-cell *matCellDef="let element">{{ element.upgradeDowngradePriorityLevel?.title }}</td>
             </ng-container>
 
             <!-- Additional Note Column -->
@@ -165,6 +169,14 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
           </table>
+          <mat-paginator
+            [pageSize]="10"
+            [pageSizeOptions]="[5, 10, 25, 50]"
+            [length]="totalItems"
+            showFirstLastButtons
+            (page)="handlePageEvent($event)"
+            class="custom-paginator">
+          </mat-paginator>
             <!-- Button Row Below Table -->
             <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 24px; gap: 24px;">
               <div style="flex: 1; display: flex; justify-content: center; gap: 12px;">
@@ -296,10 +308,28 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
         background: #43a047 !important;
         color: #fff !important;
       }
+      .custom-paginator {
+        margin-top: 16px;
+        background-color: #f5f7fa;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+      }
     `,
   ],
 })
-export class TenderListComponent {
+export class TenderListComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  dataSource = new MatTableDataSource<TenderItem>([]);
+  totalItems = 0;
+  currentPage = 1;
+  pageSize = 10;
+
+  constructor(
+    private dialog: MatDialog,
+    private tenderListApiService: TenderListApiService
+  ) {
+  }
+
   openAddTenderPopup(): void {
     this.dialog.open(AddTenderPopupComponent, {
       width: '1000px',
@@ -307,7 +337,6 @@ export class TenderListComponent {
       disableClose: false,
     });
   }
-  constructor(private dialog: MatDialog) {}
 
   openExcomDecisionPopup(): void {
     this.dialog.open(ExcomDecisionPopupComponent, {
@@ -316,6 +345,7 @@ export class TenderListComponent {
       disableClose: false,
     });
   }
+
   openMarketIntelligencePopup(): void {
     this.dialog.open(MarketIntelligencepopup, {
       width: '900px',
@@ -342,34 +372,29 @@ export class TenderListComponent {
     'form20',
   ];
 
-  dataSource = [
-    {
-      id: 1,
-      status: 'No need for EXCOM approval',
-      division: 'Civil',
-      expectedDate: new Date(),
-      entity: 'Gammon India',
-      projectName: 'Metro Project',
-      currency: 'INR',
-      estimatedValue: 120,
-      response: 'Positive',
-      upDowngrade: 'Upgrade',
-      additionalNote: 'High priority',
-      keyDate: null,
-    },
-    {
-      id: 2,
-      status: 'Open',
-      division: 'Civil',
-      expectedDate: new Date(),
-      entity: 'Gammon India',
-      projectName: 'Metro Project',
-      currency: 'INR',
-      estimatedValue: 120,
-      response: 'Positive',
-      upDowngrade: 'Upgrade',
-      additionalNote: 'High priority',
-      keyDate: null,
-    },
-  ];
+  loadTenders(pageSize: number, page: number) {
+    this.tenderListApiService.getTenders(pageSize, page).subscribe({
+      next: (response) => {
+        this.dataSource.data = response.data;
+        this.totalItems = response.totalCount;
+      },
+      error: (error) => {
+        console.error('Error loading tenders:', error);
+      }
+    });
+  }
+
+  handlePageEvent(event: any) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex + 1;
+    this.loadTenders(this.pageSize, this.currentPage);
+  }
+
+  ngOnInit() {
+    this.loadTenders(10, 1);
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
 }
