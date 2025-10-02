@@ -167,7 +167,7 @@ export class TenderListApiService {
 
     getTenders(pageSize: number = 10, page: number = 1): Observable<{ data: TenderItem[], totalCount: number }> {
         // If pageSize is -1, set a large number to fetch all records
-        const url = `${this.baseUrl}/tenders/?pageSize=${pageSize === -1 ? 999999 : pageSize}&page=${page}`;
+        const url = `${this.baseUrl}/tenders?pageSize=${pageSize === -1 ? 999999 : pageSize}&page=${page}`;
         console.log('Fetching tenders from:', url);
         
         return this.http.get<TenderResponse>(url).pipe(
