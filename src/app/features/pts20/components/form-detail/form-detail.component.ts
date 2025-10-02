@@ -67,7 +67,7 @@ import { MatRadioModule } from '@angular/material/radio';
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                   <mat-label>Business Unit</mat-label>
-                  <mat-select formControlName="businessUnit">
+                  <mat-select formControlName="businessUnit" required>
                     <mat-option value="unit1">Unit 1</mat-option>
                     <mat-option value="unit2">Unit 2</mat-option>
                     <mat-option value="unit3">Unit 3</mat-option>
@@ -75,20 +75,14 @@ import { MatRadioModule } from '@angular/material/radio';
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                   <mat-label>Due Date</mat-label>
-                  <input
-                    matInput
-                    [matDatepicker]="picker"
-                    formControlName="tenderClosingDate"
-                    placeholder="Select a date"
+                  <input matInput type="date" formControlName="duedate"
                   />
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
               </div>
               <div class="form-row">
                 <mat-form-field appearance="fill">
                   <mat-label>Tender no</mat-label>
-                  <input matInput formControlName="tenderNo" required />
+                  <input matInput formControlName="tenderNo"/>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                   <mat-label>Project Title</mat-label>
@@ -98,15 +92,15 @@ import { MatRadioModule } from '@angular/material/radio';
               <div class="form-row">
                 <mat-form-field appearance="fill">
                   <mat-label>Bid Manager</mat-label>
-                  <input matInput formControlName="BidManager" required />
+                  <input matInput formControlName="BidManager"/>
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="full-width">
                   <mat-label>Estimator</mat-label>
-                  <input matInput formControlName="Estimator" required />
+                  <input matInput formControlName="Estimator"/>
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="full-width">
                   <mat-label>Planner</mat-label>
-                  <input matInput formControlName="Planner" required />
+                  <input matInput formControlName="Planner"/>
                 </mat-form-field>
               </div>
               <div class="form-row">
@@ -120,11 +114,11 @@ import { MatRadioModule } from '@angular/material/radio';
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="full-width">
                   <mat-label>Location</mat-label>
-                  <input matInput formControlName="Location" required />
+                  <input matInput formControlName="Location"/>
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="full-width">
                   <mat-label>Planner</mat-label>
-                  <input matInput formControlName="Planner" required />
+                  <input matInput formControlName="Planner"/>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                   <mat-label>TenderType</mat-label>
@@ -216,18 +210,18 @@ import { MatRadioModule } from '@angular/material/radio';
               <div class="form-row">
                 <mat-form-field appearance="fill">
                   <mat-label>Client</mat-label>
-                  <input matInput formControlName="Client" required />
+                  <input matInput formControlName="Client" />
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                   <mat-label>Contract Period (months)</mat-label>
-                  <input matInput type="number" formControlName="ContractPeriod" required />
+                  <input matInput type="number" formControlName="ContractPeriod"/>
                 </mat-form-field>
               </div>
 
               <div class="form-row">
                 <mat-form-field appearance="fill">
                   <mat-label>Financial Standing</mat-label>
-                  <input matInput formControlName="FinantialStanding" required />
+                  <input matInput formControlName="FinantialStanding"/>
                 </mat-form-field>
               </div>
 
@@ -388,7 +382,7 @@ import { MatRadioModule } from '@angular/material/radio';
                   <div class="flex flex-row gap-4 flex-1">
                     <mat-form-field appearance="fill" class="flex-1 min-w-[220px]">
                       <mat-label>Weather Extension Description</mat-label>
-                      <input matInput formControlName="WeatherExtention" required />
+                      <input matInput formControlName="WeatherExtention"/>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="min-w-[160px]">
                       <mat-label>Degree of Risk</mat-label>
@@ -2003,7 +1997,7 @@ export class FormDetailComponent implements OnInit {
   private initializeForm(): void {
     this.formGroup = this.fb.group({
       form30: [''],
-      businessUnit: [''],
+      businessUnit: ['', Validators.required],
       dueDate: [''],
       performanceUnit: ['%'],
 
@@ -2041,7 +2035,7 @@ export class FormDetailComponent implements OnInit {
       FinancialTechnicalSplitValue: [''],
       BidType: [''],
 
-      tenderClosingDate: [''],
+      duedate: [''],
       projectDescription: [''],
       contract: this.fb.group({
         contractType: [''],
@@ -2308,7 +2302,7 @@ export class FormDetailComponent implements OnInit {
       clientName: 'ABC Construction Ltd',
       contractValue: 10000000,
       currency: 'HKD',
-      tenderClosingDate: new Date(),
+      duedate: new Date(),
       projectDescription: 'Sample project description',
       contract: {
         contractType: 'lump-sum',
