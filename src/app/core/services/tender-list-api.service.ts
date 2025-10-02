@@ -166,23 +166,35 @@ export class TenderListApiService {
     }
 
     getTenders(pageSize: number = 10, page: number = 1): Observable<{ data: TenderItem[], totalCount: number }> {
-        // If pageSize is -1, set a large number to fetch all records
         const url = `${this.baseUrl}/tenders/?pageSize=${pageSize}&page=${page}`;
         console.log('Fetching tenders from:', url);
         
-        return this.http.get<TenderResponse>(url).pipe(
-            tap((response) => {
-                console.log('Tenders fetched successfully:', response.data);
-                if (!response.data) {
-                    console.error('No data property in response:', response);
+        return this.http.get(url).pipe(
+            tap((response: any) => {
+                console.log('Raw response:', response);
+                if (!response) {
+                    throw new Error('Empty response received');
                 }
             }),
-            map((response) => ({
-                data: response.data,
-                totalCount: response.totalCount
-            })),
+            map((response: any) => {
+                // Handle different response formats
+                const data = Array.isArray(response) ? response :
+                           response.data ? response.data :
+                           response.items ? response.items : [];
+                           
+                const totalCount = typeof response.totalCount === 'number' ? response.totalCount :
+                                 Array.isArray(response) ? response.length : 0;
+
+                return {
+                    data: data as TenderItem[],
+                    totalCount: totalCount
+                };
+            }),
             catchError((error) => {
                 console.error('Error fetching tenders:', error);
+                if (error.status === 200 && error.ok === false) {
+                    console.error('Response format mismatch:', error);
+                }
                 throw error;
             })
         );
