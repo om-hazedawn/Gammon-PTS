@@ -185,15 +185,47 @@ export class TenderListApiService {
                 const totalCount = typeof response.totalCount === 'number' ? response.totalCount :
                                  Array.isArray(response) ? response.length : 0;
 
+                // Validate and clean the data
+                const validatedData = data.map((item: any) => {
+                    return {
+                        ...item,
+                        // Ensure required fields have default values if missing
+                        id: item.id || 0,
+                        division: item.division || '',
+                        tenderStatus: item.tenderStatus || '',
+                        reportDate: item.reportDate || null,
+                        businessUnitId: item.businessUnitId || 0,
+                        projectName: item.projectName || '',
+                        estimatedTenderValue: item.estimatedTenderValue || 0,
+                        // Ensure nested objects are handled properly
+                        businessUnit: item.businessUnit || { id: 0, name: '', shortName: '' },
+                        biddingGammonEntity: item.biddingGammonEntity || null,
+                        marketSector: item.marketSector || null,
+                        currency: item.currency || null,
+                        standardResponsePriorityLevel: item.standardResponsePriorityLevel || null,
+                        upgradeDowngradePriorityLevel: item.upgradeDowngradePriorityLevel || null,
+                        riskAssessmentCriteria: item.riskAssessmentCriteria || { id: 0, code: '', title: '' },
+                        excomDecisionPriorityLevel: item.excomDecisionPriorityLevel || null
+                    } as TenderItem;
+                });
+
                 return {
-                    data: data as TenderItem[],
+                    data: validatedData,
                     totalCount: totalCount
                 };
             }),
             catchError((error) => {
                 console.error('Error fetching tenders:', error);
                 if (error.status === 200 && error.ok === false) {
-                    console.error('Response format mismatch:', error);
+                    // Try to parse the response if it's a string
+                    try {
+                        if (typeof error.error === 'string') {
+                            const parsedError = JSON.parse(error.error);
+                            console.error('Parsed error response:', parsedError);
+                        }
+                    } catch (parseError) {
+                        console.error('Could not parse error response');
+                    }
                 }
                 throw error;
             })
