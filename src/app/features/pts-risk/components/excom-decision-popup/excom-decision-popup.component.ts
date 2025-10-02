@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -38,13 +38,18 @@ export class ExcomDecisionPopupComponent {
     { id: 5, title: 'Top priority' },
     { id: 6, title: 'Go' },
   ];
-  subject = { excomDecisionItem: 'Sample decision item' };
+  subject: { excomDecisionItem: string } = { excomDecisionItem: '' };
   busy = false;
 
-  constructor(public dialogRef: MatDialogRef<ExcomDecisionPopupComponent>, private fb: FormBuilder) {
+  constructor(
+    public dialogRef: MatDialogRef<ExcomDecisionPopupComponent>,
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.subject.excomDecisionItem = data.excomDecisionItem || 'Upxxxsks';
     this.tenderForm = this.fb.group({
-      excomDecisionPriorityLevelId: new FormControl('', []),
-      excomDecisionNotes: new FormControl('', [Validators.maxLength(this.excomDecisionNotesMaxLength)]),
+      excomDecisionPriorityLevelId: new FormControl(data.excomDecisionPriorityLevelId || '', []),
+      excomDecisionNotes: new FormControl(data.excomDecisionNotes || '', [Validators.maxLength(this.excomDecisionNotesMaxLength)]),
     });
   }
 
@@ -55,10 +60,16 @@ export class ExcomDecisionPopupComponent {
   handleSubmit(): void {
     if (this.tenderForm.valid) {
       this.busy = true;
+      const selectedPriorityId = this.tenderForm.value.excomDecisionPriorityLevelId;
+      const selectedPriority = this.priorityLevelOptions.find(option => option.id === selectedPriorityId);
+      
       // Simulate save
       setTimeout(() => {
         this.busy = false;
-        this.dialogRef.close(this.tenderForm.value);
+        this.dialogRef.close({
+          ...this.tenderForm.value,
+          excomDecisionPriorityLevel: selectedPriority || null
+        });
       }, 1000);
     }
   }

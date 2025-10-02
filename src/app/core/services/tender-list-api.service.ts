@@ -162,14 +162,15 @@ export class TenderListApiService {
   private baseUrl: string;
 
     constructor(private http: HttpClient) {
-      this.baseUrl = `${environment.apiUrl}/ptsrisk/Tender/api/tenders`;
+      this.baseUrl = '/api/ptsrisk/Tender/api';
     }
 
     getTenders(pageSize: number = 10, page: number = 1): Observable<{ data: TenderItem[], totalCount: number }> {
-      const url = `${this.baseUrl}?pageSize=${pageSize}&page=${page}`;
-      console.log('Fetching tenders from:', url);
-      
-      return this.http.get<TenderResponse>(url).pipe(
+        // If pageSize is -1, set a large number to fetch all records
+        const url = `${this.baseUrl}/tenders/?pageSize=${pageSize === -1 ? 999999 : pageSize}&page=${page}`;
+        console.log('Fetching tenders from:', url);
+        
+        return this.http.get<TenderResponse>(url).pipe(
             tap((response) => {
                 console.log('Tenders fetched successfully:', response.data);
                 if (!response.data) {
@@ -177,11 +178,29 @@ export class TenderListApiService {
                 }
             }),
             map((response) => ({
-              data: response.data,
-              totalCount: response.totalCount
+                data: response.data,
+                totalCount: response.totalCount
             })),
             catchError((error) => {
                 console.error('Error fetching tenders:', error);
+                throw error;
+            })
+        );
+    }
+
+    getTenderById(id: number): Observable<{ data: TenderItem, code: number, message: string | null }> {
+        const url = `${this.baseUrl}/tender//${id}`;
+        console.log('Fetching tenders from:', url);
+        
+        return this.http.get<{ data: TenderItem, code: number, message: string | null }>(url).pipe(
+            tap((response) => {
+                console.log('Tender details fetched successfully:', response.data);
+                if (!response.data) {
+                    console.error('No data property in response:', response);
+                }
+            }),
+            catchError((error) => {
+                console.error('Error fetching tender details:', error);
                 throw error;
             })
         );

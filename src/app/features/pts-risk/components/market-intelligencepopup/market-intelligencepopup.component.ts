@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -144,15 +144,24 @@ export class MarketIntelligencepopup {
   excomDecisionNotesMaxLength = 1000;
   busy = false;
 
-  constructor(public dialogRef: MatDialogRef<MarketIntelligencepopup>, private fb: FormBuilder) {
+  constructor(
+    public dialogRef: MatDialogRef<MarketIntelligencepopup>,
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
     this.tenderForm = this.fb.group({
-      winningCompetitor: new FormControl('', [Validators.required, Validators.maxLength(this.winningCompetitorMaxLength)]),
-      marginLost: new FormControl('', [
+      winningCompetitor: new FormControl(data?.winningCompetitor || '', [
+        Validators.required,
+        Validators.maxLength(this.winningCompetitorMaxLength)
+      ]),
+      marginLost: new FormControl(data?.marginLost || '', [
         Validators.min(0),
         Validators.max(100),
         Validators.pattern(/^[0-9]*\.?[0-9]+$/)
       ]),
-      otherReasonForLoss: new FormControl('', [Validators.maxLength(1000)]),
+      otherReasonForLoss: new FormControl(data?.otherReasonForLoss || '', [
+        Validators.maxLength(1000)
+      ]),
     });
   }
 

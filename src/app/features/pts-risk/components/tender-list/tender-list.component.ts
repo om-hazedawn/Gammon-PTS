@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TenderListApiService, TenderItem } from '../../../../core/services/tender-list-api.service';
 import { ExcomDecisionPopupComponent } from '../excom-decision-popup/excom-decision-popup.component';
 import { AddTenderPopupComponent } from '../add-tender-popup/add-tender-popup.component';
@@ -32,6 +33,7 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
     FormsModule,
     MatIconModule,
     MatPaginatorModule,
+    MatProgressSpinnerModule
   ],
   template: `
     <div class="form-list-container">
@@ -42,6 +44,17 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
           <button mat-raised-button class="action-btn" style="margin-left: auto;" (click)="openAddTenderPopup()">Add New Tender</button>
         </mat-card-header>
         <mat-card-content>
+          @if (isLoading) {
+            <div class="loading-spinner">
+              <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+            </div>
+          }
+          @if (error) {
+            <div class="error-message">
+              {{ error }}
+            </div>
+          }
+           @if (!isLoading && !error) {
           <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
             <!-- Status Column -->
             <ng-container matColumnDef="status">
@@ -111,9 +124,16 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
             <ng-container matColumnDef="excomDecision">
               <th mat-header-cell *matHeaderCellDef>EXCOM Decision</th>
               <td mat-cell *matCellDef="let element">
-                <button mat-icon-button color="primary" aria-label="Edit EXCOM Decision" (click)="openExcomDecisionPopup()">
-                  <mat-icon style="color: #1976d2;">edit</mat-icon>
-                </button>
+                <div class="excom-decision-cell">
+                  @if (element.excomDecisionPriorityLevel) {
+                    <div class="excom-info">
+                      <span class="excom-title">{{ element.excomDecisionPriorityLevel?.title }}</span>
+                    </div>
+                  }
+                  <button mat-icon-button color="primary" aria-label="Edit EXCOM Decision" (click)="$event.stopPropagation(); openExcomDecisionPopup(element)">
+                    <mat-icon style="color: #1976d2;">edit</mat-icon>
+                  </button>
+                </div>
               </td>
             </ng-container>
 
@@ -121,7 +141,7 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
             <ng-container matColumnDef="marketIntelligence">
               <th mat-header-cell *matHeaderCellDef>Market<br />Intelligence</th>
               <td mat-cell *matCellDef="let element">
-                <button mat-icon-button color="primary" aria-label="Edit Market Intelligence" (click)="openMarketIntelligencePopup()">
+                <button mat-icon-button color="primary" aria-label="Edit Market Intelligence" (click)="$event.stopPropagation(); openMarketIntelligencePopup(element)">
                   <mat-icon style="color: #1976d2;">edit</mat-icon>
                 </button>
               </td>
@@ -167,16 +187,21 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"
+                (click)="onRowClick(row, $event)"
+                [class.selected-row]="selectedRow === row"
+                style="cursor: pointer;"></tr>
           </table>
           <mat-paginator
-            [pageSize]="10"
+            [pageSize]="pageSize"
             [pageSizeOptions]="[5, 10, 25, 50]"
-            [length]="totalItems"
+            [length]="dataSource.data.length"
             showFirstLastButtons
             (page)="handlePageEvent($event)"
-            class="custom-paginator">
+            class="custom-paginator"
+            #paginator>
           </mat-paginator>
+           }
             <!-- Button Row Below Table -->
             <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 24px; gap: 24px;">
               <div style="flex: 1; display: flex; justify-content: center; gap: 12px;">
@@ -189,8 +214,40 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
       </mat-card>
     </div>
   `,
-  styles: [
-    `
+  styles: [`
+    .selected-row {
+      background-color: #e3f2fd !important;
+    }
+    .excom-decision-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .excom-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .excom-item {
+      font-weight: 500;
+      color: #1976d2;
+    }
+    .excom-level {
+      font-size: 0.9em;
+      color: #666;
+    }
+    .loading-spinner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    tr.mat-row:hover td {
+      background-color: #e3f2fd;
+      transition: background 0.2s;
+    }
   .form-list-container {
       mat-card-title {
         font-size: 2rem;
@@ -318,39 +375,128 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
   ],
 })
 export class TenderListComponent implements OnInit, AfterViewInit {
+  isLoading = false;
+  error: string | null = null;
+  selectedRow: TenderItem | null = null;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource = new MatTableDataSource<TenderItem>([]);
   totalItems = 0;
   currentPage = 1;
   pageSize = 10;
+  
 
   constructor(
     private dialog: MatDialog,
     private tenderListApiService: TenderListApiService
-  ) {
-  }
+  ) {}
 
-  openAddTenderPopup(): void {
-    this.dialog.open(AddTenderPopupComponent, {
+  openAddTenderPopup(data?: any): void {
+    console.log('Opening AddTenderPopup with data:', data);
+    const dialogRef = this.dialog.open(AddTenderPopupComponent, {
       width: '1000px',
       maxWidth: '90vw',
+      height: '90vh',
       disableClose: false,
+      data: data || {}, // Pass the tender data if it exists
+      panelClass: 'tender-details-dialog'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('AddTenderPopup closed with result:', result);
+      if (result) {
+        // Refresh the table
+        this.loadTenders();
+      }
     });
   }
 
-  openExcomDecisionPopup(): void {
-    this.dialog.open(ExcomDecisionPopupComponent, {
+  openExcomDecisionPopup(element: TenderItem): void {
+    const dialogRef = this.dialog.open(ExcomDecisionPopupComponent, {
       width: '900px',
       maxWidth: 'none',
       disableClose: false,
+      data: {
+        excomDecisionItem: 'Upxxxsks',
+        excomDecisionPriorityLevelId: element.excomDecisionPriorityLevelId,
+        excomDecisionNotes: element.excomDecisionNotes,
+        excomDecisionDate: element.excomDecisionDate
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Update the tender item with the new ExCom decision data
+        element.excomDecisionItem = 'Upxxxsks';
+        element.excomDecisionPriorityLevelId = result.excomDecisionPriorityLevelId;
+        element.excomDecisionPriorityLevel = result.excomDecisionPriorityLevel;
+        element.excomDecisionNotes = result.excomDecisionNotes;
+        element.excomDecisionDate = new Date().toISOString();
+        // Refresh the table
+        this.dataSource.data = [...this.dataSource.data];
+      }
     });
   }
 
-  openMarketIntelligencePopup(): void {
-    this.dialog.open(MarketIntelligencepopup, {
+  openMarketIntelligencePopup(element: TenderItem): void {
+    const dialogRef = this.dialog.open(MarketIntelligencepopup, {
       width: '900px',
       maxWidth: 'none',
       disableClose: false,
+      data: {
+        winningCompetitor: element.winningCompetitor,
+        marginLost: element.marginLostPercentage,
+        otherReasonForLoss: element.otherReasonsForLoss
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Update the tender item with the market intelligence data
+        element.winningCompetitor = result.winningCompetitor;
+        element.marginLostPercentage = result.marginLost;
+        element.otherReasonsForLoss = result.otherReasonForLoss;
+        // Refresh the table
+        this.dataSource.data = [...this.dataSource.data];
+      }
+    });
+  }
+
+  onRowClick(row: TenderItem, event: Event): void {
+    // Prevent row click if the event came from a button
+    if ((event.target as HTMLElement).tagName === 'BUTTON' ||
+        (event.target as HTMLElement).closest('button')) {
+      return;
+    }
+
+    if (!row || !row.id) {
+      console.error('Invalid row data:', row);
+      return;
+    }
+
+    this.selectedRow = row;
+    console.log('Fetching details for tender ID:', row.id);
+    
+    // Show loading state
+    this.isLoading = true;
+    
+    // Fetch full tender details when row is clicked
+    this.tenderListApiService.getTenderById(row.id).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        console.log('Tender details received:', response);
+        if (response && response.data) {
+          this.openAddTenderPopup(response.data);
+        } else {
+          this.error = 'Could not load tender details. Please try again.';
+          console.error('No data in response:', response);
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.error = 'Error loading tender details. Please try again later.';
+        console.error('Error fetching tender details:', error);
+        this.selectedRow = null;
+      }
     });
   }
 
@@ -372,14 +518,29 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     'form20',
   ];
 
-  loadTenders(pageSize: number, page: number) {
-    this.tenderListApiService.getTenders(pageSize, page).subscribe({
+  loadTenders() {
+    this.isLoading = true;
+    // Fetch all data at once using pageSize=-1
+    this.tenderListApiService.getTenders(-1, 1).subscribe({
       next: (response) => {
-        this.dataSource.data = response.data;
-        this.totalItems = response.totalCount;
+        if (response.data && response.data.length > 0) {
+          // Store all data in the MatTableDataSource
+          this.dataSource.data = response.data;
+          this.totalItems = response.data.length;
+          
+          // Initialize paginator after data is loaded
+          setTimeout(() => {
+            if (this.paginator) {
+              this.dataSource.paginator = this.paginator;
+            }
+          });
+        }
       },
       error: (error) => {
         console.error('Error loading tenders:', error);
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }
@@ -387,14 +548,23 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   handlePageEvent(event: any) {
     this.pageSize = event.pageSize;
     this.currentPage = event.pageIndex + 1;
-    this.loadTenders(this.pageSize, this.currentPage);
+    
+    // No need to fetch data, just let MatTableDataSource handle pagination
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.pageSize = this.pageSize;
+      this.dataSource.paginator.pageIndex = this.currentPage - 1;
+    }
   }
 
   ngOnInit() {
-    this.loadTenders(10, 1);
+    this.loadTenders();
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    // Connect paginator with dataSource and initialize settings
+    if (this.paginator) {
+      this.paginator.pageSize = this.pageSize;
+      this.dataSource.paginator = this.paginator;
+    }
   }
 }
