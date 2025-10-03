@@ -46,6 +46,24 @@ export class PriorityLevelListApiService {
     );
   }
 
+  getPriorityLevelsForDropdown(): Observable<PriorityLevel[]> {
+    const url = `${environment.apiUrl}/ptsrisk/PriorityLevel/api/PriorityLevelDropdown`;
+    console.log('Fetching priority levels for dropdown from:', url);
+    return this.http.get<PriorityLevelApiResponse>(url).pipe(
+      tap((response) => {
+        console.log('Priority levels for dropdown fetched successfully:', response.data);
+        if (!response.data) {
+          console.error('No data property in response:', response);
+        }
+      }),
+      map((response) => response.data),
+      catchError((error) => {
+        console.error('Error fetching priority levels for dropdown:', error);
+        throw error;
+      })
+    );
+  }
+
   getPriorityLevelById(id: number): Observable<PriorityLevel> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.get<{ data: PriorityLevel }>(url).pipe(

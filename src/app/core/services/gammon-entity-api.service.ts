@@ -51,6 +51,27 @@ export class GammonEntityApiService {
       );
   }
 
+  getgammonEntityDropdown(): Observable<GammonEntity[]> {
+    const url = `${environment.apiUrl}/ptsrisk/GammonEntity/api/GammonEntityDropdown`;
+    console.log('Fetching entities for dropdown from:', url);
+    return this.http.get<ApiResponse<GammonEntity[]>>(url).pipe(
+      tap((response) => {
+        console.log('Raw Dropdown Response:', response);
+        if (!response.data) {
+          console.error('No data property in response:', response);
+        }
+      }),
+      map((response) => response.data),
+      catchError((error) => {
+        console.error('Error fetching entities for dropdown:', error);
+        throw error;
+      })
+    );
+  }
+          
+
+ 
+
   getGammonEntityById(id: number): Observable<GammonEntity> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.get<ApiResponse<GammonEntity>>(url)

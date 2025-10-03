@@ -1,8 +1,34 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TenderListApiService } from '../../../../core/services/tender-list-api.service';
+import {
+  BusinessUnitApiService,
+  BusinessUnit,
+} from '../../../../core/services/business-unit-api.service';
+import {
+  CurrencyListApiService,
+  Currency,
+} from '../../../../core/services/currency-list-api.service';
+import {
+  GammonEntityApiService,
+  GammonEntity,
+} from '../../../../core/services/gammon-entity-api.service';
+import {
+  RiskAssessmentCriteriaApiService,
+  RiskAssessmentCriteria,
+} from '../../../../core/services/risk-assessment-criteria-api.service';
+import {
+  PriorityLevelListApiService,
+  PriorityLevel,
+} from '../../../../core/services/priority-level-list-api.service';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -34,29 +60,29 @@ import { MatRadioModule } from '@angular/material/radio';
           <legend style="font-weight: 600; color: #1976d2; padding: 0 8px;">
             Project Information
           </legend>
-           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
+          <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Tender Status</mat-label>
-            <input matInput formControlName="tenderStatus"/>
+            <input matInput formControlName="tenderStatus" />
           </mat-form-field>
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Business Unit</mat-label>
             <mat-select formControlName="businessUnitId">
               @for (option of BusinessUnitsOption; track option.id) {
-                <mat-option [value]="option.id">
-                  {{ option.title }}
-                </mat-option>
+              <mat-option [value]="option.id">
+                {{ option.name }}
+              </mat-option>
               }
             </mat-select>
 
-            @if (businessUnitIdControl.invalid && (businessUnitIdControl.dirty || businessUnitIdControl.touched)) {
-              <mat-error>
-                <i class="fas fa-exclamation mx-1"></i>
-                @if (businessUnitIdControl.errors && businessUnitIdControl.errors['required']) {
-                  <span>This field is required.</span>
-                }
-              </mat-error>
+            @if (businessUnitIdControl.invalid && (businessUnitIdControl.dirty ||
+            businessUnitIdControl.touched)) {
+            <mat-error>
+              <i class="fas fa-exclamation mx-1"></i>
+              @if (businessUnitIdControl.errors && businessUnitIdControl.errors['required']) {
+              <span>This field is required.</span>
+              }
+            </mat-error>
             }
-
           </mat-form-field>
           <div style="width: 100%; margin-bottom: 16px;">
             <mat-label>External/Internal</mat-label>
@@ -84,24 +110,22 @@ import { MatRadioModule } from '@angular/material/radio';
 
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Project Name</mat-label>
-            <input matInput
-              formControlName="projectName"
-              [maxlength]="projectNameMaxLength" />
-            @if (projectNameControl.invalid && (projectNameControl.dirty || projectNameControl.touched)) {
-              <mat-error>
-                <i class="fas fa-exclamation mx-1"></i>
-                @if (projectNameControl.errors && projectNameControl.errors['required']) {
-                  <span>Project name is required.</span>
-                }
-                @if (projectNameControl.errors && projectNameControl.errors['maxlength']) {
-                  <span>Project name cannot exceed {{projectNameMaxLength}} characters.</span>
-                }
-              </mat-error>
+            <input matInput formControlName="projectName" [maxlength]="projectNameMaxLength" />
+            @if (projectNameControl.invalid && (projectNameControl.dirty ||
+            projectNameControl.touched)) {
+            <mat-error>
+              <i class="fas fa-exclamation mx-1"></i>
+              @if (projectNameControl.errors && projectNameControl.errors['required']) {
+              <span>Project name is required.</span>
+              } @if (projectNameControl.errors && projectNameControl.errors['maxlength']) {
+              <span>Project name cannot exceed {{ projectNameMaxLength }} characters.</span>
+              }
+            </mat-error>
             }
             <mat-hint
-              >{{ tenderForm.get('projectName')?.value?.toString().length || 0 }} / {{ projectNameMaxLength }}</mat-hint
+              >{{ tenderForm.get('projectName')?.value?.toString().length || 0 }} /
+              {{ projectNameMaxLength }}</mat-hint
             >
-
           </mat-form-field>
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Expected tender issue date</mat-label>
@@ -135,44 +159,59 @@ import { MatRadioModule } from '@angular/material/radio';
 
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Project Duration (in month)</mat-label>
-            <input matInput type="number" formControlName="projectDuration" min="0"/>
-              @if (projectDurationControl.invalid && (projectDurationControl.dirty || projectDurationControl.touched)) {
-                <mat-error>
-                <i class="fas fa-exclamation mx-1"></i>
-                @if (projectDurationControl.errors && projectDurationControl.errors['min']) {
-                  <span>It must be greater than or equal to 0.</span>
-                }
-              </mat-error>
+            <input matInput type="number" formControlName="projectDuration" min="0" />
+            @if (projectDurationControl.invalid && (projectDurationControl.dirty ||
+            projectDurationControl.touched)) {
+            <mat-error>
+              <i class="fas fa-exclamation mx-1"></i>
+              @if (projectDurationControl.errors && projectDurationControl.errors['min']) {
+              <span>It must be greater than or equal to 0.</span>
               }
+            </mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Bidding Gammon entity</mat-label>
             <mat-select formControlName="biddingGammonEntityId">
               @for (option of GammonEntitiesOption; track option.id) {
-                <mat-option [value]="option.id">
-                  {{ option.title }}
-                </mat-option>
+              <mat-option [value]="option.id">
+                {{ option.name }}
+              </mat-option>
               }
             </mat-select>
           </mat-form-field>
 
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Project description & location</mat-label>
-            <textarea matInput cdkTextareaAutosize autocomplete="off"
-                      formControlName="projectDescriptionAndLocation"
-                      cdkAutosizeMaxRows="5"
-                      [maxlength]="projectDescriptionMaxLength"
-                      [cdkTextareaAutosize]="true"></textarea>
-            @if (projectDescriptionControl.invalid && (projectDescriptionControl.dirty || projectDescriptionControl.touched)) {
-              <mat-error>
-                <i class="fas fa-exclamation mx-1"></i>
-                @if (projectDescriptionControl.errors && projectDescriptionControl.errors['maxlength']) {
-                  <span>Project description cannot exceed {{projectDescriptionMaxLength}} characters.</span>
-                }
-              </mat-error>
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              autocomplete="off"
+              formControlName="projectDescriptionAndLocation"
+              cdkAutosizeMaxRows="5"
+              [maxlength]="projectDescriptionMaxLength"
+              [cdkTextareaAutosize]="true"
+            ></textarea>
+            @if (projectDescriptionControl.invalid && (projectDescriptionControl.dirty ||
+            projectDescriptionControl.touched)) {
+            <mat-error>
+              <i class="fas fa-exclamation mx-1"></i>
+              @if (projectDescriptionControl.errors &&
+              projectDescriptionControl.errors['maxlength']) {
+              <span
+                >Project description cannot exceed
+                {{ projectDescriptionMaxLength }} characters.</span
+              >
+              }
+            </mat-error>
             }
-            <mat-hint>{{ tenderForm.get('projectDescriptionAndLocation')?.value?.toString().length || 0 }} / {{ projectDescriptionMaxLength }}</mat-hint>
+            <mat-hint
+              >{{
+                tenderForm.get('projectDescriptionAndLocation')?.value?.toString().length || 0
+              }}
+              / {{ projectDescriptionMaxLength }}</mat-hint
+            >
           </mat-form-field>
 
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
@@ -181,44 +220,60 @@ import { MatRadioModule } from '@angular/material/radio';
               matInput
               formControlName="customerName"
               [maxlength]="customerNameMaxLength"
-              type="text" />
-            <mat-hint>{{ tenderForm.get('customerName')?.value?.toString().length || 0 }} / {{ customerNameMaxLength }}</mat-hint>
+              type="text"
+            />
+            <mat-hint
+              >{{ tenderForm.get('customerName')?.value?.toString().length || 0 }} /
+              {{ customerNameMaxLength }}</mat-hint
+            >
           </mat-form-field>
 
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Market Sector</mat-label>
             <input
-                matInput
-                formControlName="marketSectorVal"
-                [maxlength]="marketSectorValMaxLength"
-                type="text" />
-            <mat-hint>{{ tenderForm.get('marketSectorVal')?.value?.toString().length || 0 }} / {{ marketSectorValMaxLength }}</mat-hint>
+              matInput
+              formControlName="marketSectorVal"
+              [maxlength]="marketSectorValMaxLength"
+              type="text"
+            />
+            <mat-hint
+              >{{ tenderForm.get('marketSectorVal')?.value?.toString().length || 0 }} /
+              {{ marketSectorValMaxLength }}</mat-hint
+            >
           </mat-form-field>
 
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Currency</mat-label>
             <mat-select formControlName="currencyId">
               @for (option of currencyOption; track option.id) {
-                <mat-option [value]="option.id">
-                  {{ option.title }}
-                </mat-option>
+              <mat-option [value]="option.id">
+                {{ option.code }}
+              </mat-option>
               }
             </mat-select>
           </mat-form-field>
 
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Estimated tender value (in Millions)</mat-label>
-            <input matInput formControlName="estimatedTenderValue" min="0" max="999999" type="number" />
-            @if (estimatedTenderValueControl.invalid && (estimatedTenderValueControl.dirty || estimatedTenderValueControl.touched)) {
-              <mat-error>
-                <i class="fas fa-exclamation mx-1"></i>
-                @if (estimatedTenderValueControl.errors && estimatedTenderValueControl.errors['min']) {
-                  <span>Value must be greater than or equal to 0.</span>
-                }
-                @if (estimatedTenderValueControl.errors && estimatedTenderValueControl.errors['max']) {
-                  <span>Value cannot exceed 999,999.</span>
-                }
-              </mat-error>
+            <input
+              matInput
+              formControlName="estimatedTenderValue"
+              min="0"
+              max="999999"
+              type="number"
+            />
+            @if (estimatedTenderValueControl.invalid && (estimatedTenderValueControl.dirty ||
+            estimatedTenderValueControl.touched)) {
+            <mat-error>
+              <i class="fas fa-exclamation mx-1"></i>
+              @if (estimatedTenderValueControl.errors && estimatedTenderValueControl.errors['min'])
+              {
+              <span>Value must be greater than or equal to 0.</span>
+              } @if (estimatedTenderValueControl.errors &&
+              estimatedTenderValueControl.errors['max']) {
+              <span>Value cannot exceed 999,999.</span>
+              }
+            </mat-error>
             }
           </mat-form-field>
 
@@ -278,12 +333,12 @@ import { MatRadioModule } from '@angular/material/radio';
           </div>
 
           <div class="standard-response-row">
-            <div class="standard-response-label">
-              Standard response
-            </div>
+            <div class="standard-response-label">Standard response</div>
             <div class="standard-response-content">
               <div class="evaluated-decision">{{ getStandardResponseTitle() }}</div>
-              <div class="evaluated-decision">{{ tenderForm.get('standardResponseHint')?.value || '' }}</div>
+              <div class="evaluated-decision">
+                {{ tenderForm.get('standardResponseHint')?.value || '' }}
+              </div>
             </div>
           </div>
         </fieldset>
@@ -296,25 +351,28 @@ import { MatRadioModule } from '@angular/material/radio';
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Up / downgrade</mat-label>
             <mat-select formControlName="upgradeDowngradePriorityLevelId">
-              @for (option of GammonEntitiesOption; track option.id) {
-                <mat-option [value]="option.id">
-                  {{ option.title }}
-                </mat-option>
+              @for (option of upDownGradeOption; track option.id) {
+              <mat-option [value]="option.id">
+                {{ option.title }}
+              </mat-option>
               }
             </mat-select>
-
           </mat-form-field>
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Rationale</mat-label>
-              <textarea
-                matInput 
-                cdkTextareaAutosize autocomplete="off"
-                formControlName="upgradeDowngradeRationale"
-                cdkAutosizeMaxRows="5"
-                [maxlength]="upgradeDowngradeRationaleMaxLength"
-                [cdkTextareaAutosize]="true"></textarea>
-            <mat-hint>{{ tenderForm.get('upgradeDowngradeRationale')?.value?.toString().length || 0 }} / {{ upgradeDowngradeRationaleMaxLength }}</mat-hint>
-
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              autocomplete="off"
+              formControlName="upgradeDowngradeRationale"
+              cdkAutosizeMaxRows="5"
+              [maxlength]="upgradeDowngradeRationaleMaxLength"
+              [cdkTextareaAutosize]="true"
+            ></textarea>
+            <mat-hint
+              >{{ tenderForm.get('upgradeDowngradeRationale')?.value?.toString().length || 0 }} /
+              {{ upgradeDowngradeRationaleMaxLength }}</mat-hint
+            >
           </mat-form-field>
         </fieldset>
 
@@ -326,19 +384,21 @@ import { MatRadioModule } from '@angular/material/radio';
             <mat-label>Whether satisfy risk assessment criteria</mat-label>
             <mat-select formControlName="riskAssessmentCriteriaId">
               @for (option of whetherSatisfyRiskOption; track option.id) {
-                <mat-option [value]="option.id">
-                  {{ option.title }}
-                </mat-option>
+              <mat-option [value]="option.id">
+                {{ option.title }}
+              </mat-option>
               }
             </mat-select>
-          @if (riskAssessmentCriteriaIdControl.invalid && (riskAssessmentCriteriaIdControl.dirty || riskAssessmentCriteriaIdControl.touched)) {
+            @if (riskAssessmentCriteriaIdControl.invalid && (riskAssessmentCriteriaIdControl.dirty
+            || riskAssessmentCriteriaIdControl.touched)) {
             <mat-error>
               <i class="fas fa-exclamation mx-1"></i>
-              @if (riskAssessmentCriteriaIdControl.errors && riskAssessmentCriteriaIdControl.errors['required']) {
-                <span>This field is required.</span>
+              @if (riskAssessmentCriteriaIdControl.errors &&
+              riskAssessmentCriteriaIdControl.errors['required']) {
+              <span>This field is required.</span>
               }
             </mat-error>
-          }
+            }
           </mat-form-field>
 
           <div style="width: 100%; margin-bottom: 16px;">
@@ -354,12 +414,15 @@ import { MatRadioModule } from '@angular/material/radio';
           </div>
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Rationale</mat-label>
-              <textarea matInput
-                        cdkTextareaAutosize autocomplete="off"
-                        formControlName="riskAssessmentRationale"
-                        cdkAutosizeMaxRows="5"
-                        [maxlength]="riskAssessmentRationaleMaxLength"
-                        [cdkTextareaAutosize]="true"></textarea>
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              autocomplete="off"
+              formControlName="riskAssessmentRationale"
+              cdkAutosizeMaxRows="5"
+              [maxlength]="riskAssessmentRationaleMaxLength"
+              [cdkTextareaAutosize]="true"
+            ></textarea>
           </mat-form-field>
 
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
@@ -369,13 +432,16 @@ import { MatRadioModule } from '@angular/material/radio';
 
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Additional Note</mat-label>
-              <input
-                formControlName="additionalNote"
-                matInput
-                [maxlength]="additionalNoteMaxLength"
-                type="text"
-              />
-            <mat-hint>{{ tenderForm.get('additionalNote')?.value?.length || 0 }} / {{ additionalNoteMaxLength }}</mat-hint>
+            <input
+              formControlName="additionalNote"
+              matInput
+              [maxlength]="additionalNoteMaxLength"
+              type="text"
+            />
+            <mat-hint
+              >{{ tenderForm.get('additionalNote')?.value?.length || 0 }} /
+              {{ additionalNoteMaxLength }}</mat-hint
+            >
           </mat-form-field>
         </fieldset>
       </div>
@@ -387,7 +453,8 @@ import { MatRadioModule } from '@angular/material/radio';
       </div>
     </form>
   `,
-  styles: [`
+  styles: [
+    `
       .standard-response-row {
         display: flex;
         align-items: center;
@@ -443,70 +510,32 @@ export class AddTenderPopupComponent implements OnInit {
   additionalNoteMaxLength = 1000;
   marketSectorValMaxLength = 1000;
 
-  BusinessUnitsOption = [
-    { id: 1, title: 'Building(BDG)' },
-    { id: 2, title: 'Civil(CVL)' },
-    { id: 3, title: 'CSD(CSD)' },
-    { id: 4, title: 'E&M(E&M)' },
-    { id: 5, title: 'Facade(FAC)' },
-    { id: 6, title: 'Foundation(FDN)' },
-    { id: 7, title: 'Singapore(SGP)' }
-  ];
-  GammonEntitiesOption = [
-    { id: 1, title: 'Entasis' },
-    { id: 2, title: 'Gammon Construction and Eng. Pte Ltd' },
-    { id: 3, title: 'Gammon Construction Limited' },
-    { id: 4, title: 'Gammon E&M Ltd' },
-    { id: 5, title: 'Gammon Management Services Limited' },
-    { id: 6, title: 'Gammon Plant Ltd(HK)' },
-    { id: 7, title: 'Gammon Pte Ltd(SGP)' },
-    { id: 8, title: 'GBCL' },
-    { id: 9, title: 'GBCML' },
-    { id: 10, title: 'GECCL' },
-  ];
-  currencyOption = [
-    { id: 1, title: 'CYN' },
-    { id: 2, title: 'GBP' },
-    { id: 3, title: 'HKD' },
-    { id: 4, title: 'MOP' },
-    { id: 5, title: 'SGD' },
-    { id: 6, title: 'USD' },
-  ]
+  BusinessUnitsOption: BusinessUnit[] = [];
+  GammonEntitiesOption: GammonEntity[] = [];
+  currencyOption: Currency[] = [];
 
-  upDownGradeOption = [
-    { id: 1, title: 'For EXCOM Review' },
-    { id: 2, title: 'NO go' },
-    { id: 3, title: 'Lean' },
-    { id: 4, title: 'Target' },
-    { id: 5, title: 'Top priority' },
-    { id: 6, title: 'Go' },
-  ]
-  whetherSatisfyRiskOption = [
-    { id: 1, title: 'Unique partnership' },
-    { id: 2, title: 'New customer' },
-    { id: 3, title: 'New techinical capability required' },
-    { id: 4, title: 'Technical risk' },
-    { id: 5, title: 'Contractual risk' },
-    { id: 6, title: 'Financial risk' },
-    { id: 7, title: 'customer credit risk' },
-    { id: 8, title: 'Multiple please specify in Rationale' },
-    { id: 9, title: 'None of the above' },
-  ]
+  upDownGradeOption: PriorityLevel[] = [];
+  whetherSatisfyRiskOption: RiskAssessmentCriteria[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<AddTenderPopupComponent>,
     private fb: FormBuilder,
     private tenderListApiService: TenderListApiService,
+    private businessUnitApiService: BusinessUnitApiService,
+    private gammonEntityApiService: GammonEntityApiService,
+    private currencyListApiService: CurrencyListApiService,
+    private riskAssessmentCriteriaApiService: RiskAssessmentCriteriaApiService,
+    private priorityLevelListApiService: PriorityLevelListApiService,
     @Inject(MAT_DIALOG_DATA) public data: { id: number }
   ) {
     this.tenderForm = this.fb.group({
       attachment: [''],
       division: [undefined, []],
       tenderStatus: [undefined, []],
-      reportDate: [undefined, [],],
+      reportDate: [undefined, []],
       businessUnitId: [undefined, Validators.required],
       isExternal: [undefined, []],
-      region: [undefined, [],],
+      region: [undefined, []],
       projectName: ['', [Validators.required, Validators.maxLength(this.projectNameMaxLength)]],
       expectedTenderIssueDate: [undefined, []],
       expectedTenderSubmissionDate: [undefined, []],
@@ -527,7 +556,10 @@ export class AddTenderPopupComponent implements OnInit {
       standardResponseHint: [undefined, []],
       standardResponsePriorityLevel: [undefined, []],
       upgradeDowngradePriorityLevelId: [undefined, []],
-      upgradeDowngradeRationale: ['', [Validators.maxLength(this.upgradeDowngradeRationaleMaxLength)]],
+      upgradeDowngradeRationale: [
+        '',
+        [Validators.maxLength(this.upgradeDowngradeRationaleMaxLength)],
+      ],
       riskAssessmentCriteriaId: [undefined, Validators.required],
       riskAssessmentLevel: [undefined, []],
       riskAssessmentRationale: ['', [Validators.maxLength(this.riskAssessmentRationaleMaxLength)]],
@@ -536,6 +568,51 @@ export class AddTenderPopupComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.businessUnitApiService.getBussinessUnitDropdown().subscribe({
+      next: (businessUnits) => {
+        this.BusinessUnitsOption = businessUnits;
+      },
+      error: (error) => {
+        console.error('Error fetching business units:', error);
+      },
+    });
+
+    this.gammonEntityApiService.getgammonEntityDropdown().subscribe({
+      next: (entities) => {
+        this.GammonEntitiesOption = entities;
+      },
+      error: (error) => {
+        console.error('Error fetching Gammon entities:', error);
+      },
+    });
+
+    this.currencyListApiService.getCurrencyDropdown().subscribe({
+      next: (currencies) => {
+        this.currencyOption = currencies;
+      },
+      error: (error) => {
+        console.error('Error fetching currencies:', error);
+      },
+    });
+
+    this.riskAssessmentCriteriaApiService.getRiskAssessmentCriteriaForDropdown().subscribe({
+      next: (criteria) => {
+        this.whetherSatisfyRiskOption = criteria;
+      },
+      error: (error) => {
+        console.error('Error fetching risk assessment criteria:', error);
+      },
+    });
+
+    this.priorityLevelListApiService.getPriorityLevelsForDropdown().subscribe({
+      next: (priorityLevels) => {
+        this.upDownGradeOption = priorityLevels;
+      },
+      error: (error) => {
+        console.error('Error fetching priority levels:', error);
+      },
+    });
+
     if (this.data?.id) {
       this.tenderListApiService.getTenderById(this.data.id).subscribe({
         next: (response) => {
@@ -543,16 +620,17 @@ export class AddTenderPopupComponent implements OnInit {
             // Patch the form with the response data
             this.tenderForm.patchValue({
               ...response.data,
-              standardResponsePriorityLevel: response.data.standardResponsePriorityLevel
+              standardResponsePriorityLevel: response.data.standardResponsePriorityLevel,
             });
           }
         },
         error: (error) => {
           console.error('Error fetching tender details:', error);
-        }
+        },
       });
     }
   }
+
 
   handleSubmit(): void {
     if (this.tenderForm.valid) {
@@ -619,7 +697,7 @@ export class AddTenderPopupComponent implements OnInit {
   get upgradeDowngradePriorityLevelIdControl(): FormControl {
     return this.tenderForm.get('upgradeDowngradePriorityLevelId') as FormControl;
   }
-  
+
   get upgradeDowngradeRationaleControl(): FormControl {
     return this.tenderForm.get('upgradeDowngradeRationale') as FormControl;
   }

@@ -47,6 +47,24 @@ export class RiskAssessmentCriteriaApiService {
     );
   }
 
+  getRiskAssessmentCriteriaForDropdown(): Observable<RiskAssessmentCriteria[]> {
+    const url = `${environment.apiUrl}/ptsrisk/RiskAssessmentCriteria/api/RiskAssessmentCriteriaDropdown`;
+    console.log('Fetching risk assessment criteria for dropdown from:', url);
+    return this.http.get<RiskAssessmentCriteriaApiResponse>(url).pipe(
+      tap((response) => {
+        console.log('Risk assessment criteria for dropdown fetched successfully:', response.data);
+        if (!response.data) {
+          console.error('No data property in response:', response);
+        }
+      }),
+      map((response) => response.data),
+      catchError((error) => {
+        console.error('Error fetching risk assessment criteria for dropdown:', error);
+        throw error;
+      })
+    );
+  }
+
   getRiskAssessmentCriteriaById(id: number): Observable<RiskAssessmentCriteria> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.get<{ data: RiskAssessmentCriteria }>(url).pipe(

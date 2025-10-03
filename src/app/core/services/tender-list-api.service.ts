@@ -206,4 +206,9 @@ export class TenderListApiService {
             })
         );
     }
+
+    exportTenderExcel(): Observable<Blob> {
+        const url = `${this.baseUrl}/exportTenderExcel`;
+        return this.http.get(url, { responseType: 'blob' });
+    }
 }

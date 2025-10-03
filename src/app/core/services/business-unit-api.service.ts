@@ -16,6 +16,7 @@ export interface BusinessUnit {
   status: string;
 }
 
+
 interface BusinessApiResponse {
   data: BusinessUnit[];
 }
@@ -42,6 +43,24 @@ export class BusinessUnitApiService {
       map((response) => response.data),
       catchError((error) => {
         console.error('Error fetching business units:', error);
+        throw error;
+      })
+    );
+  }
+
+  getBussinessUnitDropdown(): Observable<BusinessUnit[]> {
+    const url = `${environment.apiUrl}/ptsrisk/BusinessUnit/api/BusinessUnitDropdown`;
+    console.log('Fetching business units for dropdown from:', url);
+    return this.http.get<BusinessApiResponse>(url).pipe(
+      tap((response) => {
+        console.log('Business units for dropdown fetched successfully:', response.data);
+        if (!response.data) {
+          console.error('No data property in response:', response);
+        }
+      }),
+      map((response) => response.data),
+      catchError((error) => {
+        console.error('Error fetching business units for dropdown:', error);
         throw error;
       })
     );
@@ -101,5 +120,4 @@ export class BusinessUnitApiService {
       })
     );
   }
-  
 }

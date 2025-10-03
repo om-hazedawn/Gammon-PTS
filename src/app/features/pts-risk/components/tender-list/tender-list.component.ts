@@ -208,7 +208,7 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
                 <button mat-raised-button color="accent" class="action-btn">Generate Snapshot</button>
                 <button mat-raised-button color="primary" class="action-btn">Generate Monthly Snapshot</button>
               </div>
-              <button mat-raised-button color="primary" class="action-btn">Export Excel</button>
+              <button mat-raised-button color="primary" class="action-btn" (click)="exportExcel()">Export Excel</button>
             </div>
         </mat-card-content>
       </mat-card>
@@ -543,6 +543,23 @@ export class TenderListComponent implements OnInit, AfterViewInit {
         this.isLoading = false;
       }
     });
+  }
+
+  exportExcel(): void {
+    this.tenderListApiService.exportTenderExcel().subscribe(
+      (response: Blob) => {
+        const blob = new Blob([response], { type: 'application/vnd.ms-excel' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'tender-list.xlsx';
+        link.click();
+        window.URL.revokeObjectURL(url);
+      },
+      (error) => {
+        console.error('Error exporting excel:', error);
+      }
+    );
   }
 
   handlePageEvent(event: any) {

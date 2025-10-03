@@ -46,6 +46,24 @@ export class CurrencyListApiService {
     );
   }
 
+  getCurrencyDropdown(): Observable<Currency[]> {
+    const url = `${environment.apiUrl}/ptsrisk/Currency/api/CurrencyDropdown`;
+    console.log('Fetching currencies for dropdown from:', url);
+    return this.http.get<CurrencyApiResponse>(url).pipe(
+      tap((response) => {
+        console.log('Currencies for dropdown fetched successfully:', response.data);
+        if (!response.data) {
+          console.error('No data property in response:', response);
+        }
+      }),
+      map((response) => response.data),
+      catchError((error) => {
+        console.error('Error fetching currencies for dropdown:', error);
+        throw error;
+      })
+    );
+  }
+
   getCurrencyById(id: number): Observable<Currency> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.get<{ data: Currency }>(url)
