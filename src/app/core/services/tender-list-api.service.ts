@@ -157,58 +157,131 @@ export interface TenderAttachment {
 @Injectable({
   providedIn: 'root',
 })
-
 export class TenderListApiService {
   private baseUrl: string;
 
-    constructor(private http: HttpClient) {
-      this.baseUrl = '/api/ptsrisk/Tender/api';
-    }
+  constructor(private http: HttpClient) {
+    this.baseUrl = '/api/ptsrisk/Tender/api';
+  }
 
-    getTenders(pageSize: number = 10, page: number = 1): Observable<{ data: TenderItem[], totalCount: number }> {
-        // If pageSize is -1, set a large number to fetch all records
-        const url = `${this.baseUrl}/tenders?pageSize=${pageSize === -1 ? 999999 : pageSize}&page=${page}`;
-        console.log('Fetching tenders from:', url);
-        
-        return this.http.get<TenderResponse>(url).pipe(
-            tap((response) => {
-                console.log('Tenders fetched successfully:', response.data);
-                if (!response.data) {
-                    console.error('No data property in response:', response);
-                }
-            }),
-            map((response) => ({
-                data: response.data,
-                totalCount: response.totalCount
-            })),
-            catchError((error) => {
-                console.error('Error fetching tenders:', error);
-                throw error;
-            })
-        );
-    }
+  getTenders(
+    pageSize: number = 10,
+    page: number = 1
+  ): Observable<{ data: TenderItem[]; totalCount: number }> {
+    // If pageSize is -1, set a large number to fetch all records
+    const url = `${this.baseUrl}/tenders?pageSize=${
+      pageSize === -1 ? 999999 : pageSize
+    }&page=${page}`;
+    console.log('Fetching tenders from:', url);
 
-    getTenderById(id: number): Observable<{ data: TenderItem, code: number, message: string | null }> {
+    return this.http.get<TenderResponse>(url).pipe(
+      tap((response) => {
+        console.log('Tenders fetched successfully:', response.data);
+        if (!response.data) {
+          console.error('No data property in response:', response);
+        }
+      }),
+      map((response) => ({
+        data: response.data,
+        totalCount: response.totalCount,
+      })),
+      catchError((error) => {
+        console.error('Error fetching tenders:', error);
+        throw error;
+      })
+    );
+  }
 
-        const url = `${this.baseUrl}/tender/${id}`;
-        console.log('Fetching tenders from:', url);
-        
-        return this.http.get<{ data: TenderItem, code: number, message: string | null }>(url).pipe(
-            tap((response) => {
-                console.log('Tender details fetched successfully:', response.data);
-                if (!response.data) {
-                    console.error('No data property in response:', response);
-                }
-            }),
-            catchError((error) => {
-                console.error('Error fetching tender details:', error);
-                throw error;
-            })
-        );
-    }
+  getTenderById(
+    id: number
+  ): Observable<{ data: TenderItem; code: number; message: string | null }> {
+    const url = `${this.baseUrl}/tender/${id}`;
+    console.log('Fetching tenders from:', url);
 
-    exportTenderExcel(): Observable<Blob> {
-        const url = `${this.baseUrl}/exportTenderExcel`;
-        return this.http.get(url, { responseType: 'blob' });
-    }
+    return this.http.get<{ data: TenderItem; code: number; message: string | null }>(url).pipe(
+      tap((response) => {
+        console.log('Tender details fetched successfully:', response.data);
+        if (!response.data) {
+          console.error('No data property in response:', response);
+        }
+      }),
+      catchError((error) => {
+        console.error('Error fetching tender details:', error);
+        throw error;
+      })
+    );
+  }
+
+  exportTenderExcel(): Observable<Blob> {
+    const url = `${this.baseUrl}/exportTenderExcel`;
+    return this.http.get(url, { responseType: 'blob' });
+  }
+
+  putTenderExcomDecision(
+    tenderId: number,
+    excomDecisionPriorityLevelId: number,
+    excomDecisionNotes: string
+  ): Observable<any> {
+    const url = `${this.baseUrl}/tenderExcomDecision`;
+    const body = {
+      tenderId: tenderId,
+      excomDecisionPriorityLevelId: excomDecisionPriorityLevelId,
+      excomDecisionNotes: excomDecisionNotes,
+    };
+    return this.http.put(url, body).pipe(
+      tap((response) => console.log('Response:', response)),
+      catchError((error) => {
+        console.error('Request failed:', error);
+        console.error('Full URL:', url);
+        console.error('Request body:', body);
+        throw error;
+      })
+    );
+  }
+
+  putTenderMarketIntelligence(
+    tenderId: number,
+    winningCompetitor: string,
+    marginLostPercentage: number,
+    otherReasonsForLoss: string,
+    reportDate?: string
+  ): Observable<any> {
+    const url = `${this.baseUrl}/tenderMarketIntelligence`;
+    const body = {
+      tenderId: tenderId,
+      winningCompetitor: winningCompetitor,
+      marginLostPercentage: marginLostPercentage,
+      otherReasonsForLoss: otherReasonsForLoss,
+      reportDate: reportDate || new Date().toISOString(),
+    };
+    console.log('Request body:', body); // Debug log
+    console.log('Full URL:', url); // Debug log
+    return this.http.put(url, body).pipe(
+      tap((response) => console.log('Response:', response)),
+      catchError((error) => {
+        console.error('Request failed:', error);
+        console.error('Full URL:', url);
+        console.error('Request body:', body);
+        throw error;
+      })
+    );
+  }
+
+  putandaddTender(tender: TenderItem): Observable<any> {
+    const url = `${this.baseUrl}/tender`;
+    // If id is 0, it's a new tender (create), otherwise it's an update
+    console.log(`${tender.id === 0 ? 'Creating' : 'Updating'} tender:`, tender);
+    
+    return this.http.put(url, { tender }).pipe(
+      tap(response => {
+        console.log('Tender saved successfully:', response);
+      }),
+      catchError(error => {
+        console.error('Error saving tender:', error);
+        console.error('Request URL:', url);
+        console.error('Request body:', { tender });
+        throw error;
+      })
+    );
+  }
 }

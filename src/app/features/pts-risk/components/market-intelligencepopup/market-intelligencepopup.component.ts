@@ -14,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
+import { TenderListApiService } from '../../../../core/services/tender-list-api.service';
 @Component({
   selector: '',
   standalone: true,
@@ -147,19 +147,21 @@ export class MarketIntelligencepopup {
   constructor(
     public dialogRef: MatDialogRef<MarketIntelligencepopup>,
     private fb: FormBuilder,
+    private tenderListApiService: TenderListApiService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    console.log('Component data:', data); // Debug log
     this.tenderForm = this.fb.group({
       winningCompetitor: new FormControl(data?.winningCompetitor || '', [
         Validators.required,
         Validators.maxLength(this.winningCompetitorMaxLength)
       ]),
-      marginLost: new FormControl(data?.marginLost || '', [
+      marginLost: new FormControl(data?.marginLost || null, [
         Validators.min(0),
         Validators.max(100),
-        Validators.pattern(/^[0-9]*\.?[0-9]+$/)
+        Validators.pattern(/^[0-9]*\.?[0-9]*$/) // Allow empty or decimal numbers
       ]),
-      otherReasonForLoss: new FormControl(data?.otherReasonForLoss || '', [
+      otherReasonForLoss: new FormControl(data?.otherReasonForLoss || null, [
         Validators.maxLength(1000)
       ]),
     });
@@ -170,13 +172,47 @@ export class MarketIntelligencepopup {
   }
 
   handleSubmit(): void {
+    if (!this.data || !this.data.tenderId) {
+      console.error('tenderId is missing:', this.data);
+      return;
+    }
+
     if (this.tenderForm.valid) {
       this.busy = true;
-      // Simulate save
-      setTimeout(() => {
-        this.busy = false;
-        this.dialogRef.close(this.tenderForm.value);
-      }, 1000);
+      
+      const currentDate = new Date().toISOString();
+      const requestData = {
+        tenderId: this.data.tenderId,
+        winningCompetitor: this.tenderForm.value.winningCompetitor || '',
+        marginLostPercentage: this.tenderForm.value.marginLost || 0,
+        otherReasonsForLoss: this.tenderForm.value.otherReasonForLoss || '',
+        reportDate: currentDate
+      };
+
+      console.log('Sending data:', requestData);
+      
+      this.tenderListApiService.putTenderMarketIntelligence(
+        requestData.tenderId,
+        requestData.winningCompetitor,
+        requestData.marginLostPercentage,
+        requestData.otherReasonsForLoss,
+        requestData.reportDate
+      ).subscribe({
+        next: () => {
+          this.busy = false;
+          const responseData = {
+            winningCompetitor: requestData.winningCompetitor || 'N/A',
+            marginLost: requestData.marginLostPercentage !== null ? requestData.marginLostPercentage : 0,
+            otherReasonForLoss: requestData.otherReasonsForLoss || 'N/A'
+          };
+          console.log('Closing dialog with data:', responseData);
+          this.dialogRef.close(responseData);
+        },
+        error: (error) => {
+          console.error('Error saving market intelligence:', error);
+          this.busy = false;
+        }
+      });
     }
   }
 

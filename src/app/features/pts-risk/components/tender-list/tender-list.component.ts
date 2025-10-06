@@ -125,11 +125,6 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
               <th mat-header-cell *matHeaderCellDef>EXCOM Decision</th>
               <td mat-cell *matCellDef="let element">
                 <div class="excom-decision-cell">
-                  @if (element.excomDecisionPriorityLevel) {
-                    <div class="excom-info">
-                      <span class="excom-title">{{ element.excomDecisionPriorityLevel?.title }}</span>
-                    </div>
-                  }
                   <button mat-icon-button color="primary" aria-label="Edit EXCOM Decision" (click)="$event.stopPropagation(); openExcomDecisionPopup(element)">
                     <mat-icon style="color: #1976d2;">edit</mat-icon>
                   </button>
@@ -416,7 +411,8 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       maxWidth: 'none',
       disableClose: false,
       data: {
-        excomDecisionItem: 'Upxxxsks',
+        tenderId: element.id, // Add tenderId
+        excomDecisionItem: element.excomDecisionItem,
         excomDecisionPriorityLevelId: element.excomDecisionPriorityLevelId,
         excomDecisionNotes: element.excomDecisionNotes,
         excomDecisionDate: element.excomDecisionDate
@@ -443,6 +439,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       maxWidth: 'none',
       disableClose: false,
       data: {
+        tenderId: element.id,
         winningCompetitor: element.winningCompetitor,
         marginLost: element.marginLostPercentage,
         otherReasonForLoss: element.otherReasonsForLoss
@@ -451,12 +448,15 @@ export class TenderListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        console.log('Market Intelligence dialog result:', result);
         // Update the tender item with the market intelligence data
         element.winningCompetitor = result.winningCompetitor;
         element.marginLostPercentage = result.marginLost;
         element.otherReasonsForLoss = result.otherReasonForLoss;
         // Refresh the table
         this.dataSource.data = [...this.dataSource.data];
+        // Reload tenders to get fresh data
+        this.loadTenders();
       }
     });
   }

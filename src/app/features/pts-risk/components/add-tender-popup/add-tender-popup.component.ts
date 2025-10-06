@@ -100,11 +100,11 @@ import { MatRadioModule } from '@angular/material/radio';
               formControlName="region"
               style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;"
             >
-              <mat-radio-button value="China">China</mat-radio-button>
-              <mat-radio-button value="Hongkong">Hongkong</mat-radio-button>
-              <mat-radio-button value="Macau">Macau</mat-radio-button>
-              <mat-radio-button value="Singapore">Singapore</mat-radio-button>
-              <mat-radio-button value="International">International</mat-radio-button>
+              <mat-radio-button value="CN">China</mat-radio-button>
+              <mat-radio-button value="HK">Hongkong</mat-radio-button>
+              <mat-radio-button value="MO">Macau</mat-radio-button>
+              <mat-radio-button value="SG">Singapore</mat-radio-button>
+              <mat-radio-button value="IT">International</mat-radio-button>
             </mat-radio-group>
           </div>
 
@@ -536,7 +536,7 @@ export class AddTenderPopupComponent implements OnInit {
       businessUnitId: [undefined, Validators.required],
       isExternal: [undefined, []],
       region: [undefined, []],
-      projectName: ['', [Validators.required, Validators.maxLength(this.projectNameMaxLength)]],
+      projectName: ['', Validators.maxLength(this.projectNameMaxLength)],
       expectedTenderIssueDate: [undefined, []],
       expectedTenderSubmissionDate: [undefined, []],
       projectDuration: [undefined, []],
@@ -634,7 +634,24 @@ export class AddTenderPopupComponent implements OnInit {
 
   handleSubmit(): void {
     if (this.tenderForm.valid) {
-      this.dialogRef.close(this.tenderForm.value);
+      const formData = this.tenderForm.value;
+      
+      // Prepare the tender data
+      const tender = {
+        ...formData,
+        id: this.data?.id || 0, // If editing, use existing ID, otherwise use 0 for new tender
+      };
+
+      // Call the unified putandaddTender method
+      this.tenderListApiService.putandaddTender(tender).subscribe({
+        next: (response) => {
+          console.log(`Tender ${tender.id === 0 ? 'created' : 'updated'} successfully:`, response);
+          this.dialogRef.close(response);
+        },
+        error: (error) => {
+          console.error('Error saving tender:', error);
+        }
+      });
     }
   }
 
