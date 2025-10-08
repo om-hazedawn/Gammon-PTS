@@ -1,0 +1,96 @@
+<div class="section" formGroupName="OtherIssue">
+  <div class="p-4 bg-white shadow rounded-lg">
+    <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Other issue</h2>
+
+    <div class="space-y-6">
+      <div class="form-row">
+        <div class="w-40 font-semibold">
+          New Plant Requirements and value of Investment Required:
+        </div>
+        <div class="flex flex-wrap items-center gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <textarea matInput formControlName="NewPlantDetails" rows="2"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="NewPlantRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">PFI or PPP Bid:</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <div class="radio-group-container min-w-[200px]">
+            <mat-radio-group formControlName="PFIorPPPBid" class="flex gap-6">
+              <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
+              <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
+              <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="pfiOrPPPBidRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Financing Required:</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <div class="radio-group-container min-w-[200px]">
+            <mat-radio-group formControlName="FinancingRequired" class="flex gap-6">
+              <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
+              <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
+              <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <input matInput formControlName="FinancingRequiredDetails" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="FinancingRequiredRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Foreign Currency Content:</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <input matInput formControlName="ForeignCurrencyContentDetails" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="ForeignCurrencyContentRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,142 @@
+<div class="section" formGroupName="Warranties">
+  <div class="p-4 bg-white shadow rounded-lg">
+    <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Warranties &amp; Guarantees</h2>
+
+    <div class="space-y-8">
+      <div class="form-row">
+        <div class="w-40 font-semibold">Parent Company Guarantee:</div>
+        <div class="flex flex-wrap gap-6 flex-1">
+          <div class="radio-group-container min-w-[200px]">
+            <mat-radio-group formControlName="ParentCompanyGuarantee" class="flex gap-6">
+              <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
+              <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
+              <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <input matInput formControlName="ParentCompanyDetails" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="ParentCompanyRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Parent Company Undertaking:</div>
+        <div class="flex flex-wrap gap-6 flex-1">
+          <div class="radio-group-container min-w-[200px]">
+            <mat-radio-group formControlName="ParentCompanyUndertaking" class="flex gap-6">
+              <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
+              <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
+              <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <input matInput formControlName="ParentCompanyUndertakingDetails" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="ParentCompanyUndertakingRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Collateral Warranties:</div>
+        <div class="flex flex-wrap gap-6 flex-1">
+          <div class="radio-group-container min-w-[200px]">
+            <mat-radio-group formControlName="CollateralWarranties" class="flex gap-6">
+              <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
+              <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
+              <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <input matInput formControlName="CollateralWarrantiesDetails" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="CollateralWarrantiesRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Other Contingent Liabilities:</div>
+        <div class="flex flex-wrap gap-6 flex-1">
+          <div class="radio-group-container min-w-[200px]">
+            <mat-radio-group formControlName="OtherContingent" class="flex gap-6">
+              <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
+              <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
+              <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <input matInput formControlName="OtherContingentDetails" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="OtherContingentRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Provided by Employer:</div>
+        <div class="flex flex-wrap gap-6 flex-1">
+          <div class="radio-group-container min-w-[200px]">
+            <mat-radio-group formControlName="ProvidedByEmployer" class="flex gap-6">
+              <mat-radio-button value="Yes" class="radio-option">Yes</mat-radio-button>
+              <mat-radio-button value="No" class="radio-option">No</mat-radio-button>
+              <mat-radio-button value="N.A." class="radio-option">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <input matInput formControlName="ProvidedByEmployerDetails" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="ProvidedByEmployerRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

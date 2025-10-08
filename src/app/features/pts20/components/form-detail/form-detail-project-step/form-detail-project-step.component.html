@@ -1,0 +1,178 @@
+<div class="section">
+  <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Project</h2>
+
+  <div class="form-row">
+    <mat-form-field appearance="fill" class="w-64">
+      <mat-label>Form 30</mat-label>
+      <input matInput formControlName="form30" [readonly]="!isEditMode" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Business Unit</mat-label>
+      <mat-select formControlName="businessUnit" required>
+        <mat-option value="unit1">Unit 1</mat-option>
+        <mat-option value="unit2">Unit 2</mat-option>
+        <mat-option value="unit3">Unit 3</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Due Date</mat-label>
+      <input matInput type="date" formControlName="duedate" />
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="fill">
+      <mat-label>Tender no</mat-label>
+      <input matInput formControlName="tenderNo" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Project Title</mat-label>
+      <input matInput formControlName="projectTitle" required />
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="fill">
+      <mat-label>Bid Manager</mat-label>
+      <input matInput formControlName="BidManager" />
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Estimator</mat-label>
+      <input matInput formControlName="Estimator" />
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Planner</mat-label>
+      <input matInput formControlName="Planner" />
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="fill">
+      <mat-label>Region</mat-label>
+      <mat-select formControlName="Region">
+        <mat-option value="region1">Region 1</mat-option>
+        <mat-option value="region2">Region 2</mat-option>
+        <mat-option value="region3">Region 3</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Location</mat-label>
+      <input matInput formControlName="Location" />
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Planner</mat-label>
+      <input matInput formControlName="Planner" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>TenderType</mat-label>
+      <mat-select formControlName="TenderType">
+        <mat-option value="type1">Type 1</mat-option>
+        <mat-option value="type2">Type 2</mat-option>
+        <mat-option value="type3">Type 3</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="fill">
+      <mat-label>Brief Description</mat-label>
+      <textarea matInput formControlName="BriefDescription" rows="3"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-label class="block mb-1">Approximate Value</mat-label>
+    <div style="display: flex; gap: 10px;">
+      <mat-form-field appearance="fill" style="flex: 1;">
+        <mat-select formControlName="ApproximateValueType" placeholder="Select type">
+          <mat-option value="type1">Type 1</mat-option>
+          <mat-option value="type2">Type 2</mat-option>
+          <mat-option value="type3">Type 3</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" style="flex: 1;">
+        <input matInput formControlName="ApproximateValueInput" placeholder="Enter value" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="fill">
+      <mat-label>Approximate Value Remarks</mat-label>
+      <input matInput formControlName="ApproximateValue" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Approximate Margin</mat-label>
+      <input matInput formControlName="Approxmargin" />
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <label class="block mb-1">Maintenance / Defect</label>
+    <div style="display: flex; gap: 10px;">
+      <mat-form-field appearance="fill" style="flex: 1;">
+        <mat-select formControlName="maintenanceType" placeholder="Select option">
+          <mat-option value="type1">Type 1</mat-option>
+          <mat-option value="type2">Type 2</mat-option>
+          <mat-option value="type3">Type 3</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" style="flex: 1;">
+        <input matInput type="number" formControlName="maintenanceValue" placeholder="Enter number" />
+      </mat-form-field>
+      <mat-form-field appearance="fill" style="flex: 1;">
+        <mat-select formControlName="maintenanceStatus" placeholder="Select status">
+          <mat-option value="open">Open</mat-option>
+          <mat-option value="inprogress">In Progress</mat-option>
+          <mat-option value="closed">Closed</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="fill">
+      <mat-label>Client</mat-label>
+      <input matInput formControlName="Client" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Contract Period (months)</mat-label>
+      <input matInput type="number" formControlName="ContractPeriod" />
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="fill">
+      <mat-label>Financial Standing</mat-label>
+      <input matInput formControlName="FinantialStanding" />
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <div class="form-row">
+      <label class="block mb-1">Tender Market Scheme</label>
+      <mat-radio-group formControlName="TenderMarketScheme" class="flex gap-6">
+        <mat-radio-button value="yes">Yes</mat-radio-button>
+        <mat-radio-button value="no">No</mat-radio-button>
+        <mat-radio-button value="na">N.A.</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Financial/Technical Split Value</mat-label>
+      <mat-select formControlName="FinancialTechnicalSplitValue" placeholder="Select status">
+        <mat-option value="open">Open</mat-option>
+        <mat-option value="inprogress">In Progress</mat-option>
+        <mat-option value="closed">Closed</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Bid Type</mat-label>
+      <mat-select formControlName="BidType" placeholder="Select Bid Type">
+        <mat-option value="open">Open</mat-option>
+        <mat-option value="inprogress">In Progress</mat-option>
+        <mat-option value="closed">Closed</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>

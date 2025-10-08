@@ -1,0 +1,179 @@
+<div class="section" formGroupName="contract">
+  <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Contract</h2>
+  <div class="form-row">
+    <div class="mb-4">
+      <label class="font-bold">Form of Contract:</label>
+    </div>
+    <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
+      <mat-label>Type</mat-label>
+      <mat-select formControlName="Type">
+        <mat-option value="A">A</mat-option>
+        <mat-option value="B">B</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+      <mat-label>Description</mat-label>
+      <input matInput formControlName="Description" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-32">
+      <mat-label>Degree of Risk</mat-label>
+      <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">M</mat-option>
+        <mat-option value="H">H</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <div class="mb-2 font-bold">Liquidated damages:</div>
+
+    <div class="flex flex-wrap gap-4 items-center mb-4">
+      <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+        <mat-label>Rate of Damages</mat-label>
+        <input
+          matInput
+          formControlName="RateOfDamages"
+          placeholder="Details of Rate of Damage e.g. $300k/Day"
+        />
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+      <mat-label>Limit of Liability</mat-label>
+      <input matInput formControlName="LimitOfLiability" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+      <mat-label>Degree of Risk</mat-label>
+      <mat-select formControlName="DegreeRiskLimit">
+        <mat-option value="M">M</mat-option>
+        <mat-option value="H">H</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="fill" class="flex-1 min-w-[160px]">
+      <mat-label>Measurement Details</mat-label>
+      <mat-select formControlName="MeasurementDetails">
+        <mat-option value="M">M</mat-option>
+        <mat-option value="H">H</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="flex-1 min-w-[160px]">
+      <mat-label>Degree of Risk</mat-label>
+      <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">M</mat-option>
+        <mat-option value="H">H</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+      <mat-label>Fluctuations</mat-label>
+      <mat-select formControlName="Fluctuations">
+        <mat-option value="M">Fixed Price</mat-option>
+        <mat-option value="H">Fluctuating Price</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-32">
+      <mat-label>Degree of Risk</mat-label>
+      <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">M</mat-option>
+        <mat-option value="H">H</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="mb-2 font-bold">Clauses provided:</div>
+
+  <div class="clause-block">
+    <label class="block mb-1">Adverse Physical Conditions:</label>
+    <mat-radio-group formControlName="Adverse" class="flex flex-row gap-4">
+      <mat-radio-button value="yes">Yes</mat-radio-button>
+      <mat-radio-button value="no">No</mat-radio-button>
+      <mat-radio-button value="na">N.A.</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <div class="clause-block mt-4 flex flex-row items-center gap-6">
+    <div>
+      <label class="block mb-1">Time Extension For Weather:</label>
+      <mat-radio-group formControlName="TimeExtension" class="flex flex-row gap-4">
+        <mat-radio-button value="yes">Yes</mat-radio-button>
+        <mat-radio-button value="no">No</mat-radio-button>
+        <mat-radio-button value="na">N.A.</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="flex flex-row gap-4 flex-1">
+      <mat-form-field appearance="fill" class="flex-1 min-w-[220px]">
+        <mat-label>Weather Extension Description</mat-label>
+        <input matInput formControlName="WeatherExtention" />
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="min-w-[160px]">
+        <mat-label>Degree of Risk</mat-label>
+        <mat-select formControlName="DegreeRiskType">
+          <mat-option value="M">M</mat-option>
+          <mat-option value="H">H</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="fill" class="min-w-[160px]">
+      <mat-label>Other Unusual Conditions:</mat-label>
+      <input matInput formControlName="OtherUnusualConditions" />
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="min-w-[160px]">
+      <mat-label>Degree of Risk:</mat-label>
+      <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">M</mat-option>
+        <mat-option value="H">H</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="min-w-[160px]">
+      <mat-label>Design Responsibility</mat-label>
+      <input matInput formControlName="DesignResponsibility" />
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="min-w-[160px]">
+      <mat-label>Degree of Risk:</mat-label>
+      <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">M</mat-option>
+        <mat-option value="H">H</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <label class="block mb-1">BIM Required:</label>
+    <mat-radio-group formControlName="BIMRequired" class="flex gap-6">
+      <mat-radio-button value="yes">Yes</mat-radio-button>
+      <mat-radio-button value="no">No</mat-radio-button>
+      <mat-radio-button value="na">N.A.</mat-radio-button>
+    </mat-radio-group>
+    <mat-form-field appearance="fill" class="min-w-[160px]">
+      <mat-label>Degree of Risk</mat-label>
+      <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">M</mat-option>
+        <mat-option value="H">H</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <label class="block mb-1">DFMA Required:</label>
+    <mat-radio-group formControlName="DFMARequired" class="flex gap-6">
+      <mat-radio-button value="yes">Yes</mat-radio-button>
+      <mat-radio-button value="no">No</mat-radio-button>
+      <mat-radio-button value="na">N.A.</mat-radio-button>
+    </mat-radio-group>
+    <mat-form-field appearance="fill" class="min-w-[160px]">
+      <mat-label>Degree of Risk</mat-label>
+      <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">M</mat-option>
+        <mat-option value="H">H</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+<div class="section" [formGroupName]="'Consultant & Competitor'">
+  <div class="p-4 bg-white shadow rounded-lg">
+    <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Consultant</h2>
+    <div class="space-y-6">
+      <div class="form-row">
+        <div class="w-40 font-semibold">Civil &amp; Structural:</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <input matInput formControlName="CivilStructuralDetails" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="CivilStructuralRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Architect:</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <input matInput formControlName="ArchitectDetails" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="ArchitectRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">E&amp;M:</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <input matInput formControlName="EMDetails" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="EMRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Quantity Surveyor</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <input matInput formControlName="QuantitySurveyorDetails" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="QuantitySurveyorRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Other</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <input matInput formControlName="OtherDetails" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 250px">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="OtherRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <h2 class="text-lg font-bold mb-4 text-[#1976d2]">Competitors</h2>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Competitor</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
+            <mat-label>Details</mat-label>
+            <input matInput formControlName="competitorDetails" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

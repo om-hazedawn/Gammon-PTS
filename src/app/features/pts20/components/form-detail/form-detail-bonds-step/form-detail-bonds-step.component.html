@@ -1,0 +1,253 @@
+<div class="section" formGroupName="Bonds">
+  <div class="p-4 bg-white shadow rounded-lg">
+    <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Bonds</h2>
+
+    <div class="space-y-6">
+      <div class="form-row">
+        <div class="w-40 font-semibold">Tender Bond:</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
+            <mat-label>Value</mat-label>
+            <input matInput type="number" formControlName="TenderValue" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 60px">
+            <mat-select formControlName="tenderUnit">
+              <mat-option value="%">%</mat-option>
+              <mat-option value="$">$</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
+            <mat-label>Call Basis</mat-label>
+            <input matInput formControlName="TenderCallBasis" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[160px] flex-1">
+            <mat-label>Expiry Date</mat-label>
+            <input matInput type="date" formControlName="TenderExpiry" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[180px] flex-1">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="TenderRemark" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-40">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="TenderRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Performance Bond:</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
+            <mat-label>Value</mat-label>
+            <input matInput type="number" formControlName="PerformanceValue" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 60px">
+            <mat-select formControlName="performanceUnit">
+              <mat-option value="%">%</mat-option>
+              <mat-option value="$">$</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
+            <mat-label>Call Basis</mat-label>
+            <input matInput formControlName="PerformanceCallBasis" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[160px] flex-1">
+            <mat-label>Expiry Date</mat-label>
+            <input matInput type="date" formControlName="PerformanceExpiry" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[180px] flex-1">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="PerformanceRemark" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-40">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="degreeRisk2">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Advance Payment Bond:</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
+            <mat-label>Value</mat-label>
+            <input matInput type="number" formControlName="AdvanceValue" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 60px">
+            <mat-select formControlName="advanceUnit">
+              <mat-option value="%">%</mat-option>
+              <mat-option value="$">$</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
+            <mat-label>Call Basis</mat-label>
+            <input matInput formControlName="AdvanceCallBasis" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[160px] flex-1">
+            <mat-label>Expiry Date</mat-label>
+            <input matInput type="date" formControlName="AdvanceExpiry" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[180px] flex-1">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="AdvanceRemark" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-40">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="AdvanceRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Retention Bond:</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
+            <mat-label>Value</mat-label>
+            <input matInput type="number" formControlName="RetentionValue" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 60px">
+            <mat-select formControlName="retentionUnit">
+              <mat-option value="%">%</mat-option>
+              <mat-option value="$">$</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
+            <mat-label>Call Basis</mat-label>
+            <input matInput formControlName="RetentionCallBasis" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[160px] flex-1">
+            <mat-label>Expiry Date</mat-label>
+            <input matInput type="date" formControlName="RetentionExpiry" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[180px] flex-1">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="RetentionRemark" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-40">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="RetentionRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Maintenance Bond:</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
+            <mat-label>Value</mat-label>
+            <input matInput type="number" formControlName="MaintenanceValue" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 60px">
+            <mat-select formControlName="maintenanceUnit">
+              <mat-option value="%">%</mat-option>
+              <mat-option value="$">$</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
+            <mat-label>Call Basis</mat-label>
+            <input matInput formControlName="MaintenanceCallBasis" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[160px] flex-1">
+            <mat-label>Expiry Date</mat-label>
+            <input matInput type="date" formControlName="MaintenanceExpiry" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[180px] flex-1">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="MaintenanceRemark" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-40">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="MaintenanceRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Other Bond:</div>
+        <div class="flex flex-wrap gap-8 flex-1">
+          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
+            <mat-label>Value</mat-label>
+            <input matInput type="number" formControlName="OtherValue" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" style="max-width: 60px">
+            <mat-select formControlName="otherUnit">
+              <mat-option value="%">%</mat-option>
+              <mat-option value="$">$</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
+            <mat-label>Call Basis</mat-label>
+            <input matInput formControlName="OtherCallBasis" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[160px] flex-1">
+            <mat-label>Expiry Date</mat-label>
+            <input matInput type="date" formControlName="OtherExpiry" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="min-w-[180px] flex-1">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="OtherRemark" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-40">
+            <mat-label>Degree of Risk</mat-label>
+            <mat-select formControlName="OtherRisk">
+              <mat-option value="H">High</mat-option>
+              <mat-option value="M">Medium</mat-option>
+              <mat-option value="L">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

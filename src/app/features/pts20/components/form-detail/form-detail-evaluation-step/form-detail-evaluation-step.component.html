@@ -1,0 +1,193 @@
+<div class="section" formGroupName="Evaluation">
+  <div class="p-6 bg-white shadow-lg rounded-lg">
+    <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Evaluation</h2>
+    <div class="space-y-6">
+      <div class="grid grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-40 font-semibold">Acceptability of Contract Conditions:</div>
+            <mat-radio-group formControlName="AcceptibilityRadio" class="flex gap-4">
+              <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+              <mat-radio-button value="No" color="warn">No</mat-radio-button>
+              <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="AcceptibilityRemark" />
+          </mat-form-field>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-40 font-semibold">Payment Terms Evaluation:</div>
+            <mat-radio-group formControlName="PaymentTermsRadio" class="flex gap-4">
+              <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+              <mat-radio-button value="No" color="warn">No</mat-radio-button>
+              <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="PaymentTermsRemark" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-40 font-semibold">Bonds and Guarantees</div>
+            <mat-radio-group formControlName="BondandGuaranteesRadio" class="flex gap-4">
+              <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+              <mat-radio-button value="No" color="warn">No</mat-radio-button>
+              <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="BondandGuaranteesRemark" />
+          </mat-form-field>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-40 font-semibold">The value &amp; extent of the contract</div>
+            <mat-radio-group formControlName="ContractValueRadio" class="flex gap-4">
+              <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+              <mat-radio-button value="No" color="warn">No</mat-radio-button>
+              <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="ContractValueRemark" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-40 font-semibold">Plant &amp; special equipment requirement</div>
+            <mat-radio-group formControlName="PlantEquipmentRadio" class="flex gap-4">
+              <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+              <mat-radio-button value="No" color="warn">No</mat-radio-button>
+              <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="PlantEquipmentRemark" />
+          </mat-form-field>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-40 font-semibold">The availability of site management</div>
+            <mat-radio-group formControlName="SiteManagementRadio" class="flex gap-4">
+              <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+              <mat-radio-button value="No" color="warn">No</mat-radio-button>
+              <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="SiteManagementRemark" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-40 font-semibold">The Company's current workload</div>
+            <mat-radio-group formControlName="CurrentWorkloadRadio" class="flex gap-4">
+              <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+              <mat-radio-button value="No" color="warn">No</mat-radio-button>
+              <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="CurrentWorkloadRemark" />
+          </mat-form-field>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-40 font-semibold">The time allowed to tender</div>
+            <mat-radio-group formControlName="TimeAllowedRadio" class="flex gap-4">
+              <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+              <mat-radio-button value="No" color="warn">No</mat-radio-button>
+              <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="TimeAllowedRemark" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-40 font-semibold">The previous record of the consultants</div>
+            <mat-radio-group formControlName="previousRecordRadio" class="flex gap-4">
+              <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+              <mat-radio-button value="No" color="warn">No</mat-radio-button>
+              <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="previousRecordRemark" />
+          </mat-form-field>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-40 font-semibold">Health Safety &amp; Environment</div>
+            <mat-radio-group formControlName="HealthSafetyEnvironmentRadio" class="flex gap-4">
+              <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+              <mat-radio-button value="No" color="warn">No</mat-radio-button>
+              <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="HealthSafetyEnvironmentRemark" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-40 font-semibold">The Competition</div>
+            <mat-radio-group formControlName="CompetitionRadio" class="flex gap-4">
+              <mat-radio-button value="Yes" color="primary">Yes</mat-radio-button>
+              <mat-radio-button value="No" color="warn">No</mat-radio-button>
+              <mat-radio-button value="N.A." color="accent">N/A</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="CompetitionRemark" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="w-40 font-semibold">Evaluation Comments</div>
+        <div class="flex-1">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Comments</mat-label>
+            <textarea matInput formControlName="EvaluationComments"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
