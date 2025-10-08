@@ -1,5 +1,6 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { TenderKeyDateComponent } from '../tender-key-date/tender-key-date.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TenderListApiService, TenderItem } from '../../../../core/services/tender-list-api.service';
@@ -161,10 +162,9 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
             <ng-container matColumnDef="keyDate">
               <th mat-header-cell *matHeaderCellDef>Key Date</th>
               <td mat-cell *matCellDef="let element">
-                <button mat-icon-button color="primary" (click)="picker.open()">
+                <button mat-icon-button color="primary" (click)="$event.stopPropagation(); openKeyDatePopup(element)">
                   <mat-icon style="color: #1976d2;">calendar_today</mat-icon>
                 </button>
-                <mat-datepicker #picker></mat-datepicker>
               </td>
             </ng-container>
 
@@ -461,6 +461,21 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     });
   }
 
+  openKeyDatePopup(element: TenderItem): void {
+    const dialogRef = this.dialog.open(TenderKeyDateComponent, {
+      width: '900px',
+      maxWidth: 'none',
+      disableClose: false,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Handle any updates if necessary
+        console.log('Key Date dialog closed with result:', result);
+      }
+    });
+  }
+
   onRowClick(row: TenderItem, event: Event): void {
     // Prevent row click if the event came from a button
     if ((event.target as HTMLElement).tagName === 'BUTTON' ||
@@ -585,3 +600,4 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     }
   }
 }
+

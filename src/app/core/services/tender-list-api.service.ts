@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
 
 export interface TenderResponse {
   data: TenderItem[];
@@ -151,7 +150,13 @@ export interface TenderAttachment {
 
   fileMimeType: string;
 
+  fileFullPath: string;
   originalFileName: string;
+  createdBy: string;
+  createdOn: string;
+  lastModifiedBy: string;
+  lastModifiedOn: string;
+  status: string;
 }
 
 @Injectable({
@@ -267,21 +272,21 @@ export class TenderListApiService {
     );
   }
 
-  putandaddTender(tender: TenderItem): Observable<any> {
+  putandaddTender(data: { tender: any }): Observable<any> {
     const url = `${this.baseUrl}/tender`;
-    // If id is 0, it's a new tender (create), otherwise it's an update
-    console.log(`${tender.id === 0 ? 'Creating' : 'Updating'} tender:`, tender);
-    
-    return this.http.put(url, { tender }).pipe(
-      tap(response => {
+    console.log('Sending tender data:', data);
+
+    return this.http.put(url, data).pipe(
+      tap((response) => {
         console.log('Tender saved successfully:', response);
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error saving tender:', error);
         console.error('Request URL:', url);
-        console.error('Request body:', { tender });
+        console.error('Request body:', data);
         throw error;
       })
     );
   }
+
 }
