@@ -39,6 +39,7 @@ import { MatRadioModule } from '@angular/material/radio';
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
           <label style="width: 200px; font-weight: 500;">Name</label>
           <mat-form-field appearance="fill" style="flex: 1;">
+            <mat-label>Name</mat-label>
             <input
               matInput
               formControlName="name"
@@ -54,6 +55,7 @@ import { MatRadioModule } from '@angular/material/radio';
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
           <label style="width: 200px; font-weight: 500;">Short Name</label>
           <mat-form-field appearance="fill" style="flex: 1;">
+            <mat-label>Short Name</mat-label>
             <input
               matInput
               formControlName="shortName"
