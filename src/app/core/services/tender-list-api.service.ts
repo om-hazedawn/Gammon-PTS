@@ -289,4 +289,18 @@ export class TenderListApiService {
     );
   }
 
+  deleteTender(id: number): Observable<any> {
+    const url = `${this.baseUrl}/tender/${id}`;
+
+    return this.http.delete(url).pipe(
+      tap((response) => 
+        console.log('Tender deleted successfully:', response
+        )),
+      catchError((error) => {
+        console.error('Error deleting tender:', error);
+        throw error;
+      })
+    );
+  }
+
 }

@@ -5,6 +5,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { RouterLink } from '@angular/router';
+import { Form20ListService, Form20List } from '../../../../core/services/Form20/form20list.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-form-list',
@@ -16,6 +19,8 @@ import { RouterLink } from '@angular/router';
     MatIconModule,
     MatCardModule,
     RouterLink,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
   ],
   template: `
     <div class="form-list-container">
@@ -32,15 +37,19 @@ import { RouterLink } from '@angular/router';
             </button>
           </div>
 
-          <table mat-table [dataSource]="forms" class="forms-table">
+          <div *ngIf="loading" class="loading-spinner">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+
+          <table mat-table [dataSource]="forms" class="forms-table" *ngIf="!loading">
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
               <td mat-cell *matCellDef="let form">{{ form.id }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="tenderStatus">
+            <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef>Tender Status</th>
-              <td mat-cell *matCellDef="let form">{{ form.tenderStatus }}</td>
+              <td mat-cell *matCellDef="let form">{{ form.status }}</td>
             </ng-container>
 
             <ng-container matColumnDef="tenderNo">
@@ -48,9 +57,9 @@ import { RouterLink } from '@angular/router';
               <td mat-cell *matCellDef="let form">{{ form.tenderNo }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="businessUnit">
+            <ng-container matColumnDef="businessUnitCode">
               <th mat-header-cell *matHeaderCellDef>Business Unit</th>
-              <td mat-cell *matCellDef="let form">{{ form.businessUnit }}</td>
+              <td mat-cell *matCellDef="let form">{{ form.businessUnitCode }}</td>
             </ng-container>
 
             <ng-container matColumnDef="title">
@@ -68,29 +77,22 @@ import { RouterLink } from '@angular/router';
               <td mat-cell *matCellDef="let form">{{ form.client }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="approximateValueContractPeriod">
+            <ng-container matColumnDef="contractDetails">
               <th mat-header-cell *matHeaderCellDef>Contract Value/Period</th>
-              <td mat-cell *matCellDef="let form">{{ form.approximateValueContractPeriod }}</td>
+              <td mat-cell *matCellDef="let form">
+                {{ form.approximateValue | number }} {{ form.currency }} / {{ form.period }} {{ form.periodUnit }}
+                <span *ngIf="form.approximateValueRemark" class="remark"> ({{ form.approximateValueRemark }})</span>
+              </td>
             </ng-container>
 
-            <ng-container matColumnDef="bidType">
+            <ng-container matColumnDef="bidTypeId">
               <th mat-header-cell *matHeaderCellDef>Bid Type</th>
-              <td mat-cell *matCellDef="let form">{{ form.bidType }}</td>
+              <td mat-cell *matCellDef="let form">{{ form.bidTypeId }}</td>
             </ng-container>
 
             <ng-container matColumnDef="dueDate">
               <th mat-header-cell *matHeaderCellDef>Due Date</th>
               <td mat-cell *matCellDef="let form">{{ form.dueDate | date }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="keyDates">
-              <th mat-header-cell *matHeaderCellDef>Key Dates</th>
-              <td mat-cell *matCellDef="let form">{{ form.keyDates }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="attachment">
-              <th mat-header-cell *matHeaderCellDef>Attachment</th>
-              <td mat-cell *matCellDef="let form">{{ form.attachment }}</td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -117,64 +119,67 @@ import { RouterLink } from '@angular/router';
       mat-card {
         margin-bottom: 20px;
       }
+
+      .loading-spinner {
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .remark {
+        color: #666;
+        font-size: 0.9em;
+      }
+
+      .mat-mdc-row:hover {
+        background-color: #f5f5f5;
+        cursor: pointer;
+      }
     `,
   ],
 })
 export class FormListComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
-    'tenderStatus',
+    'status',
     'tenderNo',
-    'businessUnit',
+    'businessUnitCode',
     'title',
     'country',
     'client',
-    'approximateValueContractPeriod',
-    'bidType',
-    'dueDate',
-    'keyDates',
-    'attachment'
+    'contractDetails',
+    'bidTypeId',
+    'dueDate'
   ];
 
-  // Mock data - will be replaced with actual service calls
-  forms = [
-    {
-      id: 1,
-      tenderStatus: 'Draft',
-      tenderNo: 'T2024001',
-      businessUnit: 'Unit A',
-      title: 'Project Alpha',
-      country: 'HKG',
-      client: 'Client X',
-      approximateValueContractPeriod: '1,000,000 / 12 months',
-      bidType: 'Solo Bid',
-      dueDate: '2024-09-30',
-      keyDates: '2024-08-15',
-      attachment: 'specs.pdf'
-    },
-    {
-      id: 2,
-      tenderStatus: 'Submitted',
-      tenderNo: 'T2024002',
-      businessUnit: 'Unit B',
-      title: 'Project Beta',
-      country: 'SGP',
-      client: 'Client Y',
-      approximateValueContractPeriod: '2,500,000 / 24 months',
-      bidType: 'Joint Venture',
-      dueDate: '2024-10-15',
-      keyDates: '2024-09-01',
-      attachment: 'documents.pdf'
-    }
-  ];
+  forms: Form20List[] = [];
+  loading = false;
+
+  constructor(
+    private form20ListService: Form20ListService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
-    // TODO: Load forms from service
+    this.loadForms();
   }
-
-  viewPDF(formId: number): void {
-    // TODO: Implement PDF generation
-    console.log('View PDF for form:', formId);
-  }
+loadForms(): void {
+  this.loading = true;
+  this.form20ListService.getForm20List().subscribe({
+    next: (data) => {
+      this.forms = data;
+      this.loading = false;
+    },
+    error: (error) => {
+      console.error('Error loading forms:', error);
+      this.loading = false;
+      this.snackBar.open('Error loading forms. Please try again.', 'Close', {
+        duration: 5000,
+        horizontalPosition: 'end',
+        verticalPosition: 'top'
+      });
+    }
+  });
+}
   
 }

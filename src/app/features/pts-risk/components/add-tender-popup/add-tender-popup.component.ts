@@ -10,7 +10,7 @@ interface FileUploadStatus {
 import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TenderListApiService} from '../../../../core/services/tender-list-api.service';
+import { TenderListApiService } from '../../../../core/services/tender-list-api.service';
 import { TenderAttachmentApiService } from '../../../../core/services/tenderAttchemnt-api.service';
 import {
   BusinessUnitApiService,
@@ -448,17 +448,18 @@ import { MatRadioModule } from '@angular/material/radio';
                 placeholder="Choose a file (PDF, Word, Excel)"
                 readonly
               />
-              @if (selectedFileName)
-              {
-                <a
-                  mat-icon-button
-                  color="primary"
-                  [href]="'/api/ptsrisk/TenderAttachment/api/tender/' + data?.id + '/attachment/download'"
-                  target="_blank"
-                  matTooltip="Download attachment"
-                >
-                  <mat-icon>download</mat-icon>
-                </a>
+              @if (selectedFileName) {
+              <a
+                mat-icon-button
+                color="primary"
+                [href]="
+                  '/api/ptsrisk/TenderAttachment/api/tender/' + data.id + '/attachment/download'
+                "
+                target="_blank"
+                matTooltip="Download attachment"
+              >
+                <mat-icon>download</mat-icon>
+              </a>
               }
             </div>
             <button
@@ -496,11 +497,25 @@ import { MatRadioModule } from '@angular/material/radio';
           </mat-form-field>
         </fieldset>
       </div>
-      <div mat-dialog-actions align="end">
-        <button mat-button type="button" (click)="dialogRef.close()">Cancel</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!tenderForm.valid">
-          Save
-        </button>
+      <div class="flex justify-between items-center">
+        <div mat-dialog-actions align="start">
+          @if(data.id) {
+          <button
+            mat-raised-button
+            color="warn"
+            type="button"
+            (click)="onDelete()"
+          >
+            Delete
+          </button>
+          }
+        </div>
+        <div mat-dialog-actions align="end">
+          <button mat-button type="button" (click)="dialogRef.close()">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="!tenderForm.valid">
+            Save
+          </button>
+        </div>
       </div>
     </form>
     <!-- Upload Status Summary -->
@@ -508,49 +523,51 @@ import { MatRadioModule } from '@angular/material/radio';
       <h3>Upload Summary</h3>
       <div *ngFor="let status of uploadStatuses" class="upload-status-item">
         <div class="file-info">
-          <span>{{status.file.name}}</span>
+          <span>{{ status.file.name }}</span>
           <span [class]="'status-' + status.status">
-            {{status.status === 'uploading' ? status.progress + '%' : status.status}}
+            {{ status.status === 'uploading' ? status.progress + '%' : status.status }}
           </span>
         </div>
         <div *ngIf="status.error" class="error-message">
-          {{status.error}}
+          {{ status.error }}
         </div>
       </div>
     </div>
   `,
-  styles: [`
-    .upload-summary {
-      margin-top: 16px;
-      padding: 16px;
-      background-color: #f5f5f5;
-      border-radius: 4px;
-    }
-    .upload-status-item {
-      margin-bottom: 8px;
-      padding: 8px;
-      background-color: white;
-      border-radius: 4px;
-    }
-    .file-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .status-completed {
-      color: #4caf50;
-    }
-    .status-error {
-      color: #f44336;
-    }
-    .status-uploading {
-      color: #2196f3;
-    }
-    .error-message {
-      color: #f44336;
-      font-size: 12px;
-      margin-top: 4px;
-    }`,
+  styles: [
+    `
+      .upload-summary {
+        margin-top: 16px;
+        padding: 16px;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+      }
+      .upload-status-item {
+        margin-bottom: 8px;
+        padding: 8px;
+        background-color: white;
+        border-radius: 4px;
+      }
+      .file-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .status-completed {
+        color: #4caf50;
+      }
+      .status-error {
+        color: #f44336;
+      }
+      .status-uploading {
+        color: #2196f3;
+      }
+      .error-message {
+        color: #f44336;
+        font-size: 12px;
+        margin-top: 4px;
+      }
+    `,
     `
       .standard-response-row {
         display: flex;
@@ -725,17 +742,17 @@ export class AddTenderPopupComponent implements OnInit {
             if (response.data.tenderAttachments) {
               this.selectedFileName = response.data.tenderAttachments.originalFileName;
               this.tenderForm.patchValue({
-                attachment: response.data.tenderAttachments.originalFileName
+                attachment: response.data.tenderAttachments.originalFileName,
               });
             }
-            
+
             // Patch the form with the response data
             this.tenderForm.patchValue({
               ...response.data,
               projectDescriptionAndLocation: response.data.projectDescription,
               standardResponsePriorityLevel: response.data.standardResponsePriorityLevel,
             });
-            
+
             // Log the patched values for debugging
             console.log('Form values after patch:', this.tenderForm.value);
           }
@@ -760,37 +777,42 @@ export class AddTenderPopupComponent implements OnInit {
   }
 
   handleSubmit(): void {
-  // Clear previous upload statuses
-  this.uploadStatuses = [];
-  this.showUploadSummary = false;
+    // Clear previous upload statuses
+    this.uploadStatuses = [];
+    this.showUploadSummary = false;
 
-  // Log the form data before submission
-  console.log('Form data being submitted:', this.tenderForm.value);
+    // Log the form data before submission
+    console.log('Form data being submitted:', this.tenderForm.value);
 
     if (!this.tenderForm.valid) {
       const errors: string[] = [];
-      Object.keys(this.tenderForm.controls).forEach(key => {
+      Object.keys(this.tenderForm.controls).forEach((key) => {
         const control = this.tenderForm.get(key);
         if (control?.errors) {
           const fieldName = key.replace(/([A-Z])/g, ' $1').toLowerCase();
-          const errorTypes = Object.keys(control.errors).map(type => {
-            switch(type) {
-              case 'required': return 'is required';
-              case 'maxlength': return 'exceeds maximum length';
-              case 'min': return 'must be greater than or equal to 0';
-              case 'max': return 'exceeds maximum value';
-              default: return type;
+          const errorTypes = Object.keys(control.errors).map((type) => {
+            switch (type) {
+              case 'required':
+                return 'is required';
+              case 'maxlength':
+                return 'exceeds maximum length';
+              case 'min':
+                return 'must be greater than or equal to 0';
+              case 'max':
+                return 'exceeds maximum value';
+              default:
+                return type;
             }
           });
           errors.push(`${fieldName}: ${errorTypes.join(', ')}`);
         }
       });
-      
+
       const uploadStatus: FileUploadStatus = {
-        file: this.selectedFile || new File([], "form-validation"),
+        file: this.selectedFile || new File([], 'form-validation'),
         progress: 0,
         status: 'error',
-        error: `Please fix the following validation errors:\n${errors.join('\n')}`
+        error: `Please fix the following validation errors:\n${errors.join('\n')}`,
       };
       this.uploadStatuses = [uploadStatus];
       this.showUploadSummary = true;
@@ -808,7 +830,8 @@ export class AddTenderPopupComponent implements OnInit {
           division: this.tenderForm.get('division')?.value || null,
           estimatedTenderValue: this.tenderForm.get('estimatedTenderValue')?.value || 0,
           expectedTenderIssueDate: this.tenderForm.get('expectedTenderIssueDate')?.value || null,
-          expectedTenderSubmissionDate: this.tenderForm.get('expectedTenderSubmissionDate')?.value || null,
+          expectedTenderSubmissionDate:
+            this.tenderForm.get('expectedTenderSubmissionDate')?.value || null,
           foreseenBUCapacity: this.tenderForm.get('foreseenBUCapacity')?.value || null,
           id: this.data?.id || null,
           isExternal: this.tenderForm.get('isExternal')?.value || null,
@@ -827,38 +850,39 @@ export class AddTenderPopupComponent implements OnInit {
           riskAssessmentLevel: this.tenderForm.get('riskAssessmentLevel')?.value || null,
           riskAssessmentRationale: this.tenderForm.get('riskAssessmentRationale')?.value || '',
           tenderStatus: this.tenderForm.get('tenderStatus')?.value || null,
-          upgradeDowngradePriorityLevelId: this.tenderForm.get('upgradeDowngradePriorityLevelId')?.value || null,
-          upgradeDowngradeRationale: this.tenderForm.get('upgradeDowngradeRationale')?.value || ''
-        }
+          upgradeDowngradePriorityLevelId:
+            this.tenderForm.get('upgradeDowngradePriorityLevelId')?.value || null,
+          upgradeDowngradeRationale: this.tenderForm.get('upgradeDowngradeRationale')?.value || '',
+        },
       };
 
       console.log('Sending tender data to API:', tenderData);
       console.log('API URL:', '/api/ptsrisk/Tender/api/tender');
-      
+
       this.tenderListApiService.putandaddTender(tenderData).subscribe({
         next: (response: any) => {
           console.log('API Response:', response);
           const tenderId = response.data?.id || this.data?.id;
           console.log('Tender ID received:', tenderId);
-          
+
           if (this.selectedFile && tenderId) {
             // Create upload status entry
             const uploadStatus: FileUploadStatus = {
               file: this.selectedFile,
               progress: 0,
-              status: 'pending'
+              status: 'pending',
             };
             this.uploadStatuses.push(uploadStatus);
-            
+
             // Upload file directly without wrapping in FormData
             console.log('Uploading attachment using TenderListApiService');
-            
+
             this.tenderAttachmentService.uploadAttachment(tenderId, this.selectedFile).subscribe({
               next: (event: HttpEvent<any>) => {
                 switch (event.type) {
                   case HttpEventType.UploadProgress:
                     if (event.total) {
-                      uploadStatus.progress = Math.round(100 * event.loaded / event.total);
+                      uploadStatus.progress = Math.round((100 * event.loaded) / event.total);
                       uploadStatus.status = 'uploading';
                     }
                     break;
@@ -875,7 +899,7 @@ export class AddTenderPopupComponent implements OnInit {
                 uploadStatus.error = this.getErrorMessage(error);
                 console.error('Error uploading file:', error);
                 this.showUploadSummary = true;
-              }
+              },
             });
           } else {
             this.dialogRef.close(response);
@@ -885,11 +909,10 @@ export class AddTenderPopupComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error saving tender:', error);
-        }
+        },
       });
     }
   }
-
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
@@ -897,13 +920,15 @@ export class AddTenderPopupComponent implements OnInit {
       const uploadStatus: FileUploadStatus = {
         file: file,
         progress: 0,
-        status: 'pending'
+        status: 'pending',
       };
-      
+
       // Check file size
       if (file.size > this.maxFileSize) {
         uploadStatus.status = 'error';
-        uploadStatus.error = `File size (${(file.size / (1024 * 1024)).toFixed(2)}MB) exceeds maximum allowed size of 10MB`;
+        uploadStatus.error = `File size (${(file.size / (1024 * 1024)).toFixed(
+          2
+        )}MB) exceeds maximum allowed size of 10MB`;
         this.uploadStatuses = [uploadStatus];
         this.showUploadSummary = true;
         return;
@@ -911,7 +936,7 @@ export class AddTenderPopupComponent implements OnInit {
 
       // Check file type
       const fileExt = file.name.split('.').pop()?.toLowerCase();
-      const allowedExts = this.acceptedFileTypes.split(',').map(ext => ext.replace('.', ''));
+      const allowedExts = this.acceptedFileTypes.split(',').map((ext) => ext.replace('.', ''));
       if (!allowedExts.includes(fileExt || '')) {
         uploadStatus.status = 'error';
         uploadStatus.error = `Invalid file type ".${fileExt}". Accepted formats are: ${this.acceptedFileTypes}`;
@@ -923,8 +948,26 @@ export class AddTenderPopupComponent implements OnInit {
       this.selectedFile = file;
       this.selectedFileName = file.name;
       this.tenderForm.patchValue({
-        attachment: file.name
+        attachment: file.name,
       });
+    }
+  }
+
+  onDelete(): void {
+    if (this.data?.id) {
+      if (confirm('Are you sure you want to delete this tender?')) {
+        this.tenderListApiService.deleteTender(this.data.id).subscribe({
+          next: () => {
+            console.log('Tender deleted successfully');
+            alert('Tender deleted successfully');
+            this.dialogRef.close({ deleted: true });
+          },
+          error: (error) => {
+            console.error('Error deleting tender:', error);
+            alert('Failed to delete tender. Please try again.');
+          },
+        });
+      }
     }
   }
 

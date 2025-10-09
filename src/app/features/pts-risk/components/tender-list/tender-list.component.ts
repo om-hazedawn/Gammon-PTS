@@ -18,6 +18,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MarketIntelligencepopup } from '../market-intelligencepopup/market-intelligencepopup.component';
+import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-date-list.component';
 
 @Component({
   selector: 'app-tender-list',
@@ -462,10 +463,13 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   }
 
   openKeyDatePopup(element: TenderItem): void {
-    const dialogRef = this.dialog.open(TenderKeyDateComponent, {
+    const dialogRef = this.dialog.open(TenderKeyDateListComponent, {
       width: '900px',
       maxWidth: 'none',
       disableClose: false,
+      data: {
+        tenderId: element.id
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
