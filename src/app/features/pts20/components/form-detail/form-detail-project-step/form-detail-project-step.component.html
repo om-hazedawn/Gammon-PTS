@@ -50,9 +50,11 @@
     <mat-form-field appearance="fill">
       <mat-label>Region</mat-label>
       <mat-select formControlName="Region">
-        <mat-option value="region1">Region 1</mat-option>
-        <mat-option value="region2">Region 2</mat-option>
-        <mat-option value="region3">Region 3</mat-option>
+        @for (region of regions | keyvalue; track region.key) {
+        <mat-option [value]="region.key">
+          {{ region.value }}
+        </mat-option>
+        }
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="fill" class="full-width">
@@ -66,9 +68,11 @@
     <mat-form-field appearance="fill">
       <mat-label>TenderType</mat-label>
       <mat-select formControlName="TenderType">
-        <mat-option value="type1">Type 1</mat-option>
-        <mat-option value="type2">Type 2</mat-option>
-        <mat-option value="type3">Type 3</mat-option>
+        @for (tenderType of tenderTypes | keyvalue; track tenderType.key) {
+        <mat-option [value]="tenderType.key">
+          {{ tenderType.value }}
+        </mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>
@@ -82,15 +86,17 @@
 
   <div class="form-row">
     <mat-label class="block mb-1">Approximate Value</mat-label>
-    <div style="display: flex; gap: 10px;">
-      <mat-form-field appearance="fill" style="flex: 1;">
+    <div style="display: flex; gap: 10px">
+      <mat-form-field appearance="fill" style="flex: 1">
         <mat-select formControlName="ApproximateValueType" placeholder="Select type">
-          <mat-option value="type1">Type 1</mat-option>
-          <mat-option value="type2">Type 2</mat-option>
-          <mat-option value="type3">Type 3</mat-option>
+          @for (currency of currencies | keyvalue; track currency.key) {
+          <mat-option [value]="currency.key">
+            {{ currency.value }}
+          </mat-option>
+          }
         </mat-select>
       </mat-form-field>
-      <mat-form-field appearance="fill" style="flex: 1;">
+      <mat-form-field appearance="fill" style="flex: 1">
         <input matInput formControlName="ApproximateValueInput" placeholder="Enter value" />
       </mat-form-field>
     </div>
@@ -109,22 +115,30 @@
 
   <div class="form-row">
     <label class="block mb-1">Maintenance / Defect</label>
-    <div style="display: flex; gap: 10px;">
-      <mat-form-field appearance="fill" style="flex: 1;">
+    <div style="display: flex; gap: 10px">
+      <mat-form-field appearance="fill" style="flex: 1">
         <mat-select formControlName="maintenanceType" placeholder="Select option">
-          <mat-option value="type1">Type 1</mat-option>
-          <mat-option value="type2">Type 2</mat-option>
-          <mat-option value="type3">Type 3</mat-option>
+          @for (maintenanceDefect of maintenanceDefects | keyvalue; track maintenanceDefect.key) {
+          <mat-option [value]="maintenanceDefect.key">
+            {{ maintenanceDefect.value }}
+          </mat-option>
+          }
         </mat-select>
       </mat-form-field>
-      <mat-form-field appearance="fill" style="flex: 1;">
-        <input matInput type="number" formControlName="maintenanceValue" placeholder="Enter number" />
+      <mat-form-field appearance="fill" style="flex: 1">
+        <input
+          matInput
+          type="number"
+          formControlName="maintenanceValue"
+          placeholder="Enter number"
+        />
       </mat-form-field>
-      <mat-form-field appearance="fill" style="flex: 1;">
+      <mat-form-field appearance="fill" style="flex: 1">
         <mat-select formControlName="maintenanceStatus" placeholder="Select status">
-          <mat-option value="open">Open</mat-option>
-          <mat-option value="inprogress">In Progress</mat-option>
-          <mat-option value="closed">Closed</mat-option>
+          <mat-option value="open">months</mat-option>
+          <mat-option value="inprogress">days</mat-option>
+          <mat-option value="closed">years</mat-option>
+          <mat-option value="weeks">weeks</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -137,14 +151,25 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Contract Period (months)</mat-label>
-      <input matInput type="number" formControlName="ContractPeriod" />
+      <mat-select formControlName="ContractPeriod" placeholder="Select type">
+        <mat-option value="months">months</mat-option>
+        <mat-option value="days">days</mat-option>
+        <mat-option value="years">years</mat-option>
+        <mat-option value="weeks">weeks</mat-option>
+      </mat-select>
     </mat-form-field>
   </div>
 
   <div class="form-row">
     <mat-form-field appearance="fill">
       <mat-label>Financial Standing</mat-label>
-      <input matInput formControlName="FinantialStanding" />
+      <mat-select formControlName="FinantialStanding">
+        @for (financeStanding of financeStandings | keyvalue; track financeStanding.key) {
+        <mat-option [value]="financeStanding.key">
+          {{ financeStanding.value }}
+        </mat-option>
+        }
+      </mat-select>
     </mat-form-field>
   </div>
 
@@ -152,26 +177,30 @@
     <div class="form-row">
       <label class="block mb-1">Tender Market Scheme</label>
       <mat-radio-group formControlName="TenderMarketScheme" class="flex gap-6">
-        <mat-radio-button value="yes">Yes</mat-radio-button>
-        <mat-radio-button value="no">No</mat-radio-button>
-        <mat-radio-button value="na">N.A.</mat-radio-button>
+        @for (key of yesNo | keyvalue; track key.key) {
+        <mat-radio-button [value]="key.key">{{ key.value }}</mat-radio-button>
+        }
       </mat-radio-group>
     </div>
 
     <mat-form-field appearance="fill">
       <mat-label>Financial/Technical Split Value</mat-label>
-      <mat-select formControlName="FinancialTechnicalSplitValue" placeholder="Select status">
-        <mat-option value="open">Open</mat-option>
-        <mat-option value="inprogress">In Progress</mat-option>
-        <mat-option value="closed">Closed</mat-option>
+      <mat-select formControlName="FinancialTechnicalSplitValue">
+        @for (split of financeTechnicalSplits | keyvalue; track split.key) {
+        <mat-option [value]="split.key">
+          {{ split.value }}
+        </mat-option>
+        }
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Bid Type</mat-label>
       <mat-select formControlName="BidType" placeholder="Select Bid Type">
-        <mat-option value="open">Open</mat-option>
-        <mat-option value="inprogress">In Progress</mat-option>
-        <mat-option value="closed">Closed</mat-option>
+       @for(bidtype of bidTypes | keyvalue; track bidtype.key) {
+        <mat-option [value]="bidtype.key">
+          {{ bidtype.value }}
+        </mat-option>
+       }
       </mat-select>
     </mat-form-field>
   </div>

@@ -32,9 +32,7 @@ export class Form20ListService {
 
   getForm20List(params = {}): Observable<Form20List[]> {
      const url = `${this.baseUrl}/obtainFormList`;
-     console.log('Fetching Form20 List with params:', params);
     return this.http.post<Form20List[]>(url, params).pipe(
-      tap(data => console.log('Fetched Form20 List:', data)),
       catchError(error => {
         console.error('Error fetching Form20 List:', error);
         throw error;

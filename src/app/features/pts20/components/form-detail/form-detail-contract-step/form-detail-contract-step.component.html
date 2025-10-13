@@ -7,8 +7,11 @@
     <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
       <mat-label>Type</mat-label>
       <mat-select formControlName="Type">
-        <mat-option value="A">A</mat-option>
-        <mat-option value="B">B</mat-option>
+        @for (contracttype of contractTypes | keyvalue; track contracttype.key) {
+        <mat-option [value]="contracttype.key">
+          {{ contracttype.value }}
+        </mat-option>
+        }
       </mat-select>
     </mat-form-field>
 
@@ -20,8 +23,14 @@
     <mat-form-field appearance="fill" class="w-32">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">L</mat-option>
+        <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
+        <mat-option value="M/H">M/H</mat-option>
         <mat-option value="H">H</mat-option>
+        <mat-option value="NA">N/A</mat-option>
+        <mat-option value="NSR">NSR</mat-option>
+        <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
@@ -48,42 +57,67 @@
     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskLimit">
+        <mat-option value="M">L</mat-option>
+        <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
+        <mat-option value="M/H">M/H</mat-option>
         <mat-option value="H">H</mat-option>
+        <mat-option value="NA">N/A</mat-option>
+        <mat-option value="NSR">NSR</mat-option>
+        <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
 
   <div class="form-row">
+    <div class="mb-2 font-bold">Measurement Details:</div>
     <mat-form-field appearance="fill" class="flex-1 min-w-[160px]">
       <mat-label>Measurement Details</mat-label>
       <mat-select formControlName="MeasurementDetails">
-        <mat-option value="M">M</mat-option>
-        <mat-option value="H">H</mat-option>
+        @for(measurementdetail of measurementDetails | keyvalue; track measurementdetail.key) {
+        <mat-option [value]="measurementdetail.key">
+          {{ measurementdetail.value }}
+        </mat-option>
+        }
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="flex-1 min-w-[160px]">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">L</mat-option>
+        <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
+        <mat-option value="M/H">M/H</mat-option>
         <mat-option value="H">H</mat-option>
+        <mat-option value="NA">N/A</mat-option>
+        <mat-option value="NSR">NSR</mat-option>
+        <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
       <mat-label>Fluctuations</mat-label>
       <mat-select formControlName="Fluctuations">
-        <mat-option value="M">Fixed Price</mat-option>
-        <mat-option value="H">Fluctuating Price</mat-option>
+        @for(fluctuation of fluctuation | keyvalue; track fluctuation.key) {
+        <mat-option [value]="fluctuation.key">
+          {{ fluctuation.value }}
+        </mat-option>
+        }
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="w-32">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">L</mat-option>
+        <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
+        <mat-option value="M/H">M/H</mat-option>
         <mat-option value="H">H</mat-option>
+        <mat-option value="NA">N/A</mat-option>
+        <mat-option value="NSR">NSR</mat-option>
+        <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
@@ -116,8 +150,14 @@
       <mat-form-field appearance="fill" class="min-w-[160px]">
         <mat-label>Degree of Risk</mat-label>
         <mat-select formControlName="DegreeRiskType">
+          <mat-option value="M">L</mat-option>
+          <mat-option value="L/M">L/M</mat-option>
           <mat-option value="M">M</mat-option>
+          <mat-option value="M/H">M/H</mat-option>
           <mat-option value="H">H</mat-option>
+          <mat-option value="NA">N/A</mat-option>
+          <mat-option value="NSR">NSR</mat-option>
+          <mat-option value="Pending">Pending</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -131,8 +171,14 @@
     <mat-form-field appearance="fill" class="min-w-[160px]">
       <mat-label>Degree of Risk:</mat-label>
       <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">L</mat-option>
+        <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
+        <mat-option value="M/H">M/H</mat-option>
         <mat-option value="H">H</mat-option>
+        <mat-option value="NA">N/A</mat-option>
+        <mat-option value="NSR">NSR</mat-option>
+        <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="fill" class="min-w-[160px]">
@@ -142,8 +188,14 @@
     <mat-form-field appearance="fill" class="min-w-[160px]">
       <mat-label>Degree of Risk:</mat-label>
       <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">L</mat-option>
+        <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
+        <mat-option value="M/H">M/H</mat-option>
         <mat-option value="H">H</mat-option>
+        <mat-option value="NA">N/A</mat-option>
+        <mat-option value="NSR">NSR</mat-option>
+        <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
@@ -158,8 +210,14 @@
     <mat-form-field appearance="fill" class="min-w-[160px]">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">L</mat-option>
+        <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
+        <mat-option value="M/H">M/H</mat-option>
         <mat-option value="H">H</mat-option>
+        <mat-option value="NA">N/A</mat-option>
+        <mat-option value="NSR">NSR</mat-option>
+        <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
     <label class="block mb-1">DFMA Required:</label>
@@ -171,8 +229,14 @@
     <mat-form-field appearance="fill" class="min-w-[160px]">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">L</mat-option>
+        <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
+        <mat-option value="M/H">M/H</mat-option>
         <mat-option value="H">H</mat-option>
+        <mat-option value="NA">N/A</mat-option>
+        <mat-option value="NSR">NSR</mat-option>
+        <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
   </div>

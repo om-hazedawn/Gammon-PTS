@@ -22,8 +22,14 @@
     <mat-form-field appearance="fill" class="w-32">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskType">
+        <mat-option value="M">L</mat-option>
+        <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
+        <mat-option value="M/H">M/H</mat-option>
         <mat-option value="H">H</mat-option>
+        <mat-option value="NA">N/A</mat-option>
+        <mat-option value="NSR">NSR</mat-option>
+        <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
 
@@ -83,8 +89,14 @@
     <mat-form-field appearance="fill" class="w-32">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskType3">
+        <mat-option value="M">L</mat-option>
+        <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
+        <mat-option value="M/H">M/H</mat-option>
         <mat-option value="H">H</mat-option>
+        <mat-option value="NA">N/A</mat-option>
+        <mat-option value="NSR">NSR</mat-option>
+        <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
 
@@ -96,11 +108,16 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+      <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="LimitofRetentionselect">
-        <mat-option value="1">L</mat-option>
-        <mat-option value="2">L/M</mat-option>
-        <mat-option value="3">M</mat-option>
-        <mat-option value="4">L/H</mat-option>
+        <mat-option value="M">L</mat-option>
+        <mat-option value="L/M">L/M</mat-option>
+        <mat-option value="M">M</mat-option>
+        <mat-option value="M/H">M/H</mat-option>
+        <mat-option value="H">H</mat-option>
+        <mat-option value="NA">N/A</mat-option>
+        <mat-option value="NSR">NSR</mat-option>
+        <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
@@ -110,13 +127,13 @@
       <label class="font-bold">Cash Profile:</label>
     </div>
     <mat-label>Max Exposure (Amount)</mat-label>
-    <div style="width: 200px;">
+    <div style="width: 200px">
       <mat-form-field appearance="fill">
         <input matInput formControlName="MaxExposureAmount" type="number" />
       </mat-form-field>
     </div>
     <label>for</label>
-    <div style="width: 200px;">
+    <div style="width: 200px">
       <mat-form-field appearance="fill">
         <input matInput formControlName="MaxExposureMonths" type="number" />
       </mat-form-field>
@@ -133,14 +150,18 @@
       <mat-label>Peak Surplus</mat-label>
       <input matInput formControlName="PeakSurplus" />
     </mat-form-field>
-    <div style="width: 200px;">
+    <div style="width: 200px">
       <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
-        <mat-label>Risk Level</mat-label>
+        <mat-label>Degree of Risk</mat-label>
         <mat-select formControlName="RiskLevel">
-          <mat-option value="L">L</mat-option>
+          <mat-option value="M">L</mat-option>
           <mat-option value="L/M">L/M</mat-option>
           <mat-option value="M">M</mat-option>
-          <mat-option value="L/H">L/H</mat-option>
+          <mat-option value="M/H">M/H</mat-option>
+          <mat-option value="H">H</mat-option>
+          <mat-option value="NA">N/A</mat-option>
+          <mat-option value="NSR">NSR</mat-option>
+          <mat-option value="Pending">Pending</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
