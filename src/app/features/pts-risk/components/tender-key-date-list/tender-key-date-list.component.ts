@@ -149,7 +149,9 @@ export class TenderKeyDateListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result === 'saved') {
+      if (result) {
+        console.log("result......");
+        console.log(result);
         this.loadKeyDates();
       }
     });

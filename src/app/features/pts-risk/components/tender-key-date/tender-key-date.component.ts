@@ -117,13 +117,13 @@ export class TenderKeyDateComponent {
   keyDateForm: FormGroup;
   isSubmitting = false;
   keyDateTypes: KeyDateType[] = [
-    'COMMERCIAL',
-    'FINANCIAL',
-    'LEGAL',
-    'EXCO',
-    'CTC',
-    'GTC',
-    'SHAREHOLDER'
+    'Commercial Reviewed on',
+    'Financial Reviewed on',
+    'Legal Reviewed on',
+    'EXCO Meeting on',
+    'CTC Meeting on',
+    'GTC Meeting on',
+    'BB Board & JP Fin Com on'
   ];
 
   constructor(
@@ -209,7 +209,8 @@ export class TenderKeyDateComponent {
           id: 0, // Send empty id for new records
           type: formValue.type as KeyDateType,
           keyDate: formattedDate,
-          remark: formValue.remark || ''
+          remark: formValue.remark || '',
+          tenderId: this.data.tenderId
         };
 
         console.log('Submitting payload:', payload);

@@ -3,8 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-export type KeyDateType = 'COMMERCIAL' | 'FINANCIAL' | 'LEGAL' | 'EXCO' | 'CTC' | 'GTC' | 'SHAREHOLDER';
-
+export type KeyDateType = 'Commercial Reviewed on' | 'Financial Reviewed on' | 'Legal Reviewed on' | 'EXCO Meeting on' | 'CTC Meeting on' | 'GTC Meeting on' | 'BB Board & JP Fin Com on';
 export interface TenderKeyDate {
   id: number;
   tenderId: number;
@@ -57,11 +56,7 @@ export class TenderKeyDateApiService {
 
   createKeyDate(tenderId: number, request: CreateKeyDateRequest): Observable<TenderKeyDate> {
     const url = `${this.baseUrl}/${tenderId}/updateKeyDate`;
-    const payload = {
-
-      ...request,
-      tenderId
-    };
+    const payload = [request];
     
     console.log('Creating key date:', {
       url,
