@@ -10,6 +10,8 @@ import { Form20ListService, Form20List } from '../../../../core/services/Form20/
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { FormAttachmentComponent } from './form-attachment/form-attchment.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-form-list',
@@ -25,6 +27,7 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
     MatSnackBarModule,
     MatPaginatorModule,
     MatSortModule,
+    MatDialogModule,
   ],
   template: `
     <div class="form-list-container">
@@ -53,7 +56,13 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
             {{ error }}
           </div>
           } @if(!loading && !error){
-          <table mat-table [dataSource]="dataSource" matSort class="forms-table" style="width: 100%;">
+          <table
+            mat-table
+            [dataSource]="dataSource"
+            matSort
+            class="forms-table"
+            style="width: 100%;"
+          >
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef>ID</th>
               <td mat-cell *matCellDef="let form">{{ form.id }}</td>
@@ -110,6 +119,24 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
               <td mat-cell *matCellDef="let form">{{ form.dueDate | date }}</td>
             </ng-container>
 
+            <ng-container matColumnDef="print">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let form">
+                <button mat-icon-button>
+                  <mat-icon>print</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="attachment">
+              <th mat-header-cell *matHeaderCellDef>Attachment</th>
+              <td mat-cell *matCellDef="let form">
+                <button mat-icon-button (click)="openAttachmentDialog(form.id)">
+                  <mat-icon>attach_file</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
           </table>
@@ -119,7 +146,8 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
             [pageSize]="10"
             [pageSizeOptions]="[5, 10, 20, 50]"
             showFirstLastButtons
-            class="custom-paginator">
+            class="custom-paginator"
+          >
           </mat-paginator>
           }
         </mat-card-content>
@@ -305,9 +333,15 @@ export class FormListComponent implements OnInit, AfterViewInit {
     'contractDetails',
     'bidTypeId',
     'dueDate',
+    'print',
+    'attachment',
   ];
 
-  constructor(private form20ListService: Form20ListService, private snackBar: MatSnackBar) {}
+  constructor(
+    private form20ListService: Form20ListService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) {}
   loadForms(): void {
     this.loading = true;
     this.form20ListService.getForm20List().subscribe({
@@ -331,7 +365,38 @@ export class FormListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
+  openAttachmentDialog(formId: string): void {
+    const dialogRef = this.dialog.open(FormAttachmentComponent, {
+      width: '500px',
+      disableClose: false,
+      data: { formId }
+    });
+
+    dialogRef.afterClosed().subscribe((result: {file: File, type: string} | undefined) => {
+      if (result) {
+        // Create FormData and append file
+        const formData = new FormData();
+        formData.append('file', result.file);
+        formData.append('type', result.type);
+        formData.append('formId', formId);
+
+        // Here you would send the formData to your API
+        console.log('Uploading attachment:', {
+          formId,
+          fileName: result.file.name,
+          type: result.type
+        });
+
+        this.snackBar.open('File uploaded successfully', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top',
+        });
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
     if (this.dataSource && this.paginator) {
       this.dataSource.paginator = this.paginator;
     }
