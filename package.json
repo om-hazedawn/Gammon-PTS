@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
+    "build:gti-dev": "ng build --configuration=gti-dev",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

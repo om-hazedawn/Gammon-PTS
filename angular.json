@@ -50,6 +50,18 @@
               ],
               "outputHashing": "all"
             },
+            "gti-dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.gti-dev.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractLicenses": true
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
@@ -63,6 +75,9 @@
           "configurations": {
             "production": {
               "buildTarget": "new-pts-ui:build:production"
+            },
+            "gti-dev": {
+              "buildTarget": "new-pts-ui:build:gti-dev"
             },
             "development": {
               "buildTarget": "new-pts-ui:build:development",
