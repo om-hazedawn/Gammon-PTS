@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -17,6 +19,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   selector: 'app-form-list',
   standalone: true,
   imports: [
+    RouterModule,
     CommonModule,
     MatTableModule,
     MatButtonModule,
@@ -138,7 +141,12 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumns"
+              (click)="onRowClick(row)"
+              style="cursor: pointer;"
+            ></tr>
           </table>
           <mat-paginator
             #paginator
@@ -316,6 +324,11 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   ],
 })
 export class FormListComponent implements OnInit, AfterViewInit {
+  onRowClick(row: Form20List): void {
+    this.router.navigate(['/pts20/form', row.id]);
+  }
+
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource = new MatTableDataSource<Form20List>();
   loading = false;
@@ -340,13 +353,14 @@ export class FormListComponent implements OnInit, AfterViewInit {
   constructor(
     private form20ListService: Form20ListService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {}
   loadForms(): void {
     this.loading = true;
     this.form20ListService.getForm20List().subscribe({
       next: (data) => {
-        this.allData = data;
+        this.allData = data.reverse(); // Reverse the array to show latest data first
         this.dataSource = new MatTableDataSource<Form20List>(this.allData);
         setTimeout(() => {
           this.dataSource.paginator = this.paginator;
