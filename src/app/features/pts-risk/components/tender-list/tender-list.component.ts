@@ -191,7 +191,8 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
           <mat-paginator
             [pageSize]="pageSize"
             [pageSizeOptions]="[5, 10, 25, 50]"
-            [length]="dataSource.data.length"
+            [length]="totalItems"
+            [pageIndex]="0"
             showFirstLastButtons
             (page)="handlePageEvent($event)"
             class="custom-paginator"
@@ -428,8 +429,10 @@ export class TenderListComponent implements OnInit, AfterViewInit {
         element.excomDecisionPriorityLevel = result.excomDecisionPriorityLevel;
         element.excomDecisionNotes = result.excomDecisionNotes;
         element.excomDecisionDate = new Date().toISOString();
-        // Refresh the table
-        this.dataSource.data = [...this.dataSource.data];
+        // Refresh the table while maintaining pagination
+        const currentData = [...this.dataSource.data];
+        this.dataSource = new MatTableDataSource<TenderItem>(currentData);
+        this.dataSource.paginator = this.paginator;
       }
     });
   }
@@ -454,10 +457,10 @@ export class TenderListComponent implements OnInit, AfterViewInit {
         element.winningCompetitor = result.winningCompetitor;
         element.marginLostPercentage = result.marginLost;
         element.otherReasonsForLoss = result.otherReasonForLoss;
-        // Refresh the table
-        this.dataSource.data = [...this.dataSource.data];
-        // Reload tenders to get fresh data
-        this.loadTenders();
+        // Refresh the table while maintaining pagination
+        const currentData = [...this.dataSource.data];
+        this.dataSource = new MatTableDataSource<TenderItem>(currentData);
+        this.dataSource.paginator = this.paginator;
       }
     });
   }
@@ -543,14 +546,13 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     this.tenderListApiService.getTenders(-1, 1).subscribe({
       next: (response) => {
         if (response.data && response.data.length > 0) {
-          // Store all data in the MatTableDataSource
-          this.dataSource.data = response.data;
+          this.dataSource = new MatTableDataSource<TenderItem>(response.data);
           this.totalItems = response.data.length;
-          
-          // Initialize paginator after data is loaded
           setTimeout(() => {
             if (this.paginator) {
               this.dataSource.paginator = this.paginator;
+              this.paginator.pageIndex = 0;
+              this.paginator.pageSize = this.pageSize;
             }
           });
         }
@@ -584,11 +586,10 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   handlePageEvent(event: any) {
     this.pageSize = event.pageSize;
     this.currentPage = event.pageIndex + 1;
-    
-    // No need to fetch data, just let MatTableDataSource handle pagination
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.pageSize = this.pageSize;
-      this.dataSource.paginator.pageIndex = this.currentPage - 1;
+    // Update paginator settings
+    if (this.paginator) {
+      this.paginator.pageSize = this.pageSize;
+      this.paginator.pageIndex = event.pageIndex;
     }
   }
 
@@ -597,11 +598,12 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Connect paginator with dataSource and initialize settings
-    if (this.paginator) {
-      this.paginator.pageSize = this.pageSize;
-      this.dataSource.paginator = this.paginator;
-    }
+    setTimeout(() => {
+      if (this.dataSource && this.paginator) {
+        this.paginator.pageSize = this.pageSize;
+        this.dataSource.paginator = this.paginator;
+      }
+    });
   }
 }
 

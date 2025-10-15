@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -134,7 +134,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
             <ng-container matColumnDef="attachment">
               <th mat-header-cell *matHeaderCellDef>Attachment</th>
               <td mat-cell *matCellDef="let form">
-                <button mat-icon-button (click)="openAttachmentDialog(form.id)">
+                <button mat-icon-button (click)="openAttachmentDialog(form.id, $event)">
                   <mat-icon>attach_file</mat-icon>
                 </button>
               </td>
@@ -151,8 +151,9 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
           <mat-paginator
             #paginator
             [length]="allData.length"
-            [pageSize]="10"
-            [pageSizeOptions]="[5, 10, 20, 50]"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions"
+            [pageIndex]="0"
             showFirstLastButtons
             class="custom-paginator"
           >
@@ -334,6 +335,8 @@ export class FormListComponent implements OnInit, AfterViewInit {
   loading = false;
   error: string | null = null;
   allData: Form20List[] = [];
+  pageSize = 10;
+  pageSizeOptions = [5, 10, 20, 50];
 
   displayedColumns: string[] = [
     'id',
@@ -354,7 +357,8 @@ export class FormListComponent implements OnInit, AfterViewInit {
     private form20ListService: Form20ListService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
   loadForms(): void {
     this.loading = true;
@@ -362,10 +366,11 @@ export class FormListComponent implements OnInit, AfterViewInit {
       next: (data) => {
         this.allData = data.reverse(); // Reverse the array to show latest data first
         this.dataSource = new MatTableDataSource<Form20List>(this.allData);
-        setTimeout(() => {
-          this.dataSource.paginator = this.paginator;
-        });
         this.loading = false;
+        this.cdr.detectChanges(); // Trigger change detection
+        if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
+        }
       },
       error: (error) => {
         console.error('Error loading forms:', error);
@@ -379,7 +384,9 @@ export class FormListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  openAttachmentDialog(formId: string): void {
+  openAttachmentDialog(formId: string, event: MouseEvent): void {
+    // Prevent row click event from triggering
+    event.stopPropagation();
     const dialogRef = this.dialog.open(FormAttachmentComponent, {
       width: '500px',
       disableClose: false,
