@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { FormApprovalComponent } from './form-Approval/form-approval.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Form20DetailsService, Form20Details } from '../../../../core/services/Form20/form20details.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -33,6 +35,7 @@ import {
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MatDialogModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -431,7 +434,8 @@ export class FormDetailComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private form20Service: Form20DetailsService
+    private form20Service: Form20DetailsService,
+    private dialog: MatDialog
   ) {
     this.initializeForm();
   }
@@ -1150,9 +1154,14 @@ export class FormDetailComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // Don't process form submission if we're in the attachment step
+    if (this.currentStep === 11) {
+      return;
+    }
+
     // Clear previous validation errors
     this.validationErrors = {};
-    
+
     // Validate all steps before submission
     let isValid = true;
     const originalStep = this.currentStep;
@@ -1179,11 +1188,29 @@ export class FormDetailComponent implements OnInit {
       return;
     }
 
+    // Open approval dialog if form is valid
     if (this.formGroup.valid) {
-      const formValue = {...this.formGroup.value};
-      
-      // Helper function to denormalize Yes/No values
-      const denormalizeYesNo = (value: string | null): string => {
+      const dialogRef = this.dialog.open(FormApprovalComponent, {
+        width: '800px',
+        data: { formData: this.formGroup.value }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.processFormSubmission();
+        }
+      });
+    } else {
+      this.loadError = 'Form validation failed. Please check all required fields.';
+      setTimeout(() => this.loadError = null, 5000);
+    }
+  }
+
+  private processFormSubmission(): void {
+    const formValue = {...this.formGroup.value};
+    
+    // Helper function to denormalize Yes/No values
+    const denormalizeYesNo = (value: string | null): string => {
         if (!value) return 'NO';
         value = value.toUpperCase();
         if (value === 'YES' || value === 'NO') return value;
@@ -1228,11 +1255,26 @@ export class FormDetailComponent implements OnInit {
 
       // Submit the form with denormalized values
       console.log('Form submitted:', formValue);
-      this.goBack();
-    } else {
-      this.loadError = 'Form validation failed. Please check all required fields.';
-      setTimeout(() => this.loadError = null, 5000);
-    }
+      
+      if (this.isEditMode && this.formId) {
+        this.form20Service.updateForm20(this.formId, formValue).subscribe({
+          next: () => this.goBack(),
+          error: (err: Error) => {
+            this.loadError = 'Failed to update form. Please try again.';
+            console.error('Error updating form:', err);
+            setTimeout(() => this.loadError = null, 5000);
+          }
+        });
+      } else {
+        this.form20Service.submitForm20(formValue).subscribe({
+          next: () => this.goBack(),
+          error: (err: Error) => {
+            this.loadError = 'Failed to create form. Please try again.';
+            console.error('Error creating form:', err);
+            setTimeout(() => this.loadError = null, 5000);
+          }
+        });
+      }
   }
 
   saveDraft(): void {

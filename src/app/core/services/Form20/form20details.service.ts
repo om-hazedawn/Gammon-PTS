@@ -239,4 +239,24 @@ export class Form20DetailsService {
       })
     );
   }
+
+  submitForm20(formData: Partial<Form20Details>): Observable<Form20Details> {
+    const url = `${this.baseUrl}/submit`;
+    return this.http.post<Form20Details>(url, formData).pipe(
+      catchError(error => {
+        console.error('Error submitting Form20:', error);
+        throw error;
+      })
+    );
+  }
+
+  updateForm20(id: number, formData: Partial<Form20Details>): Observable<Form20Details> {
+    const url = `${this.baseUrl}/update/${id}`;
+    return this.http.put<Form20Details>(url, formData).pipe(
+      catchError(error => {
+        console.error('Error updating Form20:', error);
+        throw error;
+      })
+    );
+  }
 }

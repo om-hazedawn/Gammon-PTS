@@ -2,12 +2,21 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { ControlContainer, FormGroupDirective } from '@angular/forms';
 import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
 import { Form20ListDropdownService, ObtainRegion } from '../../../../../core/services/Form20/form20listdropdown.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { Form30LinkPopupComponent } from '../form30link-component/form30Linkpopup.components';
 
 @Component({
   providers: [Form20ListDropdownService],
   selector: 'app-form-detail-project-step',
   standalone: true,
-  imports: FORM_DETAIL_STEP_IMPORTS,
+  imports: [
+    ...FORM_DETAIL_STEP_IMPORTS,
+    MatDialogModule,
+    MatIconModule,
+    MatButtonModule,
+  ],
   templateUrl: './form-detail-project-step.component.html',
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,7 +33,10 @@ export class FormDetailProjectStepComponent implements OnInit {
   bidTypes: ObtainRegion = {};
   yesNo: ObtainRegion = {};
 
-  constructor(private form20ListDropdownService: Form20ListDropdownService) {}
+  constructor(
+    private form20ListDropdownService: Form20ListDropdownService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadRegions();
@@ -35,6 +47,22 @@ export class FormDetailProjectStepComponent implements OnInit {
     this.loadFinanceTechnicalSplits();
     this.loadBidTypes();
     this.loadYesNoNA();
+  }
+
+  openForm30Popup(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const dialogRef = this.dialog.open(Form30LinkPopupComponent, {
+      width: '900px',
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe((result: string | undefined) => {
+      if (result) {
+        console.log('Form 30 URL:', result);
+      }
+    });
   }
 
   private loadRegions(): void {
@@ -113,19 +141,15 @@ export class FormDetailProjectStepComponent implements OnInit {
       }
     });
   }
- 
+
   private loadYesNoNA(): void {
     this.form20ListDropdownService.obtainYesNoNA().subscribe({
       next: (data: ObtainRegion) => {
         this.yesNo = data;
-
       },
       error: (error: unknown) => {
         console.error('Error loading Yes/No/NA options:', error);
       }
     });
   }
-
-
-
 }

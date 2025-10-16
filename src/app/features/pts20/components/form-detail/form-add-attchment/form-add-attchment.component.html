@@ -1,0 +1,65 @@
+<div class="dialog-container">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold text-[#1976d2]">Add Attachment</h2>
+    <button mat-icon-button (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="p-4 bg-white rounded-lg">
+    <form [formGroup]="attachmentForm" (ngSubmit)="onSubmit()">
+      <div class="mb-6">
+        <!-- Attachment Type -->
+        <mat-form-field class="w-full mb-4">
+          <mat-label>Attachment Type</mat-label>
+          <mat-select formControlName="type">
+            @for (type of attachmentTypes; track type.value) {
+              <mat-option [value]="type.value">{{type.label}}</mat-option>
+            }
+          </mat-select>
+          @if (attachmentForm.get('type')?.errors?.['required'] && attachmentForm.get('type')?.touched) {
+            <mat-error>Please select an attachment type</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- File Upload -->
+        <div class="mb-4">
+          <input
+            type="file"
+            class="hidden"
+            accept=".pdf"
+            #fileInput
+            (change)="onFileSelected($event)"
+          >
+          <button 
+            type="button"
+            mat-stroked-button 
+            color="primary"
+            class="w-full p-4 border-2 border-dashed"
+            (click)="fileInput.click()">
+            @if (selectedFile) {
+              Selected: {{selectedFile.name}}
+            } @else {
+              Click to select PDF file
+            }
+          </button>
+          @if (attachmentForm.get('file')?.errors?.['required'] && attachmentForm.get('file')?.touched) {
+            <mat-error class="mt-2">Please select a file</mat-error>
+          }
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end gap-3">
+        <button mat-button type="button" (click)="onCancel()">Cancel</button>
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          [disabled]="!attachmentForm.valid">
+          Add
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

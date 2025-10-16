@@ -2,10 +2,13 @@
   <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Project</h2>
 
   <div class="form-row">
-    <mat-form-field appearance="fill" class="w-64">
-      <mat-label>Form 30</mat-label>
-      <input matInput formControlName="form30" [readonly]="!isEditMode" />
-    </mat-form-field>
+    <div class="flex items-center gap-2">
+      <label class="w-40 font-semibold">Form 30</label>
+      <button mat-raised-button color="primary" (click)="openForm30Popup($event)">
+        <mat-icon>link</mat-icon>
+        Link
+      </button>
+    </div>
     <mat-form-field appearance="fill">
       <mat-label>Business Unit</mat-label>
       <mat-select formControlName="businessUnit" required>
