@@ -8,7 +8,30 @@
           <div class="flex items-center gap-4">
             <div class="w-40 font-semibold">Chief Executive</div>
             <mat-form-field appearance="fill" class="w-full">
-              <input matInput formControlName="ChiefExecutive" />
+              <mat-chip-grid #chipGridCE aria-label="Chief Executive selection">
+               @for (user of selectedCE; track user.employeeNo) {
+                 <mat-chip-row (removed)="removeChief(user)">
+                   {{user.fullName}}
+                   <button matChipRemove>
+                     <mat-icon>cancel</mat-icon>
+                   </button>
+                 </mat-chip-row>
+               }
+              </mat-chip-grid>
+              <input matInput
+                     placeholder="Type to search..."
+                     [matChipInputFor]="chipGridCE"
+                     [matAutocomplete]="auto"
+                     [formControl]="ceSearchCtrl">
+              <mat-autocomplete #auto="matAutocomplete"
+                             (optionSelected)="selectChief($event)"
+                             [displayWith]="displayFn">
+                @for (user of filteredCE | async; track user.employeeNo) {
+                  <mat-option [value]="user">
+                    {{user.fullName}} - {{user.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
             </mat-form-field>
           </div>
         </div>
@@ -17,7 +40,31 @@
           <div class="flex items-center gap-4">
             <div class="w-40 font-semibold">Division Commercial Manager</div>
             <mat-form-field appearance="fill" class="w-full">
-              <input matInput formControlName="DivisionCommercialManager" />
+              <mat-chip-grid #chipGridBDGDCM aria-label="Division Commercial Manager selection">
+               @for (user of selectedBDGDCM; track user.employeeNo) {
+                  <mat-chip-row (removed)="removeBDGDCM(user)">
+                   {{user.fullName}}
+                   <button matChipRemove>
+                     <mat-icon>cancel</mat-icon>
+                   </button>
+                 </mat-chip-row>
+               }
+              </mat-chip-grid>
+              <input matInput
+                     placeholder="Type to search..."
+                     [matChipInputFor]="chipGridBDGDCM"
+                     [matAutocomplete]="autoBDGDCM"
+                     [formControl]="bdgDcmSearchCtrl">
+              <mat-autocomplete #autoBDGDCM="matAutocomplete"
+                             (optionSelected)="selectBDGDCM($event)"
+                             [displayWith]="displayFn">
+                @for (user of filteredBDGDCM | async; track user.employeeNo) {
+                  <mat-option [value]="user">
+                    {{user.fullName}} - {{user.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
+              
             </mat-form-field>
           </div>
         </div>
@@ -27,8 +74,32 @@
         <div class="space-y-4">
           <div class="flex items-center gap-4">
             <div class="w-40 font-semibold">Executive Director</div>
-            <mat-form-field appearance="fill" class="w-full">
-              <input matInput formControlName="ExecutiveDirector" />
+             <mat-form-field appearance="fill" class="w-full">
+              <mat-chip-grid #chipGridED aria-label="Executive Director selection">
+               @for (user of selectedED; track user.employeeNo) {
+                 <mat-chip-row (removed)="removeED(user)">
+                   {{user.fullName}}
+                   <button matChipRemove>
+                     <mat-icon>cancel</mat-icon>
+                   </button>
+                 </mat-chip-row>
+               }
+              </mat-chip-grid>
+              <input matInput
+                     placeholder="Type to search..."
+                     [matChipInputFor]="chipGridED"
+                     [matAutocomplete]="autoED"
+                     [formControl]="edSearchCtrl">
+              <mat-autocomplete #autoED="matAutocomplete"
+                             (optionSelected)="selectED($event)"
+                             [displayWith]="displayFn">
+                @for (user of filteredED | async; track user.employeeNo) {
+                  <mat-option [value]="user">
+                    {{user.fullName}} - {{user.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
+              
             </mat-form-field>
           </div>
         </div>
@@ -37,7 +108,30 @@
           <div class="flex items-center gap-4">
             <div class="w-40 font-semibold">Insurance Manager</div>
             <mat-form-field appearance="fill" class="w-full">
-              <input matInput formControlName="InsuranceManager" />
+             <mat-chip-grid #chipGridINS_MGR aria-label="Insurance Manager selection">
+               @for (user of selectedINS_MGR; track user.employeeNo) {
+                 <mat-chip-row (removed)="removeINS_MGR(user)">
+                   {{user.fullName}}
+                   <button matChipRemove>
+                     <mat-icon>cancel</mat-icon>
+                   </button>
+                 </mat-chip-row>
+               }
+              </mat-chip-grid>
+              <input matInput
+                     placeholder="Type to search..."
+                     [matChipInputFor]="chipGridINS_MGR"
+                     [matAutocomplete]="autoINS_MGR"
+                     [formControl]="insMgrSearchCtrl">
+              <mat-autocomplete #autoINS_MGR="matAutocomplete"
+                             (optionSelected)="selectINS_MGR($event)"
+                             [displayWith]="displayFn">
+                @for (user of filteredINS_MGR | async; track user.employeeNo) {
+                  <mat-option [value]="user">
+                    {{user.fullName}} - {{user.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
             </mat-form-field>
           </div>
         </div>
@@ -48,7 +142,30 @@
           <div class="flex items-center gap-4">
             <div class="w-40 font-semibold">Director</div>
             <mat-form-field appearance="fill" class="w-full">
-              <input matInput formControlName="Director" />
+              <mat-chip-grid #chipGridDIR aria-label="Director selection">
+               @for (user of selectedDIR; track user.employeeNo) {
+                 <mat-chip-row (removed)="removeDIR(user)">
+                   {{user.fullName}}
+                   <button matChipRemove>
+                     <mat-icon>cancel</mat-icon>
+                   </button>
+                 </mat-chip-row>
+               }
+              </mat-chip-grid>
+              <input matInput
+                     placeholder="Type to search..."
+                     [matChipInputFor]="chipGridDIR"
+                     [matAutocomplete]="autoDIR"
+                     [formControl]="dirSearchCtrl">
+              <mat-autocomplete #autoDIR="matAutocomplete"
+                             (optionSelected)="selectDIR($event)"
+                             [displayWith]="displayFn">
+                @for (user of filteredDIR | async; track user.employeeNo) {
+                  <mat-option [value]="user">
+                    {{user.fullName}} - {{user.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
             </mat-form-field>
           </div>
         </div>
@@ -57,7 +174,30 @@
           <div class="flex items-center gap-4">
             <div class="w-40 font-semibold">Head of Lambeth</div>
             <mat-form-field appearance="fill" class="w-full">
-              <input matInput formControlName="HeadofLambeth" />
+              <mat-chip-grid #chipGridLAM aria-label="Head of Lambeth selection">
+               @for (user of selectedLAM; track user.employeeNo) {
+                 <mat-chip-row (removed)="removeLAM(user)">
+                   {{user.fullName}}
+                   <button matChipRemove>
+                     <mat-icon>cancel</mat-icon>
+                   </button>
+                 </mat-chip-row>
+               }
+              </mat-chip-grid>
+              <input matInput
+                     placeholder="Type to search..."
+                     [matChipInputFor]="chipGridLAM"
+                     [matAutocomplete]="autoLAM"
+                     [formControl]="lamSearchCtrl">
+              <mat-autocomplete #autoLAM="matAutocomplete"
+                             (optionSelected)="selectLAM($event)"
+                             [displayWith]="displayFn">
+                @for (user of filteredLAM | async; track user.employeeNo) {
+                  <mat-option [value]="user">
+                    {{user.fullName}} - {{user.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
             </mat-form-field>
           </div>
         </div>
@@ -77,7 +217,30 @@
           <div class="flex items-center gap-4">
             <div class="w-40 font-semibold">Head of Procurement</div>
             <mat-form-field appearance="fill" class="w-full">
-              <input matInput formControlName="HeadOfProcurement" />
+              <mat-chip-grid #chipGridPRO aria-label="Head of Procurement selection">
+                @for (user of selectedPRO; track user.employeeNo) {
+                  <mat-chip-row (removed)="removePRO(user)">
+                    {{user.fullName}}
+                    <button matChipRemove>
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </mat-chip-row>
+                }
+              </mat-chip-grid>
+              <input matInput
+                     placeholder="Type to search..."
+                     [matChipInputFor]="chipGridPRO"
+                     [matAutocomplete]="autoPRO"
+                     [formControl]="proSearchCtrl">
+              <mat-autocomplete #autoPRO="matAutocomplete"
+                             (optionSelected)="selectPRO($event)"
+                             [displayWith]="displayFn">
+                @for (user of filteredPRO | async; track user.employeeNo) {
+                  <mat-option [value]="user">
+                    {{user.fullName}} - {{user.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
             </mat-form-field>
           </div>
         </div>
@@ -88,7 +251,30 @@
           <div class="flex items-center gap-4">
             <div class="w-40 font-semibold">Finance Director</div>
             <mat-form-field appearance="fill" class="w-full">
-              <input matInput formControlName="FinanceDirector" />
+              <mat-chip-grid #chipGridFIN_DIR aria-label="Finance Director selection">
+                @for (user of selectedFIN_DIR; track user.employeeNo) {
+                  <mat-chip-row (removed)="removeFIN_DIR(user)">
+                    {{user.fullName}}
+                    <button matChipRemove>
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </mat-chip-row>
+                }
+              </mat-chip-grid>
+              <input matInput
+                     placeholder="Type to search..."
+                     [matChipInputFor]="chipGridFIN_DIR"
+                     [matAutocomplete]="autoFIN_DIR"
+                     [formControl]="finDirSearchCtrl">
+              <mat-autocomplete #autoFIN_DIR="matAutocomplete"
+                             (optionSelected)="selectFIN_DIR($event)"
+                             [displayWith]="displayFn">
+                @for (user of filteredFIN_DIR | async; track user.employeeNo) {
+                  <mat-option [value]="user">
+                    {{user.fullName}} - {{user.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
             </mat-form-field>
           </div>
         </div>
@@ -97,7 +283,30 @@
           <div class="flex items-center gap-4">
             <div class="w-40 font-semibold">Risk &amp; Opportunity Manager</div>
             <mat-form-field appearance="fill" class="w-full">
-              <input matInput formControlName="RiskOpportunityManager" />
+              <mat-chip-grid #chipGridRISK_OPP aria-label="Risk & Opportunity Manager selection">
+                @for (user of selectedRISK_OPP; track user.employeeNo) {
+                  <mat-chip-row (removed)="removeRISK_OPP(user)">
+                    {{user.fullName}}
+                    <button matChipRemove>
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </mat-chip-row>
+                }
+              </mat-chip-grid>
+              <input matInput
+                     placeholder="Type to search..."
+                     [matChipInputFor]="chipGridRISK_OPP"
+                     [matAutocomplete]="autoRISK_OPP"
+                     [formControl]="riskOppSearchCtrl">
+              <mat-autocomplete #autoRISK_OPP="matAutocomplete"
+                             (optionSelected)="selectRISK_OPP($event)"
+                             [displayWith]="displayFn">
+                @for (user of filteredRISK_OPP | async; track user.employeeNo) {
+                  <mat-option [value]="user">
+                    {{user.fullName}} - {{user.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
             </mat-form-field>
           </div>
         </div>
@@ -108,7 +317,30 @@
           <div class="flex items-center gap-4">
             <div class="w-40 font-semibold">Commercial Director</div>
             <mat-form-field appearance="fill" class="w-full">
-              <input matInput formControlName="CommercialDirector" />
+              <mat-chip-grid #chipGridCOM_DIR aria-label="Commercial Director selection">
+                @for (user of selectedCOM_DIR; track user.employeeNo) {
+                  <mat-chip-row (removed)="removeCOM_DIR(user)">
+                    {{user.fullName}}
+                    <button matChipRemove>
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </mat-chip-row>
+                }
+              </mat-chip-grid>
+              <input matInput
+                     placeholder="Type to search..."
+                     [matChipInputFor]="chipGridCOM_DIR"
+                     [matAutocomplete]="autoCOM_DIR"
+                     [formControl]="comDirSearchCtrl">
+              <mat-autocomplete #autoCOM_DIR="matAutocomplete"
+                             (optionSelected)="selectCOM_DIR($event)"
+                             [displayWith]="displayFn">
+                @for (user of filteredCOM_DIR | async; track user.employeeNo) {
+                  <mat-option [value]="user">
+                    {{user.fullName}} - {{user.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
             </mat-form-field>
           </div>
         </div>
@@ -117,7 +349,30 @@
           <div class="flex items-center gap-4">
             <div class="w-40 font-semibold">HSEQ</div>
             <mat-form-field appearance="fill" class="w-full">
-              <input matInput formControlName="HSEQ" />
+              <mat-chip-grid #chipGridHSEQ aria-label="HSEQ selection">
+                @for (user of selectedHSEQ; track user.employeeNo) {
+                  <mat-chip-row (removed)="removeHSEQ(user)">
+                    {{user.fullName}}
+                    <button matChipRemove>
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </mat-chip-row>
+                }
+              </mat-chip-grid>
+              <input matInput
+                     placeholder="Type to search..."
+                     [matChipInputFor]="chipGridHSEQ"
+                     [matAutocomplete]="autoHSEQ"
+                     [formControl]="hseqSearchCtrl">
+              <mat-autocomplete #autoHSEQ="matAutocomplete"
+                             (optionSelected)="selectHSEQ($event)"
+                             [displayWith]="displayFn">
+                @for (user of filteredHSEQ | async; track user.employeeNo) {
+                  <mat-option [value]="user">
+                    {{user.fullName}} - {{user.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
             </mat-form-field>
           </div>
         </div>
@@ -128,7 +383,30 @@
           <div class="flex items-center gap-4">
             <div class="w-40 font-semibold">General Counsel - Legal</div>
             <mat-form-field appearance="fill" class="w-full">
-              <input matInput formControlName="GeneralCounselLegal" />
+              <mat-chip-grid #chipGridGEN_COUN aria-label="General Counsel selection">
+                @for (user of selectedGEN_COUN; track user.employeeNo) {
+                  <mat-chip-row (removed)="removeGEN_COUN(user)">
+                    {{user.fullName}}
+                    <button matChipRemove>
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </mat-chip-row>
+                }
+              </mat-chip-grid>
+              <input matInput
+                     placeholder="Type to search..."
+                     [matChipInputFor]="chipGridGEN_COUN"
+                     [matAutocomplete]="autoGEN_COUN"
+                     [formControl]="genCounSearchCtrl">
+              <mat-autocomplete #autoGEN_COUN="matAutocomplete"
+                             (optionSelected)="selectGEN_COUN($event)"
+                             [displayWith]="displayFn">
+                @for (user of filteredGEN_COUN | async; track user.employeeNo) {
+                  <mat-option [value]="user">
+                    {{user.fullName}} - {{user.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
             </mat-form-field>
           </div>
         </div>

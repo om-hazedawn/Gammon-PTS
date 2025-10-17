@@ -241,7 +241,7 @@ export class Form20DetailsService {
   }
 
   submitForm20(formData: Partial<Form20Details>): Observable<Form20Details> {
-    const url = `${this.baseUrl}/submit`;
+    const url = `${this.baseUrl}/saveForm`;
     return this.http.post<Form20Details>(url, formData).pipe(
       catchError(error => {
         console.error('Error submitting Form20:', error);

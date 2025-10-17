@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { FormApprovalComponent } from './form-Approval/form-approval.component';
@@ -455,7 +456,7 @@ export class FormDetailComponent implements OnInit {
       form30: [''],
       businessUnit: ['', Validators.required],
       dueDate: [''],
-      performanceUnit: ['%'],
+      performanceUnit: [''],
 
       tenderNo: [''],
       projectTitle: ['', Validators.required],
@@ -544,7 +545,7 @@ export class FormDetailComponent implements OnInit {
       Bonds: this.fb.group({
         // Tender Bond
         TenderValue: [''],
-        tenderUnit: ['%'],
+        tenderUnit: [''],
         TenderCallBasis: [''],
         TenderExpiry: [''],
         TenderRemark: [''],
@@ -564,7 +565,7 @@ export class FormDetailComponent implements OnInit {
         AdvanceCallBasis: [''],
         AdvanceExpiry: [''],
         AdvanceRemark: [''],
-        AdvanceRisk: ['M'],
+        AdvanceRisk: [''],
 
         // Retention Bond
         RetentionValue: [''],
@@ -766,9 +767,15 @@ export class FormDetailComponent implements OnInit {
           this.isLoading = false;
         }
       },
-      error: (error: Error) => {
+      error: (error: HttpErrorResponse) => {
         console.error('Error loading form:', error);
-        this.loadError = error.message || 'Failed to load form details. Please try again.';
+        if (error.status === 400) {
+          this.loadError = 'Invalid form ID or form data not found. Please check the form ID and try again.';
+        } else if (error.error?.message) {
+          this.loadError = error.error.message;
+        } else {
+          this.loadError = 'Failed to load form details. Please try again.';
+        }
         this.isLoading = false;
       }
     });
@@ -1259,7 +1266,7 @@ export class FormDetailComponent implements OnInit {
       if (this.isEditMode && this.formId) {
         this.form20Service.updateForm20(this.formId, formValue).subscribe({
           next: () => this.goBack(),
-          error: (err: Error) => {
+          error: (err: HttpErrorResponse) => {
             this.loadError = 'Failed to update form. Please try again.';
             console.error('Error updating form:', err);
             setTimeout(() => this.loadError = null, 5000);
@@ -1268,7 +1275,7 @@ export class FormDetailComponent implements OnInit {
       } else {
         this.form20Service.submitForm20(formValue).subscribe({
           next: () => this.goBack(),
-          error: (err: Error) => {
+          error: (err: HttpErrorResponse) => {
             this.loadError = 'Failed to create form. Please try again.';
             console.error('Error creating form:', err);
             setTimeout(() => this.loadError = null, 5000);

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { ControlContainer, FormGroupDirective } from '@angular/forms';
 import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
-import { Form20ListDropdownService, ObtainRegion } from '../../../../../core/services/Form20/form20listdropdown.service';
+import { Form20ListDropdownService, ObtainRegion, BusinessUnitDisplay } from '../../../../../core/services/Form20/form20listdropdown.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +24,16 @@ import { Form30LinkPopupComponent } from '../form30link-component/form30Linkpopu
 export class FormDetailProjectStepComponent implements OnInit {
   @Input() isEditMode = false;
   
+  businessUnitMapping: { [key: string]: string } = {
+    'ALL': 'All',
+    'BDG': 'Building',
+    'CSD': 'CSD',
+    'BU1': 'BU1',
+    'BU2': 'BU2',
+    'BU3': 'BU3',
+    'BU4': 'BU4'
+  };
+  BuildingUnit: BusinessUnitDisplay = {};
   regions: ObtainRegion = {};
   currencies: ObtainRegion = {};
   tenderTypes: ObtainRegion = {};
@@ -39,6 +49,7 @@ export class FormDetailProjectStepComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadBuildingUnits();
     this.loadRegions();
     this.loadCurrencies();
     this.loadTenderTypes();
@@ -61,6 +72,21 @@ export class FormDetailProjectStepComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: string | undefined) => {
       if (result) {
         console.log('Form 30 URL:', result);
+      }
+    });
+  }
+  private loadBuildingUnits(): void {
+    this.form20ListDropdownService.obtainBuildingUnit().subscribe({
+      next: (data: ObtainRegion) => {
+        // Create a display object with just the keys and their mapped display names
+        const mappedData: BusinessUnitDisplay = {};
+        Object.keys(data).forEach(key => {
+          mappedData[key] = this.businessUnitMapping[key] || key;
+        });
+        this.BuildingUnit = mappedData;
+      },
+      error: (error: unknown) => {
+        console.error('Error loading building units:', error);
       }
     });
   }

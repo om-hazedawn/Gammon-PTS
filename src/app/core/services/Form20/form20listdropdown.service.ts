@@ -3,7 +3,19 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap } from 'rxjs';
 
 export interface ObtainRegion {
+  [key: string]: string[];
+}
+
+export interface BusinessUnitDisplay {
   [key: string]: string;
+}
+
+export interface ApprovalUser {
+  fullName: string;
+  employeeNo: string;
+  title: string;
+  ad: string;
+  email: string;
 }
 
 @Injectable({
@@ -11,9 +23,20 @@ export interface ObtainRegion {
 })
 export class Form20ListDropdownService {
   private baseUrl: string;
+  private buildingunit: string;
 
   constructor(private http: HttpClient) {
     this.baseUrl = '/api/pts20/Form20';
+    this.buildingunit = '/api/pts20/Authorize';
+  }
+
+  obtainBuildingUnit(): Observable<ObtainRegion> {
+    return this.http.post<ObtainRegion>(`${this.buildingunit}//functions`, {}).pipe(
+      catchError((error) => {
+        console.error('Error fetching building units:', error);
+        throw error;
+      })
+    );
   }
 
   obtainRegion(): Observable<ObtainRegion> {
@@ -87,7 +110,7 @@ export class Form20ListDropdownService {
       })
     );
   }
-  
+
   obtainMeasurementDetails(): Observable<ObtainRegion> {
     return this.http.post<ObtainRegion>(`${this.baseUrl}/obtainMeasurement`, {}).pipe(
       catchError((error) => {
@@ -115,7 +138,6 @@ export class Form20ListDropdownService {
     );
   }
 
-
   obtainJVAgreement(): Observable<ObtainRegion> {
     return this.http.post<ObtainRegion>(`${this.baseUrl}/obtainJVAgreement`, {}).pipe(
       catchError((error) => {
@@ -124,5 +146,162 @@ export class Form20ListDropdownService {
       })
     );
   }
+
+  FORM20_CE(): Observable<ApprovalUser[]> {
+    return this.http.post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_CE`, {}).pipe(
+      catchError((error) => {
+        console.error('Error fetching approval users:', error);
+        throw error;
+      })
+    );
+  }
+
+  FORM20_ALL_DCM(): Observable<ApprovalUser[]> {
+    return this.http
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_ALL_DCM`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
+  }
+
+  FORM20_ALL_ED(): Observable<ApprovalUser[]> {
+    return this.http
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_ALL_ED`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
+  }
+
+  FORM20_INS_MGR(): Observable<ApprovalUser[]> {
+    return this.http
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_INS_MGR`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
+  }
+
+  FORM20_ALL_DIR(): Observable<ApprovalUser[]> {
+    return this.http
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_ALL_DIR`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
+  }
+
+  FORM20_LAM(): Observable<ApprovalUser[]> {
+    return this.http.post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_LAM`, {}).pipe(
+      catchError((error) => {
+        console.error('Error fetching approval users:', error);
+        throw error;
+      })
+    );
+  }
+
+  FORM20_PRO(): Observable<ApprovalUser[]> {
+    return this.http.post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_PRO`, {}).pipe(
+      catchError((error) => {
+        console.error('Error fetching approval users:', error);
+        throw error;
+      })
+    );
+  }
+
+  FORM20_FIN_DIR(): Observable<ApprovalUser[]> {
+    return this.http
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_FIN_DIR`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
+  }
+
+  FORM20_RISK_OPP(): Observable<ApprovalUser[]> {
+    return this.http
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_RISK_OPP`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
+  }
+
+  FORM20_COM_DIR(): Observable<ApprovalUser[]> {
+    return this.http
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_COM_DIR`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
+  }
+
+  FORM20_HSEQ(): Observable<ApprovalUser[]> {
+    return this.http.post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_HSEQ`, {}).pipe(
+      catchError((error) => {
+        console.error('Error fetching approval users:', error);
+        throw error;
+      })
+    );
+  }
+
+  FORM20_GEN_COUN(): Observable<ApprovalUser[]> {
+    return this.http
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_GEN_COUN`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
+  }
+
+  FORM20_BDG_DCM(): Observable<ApprovalUser[]> {
+    return this.http
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_BDG_DCM`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
+  }
+
+  FORM20_BDG_DIR(): Observable<ApprovalUser[]> {
+    return this.http
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_BDG_DIR`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
+  }
+
+  FORM20_ALL_HOE(): Observable<ApprovalUser[]> {
+    return this.http
+    .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_ALL_HOE`, {}).pipe(
+      catchError((error) => {
+        console.error('Error fetching approval users:', error);
+        throw error;
+      })
+    );
+  }
+
   
 }
