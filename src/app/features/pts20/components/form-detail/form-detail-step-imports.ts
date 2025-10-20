@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 export const FORM_DETAIL_STEP_IMPORTS = [
   CommonModule,
@@ -22,4 +23,5 @@ export const FORM_DETAIL_STEP_IMPORTS = [
   MatNativeDateModule,
   MatRadioModule,
   MatSelectModule,
+  MatAutocompleteModule,
 ];

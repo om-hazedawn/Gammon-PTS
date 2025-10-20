@@ -303,5 +303,44 @@ export class Form20ListDropdownService {
     );
   }
 
+  FORM20_CSD_HOE(): Observable<ApprovalUser[]> {
+    return this.http
+    .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_CSD_HOE`, {}).pipe(
+      catchError((error) => {
+        console.error('Error fetching approval users:', error);
+        throw error;
+      })
+    );
+  }
+
+  FORM20_CSD_CM(): Observable<ApprovalUser[]> {
+    return this.http
+    .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_CSD_CM`, {}).pipe(
+      catchError((error) => {
+        console.error('Error fetching approval users:', error);
+        throw error;
+      })
+    );
+  }
+
+  FORM20_CSD_DIR(): Observable<ApprovalUser[]> {
+    return this.http
+    .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_CSD_DIR`, {}).pipe(
+      catchError((error) => {
+        console.error('Error fetching approval users:', error);
+        throw error;
+      })
+    );
+  }
+
+  FORM20_CSD_ED(): Observable<ApprovalUser[]> {
+    return this.http
+    .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_CSD_ED`, {}).pipe(
+      catchError((error) => {
+        console.error('Error fetching approval users:', error);
+        throw error;
+      })
+    );
+  }
   
 }

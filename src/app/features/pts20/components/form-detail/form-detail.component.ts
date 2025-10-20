@@ -549,7 +549,7 @@ export class FormDetailComponent implements OnInit {
         TenderCallBasis: [''],
         TenderExpiry: [''],
         TenderRemark: [''],
-        TenderRisk: ['M'],
+        TenderRisk: [''],
 
         // Performance Bond
         PerformanceValue: [''],
