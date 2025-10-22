@@ -12,7 +12,7 @@ export interface TenderItem {
   id: number;
   division: string;
   tenderStatus: string;
-  reportDate: string | null;
+  reportDate?: string | null;
   businessUnitId: number;
   isExternal: string;
   region: string;
@@ -144,6 +144,13 @@ export interface RiskAssessmentCriteria {
   status: string;
 }
 
+export interface TenderSorted {
+  column: string;
+  order: string;
+  pageSize?: number;
+  page?: number;
+}
+
 export interface TenderAttachment {
   id: number;
   tenderId: number;
@@ -158,6 +165,12 @@ export interface TenderAttachment {
   lastModifiedOn: string;
   status: string;
 }
+
+export interface UpdateTenderStatusRequest {
+  tenderStatus: string;
+  reportDate?: string;
+}
+
 
 @Injectable({
   providedIn: 'root',
@@ -195,6 +208,10 @@ export class TenderListApiService {
         throw error;
       })
     );
+  }
+
+  getTenderPageSorted(request: TenderSorted): Observable<any> {
+    return this.http.post<any>('tenders', request);
   }
 
   getTenderById(
@@ -303,4 +320,24 @@ export class TenderListApiService {
     );
   }
 
+  updateStatus(
+    tenderId: number,
+    tenderStatus: string,
+    reportDate?: any
+  ): Observable<any> {
+    const request: UpdateTenderStatusRequest = {
+      tenderStatus,
+    };
+
+    const url = `${this.baseUrl}/tender/${tenderId}/status`;
+
+    if (reportDate) {
+      request.reportDate = reportDate.utc ? reportDate.utc(true) : reportDate;
+    }
+
+    return this.http.put(
+      url,
+      request
+    );
+  }
 }

@@ -3,9 +3,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { TenderKeyDateComponent } from '../tender-key-date/tender-key-date.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { TenderListApiService, TenderItem } from '../../../../core/services/tender-list-api.service';
+import { TenderListApiService, TenderItem, TenderSorted } from '../../../../core/services/tender-list-api.service';
 import { ExcomDecisionPopupComponent } from '../excom-decision-popup/excom-decision-popup.component';
 import { AddTenderPopupComponent } from '../add-tender-popup/add-tender-popup.component';
+import { ConfirmDialog } from '../confirm-dialog/confirm-dialog.component';
+import { AlertDialog } from '../alert-dialog/alert-dialog.component';
+import { ReportDateDialog } from '../report-date/report-date.component';
+
+import { FormControl, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -19,6 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MarketIntelligencepopup } from '../market-intelligencepopup/market-intelligencepopup.component';
 import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-date-list.component';
+
 
 @Component({
   selector: 'app-tender-list',
@@ -82,6 +88,12 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
             <ng-container matColumnDef="entity">
               <th mat-header-cell *matHeaderCellDef>Bidding Gammon Entity</th>
               <td mat-cell *matCellDef="let element">{{ element.biddingGammonEntity?.name }}</td>
+            </ng-container>
+
+            <!-- Customer Name Column -->
+            <ng-container matColumnDef="customerName">
+              <th mat-header-cell *matHeaderCellDef>Customer Name</th>
+              <td mat-cell *matCellDef="let element">{{ element.customerName }}</td>
             </ng-container>
 
             <!-- Project Name Column -->
@@ -151,8 +163,33 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
               </th>
               <td mat-cell *matCellDef="let element">
                 <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
-                  <button mat-raised-button class="action-btn">No need for Excom approval</button>
-                  <button mat-raised-button class="action-btn">work in View (pending Tender Doc Released)</button>
+                  @if (showPendingExcomReview(element)) {
+                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'Pending EXCOM review', element)">Pending EXCOM review</button>
+                  }
+                  @if (showNoNeedForExcomReview(element)) {
+                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'No need for EXCOM approval', element)">No need for EXCOM approval</button>
+                  }
+                  @if (showWorkInView(element)) {
+                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'Work In View (Pending Tender Doc Released)', element)">Work In View (Pending Tender Doc Released)</button>
+                  }
+                  @if (showUnderPreparation(element)) {
+                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'Tender Under Preparation', element)">Tender Under Preparation</button>
+                  }
+                  @if (showBidSubmitted(element)) {
+                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'Bid Submitted (Pending Result Announcement)', element)">Bid submitted</button>
+                  }
+                  @if (showSuccessful(element)) {
+                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'Successful', element)">Successful</button>
+                  }
+                  @if (showUnsuccessful(element)) {
+                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'Unsuccessful', element)">Unsuccessful</button>
+                  }
+                  @if (showWithdraw(element)) {
+                    <button mat-raised-button class="action-btn red" (click)="changeStatus($event, 'Withdraw / Declined', element)">Withdraw / Declined</button>
+                  }
+                  @if (showExpired(element)) {
+                    <button mat-raised-button class="action-btn red" (click)="changeStatus($event, 'Expired', element)">Expired</button>
+                  }
                   <button mat-raised-button class="action-btn green">Weekly Snapshot</button>
                   <button mat-raised-button class="action-btn green">Monthly Snapshot</button>
                 </div>
@@ -245,7 +282,13 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
       background-color: #e3f2fd;
       transition: background 0.2s;
     }
-  .form-list-container {
+    .form-list-container {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow-x: hidden;
       mat-card-title {
         font-size: 2rem;
         font-weight: 700;
@@ -261,12 +304,23 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
         margin-bottom: 12px;
         letter-spacing: 0.5px;
       }
-        padding: 0;
-        margin: 0;
-        width: 100%;
-        box-sizing: border-box;
-        overflow-x: auto;
-      }
+    }
+    .mat-column-currency{
+      width: 90px;
+    }
+    .mat-column-changeStatus .action-btn {
+      line-height: 1.2;
+      padding: 8px 12px;
+      height: auto;
+      text-align: center;
+      word-break: break-word;
+    }
+    .mat-column-keyDate {
+      max-width: 70px;
+    }
+    .mat-column-form20{
+      max-width: 90px;
+    }
       mat-card {
         margin: 0 auto;
         max-width: 100%;
@@ -282,8 +336,6 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
       }
       table {
         width: 100%;
-        min-width: 600px;
-        max-width: 100%;
         overflow-x: auto;
         display: table;
         margin: 0;
@@ -297,7 +349,7 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
         color: #1976d2;
         font-weight: bold;
         white-space: normal;
-        word-break: keep-all;
+        //word-break: normal;
         line-height: 1.2;
         padding-top: 12px;
         padding-bottom: 12px;
@@ -309,7 +361,8 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
       td {
         text-align: center;
         vertical-align: middle;
-        white-space: nowrap;
+        white-space: normal;
+        word-break: break-word;
         padding: 14px 12px;
         background-color: #fff;
         font-size: 15px;
@@ -333,7 +386,7 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
       }
       .action-btn {
         min-width: 110px;
-        margin: 2px 6px 2px 0;
+        margin: 2px 0 2px 0;
         border-radius: 8px;
         font-weight: 500;
         box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
@@ -345,8 +398,9 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
         background-color: #43a047 !important;
         color: #fff !important;
       }
-      .action-btn:last-child {
-        margin-right: 0;
+      .action-btn.red {
+        background-color: #e53935 !important;
+        color: #fff !important;
       }
       .action-btn:hover:not([disabled]) {
         box-shadow: 0 4px 16px rgba(25, 118, 210, 0.15);
@@ -386,6 +440,35 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private tenderListApiService: TenderListApiService
   ) {}
+  tenderSort: TenderSorted = {
+    column: '',
+    order: 'asc',
+    pageSize: 10,
+    page: 1,
+  };
+  biddingEntityList: string[] = [];
+  divisionList: string[] = [];
+
+  divisionSearchFC: FormControl = new FormControl('', {});
+  statusSearchFC: FormControl = new FormControl('', {});
+  biddingEntitySearchFC: FormControl = new FormControl('', {});
+  projectDescriptionSearchFC: FormControl = new FormControl('', {});
+  projectNameSearchFC: FormControl = new FormControl('', {});
+  customerNameSearchFC: FormControl = new FormControl('', {});
+  tenderNoSearchFC: FormControl = new FormControl('', {});
+
+  /**
+   * For filter purpose
+   */
+  formGroup: FormGroup = new FormGroup({
+    division: this.divisionSearchFC,
+    tenderStatus: this.statusSearchFC,
+    biddingGammonEntity: this.biddingEntitySearchFC,
+    projectDescription: this.projectDescriptionSearchFC,
+    projectName: this.projectNameSearchFC,
+    customerName: this.customerNameSearchFC,
+    tenderNoSearchFC: this.tenderNoSearchFC,
+  });
 
   openAddTenderPopup(data?: any): void {
     console.log('Opening AddTenderPopup with data:', data);
@@ -527,6 +610,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     'division',
     'expectedDate',
     'entity',
+    'customerName',
     'projectName',
     'currency',
     'estimatedValue',
@@ -597,6 +681,221 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     this.loadTenders();
   }
 
+  changeStatus($event: MouseEvent, tenderStatus: string, element: TenderItem) {
+    $event.stopPropagation(); // stop propagate to row's onclick listener
+
+    this.dialog
+      .open(ConfirmDialog, {
+        data: {
+          title: 'Change status',
+          message: 'Please confirm the status change to ' + tenderStatus,
+          ok: 'Confirm',
+        },
+        disableClose: true,
+      })
+      .afterClosed()
+      .subscribe((confirm) => {
+        if (confirm) {
+          if (
+            [
+              'Successful',
+              'Unsuccessful',
+              'Withdraw / Declined',
+              'Expired',
+            ].indexOf(tenderStatus) >= 0
+          ) {
+            this.tenderListApiService.getTenderById(element.id).subscribe((tender) => {
+              if (['Unsuccessful'].indexOf(tenderStatus) >= 0) {
+                this.dialog
+                  .open(TenderListComponent, {
+                    width: '80vw',
+                    minWidth: '600px',
+                    disableClose: true,
+                    data: {
+                      tenderId: tender.data.id,
+                    },
+                  })
+                  .afterClosed()
+                  .subscribe((persistedTender: TenderItem) => {
+                    if (persistedTender) {
+                      this.toSaveStatus(
+                        tenderStatus,
+                        element,
+                        // convert null -> undefined to match parameter type string | undefined
+                        persistedTender.reportDate ?? undefined
+                      );
+                    } else {
+                      this.dialog.open(AlertDialog, {
+                        data: {
+                          message: 'Status changes cancelled',
+                        },
+                      });
+                    }
+                  });
+              } else {
+                this.dialog
+                  .open(ReportDateDialog, {
+                    data: tender.data.reportDate,
+                    disableClose: true,
+                  })
+                  .afterClosed()
+                  .subscribe((reportDate) => {
+                    if (reportDate) {
+                      this.toSaveStatus(tenderStatus, element, reportDate);
+                    } else {
+                      this.dialog.open(AlertDialog, {
+                        data: {
+                          message: 'Status changes cancelled',
+                        },
+                      });
+                    }
+                  });
+              }
+            });
+          } else {
+            this.toSaveStatus(tenderStatus, element);
+          }
+        } else {
+          this.dialog.open(AlertDialog, {
+            data: {
+              message: 'Status changes cancelled',
+            },
+          });
+        }
+      });
+  }
+
+  toSaveStatus(tenderStatus: string, tender: TenderItem, reportDate?: string) {
+    this.tenderListApiService.updateStatus(tender.id, tenderStatus, reportDate).subscribe({
+      next: () => {
+        this.dialog.open(AlertDialog, {
+          data: {
+            message: 'Status updated',
+          },
+        });
+
+        this.refreshDataSource();
+      },
+      error: (error) => {
+        this.dialog.open(AlertDialog, {
+          data: {
+            title: 'Error',
+            message: 'Status fail to change',
+          },
+        });
+      },
+    });
+  }
+
+  refreshDataSource() {
+    //this.tenderApi.getTenderPage().subscribe((response) => {
+    this.tenderListApiService
+      .getTenderPageSorted(this.tenderSort)
+      .subscribe((response) => {
+        // this.dataSource.data = response.data;
+        this.dataSource.data = response.data.filter((tender: TenderItem) =>
+          this._filter(tender)
+        );
+
+        this.divisionList = response.data.reduce(
+          (prev: string[], current: TenderItem) => {
+            if (prev.indexOf(current.division) < 0) {
+              prev.push(current.division);
+            }
+            return prev;
+          },
+          []
+        );
+
+        this.divisionList.sort();
+
+        this.biddingEntityList = response.data.reduce(
+          (prev: string[], current: TenderItem) => {
+            const entity = current.biddingGammonEntity?.shortName;
+            if (entity === undefined) return prev;
+            if (prev.indexOf(entity) < 0) {
+              prev.push(entity);
+            }
+            return prev;
+          },
+          []
+        );
+      });
+  }
+
+  showPendingExcomReview(element: TenderItem): boolean {
+    return (
+      element.tenderStatus.toLowerCase() ==
+        'No need for EXCOM approval'.toLowerCase() ||
+      element.tenderStatus.toLowerCase() ==
+        'Work In View (Pending Tender Doc Released)'.toLowerCase()
+    );
+  }
+
+  showNoNeedForExcomReview(element: TenderItem): boolean {
+  return (
+    element.tenderStatus.toLowerCase() ==
+      'Pending EXCOM review'.toLowerCase() ||
+    element.tenderStatus.toLowerCase() ==
+      'Work In View (Pending Tender Doc Released)'.toLowerCase()
+    );
+}
+
+  showWorkInView(element: TenderItem): boolean {
+    return (
+      element.tenderStatus.toLowerCase() ==
+        'Pending EXCOM review'.toLowerCase() ||
+      element.tenderStatus.toLowerCase() ==
+        'No need for EXCOM approval'.toLowerCase()
+    );
+  }
+
+  showUnderPreparation(element: TenderItem): boolean {
+    return (
+      element.tenderStatus.toLowerCase() ==
+      'Work In View (Pending Tender Doc Released)'.toLowerCase()
+    );
+  }
+
+  showBidSubmitted(element: TenderItem): boolean {
+    return (
+      element.tenderStatus.toLowerCase() ==
+      'Tender Under Preparation'.toLowerCase()
+    );
+  }
+
+  showSuccessful(element: TenderItem): boolean {
+    return (
+      element.tenderStatus.toLowerCase() ==
+      'Bid Submitted (Pending Result Announcement)'.toLowerCase()
+    );
+  }
+  
+  showUnsuccessful(element: TenderItem): boolean {
+    return (
+      element.tenderStatus.toLowerCase() ==
+      'Bid Submitted (Pending Result Announcement)'.toLowerCase()
+    );
+  }
+
+  showWithdraw(element: TenderItem): boolean {
+    return (
+      [
+        'Bid Submitted (Pending Result Announcement)'.toLowerCase(),
+        'Tender Under Preparation'.toLowerCase(),
+        'Work In View (Pending Tender Doc Released)'.toLowerCase(),
+      ].indexOf(element.tenderStatus.toLowerCase()) >= 0
+    );
+  }
+
+  showExpired(element: TenderItem): boolean {
+    return (
+      ['Bid Submitted (Pending Result Announcement)'.toLowerCase()].indexOf(
+        element.tenderStatus.toLowerCase()
+      ) >= 0
+    );
+  }
+
   ngAfterViewInit() {
     setTimeout(() => {
       if (this.dataSource && this.paginator) {
@@ -604,6 +903,102 @@ export class TenderListComponent implements OnInit, AfterViewInit {
         this.dataSource.paginator = this.paginator;
       }
     });
+  }
+
+  _filter(item: any): boolean {
+    let results: boolean[] = [];
+    if (this.formGroup.value) {
+      let searchKeys = Object.keys(this.formGroup.value);
+      // console.log("searchKeys", searchKeys);
+      for (let i = 0; i < searchKeys.length; i++) {
+        results[i] = true;
+      }
+
+      for (let i = 0; i < searchKeys.length; i++) {
+        // console.log("results", results);
+        // console.log("i", i);
+        let aKey = searchKeys[i];
+        if (this.formGroup.value[aKey]) {
+          let itemVal = item[aKey];
+          // This is very ugly hardcode, need to update API return model
+          if (aKey === 'biddingGammonEntity') {
+            itemVal = item[aKey]?.shortName;
+          }
+
+          // console.log(aKey + '\t' + this.formGroup.value[aKey] + '\t' + itemVal);
+          if (Array.isArray(this.formGroup.value[aKey])) {
+            if (
+              this.formGroup.value[aKey].length > 0 &&
+              this.formGroup.value[aKey].indexOf(itemVal) < 0
+            ) {
+              // console.log("1");
+              results[i] = false;
+              continue;
+
+              return false;
+            }
+          } else if (!itemVal) {
+            // console.log("2");
+            results[i] = false;
+            continue;
+
+            return false;
+          } else if (
+            (Number(itemVal) && Number(this.formGroup.value[aKey].trim())) ||
+            (Number(this.formGroup.value[aKey].trim().substring(1)) &&
+              ['>', '<'].indexOf(this.formGroup.value[aKey].trim()[0]) >= 0)
+          ) {
+            if (
+              Number(this.formGroup.value[aKey]) &&
+              +itemVal != +this.formGroup.value[aKey]
+            ) {
+              // console.log("3");
+              results[i] = false;
+              continue;
+
+              return false;
+            }
+            if (
+              this.formGroup.value[aKey].trim()[0] === '>' &&
+              +itemVal < +this.formGroup.value[aKey].trim().substring(1)
+            ) {
+              // console.log("4");
+              results[i] = false;
+              continue;
+
+              return false;
+            }
+            if (
+              this.formGroup.value[aKey].trim()[0] === '<' &&
+              +itemVal >= +this.formGroup.value[aKey].trim().substring(1)
+            ) {
+              // console.log("5");
+              results[i] = false;
+              continue;
+
+              return false;
+            }
+          } else if (
+            this.formGroup.value[aKey]
+              .toLowerCase()
+              .split(' ')
+              .some((val: string) => itemVal.toLowerCase().indexOf(val) < 0)
+          ) {
+            // console.log("6");
+            results[i] = false;
+            continue;
+
+            return false;
+          }
+        }
+      }
+    }
+    // console.log("7");
+    // results[i] = false;
+    const checker = results.every((r) => r === true);
+    // if (checker === true) console.log('checker', checker);
+    return checker;
+    // return true;
   }
 }
 
