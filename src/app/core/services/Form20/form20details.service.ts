@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable, catchError } from "rxjs";
+import { SaveForm20 } from "../../../model/entity/saveform20";
 export interface Approval {
   id: number;
   staffNo: string;
@@ -222,7 +223,6 @@ export interface Form20Details {
 @Injectable({
   providedIn: 'root'
 })
-
 export class Form20DetailsService {
   private baseUrl: string;
 
@@ -240,21 +240,12 @@ export class Form20DetailsService {
     );
   }
 
-  submitForm20(formData: Partial<Form20Details>): Observable<Form20Details> {
+  saveForm20(formData: SaveForm20): Observable<Form20Details> {
     const url = `${this.baseUrl}/saveForm`;
+
     return this.http.post<Form20Details>(url, formData).pipe(
       catchError(error => {
-        console.error('Error submitting Form20:', error);
-        throw error;
-      })
-    );
-  }
-
-  updateForm20(id: number, formData: Partial<Form20Details>): Observable<Form20Details> {
-    const url = `${this.baseUrl}/update/${id}`;
-    return this.http.put<Form20Details>(url, formData).pipe(
-      catchError(error => {
-        console.error('Error updating Form20:', error);
+        console.error('Error saving Form20:', error);
         throw error;
       })
     );

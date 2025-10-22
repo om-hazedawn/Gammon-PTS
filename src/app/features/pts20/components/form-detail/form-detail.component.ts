@@ -1,10 +1,12 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Observable, catchError, of, switchMap, map } from "rxjs";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { FormApprovalComponent } from './form-Approval/form-approval.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { Form20DetailsService, Form20Details } from '../../../../core/services/Form20/form20details.service';
+import { Form20DetailsService, Form20Details, Approval } from '../../../../core/services/Form20/form20details.service';
+import { SaveForm20 } from '../../../../model/entity/saveform20';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -443,8 +445,14 @@ export class FormDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      if (params['id'] && params['id'] !== 'new') {
-        this.formId = +params['id'];
+      const id = params['id'];
+      if (id === '0') {
+        // New form - stay in creation mode
+        this.formId = 0;
+        this.isEditMode = false;
+      } else if (id) {
+        // Existing form - load and switch to edit mode
+        this.formId = +id;
         this.isEditMode = true;
         this.loadForm(this.formId);
       }
@@ -453,18 +461,18 @@ export class FormDetailComponent implements OnInit {
 
   private initializeForm(): void {
     this.formGroup = this.fb.group({
-      form30: [''],
+      // Required fields
       businessUnit: ['', Validators.required],
-      dueDate: [''],
-      performanceUnit: [''],
-
-      tenderNo: [''],
       projectTitle: ['', Validators.required],
 
+      // Optional fields
+      form30: [''],
+      dueDate: [''],
+      performanceUnit: [''],
+      tenderNo: [''],
       BidManager: [''],
       Estimator: [''],
       Planner: [''],
-
       Region: [''],
       Location: [''],
       TenderType: [''],
@@ -799,19 +807,18 @@ export class FormDetailComponent implements OnInit {
 
       // Helper function to normalize Yes/No values
       const normalizeYesNo = (value: string | null): string => {
-        if (!value) return 'No';
+        if (!value) return '';
         value = value.toUpperCase();
-        if (value === 'YES') return 'Yes';
-        if (value === 'NO') return 'No';
-        if (value === 'N/A' || value === 'NA') return 'N.A.';
+        if (value === 'YES') return value;
+        if (value === 'NO') return value;
+        if (value === 'N/A' || value === 'NA') return value;
         return value;
       };
 
       // Helper function to ensure risk code format
       const normalizeRiskCode = (value: string | null): string => {
-        if (!value || value.trim() === '') return 'M';
-        const validCodes = ['L', 'L/M', 'M', 'M/H', 'H', 'NA', 'NSR', 'Pending'];
-        return validCodes.includes(value) ? value : 'M';
+        if (!value || value.trim() === '') return '';
+        return value;
       };
   
       this.formGroup.patchValue({
@@ -1021,7 +1028,7 @@ export class FormDetailComponent implements OnInit {
     this.validationErrors = {};
 
     const stepControls = {
-      1: ['businessUnit', 'projectTitle', 'tenderNo', 'Location', 'BriefDescription'],
+      1: ['businessUnit', 'projectTitle'], // Only these two fields are required
       2: ['contract'],
       3: ['payment'],
       4: ['Bonds'],
@@ -1128,14 +1135,59 @@ export class FormDetailComponent implements OnInit {
     return true;
   }
 
+  
   nextStep(): void {
-    if (this.currentStep < this.steps.length) {
-      if (this.validateCurrentStep()) {
-        this.currentStep++;
-        this.loadError = null;
+  if (this.currentStep < this.steps.length) {
+    if (this.validateCurrentStep()) {
+      const normalizedValue = this.normalizeFormValues(this.formGroup.value);
+      
+      // First page - initial save
+      if (this.currentStep === 1 && !this.isEditMode) {
+        this.form20Service.saveForm20({ ...normalizedValue }).subscribe({
+          next: (response) => {
+            console.log('Form saved with ID:', response.id);
+            this.formId = response.id;
+            this.isEditMode = true;
+            this.loadError = 'Form saved successfully';
+            setTimeout(() => {
+              this.loadError = null;
+              this.currentStep++;
+            }, 1000);
+          },
+          error: (err) => {
+            this.loadError = 'Failed to save form. Please try again.';
+              console.error('Error saving form:', err);
+              console.error('Error details:', err.error); // Log validation errors
+              console.error('Missing fields:', err.error?.errors); // Log specific missing fields
+              setTimeout(() => this.loadError = null, 5000);
+          }
+        });
       }
+      else if (this.formId) {
+          this.form20Service.saveForm20(normalizedValue).subscribe({
+            next: () => {
+              console.log('Form updated successfully');
+              this.loadError = 'Changes saved successfully';
+              setTimeout(() => {
+                this.loadError = null;
+                this.currentStep++;
+              }, 1000);
+            },
+            error: (err) => {
+              this.loadError = 'Failed to update form. Please try again.';
+              console.error('Error updating form:', err);
+              setTimeout(() => this.loadError = null, 5000);
+            }
+          });
+        }
+
+         else {
+          this.currentStep++;
+          this.loadError = null;
+        }
     }
   }
+}
 
   previousStep(): void {
     if (this.currentStep > 1) {
@@ -1195,151 +1247,459 @@ export class FormDetailComponent implements OnInit {
       return;
     }
 
-    // Open approval dialog if form is valid
+    // For final submission with approval
     if (this.formGroup.valid) {
-      const dialogRef = this.dialog.open(FormApprovalComponent, {
-        width: '800px',
-        data: { formData: this.formGroup.value }
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.processFormSubmission();
-        }
-      });
+      // First save the form if it's new
+      if (!this.isEditMode || this.formId === 0) {
+        const normalizedValue = this.normalizeFormValues(this.formGroup.value);
+        this.form20Service.saveForm20(normalizedValue).subscribe({
+          next: (response) => {
+            console.log('Form saved with ID:', response.id);
+            this.formId = response.id;
+            this.isEditMode = true;
+            this.openApprovalDialog();
+          },
+          error: (err: HttpErrorResponse) => {
+            this.loadError = 'Failed to save form. Please try again.';
+            console.error('Error saving form:', err);
+            setTimeout(() => this.loadError = null, 5000);
+          }
+        });
+      } else {
+        this.openApprovalDialog();
+      }
     } else {
       this.loadError = 'Form validation failed. Please check all required fields.';
       setTimeout(() => this.loadError = null, 5000);
     }
   }
 
-  private processFormSubmission(): void {
-    const formValue = {...this.formGroup.value};
-    
-    // Helper function to denormalize Yes/No values
-    const denormalizeYesNo = (value: string | null): string => {
-        if (!value) return 'NO';
-        value = value.toUpperCase();
-        if (value === 'YES' || value === 'NO') return value;
-        if (value === 'N.A.' || value === 'NA') return 'NA';
-        return value;
-      };
+  private openApprovalDialog(): void {
+    const dialogRef = this.dialog.open(FormApprovalComponent, {
+      width: '800px',
+      data: { formData: this.formGroup.value }
+    });
 
-      // Process all Yes/No fields across sections
-      if (formValue.contract) {
-        formValue.contract.BIMRequired = denormalizeYesNo(formValue.contract.BIMRequired);
-        formValue.contract.DFMARequired = denormalizeYesNo(formValue.contract.DFMARequired);
-        formValue.contract.Adverse = denormalizeYesNo(formValue.contract.Adverse);
-        formValue.contract.TimeExtension = denormalizeYesNo(formValue.contract.TimeExtension);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.processFormSubmission();
       }
-
-      if (formValue.Warranties) {
-        formValue.Warranties.ParentCompanyGuarantee = denormalizeYesNo(formValue.Warranties.ParentCompanyGuarantee);
-        formValue.Warranties.ParentCompanyUndertaking = denormalizeYesNo(formValue.Warranties.ParentCompanyUndertaking);
-        formValue.Warranties.CollateralWarranties = denormalizeYesNo(formValue.Warranties.CollateralWarranties);
-        formValue.Warranties.OtherContingent = denormalizeYesNo(formValue.Warranties.OtherContingent);
-        formValue.Warranties.ProvidedByEmployer = denormalizeYesNo(formValue.Warranties.ProvidedByEmployer);
-      }
-
-      if (formValue.Insurance) {
-        formValue.Insurance.ProvidedByEmployer = denormalizeYesNo(formValue.Insurance.ProvidedByEmployer);
-        formValue.Insurance.OnerousRequirements = denormalizeYesNo(formValue.Insurance.OnerousRequirements);
-        formValue.Insurance.ShortfallInCover = denormalizeYesNo(formValue.Insurance.ShortfallInCover);
-      }
-
-      if (formValue.Evaluation) {
-        Object.keys(formValue.Evaluation).forEach(key => {
-          if (key.endsWith('Radio')) {
-            formValue.Evaluation[key] = denormalizeYesNo(formValue.Evaluation[key]);
-          }
-        });
-      }
-
-      if (formValue.OtherIssue) {
-        formValue.OtherIssue.PFIorPPPBid = denormalizeYesNo(formValue.OtherIssue.PFIorPPPBid);
-        formValue.OtherIssue.FinancingRequired = denormalizeYesNo(formValue.OtherIssue.FinancingRequired);
-      }
-
-      // Submit the form with denormalized values
-      console.log('Form submitted:', formValue);
-      
-      if (this.isEditMode && this.formId) {
-        this.form20Service.updateForm20(this.formId, formValue).subscribe({
-          next: () => this.goBack(),
-          error: (err: HttpErrorResponse) => {
-            this.loadError = 'Failed to update form. Please try again.';
-            console.error('Error updating form:', err);
-            setTimeout(() => this.loadError = null, 5000);
-          }
-        });
-      } else {
-        this.form20Service.submitForm20(formValue).subscribe({
-          next: () => this.goBack(),
-          error: (err: HttpErrorResponse) => {
-            this.loadError = 'Failed to create form. Please try again.';
-            console.error('Error creating form:', err);
-            setTimeout(() => this.loadError = null, 5000);
-          }
-        });
-      }
+    });
   }
+
+ 
+  //   // Make a copy of form values without modifying empty values
+  //   const formValue = {...this.formGroup.value};
+    
+  //   // Submit the form values as-is
+  //   console.log('Processing form submission:', formValue);
+
+  //   // Add the form ID if in edit mode
+  //   if (this.isEditMode && this.formId) {
+  //     formValue.id = this.formId;
+  //   }
+
+  //   // Set status as Submitted for final submission
+  //   formValue.status = 'Submitted';
+
+  //   // Save the form with Submitted status
+  //   this.form20Service.saveForm20(formValue).subscribe({
+  //     next: (response) => {
+  //       console.log('Form submitted successfully:', response);
+  //       this.loadError = 'Form submitted successfully';
+  //       setTimeout(() => {
+  //         this.loadError = null;
+  //         this.goBack();
+  //       }, 2000);
+  //     },
+  //     error: (err: HttpErrorResponse) => {
+  //       this.loadError = 'Failed to submit form. Please try again.';
+  //       console.error('Error submitting form:', err);
+  //       setTimeout(() => this.loadError = null, 5000);
+  //     
+
+  private processFormSubmission(): void {
+    const normalizedValue = this.normalizeFormValues(this.formGroup.value);
+    
+    // Update status for final submission
+    normalizedValue.Status = 'Submitted';
+
+    if (this.formId) {
+      normalizedValue.businessUnitId = this.formId;
+    }
+
+    this.form20Service.saveForm20(normalizedValue).subscribe({
+    next: (response) => {
+      console.log('Form submitted successfully:', response);
+      this.loadError = 'Form submitted successfully';
+      setTimeout(() => {
+        this.loadError = null;
+        this.goBack();
+      }, 2000);
+    },
+    error: (err: HttpErrorResponse) => {
+      // ... error handling
+    }
+  });
+}
+
+
 
   saveDraft(): void {
     if (this.formGroup.value) {
-      const formValue = {...this.formGroup.value};
+      // First normalize the form values
+      const normalizedValue = this.normalizeFormValues(this.formGroup.value);
       
-      // Denormalize values back to API format
-      const denormalizeYesNo = (value: string | null): string => {
-        if (!value) return 'NO';
-        value = value.toUpperCase();
-        if (value === 'YES' || value === 'NO') return value;
-        if (value === 'N.A.' || value === 'NA') return 'NA';
-        return value;
-      };
+      // Add the required bond percentages
+      normalizedValue.bondMaintenancePercentage = "%";
+      normalizedValue.bondOtherPercentage = "%";
+      normalizedValue.bondPaymentPercentage = "%";
+      normalizedValue.bondPerformancePercentage = "%";
+      normalizedValue.bondRetentionPercentage = "%";
+      normalizedValue.bondTenderPercentage = "%";
+      normalizedValue.paymentRetentionAmountPercent = "%";
 
-      // Denormalize Contract section
-      if (formValue.contract) {
-        formValue.contract.BIMRequired = denormalizeYesNo(formValue.contract.BIMRequired);
-        formValue.contract.DFMARequired = denormalizeYesNo(formValue.contract.DFMARequired);
-        formValue.contract.Adverse = denormalizeYesNo(formValue.contract.Adverse);
-        formValue.contract.TimeExtension = denormalizeYesNo(formValue.contract.TimeExtension);
+      // Set status as Draft
+      normalizedValue.Status = "Draft";
+
+      // Add business unit ID if in edit mode
+      if (this.formId) {
+        normalizedValue.businessUnitId = this.formId;
       }
 
-      // Denormalize Warranties section
-      if (formValue.Warranties) {
-        formValue.Warranties.ParentCompanyGuarantee = denormalizeYesNo(formValue.Warranties.ParentCompanyGuarantee);
-        formValue.Warranties.ParentCompanyUndertaking = denormalizeYesNo(formValue.Warranties.ParentCompanyUndertaking);
-        formValue.Warranties.CollateralWarranties = denormalizeYesNo(formValue.Warranties.CollateralWarranties);
-        formValue.Warranties.OtherContingent = denormalizeYesNo(formValue.Warranties.OtherContingent);
-        formValue.Warranties.ProvidedByEmployer = denormalizeYesNo(formValue.Warranties.ProvidedByEmployer);
-      }
+      // Ensure arrays are properly set for distribution fields
+      normalizedValue.distributionComDir = normalizedValue.distributionComDir || ["00001"];
+      normalizedValue.distributionDivComM = normalizedValue.distributionDivComM || ["00001"];
+      normalizedValue.distributionExeDir = normalizedValue.distributionExeDir || ["00001"];
+      normalizedValue.distributionFinDir = normalizedValue.distributionFinDir || ["00001"];
+      normalizedValue.distributionCE = normalizedValue.distributionCE || ["00001"];
+      normalizedValue.distributionDir = normalizedValue.distributionDir || ["00001"];
+      normalizedValue.distributionGenC = normalizedValue.distributionGenC || ["00001"];
+      normalizedValue.distributionInsMgr = normalizedValue.distributionInsMgr || ["00001"];
+      normalizedValue.distributionProc = normalizedValue.distributionProc || ["00001"];
+      normalizedValue.distributionRiskOpp = normalizedValue.distributionRiskOpp || ["00001"];
+      normalizedValue.distributionLambeth = normalizedValue.distributionLambeth || ["00001"];
+      normalizedValue.distributionHSEQ = normalizedValue.distributionHSEQ || ["00001"];
+      normalizedValue.distributionBidMgr = normalizedValue.distributionBidMgr || [];
 
-      // Denormalize Insurance section
-      if (formValue.Insurance) {
-        formValue.Insurance.ProvidedByEmployer = denormalizeYesNo(formValue.Insurance.ProvidedByEmployer);
-        formValue.Insurance.OnerousRequirements = denormalizeYesNo(formValue.Insurance.OnerousRequirements);
-        formValue.Insurance.ShortfallInCover = denormalizeYesNo(formValue.Insurance.ShortfallInCover);
-      }
+      // Ensure approval arrays are properly initialized
+    // Add approval arrays with correct property names
+    const approvalFields = {
+      ceApproval: [{
+        Title: "",
+        Comments: "",
+        Decision: "",
+        StaffNo: "",
+        ApproverName: ""
+      }],
+      cmApproval: [{
+        Title: "",
+        Comments: "",
+        Decision: "",
+        StaffNo: "",
+        ApproverName: ""
+      }],
+      edApproval: [{
+        Title: "",
+        Comments: "",
+        Decision: "",
+        StaffNo: "",
+        ApproverName: ""
+      }],
+      dirApproval: [{
+        Title: "",
+        Comments: "",
+        Decision: "",
+        StaffNo: "",
+        ApproverName: ""
+      }],
+      hoEApproval: [{
+        Title: "",
+        Comments: "",
+        Decision: "",
+        StaffNo: "",
+        ApproverName: ""
+      }]
+    };
 
-      // Denormalize Evaluation section
-      if (formValue.Evaluation) {
-        Object.keys(formValue.Evaluation).forEach(key => {
-          if (key.endsWith('Radio')) {
-            formValue.Evaluation[key] = denormalizeYesNo(formValue.Evaluation[key]);
+    Object.assign(normalizedValue, approvalFields);
+
+      this.form20Service.saveForm20(normalizedValue).subscribe({
+        next: (response) => {
+          console.log('Draft saved successfully', response);
+          if (!this.isEditMode) {
+            this.formId = response.id;
+            this.isEditMode = true;
           }
-        });
-      }
-
-      // Denormalize OtherIssue section
-      if (formValue.OtherIssue) {
-        formValue.OtherIssue.PFIorPPPBid = denormalizeYesNo(formValue.OtherIssue.PFIorPPPBid);
-        formValue.OtherIssue.FinancingRequired = denormalizeYesNo(formValue.OtherIssue.FinancingRequired);
-      }
-
-      console.log('Saving draft:', formValue);
+          // Show success message
+          this.loadError = 'Draft saved successfully';
+          setTimeout(() => {
+            this.loadError = null;
+            this.goBack();
+          }, 2000);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.loadError = 'Failed to save draft. Please try again.';
+          console.error('Error saving draft:', err);
+          console.error('Error details:', err.error);
+          console.error('Missing fields:', err.error?.errors);
+          setTimeout(() => this.loadError = null, 5000);
+        }
+      });
+    } else {
+      this.goBack();
     }
-    this.goBack();
+}
+
+
+  private createDefaultApproval(value?: any): { Title: string; Comments: string; Decision: string; StaffNo: string; ApproverName: string } {
+    return {
+      Title: this.ensureString(value?.Title),
+      Comments: this.ensureString(value?.Comments),
+      Decision: this.ensureString(value?.Decision),
+      StaffNo: this.ensureString(value?.StaffNo),
+      ApproverName: this.ensureString(value?.ApproverName)
+    };
   }
+
+  private normalizeFormValues(formValue: any): SaveForm20 {
+    if (!formValue.businessUnit) {
+      throw new Error('Business Unit is required');
+    }
+    if (!formValue.projectTitle) {
+      throw new Error('Project Title is required');
+    }
+
+    // Helper function to ensure number or null
+    const toNumberOrNull = (value: any): number | null => {
+      if (value === null || value === undefined || value === '') return null;
+      const num = Number(value);
+      return isNaN(num) ? null : num;
+    };
+
+    // Helper function to ensure string
+    const ensureString = (value: any): string => {
+      if (value === null || value === undefined) return '';
+      return String(value);
+    };
+
+    // Create base object with required fields and default values
+    const baseForm: SaveForm20 = {
+
+      businessUnitId: toNumberOrNull(formValue.businessUnit),
+      title: formValue.projectTitle || "",
+      businessUnitCode: "BDG",
+      Status: "Draft",
+
+      // Required percentage fields all initialized to "%"
+      bondMaintenancePercentage: "%",
+      bondOtherPercentage: "%",
+      bondPaymentPercentage: "%",
+      bondPerformancePercentage: "%",
+      bondRetentionPercentage: "%",
+      bondTenderPercentage: "%",
+      paymentRetentionAmountPercent: "%",
+
+      // Required unit fields
+      periodUnit: "months",
+      maintenanceDefectUnit: "months",
+
+      // Distribution arrays with default values
+      distributionComDir: ["00001"],
+      distributionDivComM: ["00001"],
+      distributionExeDir: ["00001"],
+      distributionFinDir: ["00001"],
+      distributionCE: ["00001"],
+      distributionDir: ["00001"],
+      distributionGenC: ["00001"],
+      distributionInsMgr: ["00001"],
+      distributionProc: ["00001"],
+      distributionRiskOpp: ["00001"],
+      distributionLambeth: ["00001"],
+      distributionHSEQ: ["00001"],
+      distributionBidMgr: [],
+
+      // Approval arrays with empty default objects
+      CEApproval: [{Title: "", Comments: "", Decision: "", StaffNo: "", ApproverName: ""}],
+      CMApproval: [{Title: "", Comments: "", Decision: "", StaffNo: "", ApproverName: ""}],
+      EDApproval: [{Title: "", Comments: "", Decision: "", StaffNo: "", ApproverName: ""}],
+      DirApproval: [{Title: "", Comments: "", Decision: "", StaffNo: "", ApproverName: ""}],
+      HoEApproval: [{Title: "", Comments: "", Decision: "", StaffNo: "", ApproverName: ""}],
+
+      // Nullable numeric fields
+      approximateValue: toNumberOrNull(formValue.ApproxValue),
+      profitMargin: toNumberOrNull(formValue.profitMargin),
+      jvAgreementId: null,
+      currencyId: null,
+      maintenanceDefectId: null,
+      tenderTypeId: null,
+      splitValueId: null,
+      countryId: null,
+      bidTypeId: null,
+      clientFinanceStanding: null,
+      JvSplit: "",
+      Planner: ensureString(formValue.Planner),
+      Location: ensureString(formValue.Location),
+      TenderNo: ensureString(formValue.tenderNo),
+      Estimator: ensureString(formValue.Estimator),
+      JvPartner: ensureString(formValue.JvPartner),
+      BidManager: ensureString(formValue.BidManager),
+      ClientName: ensureString(formValue.ClientName),
+      Competitor: ensureString(formValue.Competitor),
+      Description: ensureString(formValue.Description),
+      ConsultantEM: "",
+      PeriodDetail: "",
+      BondOtherName: "",
+      OtherIsPFIPPP: "",
+      BondOtherRemark: "",
+      IsMarkingScheme: "",
+      BondTenderRemark: "",
+      ConsultantOthers: "",
+      BondOtherRiskCode: "",
+      BondPaymentRemark: "",
+      PaymentPeriodUnit: "",
+      BondOtherCallBasis: "",
+      BondTenderRiskCode: "",
+      CompetitorRiskCode: "",
+      EvaluationCashFlow: "",
+      EvaluationComments: "",
+      BondOtherExpiryDate: "",
+      BondPaymentRiskCode: "",
+      BondRetentionRemark: "",
+      BondTenderCallBasis: "",
+      ConsultantArchitect: "",
+      ContractBIMRequired: "",
+      ContractBIMRiskCode: "",
+      OtherPFIPPPRiskCode: "",
+      PaymentCashRiskCode: "",
+      BondPaymentCallBasis: "",
+      BondTenderExpiryDate: "",
+      ConsultantEMRiskCode: "",
+      ContractDFMARequired: "",
+      ContractDFMARiskCode: "",
+      ContractFormRiskCode: "",
+      EvaluationIsCashFlow: "",
+      OtherForeignCurrency: "",
+      BondMaintenanceRemark: "",
+      BondPaymentExpiryDate: "",
+      BondPerformanceRemark: "",
+      BondRetentionRiskCode: "",
+      EvaluationCompetition: "",
+      EvaluationPaymentTerm: "",
+      EvaluationTimeAllowed: "",
+      PaymentPeriodRiskCode: "",
+      PaymentRetentionLimit: "",
+      ApproximateValueRemark: "",
+      BondRetentionCallBasis: "",
+      ContractDamageRateUnit: "",
+      ContractDamageRiskCode: "",
+      ContractDesignRiskCode: "",
+      ContractLiabilityLimit: "",
+      OtherFinancingRequired: "",
+      BondMaintenanceRiskCode: "",
+      BondPerformanceRiskCode: "",
+      BondRetentionExpiryDate: "",
+      ContractClausesRiskCode: "",
+      ContractFormDescription: "",
+      ContractIsTimeExtension: "",
+      ContractUnusualRiskCode: "",
+      EvaluationBondGuarantee: "",
+      EvaluationIsCompetition: "",
+      EvaluationIsPaymentTerm: "",
+      EvaluationIsTimeAllowed: "",
+      BondMaintenanceCallBasis: "",
+      BondPerformanceCallBasis: "",
+      ConsultantCivilStructure: "",
+      ConsultantOthersRiskCode: "",
+      ContractDamageRateRemark: "",
+      EvaluationSiteManagement: "",
+      PaymentRetentionRiskCode: "",
+      BondMaintenanceExpiryDate: "",
+      BondPerformanceExpiryDate: "",
+      ContractIsAdversePhyiscal: "",
+      ContractUnusualConditions: "",
+      EvaluationCompanyWorkload: "",
+      EvaluationIsBondGuarantee: "",
+      InsuranceShortFallInCover: "",
+      ConsultantQuantitySurveyor: "",
+      EvaluationConsultantRecord: "",
+      EvaluationIsSiteManagement: "",
+      ConsultantArchitectRiskCode: "",
+      ContractFluctuationRiskCode: "",
+      ContractMeasurementRiskCode: "",
+      EvaluationContractCondition: "",
+      EvaluationIsCompanyWorkload: "",
+      InsuranceIsShortFallInCover: "",
+      InsuranceOnerousRequirement: "",
+      InsuranceProvidedByEmployer: "",
+      InsuranceThirdPartyRiskCode: "",
+      ContractDesignResponsibility: "",
+      ContractIsTimeExtensionValue: "",
+      EvaluationIsConsultantRecord: "",
+      OtherForeignCurrencyRiskCode: "",
+      PaymentCertificationRiskCode: "",
+      PaymentRetentionAmountRemark: "",
+      EvaluationIsContractCondition: "",
+      EvaluationValueExtendContract: "",
+      InsuranceIsOnerousRequirement: "",
+      InsuranceIsProvidedByEmployer: "",
+      PaymentRetentionLimitRiskCode: "",
+      OtherFinancingRequiredRiskCode: "",
+      PaymentCertificationPeriodUnit: "",
+      EvaluationClientFinancialStatus: "",
+      EvaluationIsValueExtendContract: "",
+      OtherPlantInvestmentRequirement: "",
+      WarrantGuranteeOtherLiabilities: "",
+      ConsultantCivilStructureRiskCode: "",
+      EvaluationPlantEquipmentRequired: "",
+      PaymentCertificationPeriodRemark: "",
+      EvaluationHealthSafetyEnvironment: "",
+      EvaluationIsClientFinancialStatus: "",
+      InsuranceShortFallInCoverRiskCode: "",
+      WarrantGuranteeIsOtherLiabilities: "",
+      ConsultantQuantitySurveyorRiskCode: "",
+      EvaluationIsPlantEquipmentRequired: "",
+      EvaluationIsHealthSafetyEnvironment: "",
+      InsuranceOnerousRequirementRiskCode: "",
+      InsuranceProvidedByEmployerRiskCode: "",
+      WarrantGuranteeCollateralWarranties: "",
+      WarrantGuranteeIsCollateralWarranties: "",
+      WarrantGuranteeParentCompanyGuarantee: "",
+      EvaluationEstimatingDepartmentWorkload: "",
+      OtherPlantInvestmnetRequirementRiskCode: "",
+      WarrantGuranteeIsParentCompanyGuarantee: "",
+      WarrantGuranteeOtherLiabilitiesRiskCode: "",
+      WarrantGuranteeParentCompanyUnderTaking: "",
+      EvaluationIsEstimatingDepartmentWorkload: "",
+      WarrantGuranteeIsParentCompanyUnderTaking: "",
+      WarrantGuranteeCollateralWarrantiesRiskCode: "",
+      WarrantGuranteeParentCompanyGuaranteeRiskCode: "",
+      WarrantGuranteeParentCompanyUnderTakingRiskCode: "",
+    };
+
+    // Apply any contract form group values
+    if (formValue.contract) {
+      Object.assign(baseForm, {
+        contractFormDescription: formValue.contract.Description,
+        contractBIMRequired: formValue.contract.BIMRequired,
+        contractDFMARequired: formValue.contract.DFMARequired,
+        contractIsAdversePhyiscal: formValue.contract.Adverse,
+        contractIsTimeExtension: formValue.contract.TimeExtension,
+        contractIsTimeExtensionValue: formValue.contract.WeatherExtention,
+        contractUnusualConditions: formValue.contract.OtherUnusualConditions,
+        contractDamageRate: toNumberOrNull(formValue.contract.RateOfDamages),
+        contractLiabilityLimit: formValue.contract.LimitOfLiability,
+        contractMeasurementId: toNumberOrNull(formValue.contract.MeasurementDetails),
+        contractFluctuationId: toNumberOrNull(formValue.contract.Fluctuations),
+        contractTypeId: toNumberOrNull(formValue.contract.Type),
+        contractDesignResponsibility: formValue.contract.DesignResponsibility
+      });
+    }
+
+    // Return the normalized form values
+    return baseForm;
+  }
+
 
   goBack(): void {
     this.router.navigate(['/pts20/forms']);
