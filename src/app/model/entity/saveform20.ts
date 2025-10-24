@@ -1,4 +1,5 @@
 export interface SaveForm20 {
+    id: number;
     bondMaintenancePercentage: string;
     bondOtherPercentage: string;
     bondPaymentPercentage: string;

@@ -1287,45 +1287,15 @@ export class FormDetailComponent implements OnInit {
     });
   }
 
- 
-  //   // Make a copy of form values without modifying empty values
-  //   const formValue = {...this.formGroup.value};
-    
-  //   // Submit the form values as-is
-  //   console.log('Processing form submission:', formValue);
-
-  //   // Add the form ID if in edit mode
-  //   if (this.isEditMode && this.formId) {
-  //     formValue.id = this.formId;
-  //   }
-
-  //   // Set status as Submitted for final submission
-  //   formValue.status = 'Submitted';
-
-  //   // Save the form with Submitted status
-  //   this.form20Service.saveForm20(formValue).subscribe({
-  //     next: (response) => {
-  //       console.log('Form submitted successfully:', response);
-  //       this.loadError = 'Form submitted successfully';
-  //       setTimeout(() => {
-  //         this.loadError = null;
-  //         this.goBack();
-  //       }, 2000);
-  //     },
-  //     error: (err: HttpErrorResponse) => {
-  //       this.loadError = 'Failed to submit form. Please try again.';
-  //       console.error('Error submitting form:', err);
-  //       setTimeout(() => this.loadError = null, 5000);
-  //     
-
   private processFormSubmission(): void {
     const normalizedValue = this.normalizeFormValues(this.formGroup.value);
     
     // Update status for final submission
     normalizedValue.Status = 'Submitted';
 
+    // For edit mode, ensure we have the correct ID
     if (this.formId) {
-      normalizedValue.businessUnitId = this.formId;
+      normalizedValue.id = this.formId;
     }
 
     this.form20Service.saveForm20(normalizedValue).subscribe({
@@ -1362,9 +1332,9 @@ export class FormDetailComponent implements OnInit {
       // Set status as Draft
       normalizedValue.Status = "Draft";
 
-      // Add business unit ID if in edit mode
+      // Add form ID if in edit mode
       if (this.formId) {
-        normalizedValue.businessUnitId = this.formId;
+        normalizedValue.id = this.formId;
       }
 
       // Ensure arrays are properly set for distribution fields
@@ -1427,8 +1397,9 @@ export class FormDetailComponent implements OnInit {
       this.form20Service.saveForm20(normalizedValue).subscribe({
         next: (response) => {
           console.log('Draft saved successfully', response);
-          if (!this.isEditMode) {
-            this.formId = response.id;
+          const savedId = response?.id;
+          if (savedId) {
+            this.formId = savedId;
             this.isEditMode = true;
           }
           // Show success message
@@ -1485,7 +1456,7 @@ export class FormDetailComponent implements OnInit {
 
     // Create base object with required fields and default values
     const baseForm: SaveForm20 = {
-
+      id: this.formId || 0,
       businessUnitId: toNumberOrNull(formValue.businessUnit),
       title: formValue.projectTitle || "",
       businessUnitCode: "BDG",
