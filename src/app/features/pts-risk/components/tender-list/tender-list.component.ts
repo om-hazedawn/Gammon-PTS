@@ -24,6 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MarketIntelligencepopup } from '../market-intelligencepopup/market-intelligencepopup.component';
 import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-date-list.component';
+import { Form20ControlsComponent } from '../form20-controls/form20-controls.component';
 
 
 @Component({
@@ -40,6 +41,7 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
     MatSelectModule,
     FormsModule,
     MatIconModule,
+    Form20ControlsComponent,
     MatPaginatorModule,
     MatProgressSpinnerModule
   ],
@@ -211,11 +213,8 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
               <th mat-header-cell *matHeaderCellDef>
                 Form<br />20
               </th>
-              <td mat-cell *matCellDef="let element">
-                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
-                  <button mat-stroked-button color="primary" class="form-btn">Add</button>
-                  <button mat-stroked-button color="primary" class="form-btn">Select</button>
-                </div>
+              <td mat-cell (click)="stopPropagation($event)" *matCellDef="let element"  fxLayoutAlign="center center" [ngClass]="columnBackgroundColor('Form20Id')">
+                  <app-form20-controls [riskTenderId]="element.id" [form20Id]="element.form20Id" class="form20form30Cell"></app-form20-controls>
               </td>
             </ng-container>
 
@@ -317,9 +316,6 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
     }
     .mat-column-keyDate {
       max-width: 70px;
-    }
-    .mat-column-form20{
-      max-width: 90px;
     }
       mat-card {
         margin: 0 auto;
@@ -903,6 +899,21 @@ export class TenderListComponent implements OnInit, AfterViewInit {
         this.dataSource.paginator = this.paginator;
       }
     });
+  }
+
+  stopPropagation(event: Event) {
+    event.stopPropagation();
+  }
+
+  columnBackgroundColor(colName: string) {
+    if (this.displayedColumns.indexOf(colName) >= 0) {
+      if (this.displayedColumns.indexOf(colName) % 2 == 1) {
+        return 'cusColumnBackgroundColor1';
+      } else {
+        return 'cusColumnBackgroundColor2';
+      }
+    }
+    return '';
   }
 
   _filter(item: any): boolean {

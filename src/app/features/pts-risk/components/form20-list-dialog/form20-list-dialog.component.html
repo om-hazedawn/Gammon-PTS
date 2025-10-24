@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Select Form 20</h1>
+<div mat-dialog-content fxLayout="column" style="height:100%;">
+    <mat-form-field>
+        <input matInput [formControl]="control" autocomplete="off">
+    </mat-form-field>
+    <mat-table [dataSource]="tableData" class="mat-elevation-z8">
+        <ng-container matColumnDef="tenderNo">
+            <mat-header-cell *matHeaderCellDef> Tender No </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.tenderNo}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="title">
+            <mat-header-cell *matHeaderCellDef> Project Title</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)=select(row) class="form-row"></mat-row>
+    </mat-table>
+</div>

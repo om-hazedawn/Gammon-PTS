@@ -1,0 +1,17 @@
+@if (form20Id>0) {
+  <div class="col-gap center">
+    <button mat-raised-button class="selectedButton" (click)="form20OnClick()">
+      {{tenderNo}}
+    </button>
+    <button mat-icon-button (click)="removeForm20()"><mat-icon>delete</mat-icon></button>
+    <button mat-icon-button (click)="reloadForm20()"><mat-icon>cached</mat-icon></button>
+  </div>
+}
+@if (!form20Id || form20Id<0) {
+  <div class="col-gap center">
+    <button mat-raised-button (click)="select()">Select</button>
+    <button mat-raised-button (click)="add()">Add</button>
+  </div>
+}
+
+

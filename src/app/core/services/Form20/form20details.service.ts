@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable, catchError } from "rxjs";
 import { SaveForm20 } from "../../../model/entity/saveform20";
+
 export interface Approval {
   id: number;
   staffNo: string;
@@ -220,6 +221,10 @@ export interface Form20Details {
   ceApproval: Approval[];
 }
 
+export class UpdateForm20IdRequest {
+  form20Id: number = 0;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -248,6 +253,17 @@ export class Form20DetailsService {
         console.error('Error saving Form20:', error);
         throw error;
       })
+    );
+  }
+
+  updateForm20Id(tenderId: number, form20Id: number): Observable<any> {
+    const request: UpdateForm20IdRequest = {
+      form20Id
+    };
+
+    return this.http.put<any>(
+      `tender/${tenderId}/form20Id`,
+      request
     );
   }
 }
