@@ -39,11 +39,13 @@ import { SystemConfig } from '../../../../core/services/system-config-api.servic
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
           <label style="width: 200px; font-weight: 500;">Key</label>
           <mat-form-field appearance="fill" style="flex: 1;">
+            <mat-label>Key</mat-label>
             <input
               matInput
               formControlName="key"
               placeholder="Enter Key"
               [maxlength]="keyLength"
+              required  
             />
             <mat-hint>
               {{ tenderForm.get('key')?.value?.length || 0 }} / {{ keyLength }}
@@ -63,11 +65,13 @@ import { SystemConfig } from '../../../../core/services/system-config-api.servic
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
           <label style="width: 200px; font-weight: 500;">Description</label>
           <mat-form-field appearance="fill" style="flex: 1;">
+            <mat-label>Description</mat-label>
             <input
               matInput
               formControlName="description"
               placeholder="Enter Description"
               [maxlength]="descriptionLength"
+              required
             />
             <mat-hint>
               {{ tenderForm.get('description')?.value?.length || 0 }} /
@@ -89,11 +93,13 @@ import { SystemConfig } from '../../../../core/services/system-config-api.servic
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
           <label style="width: 200px; font-weight: 500;">Value</label>
           <mat-form-field appearance="fill" style="flex: 1;">
+            <mat-label>Value</mat-label>
             <input
               matInput
               formControlName="value"
               placeholder="Enter Value"
               [maxlength]="valueLength"
+              required
             />
             <mat-hint>
               {{ tenderForm.get('value')?.value?.length || 0 }} /

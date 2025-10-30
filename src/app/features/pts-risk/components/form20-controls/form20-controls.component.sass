@@ -5,6 +5,30 @@
 
 .selectedButton
   flex: 0 1 auto
+  margin: 2px 0 2px 0;
+  border-radius: 8px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+  word-break: normal;
+
+.col-gap
+  display: flex
+  flex-direction: column
+  gap: 10px
+  align-items: center
+
+.center
+  align-items: center
+  justify-content: center
+
+.mdc-icon-button
+  width: 32px
+  height: 32px
+  padding: 4px
+
 .mat-column-title
   flex: 0 0 70%
 .mat-column-tenderNo
@@ -12,9 +36,6 @@
 .mat-table
   flex: 1
   overflow: auto
-.form-row
-  gap: 0px
-.mat-mdc-form-field
-  min-width: 100%
 .mat-row.form-row:hover
   background: #f5f5f5
+

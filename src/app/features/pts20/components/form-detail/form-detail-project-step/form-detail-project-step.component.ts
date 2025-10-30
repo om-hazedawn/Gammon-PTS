@@ -116,7 +116,12 @@ export class FormDetailProjectStepComponent implements OnInit {
   private loadTenderTypes(): void {
     this.form20ListDropdownService.obtainTenderType().subscribe({
       next: (data: ObtainRegion) => {
-        this.tenderTypes = data;
+        // Convert keys to numbers to match the numeric tenderTypeId
+        const numericTenderTypes: ObtainRegion = {};
+        Object.entries(data).forEach(([key, value]) => {
+          numericTenderTypes[+key] = value;
+        });
+        this.tenderTypes = numericTenderTypes;
         console.log('Tender Types loaded:', this.tenderTypes);
       },
       error: (error: unknown) => {

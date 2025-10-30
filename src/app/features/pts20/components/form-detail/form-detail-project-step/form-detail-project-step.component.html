@@ -74,7 +74,7 @@
       <mat-label>TenderType</mat-label>
       <mat-select formControlName="TenderType">
         @for (tenderType of tenderTypes | keyvalue; track tenderType.key) {
-        <mat-option [value]="tenderType.key">
+        <mat-option [value]="+tenderType.key">
           {{ tenderType.value }}
         </mat-option>
         }
