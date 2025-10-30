@@ -261,10 +261,8 @@ export class Form20DetailsService {
       form20Id
     };
 
-    const relative = `../api/ptsrisk/Tender/api/tender/${tenderId}/form20Id`;
-    const url = new URL(relative, window.location.href).toString(); // Translate to final URL
     return this.http.put<any>(
-      url,
+      `tender/${tenderId}/form20Id`,
       request
     );
   }
