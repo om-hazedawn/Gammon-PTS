@@ -18,7 +18,7 @@ import { Form20ListDialogComponent } from "../form20-list-dialog/form20-list-dia
 export class Form20ControlsComponent implements OnInit {
   constructor(
     private form20Service: Form20ListService,
-  private form20DetailService: Form20DetailsService,
+    private form20DetailService: Form20DetailsService,
     private tenderService: TenderListApiService,
     private dialog: MatDialog    
   ) {}
@@ -89,7 +89,7 @@ export class Form20ControlsComponent implements OnInit {
 
   reloadForm20() {
     if (this.form20Id && this.form20Id > 0) {
-      this.form20Service.getForm20List()
+      this.form20Service.getPagedForm20List({filteringItem: {}, pageSize: -1, page: 1})
         .subscribe(list => {
           let result = list.filter(i => i.id == this.form20Id);
           if (result.length > 0) {

@@ -20,11 +20,8 @@ export interface Form20List {
   approximateValueRemark: string;
 }
 
-
-export interface Form20ListRequest {
-  filteringItem: Record<string, string>;
-  sortColumn: string;
-  sortOrder: string;
+export interface Form20ListQuery {
+  filteringItem: {};
   pageSize: number;
   page: number;
 }
@@ -39,16 +36,8 @@ export class Form20ListService {
     this.baseUrl = '/api/pts20/Form20';
   }
 
-  getForm20List(pageSize: number = -1, page: number = 0): Observable<Form20List[]> {
-    const url = `${this.baseUrl}/obtainFormList`;
-    const params: Form20ListRequest = {
-      filteringItem: {},
-      sortColumn: 'id',
-      sortOrder: 'asc',
-      pageSize,
-      page
-    };
-    
+  getForm20List(params = {}): Observable<Form20List[]> {
+     const url = `${this.baseUrl}/obtainFormList`;
     return this.http.post<Form20List[]>(url, params).pipe(
       catchError(error => {
         console.error('Error fetching Form20 List:', error);
@@ -56,6 +45,15 @@ export class Form20ListService {
       })
     );
   }
-  
+
+  getPagedForm20List(params: Form20ListQuery = { filteringItem: {}, pageSize: 10, page: 1 }): Observable<Form20List[]> {
+     const url = `${this.baseUrl}/obtainFormList`;
+    return this.http.post<Form20List[]>(url, params).pipe(
+      catchError(error => {
+        console.error('Error fetching Form20 List:', error);
+        throw error;
+      })
+    );
+  }
   
 }

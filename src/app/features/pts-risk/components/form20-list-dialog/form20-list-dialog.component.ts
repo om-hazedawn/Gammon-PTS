@@ -35,7 +35,7 @@ export class Form20ListDialogComponent implements OnInit {
   ngOnInit(): void {
     this.control.valueChanges.pipe(
       startWith(''),
-      switchMap((val: string) => this.form20Service.getForm20List()
+      switchMap((val: string) => this.form20Service.getPagedForm20List({filteringItem: {}, pageSize: -1, page: 1})
         .pipe(map((list: any[]) => this._filter(val, list as any[]))))
     ).subscribe((opts: any[]) => {
       this.tableData.data = opts;
