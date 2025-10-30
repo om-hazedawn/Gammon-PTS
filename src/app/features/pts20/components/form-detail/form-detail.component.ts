@@ -479,7 +479,6 @@ export class FormDetailComponent implements OnInit {
       BriefDescription: [''],
 
       ApproxValue: [''],
-
       ApproximateValue: [''],
       ApproximateValueInput: [''],
       ApproximateValueType: [''],
@@ -492,7 +491,7 @@ export class FormDetailComponent implements OnInit {
 
       /*page 2*/
 
-      Client: [''],
+      clientName: [''],
       ContractPeriod: [''],
       FinantialStanding: [''],
 
@@ -823,16 +822,18 @@ export class FormDetailComponent implements OnInit {
   
       this.formGroup.patchValue({
         form30: formData.form30Id,
+        ApproximateValue: formData.approximateValueRemark,
         businessUnit: formData.businessUnitCode,
         dueDate: formData.dueDate,
         tenderNo: formData.tenderNo,
         projectTitle: formData.title,
+        TenderType: formData.tenderTypeId, // Map tenderTypeId to TenderType when loading
         BidManager: formData.bidManager,
         Estimator: formData.estimator,
         Planner: formData.planner,
         Location: formData.location,
         BriefDescription: formData.description,
-        Client: formData.clientName,
+        clientName: formData.clientName,
         ApproxValue: formData.approximateValue,
         Approxmargin: formData.profitMargin,
   
@@ -1441,12 +1442,15 @@ export class FormDetailComponent implements OnInit {
       throw new Error('Project Title is required');
     }
 
-    // Helper function to ensure number or null
+    // Helper functions
     const toNumberOrNull = (value: any): number | null => {
       if (value === null || value === undefined || value === '') return null;
       const num = Number(value);
       return isNaN(num) ? null : num;
     };
+
+    // Map TenderType to tenderTypeId
+    const tenderTypeId = formValue.TenderType ? toNumberOrNull(formValue.TenderType) : null;
 
     // Helper function to ensure string
     const ensureString = (value: any): string => {
@@ -1458,8 +1462,8 @@ export class FormDetailComponent implements OnInit {
     const baseForm: SaveForm20 = {
       id: this.formId || 0,
       businessUnitId: toNumberOrNull(formValue.businessUnit),
-      title: formValue.projectTitle || "",
-      businessUnitCode: "BDG",
+      title: formValue.projectTitle,
+      businessUnitCode: formValue.businessUnit ,
       Status: "Draft",
 
       // Required percentage fields all initialized to "%"
@@ -1499,11 +1503,11 @@ export class FormDetailComponent implements OnInit {
 
       // Nullable numeric fields
       approximateValue: toNumberOrNull(formValue.ApproxValue),
-      profitMargin: toNumberOrNull(formValue.profitMargin),
+      profitMargin: formValue.Approxmargin,
       jvAgreementId: null,
       currencyId: null,
       maintenanceDefectId: null,
-      tenderTypeId: null,
+      tenderTypeId: tenderTypeId,
       splitValueId: null,
       countryId: null,
       bidTypeId: null,
@@ -1515,9 +1519,9 @@ export class FormDetailComponent implements OnInit {
       Estimator: ensureString(formValue.Estimator),
       JvPartner: ensureString(formValue.JvPartner),
       BidManager: ensureString(formValue.BidManager),
-      ClientName: ensureString(formValue.ClientName),
+      clientName: ensureString(formValue.clientName),
       Competitor: ensureString(formValue.Competitor),
-      Description: ensureString(formValue.Description),
+      Description: ensureString(formValue.BriefDescription),
       ConsultantEM: "",
       PeriodDetail: "",
       BondOtherName: "",
@@ -1560,7 +1564,7 @@ export class FormDetailComponent implements OnInit {
       EvaluationTimeAllowed: "",
       PaymentPeriodRiskCode: "",
       PaymentRetentionLimit: "",
-      ApproximateValueRemark: "",
+      approximateValueRemark: formValue.ApproximateValue || '',
       BondRetentionCallBasis: "",
       ContractDamageRateUnit: "",
       ContractDamageRiskCode: "",

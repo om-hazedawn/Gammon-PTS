@@ -43,7 +43,7 @@ export interface SaveForm20 {
     Estimator: string;
     JvPartner: string;
     BidManager: string;
-    ClientName: string;
+    clientName: string;
     Competitor: string;
     Description: string;
     ConsultantEM: string;
@@ -88,7 +88,7 @@ export interface SaveForm20 {
     EvaluationTimeAllowed: string;
     PaymentPeriodRiskCode: string;
     PaymentRetentionLimit: string;
-    ApproximateValueRemark: string;
+    approximateValueRemark: string;
     BondRetentionCallBasis: string;
     ContractDamageRateUnit: string;
     ContractDamageRiskCode: string;

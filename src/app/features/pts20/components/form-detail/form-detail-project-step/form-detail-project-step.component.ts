@@ -117,6 +117,7 @@ export class FormDetailProjectStepComponent implements OnInit {
     this.form20ListDropdownService.obtainTenderType().subscribe({
       next: (data: ObtainRegion) => {
         this.tenderTypes = data;
+        console.log('Tender Types loaded:', this.tenderTypes);
       },
       error: (error: unknown) => {
         console.error('Error loading tender types:', error);
