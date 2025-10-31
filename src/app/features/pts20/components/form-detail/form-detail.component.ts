@@ -468,6 +468,7 @@ export class FormDetailComponent implements OnInit {
       // Optional fields
       form30: [''],
       dueDate: [''],
+      ComplexContractPeriod: [''], // Field for complex contract period/periodDetail
       performanceUnit: [''],
       tenderNo: [''],
       BidManager: [''],
@@ -480,7 +481,7 @@ export class FormDetailComponent implements OnInit {
 
       ApproxValue: [''],
       ApproximateValue: [''],
-      ApproximateValueInput: [''],
+      ApproximateValueInput: ['', [Validators.pattern(/^-?\d*\.?\d*$/)]],  // Allow valid decimal numbers only
       ApproximateValueType: [''],
       Approxmargin: [''],
       Maintence: [''],
@@ -488,6 +489,10 @@ export class FormDetailComponent implements OnInit {
       maintenanceType: [''],
       maintenanceValue: [''],
       maintenanceStatus: [''],
+       
+      // Contract Period fields
+      contractPeriodValue: [''],
+      contractPeriodUnit: [''],
 
       /*page 2*/
 
@@ -804,6 +809,13 @@ export class FormDetailComponent implements OnInit {
         throw new Error('Invalid form data received');
       }
 
+      // Set all contract period related fields
+      this.formGroup.patchValue({
+        ComplexContractPeriod: formData.periodDetail || '',
+        contractPeriodValue: formData.period || '',
+        contractPeriodUnit: formData.periodUnit || ''
+      });
+
       // Helper function to normalize Yes/No values
       const normalizeYesNo = (value: string | null): string => {
         if (!value) return '';
@@ -831,12 +843,26 @@ export class FormDetailComponent implements OnInit {
         BidManager: formData.bidManager,
         Estimator: formData.estimator,
         Planner: formData.planner,
+        Region: formData.countryId,
         Location: formData.location,
         BriefDescription: formData.description,
         clientName: formData.clientName,
         ApproxValue: formData.approximateValue,
         Approxmargin: formData.profitMargin,
-  
+        ApproximateValueType: formData.currencyId,
+        ApproximateValueInput: formData.approximateValue,  // Map approximate value to input field
+        maintenanceType: this.ensureNumber(formData.maintenanceDefectId),
+        maintenanceValue: this.ensureNumber(formData.maintenanceDefectPeriod),
+        maintenanceStatus: formData.maintenanceDefectUnit,
+        periodUnit: formData.periodUnit || '',
+        period: this.ensureNumber(formData.period),
+
+        FinantialStanding: formData.clientFinanceStanding,
+
+        TenderMarketScheme: formData.isMarkingScheme,
+        FinancialTechnicalSplitValue: formData.splitValueId,
+        BidType: formData.bidTypeId,
+
         contract: {
           contractType: this.ensureNumber(formData.contractTypeId),
           Description: this.ensureString(formData.contractFormDescription),
@@ -1435,6 +1461,9 @@ export class FormDetailComponent implements OnInit {
   }
 
   private normalizeFormValues(formValue: any): SaveForm20 {
+    if (!formValue) {
+      throw new Error('Form data is required');
+    }
     if (!formValue.businessUnit) {
       throw new Error('Business Unit is required');
     }
@@ -1442,9 +1471,26 @@ export class FormDetailComponent implements OnInit {
       throw new Error('Project Title is required');
     }
 
+    // Ensure approximate value is a valid decimal
+    let approximateVal = null;
+    if (formValue.ApproximateValueInput) {
+      // Clean and convert the value
+      const cleanedValue = String(formValue.ApproximateValueInput).replace(/[$,\s]/g, '');
+      const num = Number(cleanedValue);
+      if (!isNaN(num)) {
+        approximateVal = num;
+      }
+    }
+
     // Helper functions
     const toNumberOrNull = (value: any): number | null => {
       if (value === null || value === undefined || value === '') return null;
+      
+      // Remove currency symbols, commas and spaces if present
+      if (typeof value === 'string') {
+        value = value.replace(/[$,\s]/g, '');
+      }
+      
       const num = Number(value);
       return isNaN(num) ? null : num;
     };
@@ -1463,9 +1509,18 @@ export class FormDetailComponent implements OnInit {
       id: this.formId || 0,
       businessUnitId: toNumberOrNull(formValue.businessUnit),
       title: formValue.projectTitle,
-      businessUnitCode: formValue.businessUnit ,
+      businessUnitCode: formValue.businessUnit,
       Status: "Draft",
-
+      maintenanceDefectId: this.ensureNumber(formValue.maintenanceType),
+      maintenanceDefectPeriod: this.ensureNumber(formValue.maintenanceValue),
+      maintenanceDefectUnit: formValue.maintenanceStatus,
+      periodUnit: formValue.contractPeriodUnit,
+      period: toNumberOrNull(formValue.contractPeriodValue),
+      periodDetail: formValue.ComplexContractPeriod || '',
+      ContractPeriod: formValue.contractPeriodUnit || '',
+      isMarkingScheme: formValue.TenderMarketScheme || '',
+      splitValueId: this.ensureNumber(formValue.FinancialTechnicalSplitValue),
+      bidTypeId: this.ensureNumber(formValue.BidType),
       // Required percentage fields all initialized to "%"
       bondMaintenancePercentage: "%",
       bondOtherPercentage: "%",
@@ -1476,8 +1531,6 @@ export class FormDetailComponent implements OnInit {
       paymentRetentionAmountPercent: "%",
 
       // Required unit fields
-      periodUnit: "months",
-      maintenanceDefectUnit: "months",
 
       // Distribution arrays with default values
       distributionComDir: ["00001"],
@@ -1502,16 +1555,13 @@ export class FormDetailComponent implements OnInit {
       HoEApproval: [{Title: "", Comments: "", Decision: "", StaffNo: "", ApproverName: ""}],
 
       // Nullable numeric fields
-      approximateValue: toNumberOrNull(formValue.ApproxValue),
+      approximateValue: approximateVal,  // Send validated decimal value
       profitMargin: formValue.Approxmargin,
       jvAgreementId: null,
-      currencyId: null,
-      maintenanceDefectId: null,
+      currencyId: formValue.ApproximateValueType,
       tenderTypeId: tenderTypeId,
-      splitValueId: null,
-      countryId: null,
-      bidTypeId: null,
-      clientFinanceStanding: null,
+      countryId: formValue.Region,
+      clientFinanceStanding: formValue.FinantialStanding,
       JvSplit: "",
       Planner: ensureString(formValue.Planner),
       Location: ensureString(formValue.Location),
@@ -1523,11 +1573,9 @@ export class FormDetailComponent implements OnInit {
       Competitor: ensureString(formValue.Competitor),
       Description: ensureString(formValue.BriefDescription),
       ConsultantEM: "",
-      PeriodDetail: "",
       BondOtherName: "",
       OtherIsPFIPPP: "",
       BondOtherRemark: "",
-      IsMarkingScheme: "",
       BondTenderRemark: "",
       ConsultantOthers: "",
       BondOtherRiskCode: "",

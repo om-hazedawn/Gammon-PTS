@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { ControlContainer, FormGroupDirective } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Input, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { ControlContainer, FormGroupDirective, FormGroup } from '@angular/forms';
 import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
 import { Form20ListDropdownService, ObtainRegion, BusinessUnitDisplay } from '../../../../../core/services/Form20/form20listdropdown.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -21,7 +21,7 @@ import { Form30LinkPopupComponent } from '../form30link-component/form30Linkpopu
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormDetailProjectStepComponent implements OnInit {
+export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
   @Input() isEditMode = false;
   
   businessUnitMapping: { [key: string]: string } = {
@@ -45,8 +45,54 @@ export class FormDetailProjectStepComponent implements OnInit {
 
   constructor(
     private form20ListDropdownService: Form20ListDropdownService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private controlContainer: ControlContainer,
+    private cdr: ChangeDetectorRef
   ) {}
+
+  // Helper method to format numbers with commas
+  private formatWithCommas(value: number): string {
+    return value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+  }
+
+  // Helper method to parse approximate value input
+  private parseApproximateValue(val: string): number {
+    if (!val) return 0;
+    
+    let trimmedVal = val.toString().trim().replace(/,/g, '').toUpperCase();
+    
+    if (trimmedVal.endsWith('K')) {
+      return Math.round(+trimmedVal.replace('K', '') * 1000);
+    }
+    else if (trimmedVal.endsWith('M')) {
+      return Math.round(+trimmedVal.replace('M', '') * 1000000);
+    }
+    else if (trimmedVal.endsWith('B') || trimmedVal.endsWith('BN')) {
+      return Math.round(+trimmedVal.replace('BN', '').replace('B', '') * 1000000000);
+    }
+    
+    return Math.round(+trimmedVal) || 0;
+  }
+
+  ngAfterViewInit() {
+    const form = this.controlContainer.control as FormGroup;
+    if (form) {
+      const approximateValueControl = form.get('ApproximateValueInput');
+      if (approximateValueControl) {
+        approximateValueControl.valueChanges.subscribe(val => {
+          if (val) {
+            const parsedValue = this.parseApproximateValue(val);
+            if (parsedValue > 0) {
+              const formattedValue = this.formatWithCommas(parsedValue);
+              if (val !== formattedValue) {
+                approximateValueControl.setValue(formattedValue, { emitEvent: false });
+              }
+            }
+          }
+        });
+      }
+    }
+  }
 
   ngOnInit(): void {
     this.loadBuildingUnits();
@@ -84,6 +130,7 @@ export class FormDetailProjectStepComponent implements OnInit {
           mappedData[key] = this.businessUnitMapping[key] || key;
         });
         this.BuildingUnit = mappedData;
+        this.cdr.detectChanges();
       },
       error: (error: unknown) => {
         console.error('Error loading building units:', error);
@@ -94,7 +141,13 @@ export class FormDetailProjectStepComponent implements OnInit {
   private loadRegions(): void {
     this.form20ListDropdownService.obtainRegion().subscribe({
       next: (data: ObtainRegion) => {
-        this.regions = data;
+        // Convert keys to numbers to match the numeric regionId
+        const numericRegions: ObtainRegion = {};
+        Object.entries(data).forEach(([key, value]) => {
+          numericRegions[+key] = value;
+        });
+        this.regions = numericRegions;
+        this.cdr.detectChanges();
       },
       error: (error: unknown) => {
         console.error('Error loading regions:', error);
@@ -105,7 +158,12 @@ export class FormDetailProjectStepComponent implements OnInit {
   private loadCurrencies(): void {
     this.form20ListDropdownService.obtainCurrency().subscribe({
       next: (data: ObtainRegion) => {
-        this.currencies = data;
+        //convert keys to numbers to match the numeric currencyId
+        const numericCurrencies: ObtainRegion = {};
+        Object.entries(data).forEach(([key, value]) => {
+          numericCurrencies[+key] = value;
+        });
+        this.currencies = numericCurrencies;
       },
       error: (error: unknown) => {
         console.error('Error loading currencies:', error);
@@ -122,7 +180,6 @@ export class FormDetailProjectStepComponent implements OnInit {
           numericTenderTypes[+key] = value;
         });
         this.tenderTypes = numericTenderTypes;
-        console.log('Tender Types loaded:', this.tenderTypes);
       },
       error: (error: unknown) => {
         console.error('Error loading tender types:', error);
@@ -133,7 +190,11 @@ export class FormDetailProjectStepComponent implements OnInit {
   private loadMaintenanceDefects(): void {
     this.form20ListDropdownService.obtainMaintenanceDefect().subscribe({
       next: (data: ObtainRegion) => {
-        this.maintenanceDefects = data;
+        const numericMaintenanceDefects: ObtainRegion = {};
+        Object.entries(data).forEach(([key, value]) => {
+          numericMaintenanceDefects[+key] = value;
+        });
+        this.maintenanceDefects = numericMaintenanceDefects;
       },
       error: (error: unknown) => {
         console.error('Error loading maintenance defects:', error);
@@ -144,7 +205,11 @@ export class FormDetailProjectStepComponent implements OnInit {
   private loadFinanceStandings(): void {
     this.form20ListDropdownService.obtainFinanceStanding().subscribe({
       next: (data: ObtainRegion) => {
-        this.financeStandings = data;
+        const numericFinanceStandings: ObtainRegion = {};
+        Object.entries(data).forEach(([key, value]) => {
+          numericFinanceStandings[+key] = value;
+        });
+        this.financeStandings = numericFinanceStandings;
       },
       error: (error: unknown) => {
         console.error('Error loading finance standings:', error);
@@ -155,7 +220,11 @@ export class FormDetailProjectStepComponent implements OnInit {
   private loadFinanceTechnicalSplits(): void {
     this.form20ListDropdownService.obtainFinanceTechnicalSplit().subscribe({
       next: (data: ObtainRegion) => {
-        this.financeTechnicalSplits = data;
+        const numericFinanceTechnicalSplits: ObtainRegion = {};
+        Object.entries(data).forEach(([key, value]) => {
+          numericFinanceTechnicalSplits[+key] = value;
+        });
+        this.financeTechnicalSplits = numericFinanceTechnicalSplits;
       },
       error: (error: unknown) => {
         console.error('Error loading finance/technical splits:', error);
@@ -166,7 +235,11 @@ export class FormDetailProjectStepComponent implements OnInit {
   private loadBidTypes(): void {
     this.form20ListDropdownService.obtainBidType().subscribe({
       next: (data: ObtainRegion) => {
-        this.bidTypes = data;
+        const numericBidTypes: ObtainRegion = {};
+        Object.entries(data).forEach(([key, value]) => {
+          numericBidTypes[+key] = value;
+        });
+        this.bidTypes = numericBidTypes;
       },
       error: (error: unknown) => {
         console.error('Error loading bid types:', error);
