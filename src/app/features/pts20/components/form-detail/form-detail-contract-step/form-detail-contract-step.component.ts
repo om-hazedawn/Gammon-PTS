@@ -28,7 +28,11 @@ export class FormDetailContractStepComponent {
   private loadContractTypes(): void {
     this.form20ListDropdownService.obtainContractType().subscribe({
       next: (data: ObtainRegion) => {
-        this.contractTypes = data;
+        const contractData : ObtainRegion = {};
+        Object.entries(data).forEach(([key, value]) => {
+          contractData[+key] = value;     
+        });
+        this.contractTypes = contractData;
       },
       error: (error: unknown) => {
         console.error('Error loading contract types:', error);
@@ -39,7 +43,11 @@ export class FormDetailContractStepComponent {
   private loadMeasurementDetails(): void {
     this.form20ListDropdownService.obtainMeasurementDetails().subscribe({
       next: (data: ObtainRegion) => {
-        this.measurementDetails = data;
+        const measurementData : ObtainRegion = {};
+        Object.entries(data).forEach(([key, value]) => {
+          measurementData[+key] = value;
+        });
+        this.measurementDetails = measurementData;
       },
       error: (error: unknown) => {
         console.error('Error loading measurement details:', error);
@@ -49,7 +57,11 @@ export class FormDetailContractStepComponent {
   private loadFluctuation(): void {
     this.form20ListDropdownService.obtainFluctuation().subscribe({
       next: (data: ObtainRegion) => {
-        this.fluctuation = data;
+        const fluctuationData : ObtainRegion = {};
+        Object.entries(data).forEach(([key, value]) => {
+          fluctuationData[+key] = value;
+        });
+        this.fluctuation = fluctuationData;
       },
       error: (error: unknown) => {
         console.error('Error loading fluctuation details:', error);

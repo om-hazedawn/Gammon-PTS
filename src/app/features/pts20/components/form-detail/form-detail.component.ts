@@ -494,8 +494,6 @@ export class FormDetailComponent implements OnInit {
       contractPeriodValue: [''],
       contractPeriodUnit: [''],
 
-      /*page 2*/
-
       clientName: [''],
       ContractPeriod: [''],
       FinantialStanding: [''],
@@ -504,22 +502,27 @@ export class FormDetailComponent implements OnInit {
       FinancialTechnicalSplitValue: [''],
       BidType: [''],
 
+      JvAgreement: [''],
+      JvSplit: [''],
+      JvPartner: [''],
+
       duedate: [''],
       projectDescription: [''],
       contract: this.fb.group({
         contractType: [''],
-        contractDuration: [''],
         Type: [''],
         Description: [''],
-        DegreeName: [''],
-        DegreeRiskType: [''],
-        DegreeRiskLimit: [''],
+        DegreeRiskTypeContract: [''],
+        contractDuration: [''],
         RateOfDamages: [''],
         LimitOfLiability: [''],
-
+        DegreeRiskDamage : [''],
         MeasurementDetails: [''],
+        DegreeRiskMeasurement: [''],
         Fluctuations: [''],
-
+        DegreeRiskfluctuation: [''],
+  
+        DegreeName: [''],  
         Adverse: [''],
         TimeExtension: [''],
         WeatherExtention: [''],
@@ -527,6 +530,12 @@ export class FormDetailComponent implements OnInit {
         DesignResponsibility: [''],
         BIMRequired: [''],
         DFMARequired: [''],
+
+        DegreeRiskWeather: [''],
+        DegreeRiskTypeUnusual: [''],
+        DegreeRiskTypeDesign: [''],
+        DegreeRiskTypeBIM: [''],
+        DegreeRiskTypeDFMA: [''],
       }),
 
       payment: this.fb.group({
@@ -809,6 +818,9 @@ export class FormDetailComponent implements OnInit {
         throw new Error('Invalid form data received');
       }
 
+      // Debug: Log the jvAgreementId value
+      console.log('JV Agreement ID from API:', formData.jvAgreementId, 'Type:', typeof formData.jvAgreementId);
+
       // Set all contract period related fields
       this.formGroup.patchValue({
         ComplexContractPeriod: formData.periodDetail || '',
@@ -831,7 +843,10 @@ export class FormDetailComponent implements OnInit {
         if (!value || value.trim() === '') return '';
         return value;
       };
-  
+
+      console.log('Loading form data - contractDamageRiskCode:', formData.contractDamageRiskCode);
+      console.log('Loading form data - contractFormRiskCode:', formData.contractFormRiskCode);
+
       this.formGroup.patchValue({
         form30: formData.form30Id,
         ApproximateValue: formData.approximateValueRemark,
@@ -862,24 +877,34 @@ export class FormDetailComponent implements OnInit {
         TenderMarketScheme: formData.isMarkingScheme,
         FinancialTechnicalSplitValue: formData.splitValueId,
         BidType: formData.bidTypeId,
+        JvAgreement: formData.jvAgreementId,
+        JvSplit: formData.jvSplit,
+        JvPartner: formData.jvPartner,
 
         contract: {
-          contractType: this.ensureNumber(formData.contractTypeId),
+          Type: this.ensureNumber(formData.contractTypeId),
           Description: this.ensureString(formData.contractFormDescription),
           DegreeName: this.ensureString(formData.contractFormDescription),
-          DegreeRiskType: normalizeRiskCode(formData.contractFormRiskCode),
+          DegreeRiskTypeContract: normalizeRiskCode(formData.contractFormRiskCode),
+          DegreeRiskDamage: normalizeRiskCode(formData.contractDamageRiskCode),
           DesignResponsibility: this.ensureString(formData.contractDesignResponsibility),
+          DegreeRiskMeasurement: normalizeRiskCode(formData.contractMeasurementRiskCode),
+          DegreeRiskfluctuation: normalizeRiskCode(formData.contractFluctuationRiskCode),
+          DegreeRiskWeather: normalizeRiskCode(formData.contractDesignRiskCode),
+          DegreeRiskTypeUnusual: normalizeRiskCode(formData.contractUnusualRiskCode),
+          DegreeRiskTypeDesign: normalizeRiskCode(formData.contractDesignRiskCode),
+          DegreeRiskTypeBIM: normalizeRiskCode(formData.contractBIMRiskCode),
+          DegreeRiskTypeDFMA: normalizeRiskCode(formData.contractDFMARiskCode),
           BIMRequired: normalizeYesNo(formData.contractBIMRequired),
           DFMARequired: normalizeYesNo(formData.contractDFMARequired),
           Adverse: normalizeYesNo(formData.contractIsAdversePhyiscal),
           TimeExtension: normalizeYesNo(formData.contractIsTimeExtension),
           WeatherExtention: this.ensureString(formData.contractIsTimeExtensionValue),
           OtherUnusualConditions: this.ensureString(formData.contractUnusualConditions),
-          RateOfDamages: this.ensureNumber(formData.contractDamageRate),
+          RateOfDamages: this.ensureString(formData.contractDamageRateRemark),
           LimitOfLiability: this.ensureString(formData.contractLiabilityLimit),
           MeasurementDetails: this.ensureNumber(formData.contractMeasurementId),
           Fluctuations: this.ensureNumber(formData.contractFluctuationId),
-          Type: this.ensureNumber(formData.contractTypeId)
         },
   
         payment: {
@@ -1049,6 +1074,13 @@ export class FormDetailComponent implements OnInit {
           HSEQ: formData.distributionHSEQ
         }
     });
+
+    // Debug: Log the value that was set for JvAgreement
+    setTimeout(() => {
+      const jvAgreementValue = this.formGroup.get('JvAgreement')?.value;
+      console.log('JV Agreement form value after patching:', jvAgreementValue, 'Type:', typeof jvAgreementValue);
+      console.log('Full form value:', this.formGroup.value);
+    }, 100);
   }
 
   validateCurrentStep(): boolean {
@@ -1521,7 +1553,11 @@ export class FormDetailComponent implements OnInit {
       isMarkingScheme: formValue.TenderMarketScheme || '',
       splitValueId: this.ensureNumber(formValue.FinancialTechnicalSplitValue),
       bidTypeId: this.ensureNumber(formValue.BidType),
-      // Required percentage fields all initialized to "%"
+      JvSplit: ensureString(formValue.JvSplit),
+      JvPartner: ensureString(formValue.JvPartner),
+      jvAgreementId: this.ensureNumber(formValue.JvAgreement),
+
+
       bondMaintenancePercentage: "%",
       bondOtherPercentage: "%",
       bondPaymentPercentage: "%",
@@ -1557,21 +1593,54 @@ export class FormDetailComponent implements OnInit {
       // Nullable numeric fields
       approximateValue: approximateVal,  // Send validated decimal value
       profitMargin: formValue.Approxmargin,
-      jvAgreementId: null,
+     
       currencyId: formValue.ApproximateValueType,
       tenderTypeId: tenderTypeId,
       countryId: formValue.Region,
       clientFinanceStanding: formValue.FinantialStanding,
-      JvSplit: "",
+
+      // Contract fields with default values (will be overridden in if block if contract exists)
+      contractTypeId: null,
+      contractFormRiskCode: "",
+      contractFormDescription: "",
+      contractDamageRateRemark: "",
+      contractLiabilityLimit: "",
+      contractDamageRiskCode: "",
+      contractMeasurementId: null,
+      contractMeasurementRiskCode: "",
+      contractFluctuationId: null,
+      contractFluctuationRiskCode: "",
+      contractIsAdversePhyiscal: "",
+      contractIsTimeExtension: "",
+      contractIsTimeExtensionValue: "",
+      contractClausesRiskCode: "",
+      contractUnusualConditions : "",
+      contractUnusualRiskCode: "",
+      contractDesignResponsibility: "",
+      contractDesignRiskCode: "",
+      contractBIMRequired:"",
+      contractBIMRiskCode: "",
+      contractDFMARequired: "",
+      contractDFMARiskCode: "",
+
+
+
+
+
+     
       Planner: ensureString(formValue.Planner),
       Location: ensureString(formValue.Location),
       TenderNo: ensureString(formValue.tenderNo),
       Estimator: ensureString(formValue.Estimator),
-      JvPartner: ensureString(formValue.JvPartner),
+     
       BidManager: ensureString(formValue.BidManager),
       clientName: ensureString(formValue.clientName),
       Competitor: ensureString(formValue.Competitor),
       Description: ensureString(formValue.BriefDescription),
+
+      //page 2 
+     
+
       ConsultantEM: "",
       BondOtherName: "",
       OtherIsPFIPPP: "",
@@ -1591,16 +1660,12 @@ export class FormDetailComponent implements OnInit {
       BondRetentionRemark: "",
       BondTenderCallBasis: "",
       ConsultantArchitect: "",
-      ContractBIMRequired: "",
-      ContractBIMRiskCode: "",
       OtherPFIPPPRiskCode: "",
       PaymentCashRiskCode: "",
       BondPaymentCallBasis: "",
       BondTenderExpiryDate: "",
       ConsultantEMRiskCode: "",
-      ContractDFMARequired: "",
-      ContractDFMARiskCode: "",
-      ContractFormRiskCode: "",
+      
       EvaluationIsCashFlow: "",
       OtherForeignCurrency: "",
       BondMaintenanceRemark: "",
@@ -1615,17 +1680,13 @@ export class FormDetailComponent implements OnInit {
       approximateValueRemark: formValue.ApproximateValue || '',
       BondRetentionCallBasis: "",
       ContractDamageRateUnit: "",
-      ContractDamageRiskCode: "",
-      ContractDesignRiskCode: "",
-      ContractLiabilityLimit: "",
+
+      
       OtherFinancingRequired: "",
       BondMaintenanceRiskCode: "",
       BondPerformanceRiskCode: "",
       BondRetentionExpiryDate: "",
-      ContractClausesRiskCode: "",
-      ContractFormDescription: "",
-      ContractIsTimeExtension: "",
-      ContractUnusualRiskCode: "",
+      
       EvaluationBondGuarantee: "",
       EvaluationIsCompetition: "",
       EvaluationIsPaymentTerm: "",
@@ -1634,13 +1695,12 @@ export class FormDetailComponent implements OnInit {
       BondPerformanceCallBasis: "",
       ConsultantCivilStructure: "",
       ConsultantOthersRiskCode: "",
-      ContractDamageRateRemark: "",
+      
+
       EvaluationSiteManagement: "",
       PaymentRetentionRiskCode: "",
       BondMaintenanceExpiryDate: "",
       BondPerformanceExpiryDate: "",
-      ContractIsAdversePhyiscal: "",
-      ContractUnusualConditions: "",
       EvaluationCompanyWorkload: "",
       EvaluationIsBondGuarantee: "",
       InsuranceShortFallInCover: "",
@@ -1648,16 +1708,13 @@ export class FormDetailComponent implements OnInit {
       EvaluationConsultantRecord: "",
       EvaluationIsSiteManagement: "",
       ConsultantArchitectRiskCode: "",
-      ContractFluctuationRiskCode: "",
-      ContractMeasurementRiskCode: "",
+      
       EvaluationContractCondition: "",
       EvaluationIsCompanyWorkload: "",
       InsuranceIsShortFallInCover: "",
       InsuranceOnerousRequirement: "",
       InsuranceProvidedByEmployer: "",
       InsuranceThirdPartyRiskCode: "",
-      ContractDesignResponsibility: "",
-      ContractIsTimeExtensionValue: "",
       EvaluationIsConsultantRecord: "",
       OtherForeignCurrencyRiskCode: "",
       PaymentCertificationRiskCode: "",
@@ -1703,19 +1760,29 @@ export class FormDetailComponent implements OnInit {
     // Apply any contract form group values
     if (formValue.contract) {
       Object.assign(baseForm, {
+        contractTypeId: toNumberOrNull(formValue.contract.ContractForm),
+        contractFormRiskCode: ensureString(formValue.contract?.DegreeRiskTypeContract),
         contractFormDescription: formValue.contract.Description,
-        contractBIMRequired: formValue.contract.BIMRequired,
-        contractDFMARequired: formValue.contract.DFMARequired,
+        contractDamageRateRemark: formValue.contract.RateOfDamages,
+        contractLiabilityLimit: formValue.contract.LimitOfLiability,
+        contractDamageRiskCode: formValue.contract.DegreeRiskDamage,
+        contractMeasurementId: toNumberOrNull(formValue.contract.MeasurementDetails),
+        contractMeasurementRiskCode: formValue.contract.DegreeRiskMeasurement,
+        contractFluctuationId: toNumberOrNull(formValue.contract.Fluctuations),
+        contractFluctuationRiskCode: formValue.contract.DegreeRiskfluctuation,
         contractIsAdversePhyiscal: formValue.contract.Adverse,
         contractIsTimeExtension: formValue.contract.TimeExtension,
         contractIsTimeExtensionValue: formValue.contract.WeatherExtention,
+        contractClausesRiskCode: formValue.contract.DegreeRiskWeather,
         contractUnusualConditions: formValue.contract.OtherUnusualConditions,
+        contractUnusualRiskCode: formValue.contract.DegreeRiskTypeUnusual,
+        contractDesignResponsibility: formValue.contract.DesignResponsibility,
+        contractDesignRiskCode: formValue.contract.DegreeRiskTypeDesign,
+        contractBIMRequired: formValue.contract.BIMRequired,
+        contractBIMRiskCode: formValue.contract.DegreeRiskTypeBIM,
+        contractDFMARequired: formValue.contract.DFMARequired,
+        contractDFMARiskCode: formValue.contract.DegreeRiskTypeDFMA,
         contractDamageRate: toNumberOrNull(formValue.contract.RateOfDamages),
-        contractLiabilityLimit: formValue.contract.LimitOfLiability,
-        contractMeasurementId: toNumberOrNull(formValue.contract.MeasurementDetails),
-        contractFluctuationId: toNumberOrNull(formValue.contract.Fluctuations),
-        contractTypeId: toNumberOrNull(formValue.contract.Type),
-        contractDesignResponsibility: formValue.contract.DesignResponsibility
       });
     }
 

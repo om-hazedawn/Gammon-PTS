@@ -111,6 +111,15 @@ export class Form20ListDropdownService {
     );
   }
 
+  obtainJVAgreement(): Observable<ObtainRegion> {
+    return this.http.post<ObtainRegion>(`${this.baseUrl}/obtainJVAgreement`, {}).pipe(
+      catchError((error) => {
+        console.error('Error fetching JV Agreement options:', error);
+        throw error;
+      })
+    );
+  }
+
   obtainMeasurementDetails(): Observable<ObtainRegion> {
     return this.http.post<ObtainRegion>(`${this.baseUrl}/obtainMeasurement`, {}).pipe(
       catchError((error) => {
@@ -133,15 +142,6 @@ export class Form20ListDropdownService {
     return this.http.post<ObtainRegion>(`${this.baseUrl}/obtainMaintenanceDefect`, {}).pipe(
       catchError((error) => {
         console.error('Error fetching maintenance defects:', error);
-        throw error;
-      })
-    );
-  }
-
-  obtainJVAgreement(): Observable<ObtainRegion> {
-    return this.http.post<ObtainRegion>(`${this.baseUrl}/obtainJVAgreement`, {}).pipe(
-      catchError((error) => {
-        console.error('Error fetching JV agreements:', error);
         throw error;
       })
     );

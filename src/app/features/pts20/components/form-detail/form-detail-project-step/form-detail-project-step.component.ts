@@ -24,6 +24,16 @@ import { Form30LinkPopupComponent } from '../form30link-component/form30Linkpopu
 export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
   @Input() isEditMode = false;
   
+  // Getter to access the parent form
+  get formGroup(): FormGroup {
+    return this.controlContainer.control as FormGroup;
+  }
+
+  // Check if bid type is Joint Venture Bid (value 2)
+  get isJointVentureBid(): boolean {
+    return this.formGroup?.get('BidType')?.value === 2;
+  }
+  
   businessUnitMapping: { [key: string]: string } = {
     'ALL': 'All',
     'BDG': 'Building',
@@ -42,6 +52,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
   financeTechnicalSplits: ObtainRegion = {};
   bidTypes: ObtainRegion = {};
   yesNo: ObtainRegion = {};
+  jvAgreementOptions: ObtainRegion = {};
 
   constructor(
     private form20ListDropdownService: Form20ListDropdownService,
@@ -91,6 +102,14 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
           }
         });
       }
+
+      // Listen to BidType changes to show/hide JV Partners field
+      const bidTypeControl = form.get('BidType');
+      if (bidTypeControl) {
+        bidTypeControl.valueChanges.subscribe(value => {
+          this.cdr.detectChanges(); // Trigger change detection when bid type changes
+        });
+      }
     }
   }
 
@@ -104,6 +123,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
     this.loadFinanceTechnicalSplits();
     this.loadBidTypes();
     this.loadYesNoNA();
+    this.loadJVAgreementOptions();
   }
 
   openForm30Popup(event: MouseEvent): void {
@@ -251,9 +271,24 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
     this.form20ListDropdownService.obtainYesNoNA().subscribe({
       next: (data: ObtainRegion) => {
         this.yesNo = data;
+        this.cdr.detectChanges();
       },
       error: (error: unknown) => {
         console.error('Error loading Yes/No/NA options:', error);
+      }
+    });
+  }
+
+  private loadJVAgreementOptions(): void {
+    this.form20ListDropdownService.obtainJVAgreement().subscribe({
+      next: (data: ObtainRegion) => {
+        this.jvAgreementOptions = data;
+        // Debug: Log the JV Agreement options
+        console.log('JV Agreement options loaded:', data);
+        this.cdr.detectChanges();
+      },
+      error: (error: unknown) => {
+        console.error('Error loading JV Agreement options:', error);
       }
     });
   }

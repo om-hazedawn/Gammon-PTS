@@ -8,7 +8,7 @@
       <mat-label>Type</mat-label>
       <mat-select formControlName="Type">
         @for (contracttype of contractTypes | keyvalue; track contracttype.key) {
-        <mat-option [value]="contracttype.key">
+        <mat-option [value]="+contracttype.key">
           {{ contracttype.value }}
         </mat-option>
         }
@@ -22,8 +22,8 @@
 
     <mat-form-field appearance="fill" class="w-32">
       <mat-label>Degree of Risk</mat-label>
-      <mat-select formControlName="DegreeRiskType">
-        <mat-option value="M">L</mat-option>
+      <mat-select formControlName="DegreeRiskTypeContract">
+        <mat-option value="L">L</mat-option>
         <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
         <mat-option value="M/H">M/H</mat-option>
@@ -56,8 +56,8 @@
 
     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
       <mat-label>Degree of Risk</mat-label>
-      <mat-select formControlName="DegreeRiskLimit">
-        <mat-option value="M">L</mat-option>
+      <mat-select formControlName="DegreeRiskDamage">
+        <mat-option value="L">L</mat-option>
         <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
         <mat-option value="M/H">M/H</mat-option>
@@ -75,7 +75,7 @@
       <mat-label>Measurement Details</mat-label>
       <mat-select formControlName="MeasurementDetails">
         @for(measurementdetail of measurementDetails | keyvalue; track measurementdetail.key) {
-        <mat-option [value]="measurementdetail.key">
+        <mat-option [value]="+measurementdetail.key">
           {{ measurementdetail.value }}
         </mat-option>
         }
@@ -84,8 +84,8 @@
 
     <mat-form-field appearance="fill" class="flex-1 min-w-[160px]">
       <mat-label>Degree of Risk</mat-label>
-      <mat-select formControlName="DegreeRiskType">
-        <mat-option value="M">L</mat-option>
+      <mat-select formControlName="DegreeRiskMeasurement">
+        <mat-option value="L">L</mat-option>
         <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
         <mat-option value="M/H">M/H</mat-option>
@@ -100,7 +100,7 @@
       <mat-label>Fluctuations</mat-label>
       <mat-select formControlName="Fluctuations">
         @for(fluctuation of fluctuation | keyvalue; track fluctuation.key) {
-        <mat-option [value]="fluctuation.key">
+        <mat-option [value]="+fluctuation.key">
           {{ fluctuation.value }}
         </mat-option>
         }
@@ -109,8 +109,8 @@
 
     <mat-form-field appearance="fill" class="w-32">
       <mat-label>Degree of Risk</mat-label>
-      <mat-select formControlName="DegreeRiskType">
-        <mat-option value="M">L</mat-option>
+      <mat-select formControlName="DegreeRiskfluctuation">
+        <mat-option value="L">L</mat-option>
         <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
         <mat-option value="M/H">M/H</mat-option>
@@ -127,9 +127,9 @@
   <div class="clause-block">
     <label class="block mb-1">Adverse Physical Conditions:</label>
     <mat-radio-group formControlName="Adverse" class="flex flex-row gap-4">
-      <mat-radio-button value="yes">Yes</mat-radio-button>
-      <mat-radio-button value="no">No</mat-radio-button>
-      <mat-radio-button value="na">N.A.</mat-radio-button>
+      <mat-radio-button value="YES">Yes</mat-radio-button>
+      <mat-radio-button value="NO">No</mat-radio-button>
+      <mat-radio-button value="N/A">N.A.</mat-radio-button>
     </mat-radio-group>
   </div>
 
@@ -137,9 +137,9 @@
     <div>
       <label class="block mb-1">Time Extension For Weather:</label>
       <mat-radio-group formControlName="TimeExtension" class="flex flex-row gap-4">
-        <mat-radio-button value="yes">Yes</mat-radio-button>
-        <mat-radio-button value="no">No</mat-radio-button>
-        <mat-radio-button value="na">N.A.</mat-radio-button>
+        <mat-radio-button value="YES">Yes</mat-radio-button>
+      <mat-radio-button value="NO">No</mat-radio-button>
+      <mat-radio-button value="N/A">N.A.</mat-radio-button>
       </mat-radio-group>
     </div>
     <div class="flex flex-row gap-4 flex-1">
@@ -149,8 +149,8 @@
       </mat-form-field>
       <mat-form-field appearance="fill" class="min-w-[160px]">
         <mat-label>Degree of Risk</mat-label>
-        <mat-select formControlName="DegreeRiskType">
-          <mat-option value="M">L</mat-option>
+        <mat-select formControlName="DegreeRiskWeather">
+          <mat-option value="L">L</mat-option>
           <mat-option value="L/M">L/M</mat-option>
           <mat-option value="M">M</mat-option>
           <mat-option value="M/H">M/H</mat-option>
@@ -170,8 +170,8 @@
     </mat-form-field>
     <mat-form-field appearance="fill" class="min-w-[160px]">
       <mat-label>Degree of Risk:</mat-label>
-      <mat-select formControlName="DegreeRiskType">
-        <mat-option value="M">L</mat-option>
+      <mat-select formControlName="DegreeRiskTypeUnusual">
+        <mat-option value="L">L</mat-option>
         <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
         <mat-option value="M/H">M/H</mat-option>
@@ -187,8 +187,8 @@
     </mat-form-field>
     <mat-form-field appearance="fill" class="min-w-[160px]">
       <mat-label>Degree of Risk:</mat-label>
-      <mat-select formControlName="DegreeRiskType">
-        <mat-option value="M">L</mat-option>
+      <mat-select formControlName="DegreeRiskTypeDesign">
+        <mat-option value="L">L</mat-option>
         <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
         <mat-option value="M/H">M/H</mat-option>
@@ -203,14 +203,14 @@
   <div class="form-row">
     <label class="block mb-1">BIM Required:</label>
     <mat-radio-group formControlName="BIMRequired" class="flex gap-6">
-      <mat-radio-button value="yes">Yes</mat-radio-button>
-      <mat-radio-button value="no">No</mat-radio-button>
-      <mat-radio-button value="na">N.A.</mat-radio-button>
+      <mat-radio-button value="YES">Yes</mat-radio-button>
+      <mat-radio-button value="NO">No</mat-radio-button>
+      <mat-radio-button value="N/A">N.A.</mat-radio-button>
     </mat-radio-group>
     <mat-form-field appearance="fill" class="min-w-[160px]">
       <mat-label>Degree of Risk</mat-label>
-      <mat-select formControlName="DegreeRiskType">
-        <mat-option value="M">L</mat-option>
+      <mat-select formControlName="DegreeRiskTypeBIM">
+        <mat-option value="L">L</mat-option>
         <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
         <mat-option value="M/H">M/H</mat-option>
@@ -222,14 +222,14 @@
     </mat-form-field>
     <label class="block mb-1">DFMA Required:</label>
     <mat-radio-group formControlName="DFMARequired" class="flex gap-6">
-      <mat-radio-button value="yes">Yes</mat-radio-button>
-      <mat-radio-button value="no">No</mat-radio-button>
-      <mat-radio-button value="na">N.A.</mat-radio-button>
+      <mat-radio-button value="YES">Yes</mat-radio-button>
+      <mat-radio-button value="NO">No</mat-radio-button>
+      <mat-radio-button value="N/A">N.A.</mat-radio-button>
     </mat-radio-group>
     <mat-form-field appearance="fill" class="min-w-[160px]">
       <mat-label>Degree of Risk</mat-label>
-      <mat-select formControlName="DegreeRiskType">
-        <mat-option value="M">L</mat-option>
+      <mat-select formControlName="DegreeRiskTypeDFMA">
+        <mat-option value="L">L</mat-option>
         <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
         <mat-option value="M/H">M/H</mat-option>

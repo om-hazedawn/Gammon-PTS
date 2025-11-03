@@ -221,4 +221,28 @@
       </mat-select>
     </mat-form-field>
   </div>
+
+  <!-- JV Partner(s) field - shown only when bid type is Joint Venture Bid (value 2) -->
+  @if (isJointVentureBid) {
+  <div class="form-row">
+    <mat-form-field appearance="fill">
+      <mat-label>JV Partner(s)</mat-label>
+      <textarea matInput formControlName="JvPartner" placeholder="Enter Joint Venture Partner details" ></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>JV Split</mat-label>
+      <input matInput formControlName="JvSplit" placeholder="Enter Joint Venture Split details" />
+    </mat-form-field>
+   <mat-form-field appearance="fill">
+  <mat-label>JV Agreement in Place</mat-label>
+  <mat-select formControlName="JvAgreement" placeholder="Select Option">
+    @for (jvAgreement of jvAgreementOptions | keyvalue; track jvAgreement.key) {
+      <mat-option [value]="+jvAgreement.key">
+        {{ jvAgreement.value }}
+      </mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+  </div>
+  }
 </div>
