@@ -91,7 +91,7 @@ export class Form20ControlsComponent implements OnInit {
     if (this.form20Id && this.form20Id > 0) {
       this.form20Service.getPagedForm20List({filteringItem: {}, pageSize: -1, page: 1})
         .subscribe(list => {
-          let result = list.filter(i => i.id == this.form20Id);
+          let result = list.items.filter(i => i.id == this.form20Id);
           if (result.length > 0) {
             this.tenderNo = result[0].tenderNo
           } else {

@@ -19,6 +19,13 @@ export interface Form20List {
   dueDate: string;
   approximateValueRemark: string;
 }
+export interface PagedResult<T> {
+  items: T[];
+  totalCount: number;
+  totalPage: number;
+}
+
+export interface Form20ListPagedResult extends PagedResult<Form20List>{}
 
 
 export interface Form20ListRequest {
@@ -65,9 +72,9 @@ export class Form20ListService {
     );
   }
 
-  getPagedForm20List(params: Form20ListQuery = { filteringItem: {}, pageSize: 10, page: 1 }): Observable<Form20List[]> {
-     const url = `${this.baseUrl}/obtainFormList`;
-    return this.http.post<Form20List[]>(url, params).pipe(
+  getPagedForm20List(params: Form20ListQuery = { filteringItem: {}, pageSize: 10, page: 1 }): Observable<Form20ListPagedResult> {
+    const url = `${this.baseUrl}/obtainFormList`;
+    return this.http.post<Form20ListPagedResult>(url, params).pipe(
       catchError(error => {
         console.error('Error fetching Form20 List:', error);
         throw error;

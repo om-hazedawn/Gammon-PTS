@@ -6,7 +6,7 @@ import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { map, Observable, startWith, switchMap } from "rxjs";
-import { Form20ListService } from "../../../../core/services/Form20/form20list.service";
+import { Form20ListPagedResult, Form20ListService } from "../../../../core/services/Form20/form20list.service";
 
 @Component({
   selector: 'app-form20-list-dialog',
@@ -36,7 +36,7 @@ export class Form20ListDialogComponent implements OnInit {
     this.control.valueChanges.pipe(
       startWith(''),
       switchMap((val: string) => this.form20Service.getPagedForm20List({filteringItem: {}, pageSize: -1, page: 1})
-        .pipe(map((list: any[]) => this._filter(val, list as any[]))))
+        .pipe(map((list: Form20ListPagedResult) => this._filter(val, list.items))))
     ).subscribe((opts: any[]) => {
       this.tableData.data = opts;
     })

@@ -623,7 +623,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   loadTenders() {
     this.isLoading = true;
     // Fetch all data at once using pageSize=-1
-    this.tenderListApiService.getTenders(-1, 1).subscribe({
+    this.tenderListApiService.getTenders(10, 1).subscribe({
       next: (response) => {
         if (response.data && response.data.length > 0) {
           this.dataSource = new MatTableDataSource<TenderItem>(response.data);
