@@ -150,7 +150,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
           mappedData[key] = this.businessUnitMapping[key] || key;
         });
         this.BuildingUnit = mappedData;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (error: unknown) => {
         console.error('Error loading building units:', error);
@@ -167,7 +167,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
           numericRegions[+key] = value;
         });
         this.regions = numericRegions;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (error: unknown) => {
         console.error('Error loading regions:', error);
@@ -184,6 +184,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
           numericCurrencies[+key] = value;
         });
         this.currencies = numericCurrencies;
+        this.cdr.markForCheck(); // Trigger change detection
       },
       error: (error: unknown) => {
         console.error('Error loading currencies:', error);
@@ -200,6 +201,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
           numericTenderTypes[+key] = value;
         });
         this.tenderTypes = numericTenderTypes;
+        this.cdr.markForCheck(); // Trigger change detection
       },
       error: (error: unknown) => {
         console.error('Error loading tender types:', error);
@@ -215,6 +217,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
           numericMaintenanceDefects[+key] = value;
         });
         this.maintenanceDefects = numericMaintenanceDefects;
+        this.cdr.markForCheck(); // Trigger change detection
       },
       error: (error: unknown) => {
         console.error('Error loading maintenance defects:', error);
@@ -230,6 +233,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
           numericFinanceStandings[+key] = value;
         });
         this.financeStandings = numericFinanceStandings;
+        this.cdr.markForCheck(); // Trigger change detection
       },
       error: (error: unknown) => {
         console.error('Error loading finance standings:', error);
@@ -245,6 +249,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
           numericFinanceTechnicalSplits[+key] = value;
         });
         this.financeTechnicalSplits = numericFinanceTechnicalSplits;
+        this.cdr.markForCheck(); // Trigger change detection
       },
       error: (error: unknown) => {
         console.error('Error loading finance/technical splits:', error);
@@ -260,6 +265,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
           numericBidTypes[+key] = value;
         });
         this.bidTypes = numericBidTypes;
+        this.cdr.markForCheck(); // Trigger change detection
       },
       error: (error: unknown) => {
         console.error('Error loading bid types:', error);

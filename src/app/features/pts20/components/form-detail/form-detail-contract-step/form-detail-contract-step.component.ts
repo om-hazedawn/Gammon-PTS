@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { ControlContainer, FormGroupDirective } from '@angular/forms';
 import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
 import { Form20ListDropdownService, ObtainRegion } from '../../../../../core/services/Form20/form20listdropdown.service';
@@ -17,7 +17,10 @@ export class FormDetailContractStepComponent {
   measurementDetails: ObtainRegion = {};
   fluctuation: ObtainRegion = {};
 
-  constructor(private form20ListDropdownService: Form20ListDropdownService) {}
+  constructor(
+    private form20ListDropdownService: Form20ListDropdownService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadContractTypes();
@@ -33,6 +36,7 @@ export class FormDetailContractStepComponent {
           contractData[+key] = value;     
         });
         this.contractTypes = contractData;
+        this.cdr.markForCheck(); // Trigger change detection
       },
       error: (error: unknown) => {
         console.error('Error loading contract types:', error);
@@ -48,6 +52,7 @@ export class FormDetailContractStepComponent {
           measurementData[+key] = value;
         });
         this.measurementDetails = measurementData;
+        this.cdr.markForCheck(); // Trigger change detection
       },
       error: (error: unknown) => {
         console.error('Error loading measurement details:', error);
@@ -62,6 +67,7 @@ export class FormDetailContractStepComponent {
           fluctuationData[+key] = value;
         });
         this.fluctuation = fluctuationData;
+        this.cdr.markForCheck(); // Trigger change detection
       },
       error: (error: unknown) => {
         console.error('Error loading fluctuation details:', error);

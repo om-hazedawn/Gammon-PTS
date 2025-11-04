@@ -6,15 +6,15 @@ export interface SaveForm20 {
   bondPerformancePercentage: string;
   bondRetentionPercentage: string;
   bondTenderPercentage: string;
-  paymentRetentionAmountPercent: string;
+  
   businessUnitId: number | null;
   approximateValue: number | null;
   profitMargin: number | null;
   periodUnit: string;
   period: number | null;
   periodDetail: string;
-  maintenanceDefectUnit: string;
-  maintenanceDefectPeriod: number | null;
+  
+  
   maintenanceDefectId: number | null;
   ContractPeriod: string;
   title: string;
@@ -48,14 +48,11 @@ export interface SaveForm20 {
   contractTypeId : number | null;
   contractFormRiskCode: string;
   contractFormDescription: string;
-   
   contractDamageRateRemark: string;
   contractLiabilityLimit: string;
   contractDamageRiskCode: string;
-
   contractMeasurementId : number | null;
   contractMeasurementRiskCode : string;
-
   contractFluctuationId : number | null;
   contractFluctuationRiskCode : string;
   contractIsAdversePhyiscal : string;
@@ -65,11 +62,34 @@ export interface SaveForm20 {
   contractUnusualConditions : string;
   contractUnusualRiskCode: string;
   contractDesignResponsibility: string;
-  contractDesignRiskCode: string;
+  
   contractBIMRequired: string;
   contractBIMRiskCode: string;
   contractDFMARequired: string;
   contractDFMARiskCode: string;
+
+  /* page 3*/
+  maintenanceDefectPeriod: number | null;
+  maintenanceDefectUnit: string;
+  paymentCertificationPeriod: number | null;
+  paymentCertificationPeriodRemark: string;
+  paymentCertificationRiskCode: string;
+  paymentRetentionAmount: number | null;
+  paymentRetentionAmountPercent: string;
+  paymentRetentionAmountRemark: string;
+  paymentRetentionRiskCode: string;
+  paymentPeriod: number | null;
+  paymentPeriodUnit: string;
+  contractDesignRiskCode: string;
+  paymentRetentionLimitRiskCode: string;
+  paymentMaxExposure:number | null;
+  paymentMaxExposureMonth:number | null;
+  paymentPeakDeficit:number | null;
+  paymentPeakSurplus:number | null;
+  paymentAverageDeficit:number | null;
+  paymentAverageSurplus:number | null;
+  paymentCashRiskCode: string;
+  paymentRetentionLimit: string;
 
 
   Planner: string;
@@ -90,7 +110,7 @@ export interface SaveForm20 {
   ConsultantOthers: string;
   BondOtherRiskCode: string;
   BondPaymentRemark: string;
-  PaymentPeriodUnit: string;
+  
   BondOtherCallBasis: string;
   BondTenderRiskCode: string;
   CompetitorRiskCode: string;
@@ -103,7 +123,7 @@ export interface SaveForm20 {
   ConsultantArchitect: string;
  
   OtherPFIPPPRiskCode: string;
-  PaymentCashRiskCode: string;
+  
   BondPaymentCallBasis: string;
   BondTenderExpiryDate: string;
   ConsultantEMRiskCode: string;
@@ -118,7 +138,6 @@ export interface SaveForm20 {
   EvaluationPaymentTerm: string;
   EvaluationTimeAllowed: string;
   PaymentPeriodRiskCode: string;
-  PaymentRetentionLimit: string;
   approximateValueRemark: string;
   BondRetentionCallBasis: string;
   ContractDamageRateUnit: string;
@@ -139,7 +158,7 @@ export interface SaveForm20 {
   ConsultantOthersRiskCode: string;
   
   EvaluationSiteManagement: string;
-  PaymentRetentionRiskCode: string;
+  
   BondMaintenanceExpiryDate: string;
   BondPerformanceExpiryDate: string;
   EvaluationCompanyWorkload: string;
@@ -157,13 +176,13 @@ export interface SaveForm20 {
   InsuranceThirdPartyRiskCode: string;
   EvaluationIsConsultantRecord: string;
   OtherForeignCurrencyRiskCode: string;
-  PaymentCertificationRiskCode: string;
-  PaymentRetentionAmountRemark: string;
+  
+  
   EvaluationIsContractCondition: string;
   EvaluationValueExtendContract: string;
   InsuranceIsOnerousRequirement: string;
   InsuranceIsProvidedByEmployer: string;
-  PaymentRetentionLimitRiskCode: string;
+  
   OtherFinancingRequiredRiskCode: string;
   PaymentCertificationPeriodUnit: string;
   EvaluationClientFinancialStatus: string;
@@ -172,7 +191,7 @@ export interface SaveForm20 {
   WarrantGuranteeOtherLiabilities: string;
   ConsultantCivilStructureRiskCode: string;
   EvaluationPlantEquipmentRequired: string;
-  PaymentCertificationPeriodRemark: string;
+  
   EvaluationHealthSafetyEnvironment: string;
   EvaluationIsClientFinancialStatus: string;
   InsuranceShortFallInCoverRiskCode: string;

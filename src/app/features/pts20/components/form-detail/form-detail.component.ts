@@ -846,6 +846,8 @@ export class FormDetailComponent implements OnInit {
 
       console.log('Loading form data - contractDamageRiskCode:', formData.contractDamageRiskCode);
       console.log('Loading form data - contractFormRiskCode:', formData.contractFormRiskCode);
+      console.log('Loading form data - paymentCertificationPeriod:', formData.paymentCertificationPeriod);
+      console.log('Loading form data - paymentPeriod:', formData.paymentPeriod);
 
       this.formGroup.patchValue({
         form30: formData.form30Id,
@@ -867,8 +869,8 @@ export class FormDetailComponent implements OnInit {
         ApproximateValueType: formData.currencyId,
         ApproximateValueInput: formData.approximateValue,  // Map approximate value to input field
         maintenanceType: this.ensureNumber(formData.maintenanceDefectId),
-        maintenanceValue: this.ensureNumber(formData.maintenanceDefectPeriod),
-        maintenanceStatus: formData.maintenanceDefectUnit,
+        
+        
         periodUnit: formData.periodUnit || '',
         period: this.ensureNumber(formData.period),
 
@@ -908,12 +910,18 @@ export class FormDetailComponent implements OnInit {
         },
   
         payment: {
-          Period: formData.paymentPeriod,
-          Months: formData.paymentCertificationPeriod,
+          maintenanceValue: this.ensureNumber(formData.maintenanceDefectPeriod),
+          maintenanceStatus: formData.maintenanceDefectUnit,
+          Period: this.ensureNumber(formData.paymentCertificationPeriod),
+          Months: formData.paymentCertificationPeriodUnit,
           DegreeRiskType: formData.paymentCertificationRiskCode,
           Retention: formData.paymentRetentionAmount,
+          DegreeRiskType2: formData.paymentRetentionRiskCode,
           Percent: formData.paymentRetentionAmountPercent,
           Remarks: formData.paymentRetentionAmountRemark,
+          PaymentPeriod: this.ensureNumber(formData.paymentPeriod),
+          Months2: formData.paymentPeriodUnit,
+          Remarks2: formData.paymentCertificationPeriodRemark,
           LimitofRetention: formData.paymentRetentionLimit,
           LimitofRetentionselect: formData.paymentRetentionLimitRiskCode,
           MaxExposureAmount: formData.paymentMaxExposure,
@@ -922,7 +930,8 @@ export class FormDetailComponent implements OnInit {
           PeakSurplus: formData.paymentPeakSurplus,
           AverageDeficit: formData.paymentAverageDeficit,
           AverageSurplus: formData.paymentAverageSurplus,
-          RiskLevel: formData.paymentCashRiskCode
+          RiskLevel: formData.paymentCashRiskCode,
+          DegreeRiskType3:formData.paymentPeriodRiskCode,
         },
   
         Bonds: {
@@ -1544,8 +1553,8 @@ export class FormDetailComponent implements OnInit {
       businessUnitCode: formValue.businessUnit,
       Status: "Draft",
       maintenanceDefectId: this.ensureNumber(formValue.maintenanceType),
-      maintenanceDefectPeriod: this.ensureNumber(formValue.maintenanceValue),
-      maintenanceDefectUnit: formValue.maintenanceStatus,
+      
+      
       periodUnit: formValue.contractPeriodUnit,
       period: toNumberOrNull(formValue.contractPeriodValue),
       periodDetail: formValue.ComplexContractPeriod || '',
@@ -1623,11 +1632,24 @@ export class FormDetailComponent implements OnInit {
       contractDFMARequired: "",
       contractDFMARiskCode: "",
 
+      /* Page 3  payment value */
+      maintenanceDefectPeriod: null,
+      maintenanceDefectUnit: "",
+      paymentCertificationPeriod: null,
+      paymentRetentionAmount: null,
+      paymentRetentionRiskCode: "",
+      paymentPeriod: null,
+      paymentPeriodUnit: "",
+      paymentMaxExposure: null,
+      paymentMaxExposureMonth: null,
+      paymentPeakDeficit: null,
+      paymentPeakSurplus: null,
+      paymentAverageDeficit: null,
+      paymentAverageSurplus: null,
+      paymentCashRiskCode: "",
+      paymentRetentionLimit: "",
 
-
-
-
-     
+      
       Planner: ensureString(formValue.Planner),
       Location: ensureString(formValue.Location),
       TenderNo: ensureString(formValue.tenderNo),
@@ -1638,9 +1660,6 @@ export class FormDetailComponent implements OnInit {
       Competitor: ensureString(formValue.Competitor),
       Description: ensureString(formValue.BriefDescription),
 
-      //page 2 
-     
-
       ConsultantEM: "",
       BondOtherName: "",
       OtherIsPFIPPP: "",
@@ -1649,7 +1668,6 @@ export class FormDetailComponent implements OnInit {
       ConsultantOthers: "",
       BondOtherRiskCode: "",
       BondPaymentRemark: "",
-      PaymentPeriodUnit: "",
       BondOtherCallBasis: "",
       BondTenderRiskCode: "",
       CompetitorRiskCode: "",
@@ -1661,11 +1679,13 @@ export class FormDetailComponent implements OnInit {
       BondTenderCallBasis: "",
       ConsultantArchitect: "",
       OtherPFIPPPRiskCode: "",
-      PaymentCashRiskCode: "",
       BondPaymentCallBasis: "",
       BondTenderExpiryDate: "",
       ConsultantEMRiskCode: "",
-      
+
+  
+
+
       EvaluationIsCashFlow: "",
       OtherForeignCurrency: "",
       BondMaintenanceRemark: "",
@@ -1676,7 +1696,6 @@ export class FormDetailComponent implements OnInit {
       EvaluationPaymentTerm: "",
       EvaluationTimeAllowed: "",
       PaymentPeriodRiskCode: "",
-      PaymentRetentionLimit: "",
       approximateValueRemark: formValue.ApproximateValue || '',
       BondRetentionCallBasis: "",
       ContractDamageRateUnit: "",
@@ -1698,7 +1717,7 @@ export class FormDetailComponent implements OnInit {
       
 
       EvaluationSiteManagement: "",
-      PaymentRetentionRiskCode: "",
+      
       BondMaintenanceExpiryDate: "",
       BondPerformanceExpiryDate: "",
       EvaluationCompanyWorkload: "",
@@ -1717,13 +1736,13 @@ export class FormDetailComponent implements OnInit {
       InsuranceThirdPartyRiskCode: "",
       EvaluationIsConsultantRecord: "",
       OtherForeignCurrencyRiskCode: "",
-      PaymentCertificationRiskCode: "",
-      PaymentRetentionAmountRemark: "",
+      paymentCertificationRiskCode: "",
+      paymentRetentionAmountRemark:  "",
       EvaluationIsContractCondition: "",
       EvaluationValueExtendContract: "",
       InsuranceIsOnerousRequirement: "",
       InsuranceIsProvidedByEmployer: "",
-      PaymentRetentionLimitRiskCode: "",
+      paymentRetentionLimitRiskCode: "",
       OtherFinancingRequiredRiskCode: "",
       PaymentCertificationPeriodUnit: "",
       EvaluationClientFinancialStatus: "",
@@ -1732,7 +1751,7 @@ export class FormDetailComponent implements OnInit {
       WarrantGuranteeOtherLiabilities: "",
       ConsultantCivilStructureRiskCode: "",
       EvaluationPlantEquipmentRequired: "",
-      PaymentCertificationPeriodRemark: "",
+      paymentCertificationPeriodRemark: "",
       EvaluationHealthSafetyEnvironment: "",
       EvaluationIsClientFinancialStatus: "",
       InsuranceShortFallInCoverRiskCode: "",
@@ -1783,6 +1802,139 @@ export class FormDetailComponent implements OnInit {
         contractDFMARequired: formValue.contract.DFMARequired,
         contractDFMARiskCode: formValue.contract.DegreeRiskTypeDFMA,
         contractDamageRate: toNumberOrNull(formValue.contract.RateOfDamages),
+      });
+    }
+
+    // Apply any payment form group values
+    if (formValue.payment) {
+      Object.assign(baseForm, {
+        maintenanceDefectPeriod: this.ensureNumber(formValue.maintenanceValue),
+        maintenanceDefectUnit: formValue.maintenanceStatus,
+        paymentCertificationPeriod: toNumberOrNull(formValue.payment.Period),
+        PaymentCertificationPeriodUnit: ensureString(formValue.payment.Months),
+        paymentCertificationRiskCode: ensureString(formValue.payment.DegreeRiskType),
+        paymentCertificationPeriodRemark: ensureString(formValue.payment.Remarks2),
+        paymentRetentionAmount: toNumberOrNull(formValue.payment.Retention),
+        paymentRetentionAmountPercent: ensureString(formValue.payment.Percent),
+        paymentRetentionRiskCode: ensureString(formValue.payment.DegreeRiskType2),
+        paymentRetentionAmountRemark: ensureString(formValue.payment.Remarks),
+        paymentPeriod: toNumberOrNull(formValue.payment.PaymentPeriod),
+        PaymentPeriodUnit: ensureString(formValue.payment.Months2),
+        PaymentPeriodRiskCode: ensureString(formValue.payment.DegreeRiskType3),
+        paymentRetentionLimit: ensureString(formValue.payment.LimitofRetention),
+        paymentRetentionLimitRiskCode: ensureString(formValue.payment.LimitofRetentionselect),
+        paymentMaxExposure: toNumberOrNull(formValue.payment.MaxExposureAmount),
+        paymentMaxExposureMonth: toNumberOrNull(formValue.payment.MaxExposureMonths),
+        paymentPeakDeficit: toNumberOrNull(formValue.payment.PeakDeficit),
+        paymentPeakSurplus: toNumberOrNull(formValue.payment.PeakSurplus),
+        paymentAverageDeficit: toNumberOrNull(formValue.payment.AverageDeficit),
+        paymentAverageSurplus: toNumberOrNull(formValue.payment.AverageSurplus),
+        paymentCashRiskCode: ensureString(formValue.payment.RiskLevel),
+      });
+    }
+
+    // Apply any Bonds form group values
+    if (formValue.Bonds) {
+      Object.assign(baseForm, {
+        bondTenderValue: toNumberOrNull(formValue.Bonds.TenderValue),
+        bondTenderPercentage: ensureString(formValue.Bonds.tenderUnit),
+        bondTenderCallBasis: ensureString(formValue.Bonds.TenderCallBasis),
+        bondTenderExpiryDate: ensureString(formValue.Bonds.TenderExpiry),
+        bondTenderRemark: ensureString(formValue.Bonds.TenderRemark),
+        bondTenderRiskCode: ensureString(formValue.Bonds.TenderRisk),
+        
+        bondPerformanceValue: toNumberOrNull(formValue.Bonds.PerformanceValue),
+        bondPerformancePercentage: ensureString(formValue.Bonds.performanceUnit),
+        bondPerformanceCallBasis: ensureString(formValue.Bonds.PerformanceCallBasis),
+        bondPerformanceExpiryDate: ensureString(formValue.Bonds.PerformanceExpiry),
+        bondPerformanceRemark: ensureString(formValue.Bonds.PerformanceRemark),
+        bondPerformanceRiskCode: ensureString(formValue.Bonds.degreeRisk2),
+        
+        bondPaymentValue: toNumberOrNull(formValue.Bonds.AdvanceValue),
+        bondPaymentPercentage: ensureString(formValue.Bonds.advanceUnit),
+        bondPaymentCallBasis: ensureString(formValue.Bonds.AdvanceCallBasis),
+        bondPaymentExpiryDate: ensureString(formValue.Bonds.AdvanceExpiry),
+        bondPaymentRemark: ensureString(formValue.Bonds.AdvanceRemark),
+        bondPaymentRiskCode: ensureString(formValue.Bonds.AdvanceRisk),
+        
+        bondRetentionValue: toNumberOrNull(formValue.Bonds.RetentionValue),
+        bondRetentionPercentage: ensureString(formValue.Bonds.retentionUnit),
+        bondRetentionCallBasis: ensureString(formValue.Bonds.RetentionCallBasis),
+        bondRetentionExpiryDate: ensureString(formValue.Bonds.RetentionExpiry),
+        bondRetentionRemark: ensureString(formValue.Bonds.RetentionRemark),
+        bondRetentionRiskCode: ensureString(formValue.Bonds.RetentionRisk),
+        
+        bondMaintenanceValue: toNumberOrNull(formValue.Bonds.MaintenanceValue),
+        bondMaintenancePercentage: ensureString(formValue.Bonds.maintenanceUnit),
+        bondMaintenanceCallBasis: ensureString(formValue.Bonds.MaintenanceCallBasis),
+        bondMaintenanceExpiryDate: ensureString(formValue.Bonds.MaintenanceExpiry),
+        bondMaintenanceRemark: ensureString(formValue.Bonds.MaintenanceRemark),
+        bondMaintenanceRiskCode: ensureString(formValue.Bonds.MaintenanceRisk),
+        
+        bondOtherValue: toNumberOrNull(formValue.Bonds.OtherValue),
+        bondOtherPercentage: ensureString(formValue.Bonds.otherUnit),
+        bondOtherCallBasis: ensureString(formValue.Bonds.OtherCallBasis),
+        bondOtherExpiryDate: ensureString(formValue.Bonds.OtherExpiry),
+        bondOtherRemark: ensureString(formValue.Bonds.OtherRemark),
+        bondOtherRiskCode: ensureString(formValue.Bonds.OtherRisk),
+      });
+    }
+
+    // Apply any Warranties form group values
+    if (formValue.Warranties) {
+      Object.assign(baseForm, {
+        warrantGuranteeIsParentCompanyGuarantee: ensureString(formValue.Warranties.ParentCompanyGuarantee),
+        warrantGuranteeParentCompanyGuarantee: ensureString(formValue.Warranties.ParentCompanyDetails),
+        warrantGuranteeParentCompanyGuaranteeRiskCode: ensureString(formValue.Warranties.ParentCompanyRisk),
+        
+        warrantGuranteeIsParentCompanyUnderTaking: ensureString(formValue.Warranties.ParentCompanyUndertaking),
+        warrantGuranteeParentCompanyUnderTaking: ensureString(formValue.Warranties.ParentCompanyUndertakingDetails),
+        warrantGuranteeParentCompanyUnderTakingRiskCode: ensureString(formValue.Warranties.ParentCompanyUndertakingRisk),
+        
+        warrantGuranteeIsCollateralWarranties: ensureString(formValue.Warranties.CollateralWarranties),
+        warrantGuranteeCollateralWarranties: ensureString(formValue.Warranties.CollateralWarrantiesDetails),
+        warrantGuranteeCollateralWarrantiesRiskCode: ensureString(formValue.Warranties.CollateralWarrantiesRisk),
+        
+        warrantGuranteeIsOtherLiabilities: ensureString(formValue.Warranties.OtherContingent),
+        warrantGuranteeOtherLiabilities: ensureString(formValue.Warranties.OtherContingentDetails),
+        warrantGuranteeOtherLiabilitiesRiskCode: ensureString(formValue.Warranties.OtherContingentRisk),
+      });
+    }
+
+    // Apply any Insurance form group values
+    if (formValue.Insurance) {
+      Object.assign(baseForm, {
+        insuranceIsProvidedByEmployer: ensureString(formValue.Insurance.ProvidedByEmployer),
+        insuranceProvidedByEmployer: ensureString(formValue.Insurance.ProvidedByEmployerDetails),
+        insuranceProvidedByEmployerRiskCode: ensureString(formValue.Insurance.ProvidedByEmployerRisk),
+        
+        insuranceThirdPartyAmount: toNumberOrNull(formValue.Insurance.ThirdPartyAmount),
+        insuranceThirdPartyRiskCode: ensureString(formValue.Insurance.ThirdPartyRisk),
+        
+        insuranceIsOnerousRequirement: ensureString(formValue.Insurance.OnerousRequirements),
+        insuranceOnerousRequirement: ensureString(formValue.Insurance.OnerousRequirementsDetails),
+        insuranceOnerousRequirementRiskCode: ensureString(formValue.Insurance.OnerousRequirementsRisk),
+        
+        insuranceIsShortFallInCover: ensureString(formValue.Insurance.ShortfallInCover),
+        insuranceShortFallInCover: ensureString(formValue.Insurance.ShortfallInCoverDetails),
+        insuranceShortFallInCoverRiskCode: ensureString(formValue.Insurance.ShortfallInCoverRisk),
+      });
+    }
+
+    // Apply any OtherIssue form group values
+    if (formValue.OtherIssue) {
+      Object.assign(baseForm, {
+        otherPlantInvestmentRequirement: ensureString(formValue.OtherIssue.NewPlantDetails),
+        otherPlantInvestmnetRequirementRiskCode: ensureString(formValue.OtherIssue.NewPlantRisk),
+        
+        otherIsPFIPPP: ensureString(formValue.OtherIssue.PFIorPPPBid),
+        otherPFIPPPRiskCode: ensureString(formValue.OtherIssue.pfiOrPPPBidRisk),
+        
+        otherFinancingRequired: ensureString(formValue.OtherIssue.FinancingRequired),
+        otherFinancingRequiredRiskCode: ensureString(formValue.OtherIssue.FinancingRequiredRisk),
+        
+        otherForeignCurrency: ensureString(formValue.OtherIssue.ForeignCurrencyContentDetails),
+        otherForeignCurrencyRiskCode: ensureString(formValue.OtherIssue.ForeignCurrencyContentRisk),
       });
     }
 

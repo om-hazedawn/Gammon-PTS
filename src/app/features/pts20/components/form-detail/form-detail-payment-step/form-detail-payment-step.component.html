@@ -11,18 +11,19 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+      <mat-label>Months</mat-label>
       <mat-select formControlName="Months" placeholder="Select Months">
-        <mat-option value="1">days</mat-option>
-        <mat-option value="2">weeks</mat-option>
-        <mat-option value="3">months</mat-option>
-        <mat-option value="4">years</mat-option>
+        <mat-option value="days">days</mat-option>
+        <mat-option value="weeks">weeks</mat-option>
+        <mat-option value="months">months</mat-option>
+        <mat-option value="years">years</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="w-32">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskType">
-        <mat-option value="M">L</mat-option>
+        <mat-option value="L">L</mat-option>
         <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
         <mat-option value="M/H">M/H</mat-option>
@@ -38,21 +39,28 @@
     </div>
     <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
       <mat-label>Retention</mat-label>
-      <input matInput formControlName="Retention" />
+      <input matInput formControlName="Retention" type="number"/>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+      <mat-label>Percent</mat-label>
       <mat-select formControlName="Percent" placeholder="Select Percent">
-        <mat-option value="1">%</mat-option>
-        <mat-option value="2">Amount</mat-option>
+        <mat-option value="%">%</mat-option>
+        <mat-option value="Amount">Amount</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="w-32">
       <mat-label>Degree Name</mat-label>
       <mat-select formControlName="DegreeRiskType2">
+         <mat-option value="L">L</mat-option>
+        <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
+        <mat-option value="M/H">M/H</mat-option>
         <mat-option value="H">H</mat-option>
+        <mat-option value="NA">N/A</mat-option>
+        <mat-option value="NSR">NSR</mat-option>
+        <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
@@ -78,18 +86,19 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+      <mat-label>Months</mat-label>
       <mat-select formControlName="Months2" placeholder="Select Months">
-        <mat-option value="1">days</mat-option>
-        <mat-option value="2">weeks</mat-option>
-        <mat-option value="3">months</mat-option>
-        <mat-option value="4">years</mat-option>
+        <mat-option value="days">days</mat-option>
+        <mat-option value="weeks">weeks</mat-option>
+        <mat-option value="months">months</mat-option>
+        <mat-option value="years">years</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="w-32">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskType3">
-        <mat-option value="M">L</mat-option>
+        <mat-option value="L">L</mat-option>
         <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
         <mat-option value="M/H">M/H</mat-option>
@@ -110,7 +119,7 @@
     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="LimitofRetentionselect">
-        <mat-option value="M">L</mat-option>
+        <mat-option value="L">L</mat-option>
         <mat-option value="L/M">L/M</mat-option>
         <mat-option value="M">M</mat-option>
         <mat-option value="M/H">M/H</mat-option>
@@ -144,17 +153,17 @@
   <div class="form-row">
     <mat-form-field appearance="fill">
       <mat-label>Peak deficit</mat-label>
-      <input matInput formControlName="PeakDeficit" />
+      <input matInput formControlName="PeakDeficit" type="number"/>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Peak Surplus</mat-label>
-      <input matInput formControlName="PeakSurplus" />
+      <input matInput formControlName="PeakSurplus" type="number"/>
     </mat-form-field>
     <div style="width: 200px">
       <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
         <mat-label>Degree of Risk</mat-label>
         <mat-select formControlName="RiskLevel">
-          <mat-option value="M">L</mat-option>
+          <mat-option value="L">L</mat-option>
           <mat-option value="L/M">L/M</mat-option>
           <mat-option value="M">M</mat-option>
           <mat-option value="M/H">M/H</mat-option>
@@ -170,12 +179,12 @@
   <div class="form-row">
     <mat-form-field appearance="fill">
       <mat-label>Average deficit</mat-label>
-      <input matInput formControlName="AverageDeficit" />
+      <input matInput formControlName="AverageDeficit" type="number"/>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Average Surplus</mat-label>
-      <input matInput formControlName="AverageSurplus" />
+      <input matInput formControlName="AverageSurplus" type="number"/>
     </mat-form-field>
   </div>
 </div>
