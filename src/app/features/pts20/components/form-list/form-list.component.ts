@@ -363,8 +363,29 @@ export class FormListComponent implements OnInit, AfterViewInit {
   loadForms(): void {
     this.loading = true;
     this.form20ListService.getForm20List().subscribe({
-      next: (data) => {
-        this.allData = data.reverse(); // Reverse the array to show latest data first
+      next: (data: any) => {
+        console.log('API Response data:', data, 'Type:', typeof data, 'IsArray:', Array.isArray(data));
+        
+        // Check if data is wrapped in a paginated response
+        let formsArray: Form20List[] = [];
+        
+        if (Array.isArray(data)) {
+          formsArray = data;
+        } else if (data && typeof data === 'object') {
+          // Check if it's a paginated response with items property
+          if ('items' in data && Array.isArray(data.items)) {
+            formsArray = data.items as Form20List[];
+            console.log('Found paginated response with items array');
+          } else if ('data' in data && Array.isArray(data.data)) {
+            formsArray = data.data as Form20List[];
+            console.log('Found wrapped response with data array');
+          } else {
+            console.warn('Unknown response structure:', data);
+          }
+        }
+        
+        console.log('Forms array to display:', formsArray);
+        this.allData = formsArray.reverse(); // Reverse the array to show latest data first
         this.dataSource = new MatTableDataSource<Form20List>(this.allData);
         this.loading = false;
         this.cdr.detectChanges(); // Trigger change detection
