@@ -1,11 +1,5 @@
 export interface SaveForm20 {
   id: number;
-  bondMaintenancePercentage: string;
-  bondOtherPercentage: string;
-  bondPaymentPercentage: string;
-  bondPerformancePercentage: string;
-  bondRetentionPercentage: string;
-  bondTenderPercentage: string;
   
   businessUnitId: number | null;
   approximateValue: number | null;
@@ -91,6 +85,70 @@ export interface SaveForm20 {
   paymentCashRiskCode: string;
   paymentRetentionLimit: string;
 
+  /* 4th Bond*/
+  bondTenderValue: number | null;
+  bondTenderCallBasis: string;
+  bondTenderExpiryDate: string;
+  bondTenderPercentage: string;
+  bondTenderRemark: string;
+  bondTenderRiskCode: string;
+
+  bondPerformanceValue: number | null;
+  bondPerformanceCallBasis: string;
+  bondPerformanceExpiryDate: string;
+  bondPerformancePercentage: string;
+  bondPerformanceRemark: string;
+  bondPerformanceRiskCode: string;
+
+  bondPaymentValue  : number | null;
+  bondPaymentCallBasis: string;
+  bondPaymentExpiryDate: string;
+  bondPaymentPercentage: string;
+  bondPaymentRemark: string;
+  bondPaymentRiskCode: string;
+
+  bondRetentionValue : number | null;
+  bondRetentionCallBasis: string;
+  bondRetentionExpiryDate: string;
+  bondRetentionPercentage: string;
+  bondRetentionRemark: string;
+  bondRetentionRiskCode: string;
+
+  bondMaintenanceValue: number | null;
+  bondMaintenanceCallBasis: string;
+  bondMaintenanceExpiryDate: string;
+  bondMaintenancePercentage: string;
+  bondMaintenanceRemark: string;
+  bondMaintenanceRiskCode: string;
+
+  bondOtherValue: number | null;
+  bondOtherCallBasis: string;
+  bondOtherExpiryDate: string;
+  bondOtherPercentage: string;
+  bondOtherRemark: string;
+  bondOtherRiskCode: string;
+  bondOtherName: string;
+
+  /*warrenty 5th*/
+  warrantGuranteeIsParentCompanyGuarantee: string;
+  warrantGuranteeParentCompanyGuarantee: string;
+  warrantGuranteeParentCompanyGuaranteeRiskCode: string;
+
+  warrantGuranteeIsParentCompanyUnderTaking: string;
+  warrantGuranteeParentCompanyUnderTaking: string;
+  warrantGuranteeParentCompanyUnderTakingRiskCode: string;
+
+  warrantGuranteeIsCollateralWarranties: string;
+  warrantGuranteeCollateralWarranties: string;
+  warrantGuranteeCollateralWarrantiesRiskCode: string;
+
+  warrantGuranteeIsOtherLiabilities: string;
+  warrantGuranteeOtherLiabilities: string;
+  warrantGuranteeOtherLiabilitiesRiskCode: string;
+  
+  /* 6th insurance*/
+  
+
 
   Planner: string;
   Location: string;
@@ -102,65 +160,50 @@ export interface SaveForm20 {
   Competitor: string;
   Description: string;
   ConsultantEM: string;
-  BondOtherName: string;
-  OtherIsPFIPPP: string;
-  BondOtherRemark: string;
-  isMarkingScheme: string;
-  BondTenderRemark: string;
-  ConsultantOthers: string;
-  BondOtherRiskCode: string;
-  BondPaymentRemark: string;
   
-  BondOtherCallBasis: string;
-  BondTenderRiskCode: string;
+  OtherIsPFIPPP: string;
+  isMarkingScheme: string;
+ 
+  ConsultantOthers: string;
+ 
+  
+ 
+  
   CompetitorRiskCode: string;
   EvaluationCashFlow: string;
   EvaluationComments: string;
-  BondOtherExpiryDate: string;
-  BondPaymentRiskCode: string;
-  BondRetentionRemark: string;
-  BondTenderCallBasis: string;
   ConsultantArchitect: string;
  
   OtherPFIPPPRiskCode: string;
-  
-  BondPaymentCallBasis: string;
-  BondTenderExpiryDate: string;
+ 
   ConsultantEMRiskCode: string;
   
   EvaluationIsCashFlow: string;
   OtherForeignCurrency: string;
-  BondMaintenanceRemark: string;
-  BondPaymentExpiryDate: string;
-  BondPerformanceRemark: string;
-  BondRetentionRiskCode: string;
+  
   EvaluationCompetition: string;
   EvaluationPaymentTerm: string;
   EvaluationTimeAllowed: string;
   PaymentPeriodRiskCode: string;
   approximateValueRemark: string;
-  BondRetentionCallBasis: string;
+ 
   ContractDamageRateUnit: string;
   
   
   OtherFinancingRequired: string;
-  BondMaintenanceRiskCode: string;
-  BondPerformanceRiskCode: string;
-  BondRetentionExpiryDate: string;
+  
  
   EvaluationBondGuarantee: string;
   EvaluationIsCompetition: string;
   EvaluationIsPaymentTerm: string;
   EvaluationIsTimeAllowed: string;
-  BondMaintenanceCallBasis: string;
-  BondPerformanceCallBasis: string;
+ 
   ConsultantCivilStructure: string;
   ConsultantOthersRiskCode: string;
   
   EvaluationSiteManagement: string;
   
-  BondMaintenanceExpiryDate: string;
-  BondPerformanceExpiryDate: string;
+ 
   EvaluationCompanyWorkload: string;
   EvaluationIsBondGuarantee: string;
   InsuranceShortFallInCover: string;
@@ -174,7 +217,6 @@ export interface SaveForm20 {
   InsuranceOnerousRequirement: string;
   InsuranceProvidedByEmployer: string;
   InsuranceThirdPartyRiskCode: string;
-  EvaluationIsConsultantRecord: string;
   OtherForeignCurrencyRiskCode: string;
   
   
@@ -188,32 +230,26 @@ export interface SaveForm20 {
   EvaluationClientFinancialStatus: string;
   EvaluationIsValueExtendContract: string;
   OtherPlantInvestmentRequirement: string;
-  WarrantGuranteeOtherLiabilities: string;
+ 
   ConsultantCivilStructureRiskCode: string;
   EvaluationPlantEquipmentRequired: string;
   
   EvaluationHealthSafetyEnvironment: string;
   EvaluationIsClientFinancialStatus: string;
   InsuranceShortFallInCoverRiskCode: string;
-  WarrantGuranteeIsOtherLiabilities: string;
+ 
   ConsultantQuantitySurveyorRiskCode: string;
   EvaluationIsPlantEquipmentRequired: string;
   EvaluationIsHealthSafetyEnvironment: string;
   InsuranceOnerousRequirementRiskCode: string;
   InsuranceProvidedByEmployerRiskCode: string;
-  WarrantGuranteeCollateralWarranties: string;
-  WarrantGuranteeIsCollateralWarranties: string;
-  WarrantGuranteeParentCompanyGuarantee: string;
+ 
   EvaluationEstimatingDepartmentWorkload: string;
   OtherPlantInvestmnetRequirementRiskCode: string;
-  WarrantGuranteeIsParentCompanyGuarantee: string;
-  WarrantGuranteeOtherLiabilitiesRiskCode: string;
-  WarrantGuranteeParentCompanyUnderTaking: string;
+ 
   EvaluationIsEstimatingDepartmentWorkload: string;
-  WarrantGuranteeIsParentCompanyUnderTaking: string;
-  WarrantGuranteeCollateralWarrantiesRiskCode: string;
-  WarrantGuranteeParentCompanyGuaranteeRiskCode: string;
-  WarrantGuranteeParentCompanyUnderTakingRiskCode: string;
+  EvaluationIsConsultantRecord: string;
+  
   CEApproval: ApprovalInfo[];
   CMApproval: ApprovalInfo[];
   EDApproval: ApprovalInfo[];

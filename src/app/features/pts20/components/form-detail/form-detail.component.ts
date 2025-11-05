@@ -611,6 +611,7 @@ export class FormDetailComponent implements OnInit {
         OtherExpiry: [''],
         OtherRemark: [''],
         OtherRisk: [''],
+        OtherName: [''],
       }),
 
       Warranties: this.fb.group({
@@ -953,7 +954,7 @@ export class FormDetailComponent implements OnInit {
           AdvanceCallBasis: formData.bondPaymentCallBasis,
           AdvanceExpiry: formData.bondPaymentExpiryDate,
           AdvanceRemark: formData.bondPaymentRemark,
-          AdvanceRisk: formData.bondPaymentRiskCode,
+          AdvanceRisk: formData.bondPaymentRiskCode, 
           advanceUnit: formData.bondPaymentPercentage,
   
           RetentionValue: formData.bondRetentionValue,
@@ -975,56 +976,57 @@ export class FormDetailComponent implements OnInit {
           OtherExpiry: formData.bondOtherExpiryDate,
           OtherRemark: formData.bondOtherRemark,
           OtherRisk: formData.bondOtherRiskCode,
-          otherUnit: formData.bondOtherPercentage
+          otherUnit: formData.bondOtherPercentage,
+          OtherName: formData.bondOtherName,
         },
   
         Warranties: {
           ParentCompanyGuarantee: normalizeYesNo(formData.warrantGuranteeIsParentCompanyGuarantee),
           ParentCompanyDetails: formData.warrantGuranteeParentCompanyGuarantee,
-          ParentCompanyRisk: formData.warrantGuranteeParentCompanyGuaranteeRiskCode || 'M',
+          ParentCompanyRisk: formData.warrantGuranteeParentCompanyGuaranteeRiskCode ,
   
           ParentCompanyUndertaking: normalizeYesNo(formData.warrantGuranteeIsParentCompanyUnderTaking),
           ParentCompanyUndertakingDetails: formData.warrantGuranteeParentCompanyUnderTaking,
-          ParentCompanyUndertakingRisk: formData.warrantGuranteeParentCompanyUnderTakingRiskCode || 'M',
+          ParentCompanyUndertakingRisk: formData.warrantGuranteeParentCompanyUnderTakingRiskCode ,
   
           CollateralWarranties: normalizeYesNo(formData.warrantGuranteeIsCollateralWarranties),
           CollateralWarrantiesDetails: formData.warrantGuranteeCollateralWarranties,
-          CollateralWarrantiesRisk: formData.warrantGuranteeCollateralWarrantiesRiskCode || 'M',
+          CollateralWarrantiesRisk: formData.warrantGuranteeCollateralWarrantiesRiskCode ,
   
           OtherContingent: normalizeYesNo(formData.warrantGuranteeIsOtherLiabilities),
           OtherContingentDetails: formData.warrantGuranteeOtherLiabilities,
-          OtherContingentRisk: formData.warrantGuranteeOtherLiabilitiesRiskCode || 'M',
+          OtherContingentRisk: formData.warrantGuranteeOtherLiabilitiesRiskCode ,
   
           ProvidedByEmployer: normalizeYesNo(formData.insuranceIsProvidedByEmployer),
           ProvidedByEmployerDetails: formData.insuranceProvidedByEmployer,
-          ProvidedByEmployerRisk: formData.insuranceProvidedByEmployerRiskCode || 'M'
+          ProvidedByEmployerRisk: formData.insuranceProvidedByEmployerRiskCode
         },
   
         Insurance: {
           ProvidedByEmployer: normalizeYesNo(formData.insuranceIsProvidedByEmployer),
           ProvidedByEmployerDetails: formData.insuranceProvidedByEmployer,
-          ProvidedByEmployerRisk: formData.insuranceProvidedByEmployerRiskCode || 'M',
+          ProvidedByEmployerRisk: formData.insuranceProvidedByEmployerRiskCode,
           ThirdPartyAmount: formData.insuranceThirdPartyAmount,
-          ThirdPartyRisk: formData.insuranceThirdPartyRiskCode || 'M',
+          ThirdPartyRisk: formData.insuranceThirdPartyRiskCode ,
           OnerousRequirements: normalizeYesNo(formData.insuranceIsOnerousRequirement),
           OnerousRequirementsDetails: formData.insuranceOnerousRequirement,
-          OnerousRequirementsRisk: formData.insuranceOnerousRequirementRiskCode || 'M',
+          OnerousRequirementsRisk: formData.insuranceOnerousRequirementRiskCode,
           ShortfallInCover: normalizeYesNo(formData.insuranceIsShortFallInCover),
           ShortfallInCoverDetails: formData.insuranceShortFallInCover,
-          ShortfallInCoverRisk: formData.insuranceShortFallInCoverRiskCode || 'M'
+          ShortfallInCoverRisk: formData.insuranceShortFallInCoverRiskCode 
         },
   
         OtherIssue: {
           NewPlantDetails: formData.otherPlantInvestmentRequirement,
-          NewPlantRisk: formData.otherPlantInvestmnetRequirementRiskCode || 'M',
+          NewPlantRisk: formData.otherPlantInvestmnetRequirementRiskCode ,
           PFIorPPPBid: normalizeYesNo(formData.otherIsPFIPPP),
           PFIorPPPBidDetails: formData.otherIsPFIPPP,
-          pfiOrPPPBidRisk: formData.otherPFIPPPRiskCode || 'M',
+          pfiOrPPPBidRisk: formData.otherPFIPPPRiskCode ,
           FinancingRequired: normalizeYesNo(formData.otherFinancingRequired),
           FinancingRequiredDetails: formData.otherFinancingRequired,
-          FinancingRequiredRisk: formData.otherFinancingRequiredRiskCode || 'M',
+          FinancingRequiredRisk: formData.otherFinancingRequiredRiskCode,
           ForeignCurrencyContentDetails: formData.otherForeignCurrency,
-          ForeignCurrencyContentRisk: formData.otherForeignCurrencyRiskCode || 'M'
+          ForeignCurrencyContentRisk: formData.otherForeignCurrencyRiskCode
         },
   
         'Consultant & Competitor': {
@@ -1388,15 +1390,6 @@ export class FormDetailComponent implements OnInit {
       // First normalize the form values
       const normalizedValue = this.normalizeFormValues(this.formGroup.value);
       
-      // Add the required bond percentages
-      normalizedValue.bondMaintenancePercentage = "%";
-      normalizedValue.bondOtherPercentage = "%";
-      normalizedValue.bondPaymentPercentage = "%";
-      normalizedValue.bondPerformancePercentage = "%";
-      normalizedValue.bondRetentionPercentage = "%";
-      normalizedValue.bondTenderPercentage = "%";
-      normalizedValue.paymentRetentionAmountPercent = "%";
-
       // Set status as Draft
       normalizedValue.Status = "Draft";
 
@@ -1567,12 +1560,8 @@ export class FormDetailComponent implements OnInit {
       jvAgreementId: this.ensureNumber(formValue.JvAgreement),
 
 
-      bondMaintenancePercentage: "%",
-      bondOtherPercentage: "%",
-      bondPaymentPercentage: "%",
-      bondPerformancePercentage: "%",
-      bondRetentionPercentage: "%",
-      bondTenderPercentage: "%",
+      
+
       paymentRetentionAmountPercent: "%",
 
       // Required unit fields
@@ -1648,6 +1637,67 @@ export class FormDetailComponent implements OnInit {
       paymentAverageSurplus: null,
       paymentCashRiskCode: "",
       paymentRetentionLimit: "",
+      
+      /* page 4*/
+      bondTenderValue: null,
+      bondTenderCallBasis: "",
+      bondTenderExpiryDate: "",
+      bondTenderPercentage: "",
+      bondTenderRemark: "",
+      bondTenderRiskCode: "",
+
+      bondPerformanceValue: null,
+      bondPerformanceCallBasis: "",
+      bondPerformanceExpiryDate: "",
+      bondPerformancePercentage: "",
+      bondPerformanceRemark: "",
+      bondPerformanceRiskCode: "",
+
+      bondPaymentValue: null, 
+      bondPaymentCallBasis: "",
+      bondPaymentExpiryDate: "",
+      bondPaymentPercentage: "",
+      bondPaymentRemark: "",
+      bondPaymentRiskCode: "",
+
+      bondRetentionValue: null,
+      bondRetentionCallBasis: "",
+      bondRetentionExpiryDate: "",
+      bondRetentionPercentage: "",
+      bondRetentionRemark: "",
+      bondRetentionRiskCode: "",
+
+      bondMaintenanceValue: null,
+      bondMaintenanceCallBasis: "",
+      bondMaintenanceExpiryDate: "",
+      bondMaintenancePercentage: "",
+      bondMaintenanceRemark: "",
+      bondMaintenanceRiskCode: "",
+
+      bondOtherValue: null,
+      bondOtherCallBasis: "",
+      bondOtherExpiryDate: "",
+      bondOtherPercentage: "",
+      bondOtherRemark: "",
+      bondOtherRiskCode: "",
+      bondOtherName: "",
+
+      /* page 5 Warranties*/
+      warrantGuranteeIsParentCompanyGuarantee: "",
+      warrantGuranteeParentCompanyGuarantee: "",
+      warrantGuranteeParentCompanyGuaranteeRiskCode: "",
+
+      warrantGuranteeIsParentCompanyUnderTaking: "",
+      warrantGuranteeParentCompanyUnderTaking: "",
+      warrantGuranteeParentCompanyUnderTakingRiskCode: "",
+
+      warrantGuranteeIsCollateralWarranties: "",
+      warrantGuranteeCollateralWarranties: "",
+      warrantGuranteeCollateralWarrantiesRiskCode: "",
+
+      warrantGuranteeIsOtherLiabilities: "",
+      warrantGuranteeOtherLiabilities: "",
+      warrantGuranteeOtherLiabilitiesRiskCode: "",
 
       
       Planner: ensureString(formValue.Planner),
@@ -1661,65 +1711,31 @@ export class FormDetailComponent implements OnInit {
       Description: ensureString(formValue.BriefDescription),
 
       ConsultantEM: "",
-      BondOtherName: "",
+      
       OtherIsPFIPPP: "",
-      BondOtherRemark: "",
-      BondTenderRemark: "",
-      ConsultantOthers: "",
-      BondOtherRiskCode: "",
-      BondPaymentRemark: "",
-      BondOtherCallBasis: "",
-      BondTenderRiskCode: "",
+      ConsultantOthers: "",   
       CompetitorRiskCode: "",
       EvaluationCashFlow: "",
       EvaluationComments: "",
-      BondOtherExpiryDate: "",
-      BondPaymentRiskCode: "",
-      BondRetentionRemark: "",
-      BondTenderCallBasis: "",
       ConsultantArchitect: "",
       OtherPFIPPPRiskCode: "",
-      BondPaymentCallBasis: "",
-      BondTenderExpiryDate: "",
       ConsultantEMRiskCode: "",
-
-  
-
-
       EvaluationIsCashFlow: "",
       OtherForeignCurrency: "",
-      BondMaintenanceRemark: "",
-      BondPaymentExpiryDate: "",
-      BondPerformanceRemark: "",
-      BondRetentionRiskCode: "",
       EvaluationCompetition: "",
       EvaluationPaymentTerm: "",
       EvaluationTimeAllowed: "",
       PaymentPeriodRiskCode: "",
       approximateValueRemark: formValue.ApproximateValue || '',
-      BondRetentionCallBasis: "",
       ContractDamageRateUnit: "",
-
-      
       OtherFinancingRequired: "",
-      BondMaintenanceRiskCode: "",
-      BondPerformanceRiskCode: "",
-      BondRetentionExpiryDate: "",
-      
       EvaluationBondGuarantee: "",
       EvaluationIsCompetition: "",
       EvaluationIsPaymentTerm: "",
       EvaluationIsTimeAllowed: "",
-      BondMaintenanceCallBasis: "",
-      BondPerformanceCallBasis: "",
       ConsultantCivilStructure: "",
       ConsultantOthersRiskCode: "",
-      
-
       EvaluationSiteManagement: "",
-      
-      BondMaintenanceExpiryDate: "",
-      BondPerformanceExpiryDate: "",
       EvaluationCompanyWorkload: "",
       EvaluationIsBondGuarantee: "",
       InsuranceShortFallInCover: "",
@@ -1734,7 +1750,6 @@ export class FormDetailComponent implements OnInit {
       InsuranceOnerousRequirement: "",
       InsuranceProvidedByEmployer: "",
       InsuranceThirdPartyRiskCode: "",
-      EvaluationIsConsultantRecord: "",
       OtherForeignCurrencyRiskCode: "",
       paymentCertificationRiskCode: "",
       paymentRetentionAmountRemark:  "",
@@ -1748,32 +1763,23 @@ export class FormDetailComponent implements OnInit {
       EvaluationClientFinancialStatus: "",
       EvaluationIsValueExtendContract: "",
       OtherPlantInvestmentRequirement: "",
-      WarrantGuranteeOtherLiabilities: "",
       ConsultantCivilStructureRiskCode: "",
       EvaluationPlantEquipmentRequired: "",
       paymentCertificationPeriodRemark: "",
       EvaluationHealthSafetyEnvironment: "",
       EvaluationIsClientFinancialStatus: "",
       InsuranceShortFallInCoverRiskCode: "",
-      WarrantGuranteeIsOtherLiabilities: "",
       ConsultantQuantitySurveyorRiskCode: "",
       EvaluationIsPlantEquipmentRequired: "",
       EvaluationIsHealthSafetyEnvironment: "",
       InsuranceOnerousRequirementRiskCode: "",
       InsuranceProvidedByEmployerRiskCode: "",
-      WarrantGuranteeCollateralWarranties: "",
-      WarrantGuranteeIsCollateralWarranties: "",
-      WarrantGuranteeParentCompanyGuarantee: "",
       EvaluationEstimatingDepartmentWorkload: "",
       OtherPlantInvestmnetRequirementRiskCode: "",
-      WarrantGuranteeIsParentCompanyGuarantee: "",
-      WarrantGuranteeOtherLiabilitiesRiskCode: "",
-      WarrantGuranteeParentCompanyUnderTaking: "",
       EvaluationIsEstimatingDepartmentWorkload: "",
-      WarrantGuranteeIsParentCompanyUnderTaking: "",
-      WarrantGuranteeCollateralWarrantiesRiskCode: "",
-      WarrantGuranteeParentCompanyGuaranteeRiskCode: "",
-      WarrantGuranteeParentCompanyUnderTakingRiskCode: "",
+      
+      // Missing evaluation "Is" fields 
+      EvaluationIsConsultantRecord: "",
     };
 
     // Apply any contract form group values
@@ -1877,13 +1883,14 @@ export class FormDetailComponent implements OnInit {
         bondOtherExpiryDate: ensureString(formValue.Bonds.OtherExpiry),
         bondOtherRemark: ensureString(formValue.Bonds.OtherRemark),
         bondOtherRiskCode: ensureString(formValue.Bonds.OtherRisk),
+        bondOtherName: ensureString(formValue.Bonds.OtherName),
       });
     }
 
     // Apply any Warranties form group values
     if (formValue.Warranties) {
       Object.assign(baseForm, {
-        warrantGuranteeIsParentCompanyGuarantee: ensureString(formValue.Warranties.ParentCompanyGuarantee),
+        warrantGuranteeIsParentCompanyGuarantee: ensureString(formValue.warrantGuranteeIsParentCompanyGuarantee),
         warrantGuranteeParentCompanyGuarantee: ensureString(formValue.Warranties.ParentCompanyDetails),
         warrantGuranteeParentCompanyGuaranteeRiskCode: ensureString(formValue.Warranties.ParentCompanyRisk),
         
