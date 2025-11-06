@@ -1,0 +1,148 @@
+<div mat-dialog-title>
+    <div class="d-flex flex-row align-items-center">
+      <h2 class="m-0 flex-fill">Tender - Lost tender market intelligence</h2>
+    </div>
+  </div>
+  
+  <form [formGroup]="tenderForm" (ngSubmit)="handleSubmit()">
+    <!-- The fieldset is for disabling all form fields when necessary -->
+    <fieldset [disabled]="isBusy()">
+      <div mat-dialog-content>
+        <div style="display: flex; align-items: center; margin-bottom: 16px;">
+            <div style="flex: 30%;">Report Date</div>
+            <div style="flex: 70%;">
+                <mat-form-field>
+                    <mat-label>Report Date</mat-label>
+                    <input matInput [matDatepicker]="picker" readonly [formControl]="reportDateControl">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>                
+            </div>
+        </div>
+
+        <!-- Winning competitor -->
+        <div style="display: flex; align-items: center; margin-bottom: 16px;">
+          <div style="flex: 30%;">
+            Winning competitor
+          </div>
+
+          <div style="flex: 70%;">
+            <mat-form-field>
+              <mat-label>Winning competitor</mat-label>
+              <input
+                #winningCompetitorInput
+                formControlName="winningCompetitor"
+                matInput
+                [maxlength]="winningCompetitorMaxLength"
+                name="winningCompetitor"
+                type="text"
+                required
+              />
+  
+              <mat-hint>{{ winningCompetitorInput.value.length }} /
+                {{ winningCompetitorMaxLength }}</mat-hint>
+              
+              @if (winningCompetitorControl.invalid &&
+                  (winningCompetitorControl.dirty || winningCompetitorControl.touched))
+              {
+                <mat-error>
+                  <i class="fas fa-exclamation mx-1"></i>
+                  @if (winningCompetitorControl.errors && winningCompetitorControl.errors['required'])
+                  {
+                    <span>This field is required.</span>
+                  }
+                  @if (winningCompetitorControl.hasError('error422'))
+                  {
+                    <span>{{ winningCompetitorControl.getError('error422') }}</span>
+                  }
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <!-- Margin lost (%) -->
+        <div style="display: flex; align-items: center; margin-bottom: 16px;">
+          <div style="flex: 30%;">
+            Margin lost (%)
+          </div>
+
+          <div style="flex: 70%;">
+            <mat-form-field>
+              <mat-label>Margin lost (%)</mat-label>
+              <input
+                [formControl]="marginLostPercentageControl"
+                matInput
+                min="0"
+                max="100"
+                name="marginLostPercentage"
+                type="number"
+              />
+              @if (marginLostPercentageControl.invalid &&
+                  (marginLostPercentageControl.dirty || marginLostPercentageControl.touched))
+              {
+                <mat-error>
+                  <i class="fas fa-exclamation mx-1"></i>
+                  @if (marginLostPercentageControl.errors && marginLostPercentageControl.errors['required'])
+                  {
+                    <span>This field is required.</span>
+                  }
+                  @if (marginLostPercentageControl.hasError('error422'))
+                  {
+                    <span>{{ marginLostPercentageControl.getError('error422') }}</span>
+                  }
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <!-- Other reasons for loss, if any -->
+        <div style="display: flex; align-items: center; margin-bottom: 16px;">
+          <div style="flex: 30%;">
+            Other reasons for loss, if any
+          </div>
+
+          <div style="flex: 70%;">
+            <mat-form-field>
+              <mat-label>Other reasons for loss, if any</mat-label>
+              <textarea #otherReasonsForLossInput
+                matInput cdkTextareaAutosize autocomplete="off"
+                        formControlName="otherReasonsForLoss"
+                        cdkAutosizeMaxRows="5"
+                        [maxlength]="otherReasonsForLossMaxLength"
+                        [cdkTextareaAutosize]="true"></textarea>
+  
+              <mat-hint>{{ otherReasonsForLossInput.value.length }} /
+                {{ otherReasonsForLossMaxLength }}</mat-hint>
+              @if (otherReasonsForLossControl.invalid &&
+                  (otherReasonsForLossControl.dirty || otherReasonsForLossControl.touched))
+              {
+                <mat-error>
+                  <i class="fas fa-exclamation mx-1"></i>
+                  @if (otherReasonsForLossControl.errors && otherReasonsForLossControl.errors['required'])
+                  {
+                    <span>This field is required.</span>
+                  }
+                  @if (otherReasonsForLossControl.hasError('error422'))
+                  {
+                    <span>{{ otherReasonsForLossControl.getError('error422') }}</span>
+                  }
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <div mat-dialog-actions  align="end">
+      <button mat-button type="button" (click)="dialogRef.close()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!tenderForm.valid">
+        Save
+      </button>
+      @if (isBusy())
+      {
+        <mat-spinner diameter="20"></mat-spinner>
+      }
+    </div>
+  </form>

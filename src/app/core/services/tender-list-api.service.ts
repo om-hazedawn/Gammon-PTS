@@ -145,8 +145,8 @@ export interface RiskAssessmentCriteria {
 }
 
 export interface TenderSorted {
-  column: string;
-  order: string;
+  column?: string;
+  order?: string;
   pageSize?: number;
   page?: number;
 }
@@ -171,6 +171,13 @@ export interface UpdateTenderStatusRequest {
   reportDate?: string;
 }
 
+export interface UpdateTenderMarketIntelligenceRequest  {
+  tenderId: number;
+  winningCompetitor?: string;
+  marginLostPercentage?: number;
+  otherReasonsForLoss?: string;
+  reportDate?: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -182,36 +189,8 @@ export class TenderListApiService {
     this.baseUrl = '/api/ptsrisk/Tender/api';
   }
 
-  getTenders(
-    pageSize: number = 10,
-    page: number = 1
-  ): Observable<{ data: TenderItem[]; totalCount: number }> {
-    // If pageSize is -1, set a large number to fetch all records
-    const url = `${this.baseUrl}/tenders?pageSize=${
-      pageSize === -1 ? 999999 : pageSize
-    }&page=${page}`;
-    console.log('Fetching tenders from:', url);
-
-    return this.http.get<TenderResponse>(url).pipe(
-      tap((response) => {
-        console.log('Tenders fetched successfully:', response.data);
-        if (!response.data) {
-          console.error('No data property in response:', response);
-        }
-      }),
-      map((response) => ({
-        data: response.data,
-        totalCount: response.totalCount,
-      })),
-      catchError((error) => {
-        console.error('Error fetching tenders:', error);
-        throw error;
-      })
-    );
-  }
-
   getTenderPageSorted(request: TenderSorted): Observable<any> {
-    return this.http.post<any>('tenders', request);
+    return this.http.post<any>(`${this.baseUrl}/tenders`, request);
   }
 
   getTenderById(
@@ -262,28 +241,17 @@ export class TenderListApiService {
   }
 
   putTenderMarketIntelligence(
-    tenderId: number,
-    winningCompetitor: string,
-    marginLostPercentage: number,
-    otherReasonsForLoss: string,
-    reportDate?: string
+    request: UpdateTenderMarketIntelligenceRequest
   ): Observable<any> {
     const url = `${this.baseUrl}/tenderMarketIntelligence`;
-    const body = {
-      tenderId: tenderId,
-      winningCompetitor: winningCompetitor,
-      marginLostPercentage: marginLostPercentage,
-      otherReasonsForLoss: otherReasonsForLoss,
-      reportDate: reportDate || new Date().toISOString(),
-    };
-    console.log('Request body:', body); // Debug log
+    console.log('Request body:', request); // Debug log
     console.log('Full URL:', url); // Debug log
-    return this.http.put(url, body).pipe(
+    return this.http.put(url, request).pipe(
       tap((response) => console.log('Response:', response)),
       catchError((error) => {
         console.error('Request failed:', error);
         console.error('Full URL:', url);
-        console.error('Request body:', body);
+        console.error('Request body:', request);
         throw error;
       })
     );

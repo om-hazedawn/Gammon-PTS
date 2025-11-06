@@ -24,6 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MarketIntelligencepopup } from '../market-intelligencepopup/market-intelligencepopup.component';
 import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-date-list.component';
+import { ReportDateWithMarketIntelDialog } from '../report-date-with-market-intel/report-date-with-market-intel.component';
 import { Form20ControlsComponent } from '../form20-controls/form20-controls.component';
 
 
@@ -228,7 +229,7 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
             [pageSize]="pageSize"
             [pageSizeOptions]="[5, 10, 25, 50]"
             [length]="totalItems"
-            [pageIndex]="0"
+            [pageIndex]="currentPage - 1"
             showFirstLastButtons
             (page)="handlePageEvent($event)"
             class="custom-paginator"
@@ -439,8 +440,8 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   tenderSort: TenderSorted = {
     column: '',
     order: 'asc',
-    pageSize: 10,
-    page: 1,
+    pageSize: this.pageSize,
+    page: this.currentPage,
   };
   biddingEntityList: string[] = [];
   divisionList: string[] = [];
@@ -481,7 +482,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       console.log('AddTenderPopup closed with result:', result);
       if (result) {
         // Refresh the table
-        this.loadTenders();
+        this.loadTenders({ page: this.currentPage, pageSize: this.pageSize });
       }
     });
   }
@@ -620,21 +621,15 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     'form20',
   ];
 
-  loadTenders() {
+  loadTenders(tenderSorted: TenderSorted) {
     this.isLoading = true;
     // Fetch all data at once using pageSize=-1
-    this.tenderListApiService.getTenders(10, 1).subscribe({
+    this.tenderListApiService.getTenderPageSorted(tenderSorted).subscribe({
       next: (response) => {
-        if (response.data && response.data.length > 0) {
-          this.dataSource = new MatTableDataSource<TenderItem>(response.data);
-          this.totalItems = response.data.length;
-          setTimeout(() => {
-            if (this.paginator) {
-              this.dataSource.paginator = this.paginator;
-              this.paginator.pageIndex = 0;
-              this.paginator.pageSize = this.pageSize;
-            }
-          });
+        if (response.totalCount > 0) {
+          const items = response.items ?? [];
+          this.dataSource.data = items;
+          this.totalItems = response.totalCount ?? items.length;
         }
       },
       error: (error) => {
@@ -666,15 +661,16 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   handlePageEvent(event: any) {
     this.pageSize = event.pageSize;
     this.currentPage = event.pageIndex + 1;
-    // Update paginator settings
-    if (this.paginator) {
-      this.paginator.pageSize = this.pageSize;
-      this.paginator.pageIndex = event.pageIndex;
-    }
+    this.loadTenders({ page: this.currentPage, pageSize: this.pageSize });
+    this.tenderSort = {
+      ...this.tenderSort,
+      page: this.currentPage,
+      pageSize: this.pageSize,
+    };
   }
 
   ngOnInit() {
-    this.loadTenders();
+    this.loadTenders({ page: this.currentPage, pageSize: this.pageSize });
   }
 
   changeStatus($event: MouseEvent, tenderStatus: string, element: TenderItem) {
@@ -703,8 +699,8 @@ export class TenderListComponent implements OnInit, AfterViewInit {
             this.tenderListApiService.getTenderById(element.id).subscribe((tender) => {
               if (['Unsuccessful'].indexOf(tenderStatus) >= 0) {
                 this.dialog
-                  .open(TenderListComponent, {
-                    width: '80vw',
+                  .open(ReportDateWithMarketIntelDialog, {
+                    width: '50vw',
                     minWidth: '600px',
                     disableClose: true,
                     data: {
@@ -788,12 +784,11 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     this.tenderListApiService
       .getTenderPageSorted(this.tenderSort)
       .subscribe((response) => {
-        // this.dataSource.data = response.data;
-        this.dataSource.data = response.data.filter((tender: TenderItem) =>
-          this._filter(tender)
-        );
+        const list: TenderItem[] = response.items ?? [];
 
-        this.divisionList = response.data.reduce(
+        this.dataSource.data = list.filter((tender: TenderItem) => this._filter(tender));
+
+        this.divisionList = list.reduce(
           (prev: string[], current: TenderItem) => {
             if (prev.indexOf(current.division) < 0) {
               prev.push(current.division);
@@ -805,7 +800,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
 
         this.divisionList.sort();
 
-        this.biddingEntityList = response.data.reduce(
+        this.biddingEntityList = list.reduce(
           (prev: string[], current: TenderItem) => {
             const entity = current.biddingGammonEntity?.shortName;
             if (entity === undefined) return prev;
@@ -893,12 +888,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      if (this.dataSource && this.paginator) {
-        this.paginator.pageSize = this.pageSize;
-        this.dataSource.paginator = this.paginator;
-      }
-    });
+    this.dataSource.paginator = this.paginator;
   }
 
   stopPropagation(event: Event) {

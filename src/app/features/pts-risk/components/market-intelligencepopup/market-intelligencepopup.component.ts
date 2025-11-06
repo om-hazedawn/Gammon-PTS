@@ -36,11 +36,13 @@ import { TenderListApiService } from '../../../../core/services/tender-list-api.
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
           <label style="width: 200px; font-weight: 500;">Winning competitor</label>
           <mat-form-field appearance="fill" style="flex: 1;">
+            <mat-label>Winning competitor</mat-label>
             <textarea
               matInput
               formControlName="winningCompetitor"
               placeholder="Enter competitor name"
               maxlength="{{ winningCompetitorMaxLength }}"
+              required
             ></textarea>
             <mat-hint>{{ tenderForm.get('winningCompetitor')?.value?.length || 0 }} / {{ winningCompetitorMaxLength }}</mat-hint>
             @if (tenderForm.get('winningCompetitor')?.invalid && (tenderForm.get('winningCompetitor')?.dirty || tenderForm.get('winningCompetitor')?.touched))
@@ -60,6 +62,7 @@ import { TenderListApiService } from '../../../../core/services/tender-list-api.
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
           <label style="width: 200px; font-weight: 500;">Margin Lost(%)</label>
           <mat-form-field appearance="fill" style="flex: 1;">
+            <mat-label>Margin Lost(%)</mat-label>
             <input
               matInput
               type="number"
@@ -91,6 +94,7 @@ import { TenderListApiService } from '../../../../core/services/tender-list-api.
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
           <label style="width: 200px; font-weight: 500;">Other reason for loss, if any</label>
           <mat-form-field appearance="fill" style="flex: 1;">
+            <mat-label>Other reason for loss, if any</mat-label>
             <textarea
               matInput
               formControlName="otherReasonForLoss"
@@ -190,14 +194,9 @@ export class MarketIntelligencepopup {
       };
 
       console.log('Sending data:', requestData);
-      
-      this.tenderListApiService.putTenderMarketIntelligence(
-        requestData.tenderId,
-        requestData.winningCompetitor,
-        requestData.marginLostPercentage,
-        requestData.otherReasonsForLoss,
-        requestData.reportDate
-      ).subscribe({
+
+      this.tenderListApiService.putTenderMarketIntelligence(requestData).subscribe(
+      {
         next: () => {
           this.busy = false;
           const responseData = {
