@@ -147,8 +147,72 @@ export interface SaveForm20 {
   warrantGuranteeOtherLiabilitiesRiskCode: string;
   
   /* 6th insurance*/
-  
+  insuranceIsProvidedByEmployer: string;
+  insuranceProvidedByEmployer: string;
+  insuranceProvidedByEmployerRiskCode: string;
+  insuranceThirdPartyAmount : number | null;
+  insuranceThirdPartyRiskCode: string;
+  insuranceIsOnerousRequirement: string;
+  insuranceOnerousRequirement: string;
+  insuranceOnerousRequirementRiskCode: string;
+  insuranceIsShortFallInCover:string;
+  insuranceShortFallInCover: string;
+  insuranceShortFallInCoverRiskCode: string;
 
+  /* 7th other*/
+  otherPlantInvestmentRequirement: string;
+  otherPlantInvestmnetRequirementRiskCode: string;
+  otherIsPFIPPP: string;
+  otherPFIPPPRiskCode: string;
+  otherFinancingRequired: string;
+  otherFinancingRequiredRiskCode: string;
+  otherForeignCurrency: string;
+  otherForeignCurrencyRiskCode: string;
+
+  /*8th  consultant */
+  consultantCivilStructure: string;
+  consultantCivilStructureRiskCode: string;
+  consultantArchitect: string;
+  consultantArchitectRiskCode: string;
+  consultantEM: string;
+  consultantEMRiskCode: string;
+  consultantQuantitySurveyor: string;
+  consultantQuantitySurveyorRiskCode: string;
+  consultantOthers: string;
+  consultantOthersRiskCode: string;
+  competitor: string;
+
+  /*9th evaluation */
+  EvaluationCashFlow: string;
+  EvaluationComments: string;
+  EvaluationIsCashFlow: string;
+  EvaluationCompetition: string;
+  EvaluationPaymentTerm: string;
+  EvaluationTimeAllowed: string;
+  EvaluationBondGuarantee: string;
+  EvaluationIsCompetition: string;
+  EvaluationIsPaymentTerm: string;
+  EvaluationIsTimeAllowed: string; 
+  EvaluationSiteManagement: string;
+  EvaluationCompanyWorkload: string;
+  EvaluationIsBondGuarantee: string;
+  EvaluationConsultantRecord: string;
+  EvaluationIsSiteManagement: string;
+  EvaluationContractCondition: string;
+  EvaluationIsCompanyWorkload: string;
+  EvaluationIsContractCondition: string;
+  EvaluationValueExtendContract: string;
+  EvaluationClientFinancialStatus: string;
+  EvaluationIsValueExtendContract: string;
+  EvaluationPlantEquipmentRequired: string;
+  EvaluationHealthSafetyEnvironment: string;
+  EvaluationIsClientFinancialStatus: string;
+  EvaluationIsPlantEquipmentRequired: string;
+  EvaluationIsHealthSafetyEnvironment: string;
+  EvaluationEstimatingDepartmentWorkload: string;
+  EvaluationIsEstimatingDepartmentWorkload: string;
+  EvaluationIsConsultantRecord: string;
+  
 
   Planner: string;
   Location: string;
@@ -157,98 +221,31 @@ export interface SaveForm20 {
 
   BidManager: string;
   clientName: string;
-  Competitor: string;
   Description: string;
-  ConsultantEM: string;
   
-  OtherIsPFIPPP: string;
+  
   isMarkingScheme: string;
  
-  ConsultantOthers: string;
  
-  
+  PaymentCertificationPeriodUnit: string;
  
   
   CompetitorRiskCode: string;
-  EvaluationCashFlow: string;
-  EvaluationComments: string;
-  ConsultantArchitect: string;
- 
-  OtherPFIPPPRiskCode: string;
- 
-  ConsultantEMRiskCode: string;
   
-  EvaluationIsCashFlow: string;
-  OtherForeignCurrency: string;
-  
-  EvaluationCompetition: string;
-  EvaluationPaymentTerm: string;
-  EvaluationTimeAllowed: string;
   PaymentPeriodRiskCode: string;
   approximateValueRemark: string;
  
   ContractDamageRateUnit: string;
   
-  
-  OtherFinancingRequired: string;
+ 
+ 
+ 
+
   
  
-  EvaluationBondGuarantee: string;
-  EvaluationIsCompetition: string;
-  EvaluationIsPaymentTerm: string;
-  EvaluationIsTimeAllowed: string;
- 
-  ConsultantCivilStructure: string;
-  ConsultantOthersRiskCode: string;
-  
-  EvaluationSiteManagement: string;
   
  
-  EvaluationCompanyWorkload: string;
-  EvaluationIsBondGuarantee: string;
-  InsuranceShortFallInCover: string;
-  ConsultantQuantitySurveyor: string;
-  EvaluationConsultantRecord: string;
-  EvaluationIsSiteManagement: string;
-  ConsultantArchitectRiskCode: string;
-  EvaluationContractCondition: string;
-  EvaluationIsCompanyWorkload: string;
-  InsuranceIsShortFallInCover: string;
-  InsuranceOnerousRequirement: string;
-  InsuranceProvidedByEmployer: string;
-  InsuranceThirdPartyRiskCode: string;
-  OtherForeignCurrencyRiskCode: string;
   
-  
-  EvaluationIsContractCondition: string;
-  EvaluationValueExtendContract: string;
-  InsuranceIsOnerousRequirement: string;
-  InsuranceIsProvidedByEmployer: string;
-  
-  OtherFinancingRequiredRiskCode: string;
-  PaymentCertificationPeriodUnit: string;
-  EvaluationClientFinancialStatus: string;
-  EvaluationIsValueExtendContract: string;
-  OtherPlantInvestmentRequirement: string;
- 
-  ConsultantCivilStructureRiskCode: string;
-  EvaluationPlantEquipmentRequired: string;
-  
-  EvaluationHealthSafetyEnvironment: string;
-  EvaluationIsClientFinancialStatus: string;
-  InsuranceShortFallInCoverRiskCode: string;
- 
-  ConsultantQuantitySurveyorRiskCode: string;
-  EvaluationIsPlantEquipmentRequired: string;
-  EvaluationIsHealthSafetyEnvironment: string;
-  InsuranceOnerousRequirementRiskCode: string;
-  InsuranceProvidedByEmployerRiskCode: string;
- 
-  EvaluationEstimatingDepartmentWorkload: string;
-  OtherPlantInvestmnetRequirementRiskCode: string;
- 
-  EvaluationIsEstimatingDepartmentWorkload: string;
-  EvaluationIsConsultantRecord: string;
   
   CEApproval: ApprovalInfo[];
   CMApproval: ApprovalInfo[];

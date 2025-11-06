@@ -1,11 +1,21 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { Observable, catchError, of, switchMap, map } from "rxjs";
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { Observable, catchError, of, switchMap, map } from 'rxjs';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+} from '@angular/forms';
 import { FormApprovalComponent } from './form-Approval/form-approval.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { Form20DetailsService, Form20Details, Approval } from '../../../../core/services/Form20/form20details.service';
+import {
+  Form20DetailsService,
+  Form20Details,
+  Approval,
+} from '../../../../core/services/Form20/form20details.service';
 import { SaveForm20 } from '../../../../model/entity/saveform20';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -79,108 +89,71 @@ import {
         </mat-card-header>
         <mat-card-content>
           @if (isLoading) {
-            <div class="loading-container">
-              <mat-spinner diameter="40"></mat-spinner>
-              <p>Loading form details...</p>
-            </div>
+          <div class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading form details...</p>
+          </div>
           } @else if (loadError) {
-            <div class="error-container">
-              <mat-icon color="warn">error</mat-icon>
-              <p>{{ loadError }}</p>
-              <button mat-raised-button color="primary" (click)="loadForm(formId!)">Retry</button>
-            </div>
+          <div class="error-container">
+            <mat-icon color="warn">error</mat-icon>
+            <p>{{ loadError }}</p>
+            <button mat-raised-button color="primary" (click)="loadForm(formId!)">Retry</button>
+          </div>
           } @else if (formGroup) {
-            <div class="form-navigation">
-              @for (step of steps; track step; let i = $index) {
-                <div
-                  class="step-item"
-                  [class.active]="currentStep === i + 1"
-                  (click)="goToStep(i + 1)"
-                >
-                  <span class="step-number">{{ i + 1 }}</span>
-                  <span class="step-label">{{ step }}</span>
-                </div>
+          <div class="form-navigation">
+            @for (step of steps; track step; let i = $index) {
+            <div class="step-item" [class.active]="currentStep === i + 1" (click)="goToStep(i + 1)">
+              <span class="step-number">{{ i + 1 }}</span>
+              <span class="step-label">{{ step }}</span>
+            </div>
+            }
+          </div>
+
+          <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+            @if (currentStep === 1) {
+            <app-form-detail-project-step [isEditMode]="isEditMode"></app-form-detail-project-step>
+            } @if (currentStep === 2) {
+            <app-form-detail-contract-step></app-form-detail-contract-step>
+            } @if (currentStep === 3) {
+            <app-form-detail-payment-step></app-form-detail-payment-step>
+            } @if (currentStep === 4) {
+            <app-form-detail-bonds-step></app-form-detail-bonds-step>
+            } @if (currentStep === 5) {
+            <app-form-detail-warranties-step></app-form-detail-warranties-step>
+            } @if (currentStep === 6) {
+            <app-form-detail-insurance-step></app-form-detail-insurance-step>
+            } @if (currentStep === 7) {
+            <app-form-detail-other-issues-step></app-form-detail-other-issues-step>
+            } @if (currentStep === 8) {
+            <app-form-detail-consultant-step></app-form-detail-consultant-step>
+            } @if (currentStep === 9) {
+            <app-form-detail-evaluation-step></app-form-detail-evaluation-step>
+            } @if (currentStep === 10) {
+            <app-form-detail-distribution-step></app-form-detail-distribution-step>
+            } @if (currentStep === 11) {
+            <app-form-detail-attachment-step></app-form-detail-attachment-step>
+            }
+
+            <div class="actions">
+              <button
+                type="button"
+                mat-button
+                (click)="previousStep()"
+                [disabled]="currentStep === 1"
+              >
+                Previous
+              </button>
+              @if (currentStep < 10) {
+              <button type="button" mat-raised-button color="primary" (click)="nextStep()">
+                Next
+              </button>
+              } @if (currentStep === 10) {
+              <button type="submit" mat-raised-button color="primary" [disabled]="!formGroup.valid">
+                Submit
+              </button>
               }
             </div>
-
-            <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-              @if (currentStep === 1) {
-                <app-form-detail-project-step
-                  [isEditMode]="isEditMode"
-                ></app-form-detail-project-step>
-              }
-
-              @if (currentStep === 2) {
-                <app-form-detail-contract-step></app-form-detail-contract-step>
-              }
-
-              @if (currentStep === 3) {
-                <app-form-detail-payment-step></app-form-detail-payment-step>
-              }
-
-              @if (currentStep === 4) {
-                <app-form-detail-bonds-step></app-form-detail-bonds-step>
-              }
-
-              @if (currentStep === 5) {
-                <app-form-detail-warranties-step></app-form-detail-warranties-step>
-              }
-
-              @if (currentStep === 6) {
-                <app-form-detail-insurance-step></app-form-detail-insurance-step>
-              }
-
-              @if (currentStep === 7) {
-                <app-form-detail-other-issues-step></app-form-detail-other-issues-step>
-              }
-
-              @if (currentStep === 8) {
-                <app-form-detail-consultant-step></app-form-detail-consultant-step>
-              }
-
-              @if (currentStep === 9) {
-                <app-form-detail-evaluation-step></app-form-detail-evaluation-step>
-              }
-
-              @if (currentStep === 10) {
-                <app-form-detail-distribution-step></app-form-detail-distribution-step>
-              }
-
-              @if (currentStep === 11) {
-                <app-form-detail-attachment-step></app-form-detail-attachment-step>
-              }
-
-              <div class="actions">
-                <button
-                  type="button"
-                  mat-button
-                  (click)="previousStep()"
-                  [disabled]="currentStep === 1"
-                >
-                  Previous
-                </button>
-                @if (currentStep < 10) {
-                  <button
-                    type="button"
-                    mat-raised-button
-                    color="primary"
-                    (click)="nextStep()"
-                  >
-                    Next
-                  </button>
-                }
-                @if (currentStep === 10) {
-                  <button
-                    type="submit"
-                    mat-raised-button
-                    color="primary"
-                    [disabled]="!formGroup.valid"
-                  >
-                    Submit
-                  </button>
-                }
-              </div>
-            </form>
+          </form>
           }
         </mat-card-content>
       </mat-card>
@@ -377,23 +350,23 @@ export class FormDetailComponent implements OnInit {
   isLoading = false;
   loadError: string | null = null;
   validationErrors: { [key: string]: string[] } = {};
-  
+
   // Mapping of form sections to their display names for error messages
   private readonly sectionNames = {
-    'businessUnit': 'Business Unit',
-    'projectTitle': 'Project Title',
-    'tenderNo': 'Tender Number',
-    'Location': 'Location',
-    'BriefDescription': 'Brief Description',
-    'contract': 'Contract Details',
-    'payment': 'Payment Details',
-    'Bonds': 'Bonds',
-    'Warranties': 'Warranties',
-    'Insurance': 'Insurance',
-    'OtherIssue': 'Other Issues',
+    businessUnit: 'Business Unit',
+    projectTitle: 'Project Title',
+    tenderNo: 'Tender Number',
+    Location: 'Location',
+    BriefDescription: 'Brief Description',
+    contract: 'Contract Details',
+    payment: 'Payment Details',
+    Bonds: 'Bonds',
+    Warranties: 'Warranties',
+    Insurance: 'Insurance',
+    OtherIssue: 'Other Issues',
     'Consultant & Competitor': 'Consultant & Competitor',
-    'Evaluation': 'Evaluation',
-    'Distribution': 'Distribution'
+    Evaluation: 'Evaluation',
+    Distribution: 'Distribution',
   };
   steps = [
     'Project',
@@ -481,7 +454,7 @@ export class FormDetailComponent implements OnInit {
 
       ApproxValue: [''],
       ApproximateValue: [''],
-      ApproximateValueInput: ['', [Validators.pattern(/^-?\d*\.?\d*$/)]],  // Allow valid decimal numbers only
+      ApproximateValueInput: ['', [Validators.pattern(/^-?\d*\.?\d*$/)]], // Allow valid decimal numbers only
       ApproximateValueType: [''],
       Approxmargin: [''],
       Maintence: [''],
@@ -489,7 +462,7 @@ export class FormDetailComponent implements OnInit {
       maintenanceType: [''],
       maintenanceValue: [''],
       maintenanceStatus: [''],
-       
+
       // Contract Period fields
       contractPeriodValue: [''],
       contractPeriodUnit: [''],
@@ -516,13 +489,13 @@ export class FormDetailComponent implements OnInit {
         contractDuration: [''],
         RateOfDamages: [''],
         LimitOfLiability: [''],
-        DegreeRiskDamage : [''],
+        DegreeRiskDamage: [''],
         MeasurementDetails: [''],
         DegreeRiskMeasurement: [''],
         Fluctuations: [''],
         DegreeRiskfluctuation: [''],
-  
-        DegreeName: [''],  
+
+        DegreeName: [''],
         Adverse: [''],
         TimeExtension: [''],
         WeatherExtention: [''],
@@ -648,7 +621,6 @@ export class FormDetailComponent implements OnInit {
         ProvidedByEmployerRisk: [''],
 
         // Min Amount of Third Party Liability
-        ThirdPartyAmount: [''],
         ThirdPartyUnit: [''],
         ThirdPartyDetails: [''],
         ThirdPartyRisk: [''],
@@ -676,7 +648,6 @@ export class FormDetailComponent implements OnInit {
 
         // Financing Required
         FinancingRequired: [''],
-        FinancingRequiredDetails: [''],
         FinancingRequiredRisk: [''],
 
         // Foreign Currency Content
@@ -774,7 +745,7 @@ export class FormDetailComponent implements OnInit {
   loadForm(id: number): void {
     this.isLoading = true;
     this.loadError = null;
-    
+
     this.form20Service.getForm20Details(id).subscribe({
       next: (formData: Form20Details) => {
         try {
@@ -792,14 +763,15 @@ export class FormDetailComponent implements OnInit {
       error: (error: HttpErrorResponse) => {
         console.error('Error loading form:', error);
         if (error.status === 400) {
-          this.loadError = 'Invalid form ID or form data not found. Please check the form ID and try again.';
+          this.loadError =
+            'Invalid form ID or form data not found. Please check the form ID and try again.';
         } else if (error.error?.message) {
           this.loadError = error.error.message;
         } else {
           this.loadError = 'Failed to load form details. Please try again.';
         }
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -815,281 +787,294 @@ export class FormDetailComponent implements OnInit {
   }
 
   patchFormValues(formData: Form20Details): void {
-      if (!formData) {
-        throw new Error('Invalid form data received');
-      }
+    if (!formData) {
+      throw new Error('Invalid form data received');
+    }
 
-      // Debug: Log the jvAgreementId value
-      console.log('JV Agreement ID from API:', formData.jvAgreementId, 'Type:', typeof formData.jvAgreementId);
+    // Debug: Log the jvAgreementId value
+    console.log(
+      'JV Agreement ID from API:',
+      formData.jvAgreementId,
+      'Type:',
+      typeof formData.jvAgreementId
+    );
 
-      // Set all contract period related fields
-      this.formGroup.patchValue({
-        ComplexContractPeriod: formData.periodDetail || '',
-        contractPeriodValue: formData.period || '',
-        contractPeriodUnit: formData.periodUnit || ''
-      });
+    // Set all contract period related fields
+    this.formGroup.patchValue({
+      ComplexContractPeriod: formData.periodDetail || '',
+      contractPeriodValue: formData.period || '',
+      contractPeriodUnit: formData.periodUnit || '',
+    });
 
-      // Helper function to normalize Yes/No values
-      const normalizeYesNo = (value: string | null): string => {
-        if (!value) return '';
-        value = value.toUpperCase();
-        if (value === 'YES') return value;
-        if (value === 'NO') return value;
-        if (value === 'N/A' || value === 'NA') return value;
-        return value;
-      };
+    // Helper function to normalize Yes/No values
+    const normalizeYesNo = (value: string | null): string => {
+      if (!value) return '';
+      value = value.toUpperCase();
+      if (value === 'YES') return value;
+      if (value === 'NO') return value;
+      if (value === 'N/A' || value === 'NA') return value;
+      return value;
+    };
 
-      // Helper function to ensure risk code format
-      const normalizeRiskCode = (value: string | null): string => {
-        if (!value || value.trim() === '') return '';
-        return value;
-      };
+    // Helper function to ensure risk code format
+    const normalizeRiskCode = (value: string | null): string => {
+      if (!value || value.trim() === '') return '';
+      return value;
+    };
 
-      console.log('Loading form data - contractDamageRiskCode:', formData.contractDamageRiskCode);
-      console.log('Loading form data - contractFormRiskCode:', formData.contractFormRiskCode);
-      console.log('Loading form data - paymentCertificationPeriod:', formData.paymentCertificationPeriod);
-      console.log('Loading form data - paymentPeriod:', formData.paymentPeriod);
+    console.log('Loading form data - contractDamageRiskCode:', formData.contractDamageRiskCode);
+    console.log('Loading form data - contractFormRiskCode:', formData.contractFormRiskCode);
+    console.log(
+      'Loading form data - paymentCertificationPeriod:',
+      formData.paymentCertificationPeriod
+    );
+    console.log('Loading form data - paymentPeriod:', formData.paymentPeriod);
 
-      this.formGroup.patchValue({
-        form30: formData.form30Id,
-        ApproximateValue: formData.approximateValueRemark,
-        businessUnit: formData.businessUnitCode,
-        dueDate: formData.dueDate,
-        tenderNo: formData.tenderNo,
-        projectTitle: formData.title,
-        TenderType: formData.tenderTypeId, // Map tenderTypeId to TenderType when loading
-        BidManager: formData.bidManager,
-        Estimator: formData.estimator,
-        Planner: formData.planner,
-        Region: formData.countryId,
-        Location: formData.location,
-        BriefDescription: formData.description,
-        clientName: formData.clientName,
-        ApproxValue: formData.approximateValue,
-        Approxmargin: formData.profitMargin,
-        ApproximateValueType: formData.currencyId,
-        ApproximateValueInput: formData.approximateValue,  // Map approximate value to input field
-        maintenanceType: this.ensureNumber(formData.maintenanceDefectId),
-        
-        
-        periodUnit: formData.periodUnit || '',
-        period: this.ensureNumber(formData.period),
+    this.formGroup.patchValue({
+      form30: formData.form30Id,
+      ApproximateValue: formData.approximateValueRemark,
+      businessUnit: formData.businessUnitCode,
+      dueDate: formData.dueDate,
+      tenderNo: formData.tenderNo,
+      projectTitle: formData.title,
+      TenderType: formData.tenderTypeId, // Map tenderTypeId to TenderType when loading
+      BidManager: formData.bidManager,
+      Estimator: formData.estimator,
+      Planner: formData.planner,
+      Region: formData.countryId,
+      Location: formData.location,
+      BriefDescription: formData.description,
+      clientName: formData.clientName,
+      ApproxValue: formData.approximateValue,
+      Approxmargin: formData.profitMargin,
+      ApproximateValueType: formData.currencyId,
+      ApproximateValueInput: formData.approximateValue, // Map approximate value to input field
+      maintenanceType: this.ensureNumber(formData.maintenanceDefectId),
 
-        FinantialStanding: formData.clientFinanceStanding,
+      periodUnit: formData.periodUnit || '',
+      period: this.ensureNumber(formData.period),
 
-        TenderMarketScheme: formData.isMarkingScheme,
-        FinancialTechnicalSplitValue: formData.splitValueId,
-        BidType: formData.bidTypeId,
-        JvAgreement: formData.jvAgreementId,
-        JvSplit: formData.jvSplit,
-        JvPartner: formData.jvPartner,
+      FinantialStanding: formData.clientFinanceStanding,
 
-        contract: {
-          Type: this.ensureNumber(formData.contractTypeId),
-          Description: this.ensureString(formData.contractFormDescription),
-          DegreeName: this.ensureString(formData.contractFormDescription),
-          DegreeRiskTypeContract: normalizeRiskCode(formData.contractFormRiskCode),
-          DegreeRiskDamage: normalizeRiskCode(formData.contractDamageRiskCode),
-          DesignResponsibility: this.ensureString(formData.contractDesignResponsibility),
-          DegreeRiskMeasurement: normalizeRiskCode(formData.contractMeasurementRiskCode),
-          DegreeRiskfluctuation: normalizeRiskCode(formData.contractFluctuationRiskCode),
-          DegreeRiskWeather: normalizeRiskCode(formData.contractDesignRiskCode),
-          DegreeRiskTypeUnusual: normalizeRiskCode(formData.contractUnusualRiskCode),
-          DegreeRiskTypeDesign: normalizeRiskCode(formData.contractDesignRiskCode),
-          DegreeRiskTypeBIM: normalizeRiskCode(formData.contractBIMRiskCode),
-          DegreeRiskTypeDFMA: normalizeRiskCode(formData.contractDFMARiskCode),
-          BIMRequired: normalizeYesNo(formData.contractBIMRequired),
-          DFMARequired: normalizeYesNo(formData.contractDFMARequired),
-          Adverse: normalizeYesNo(formData.contractIsAdversePhyiscal),
-          TimeExtension: normalizeYesNo(formData.contractIsTimeExtension),
-          WeatherExtention: this.ensureString(formData.contractIsTimeExtensionValue),
-          OtherUnusualConditions: this.ensureString(formData.contractUnusualConditions),
-          RateOfDamages: this.ensureString(formData.contractDamageRateRemark),
-          LimitOfLiability: this.ensureString(formData.contractLiabilityLimit),
-          MeasurementDetails: this.ensureNumber(formData.contractMeasurementId),
-          Fluctuations: this.ensureNumber(formData.contractFluctuationId),
-        },
-  
-        payment: {
-          maintenanceValue: this.ensureNumber(formData.maintenanceDefectPeriod),
-          maintenanceStatus: formData.maintenanceDefectUnit,
-          Period: this.ensureNumber(formData.paymentCertificationPeriod),
-          Months: formData.paymentCertificationPeriodUnit,
-          DegreeRiskType: formData.paymentCertificationRiskCode,
-          Retention: formData.paymentRetentionAmount,
-          DegreeRiskType2: formData.paymentRetentionRiskCode,
-          Percent: formData.paymentRetentionAmountPercent,
-          Remarks: formData.paymentRetentionAmountRemark,
-          PaymentPeriod: this.ensureNumber(formData.paymentPeriod),
-          Months2: formData.paymentPeriodUnit,
-          Remarks2: formData.paymentCertificationPeriodRemark,
-          LimitofRetention: formData.paymentRetentionLimit,
-          LimitofRetentionselect: formData.paymentRetentionLimitRiskCode,
-          MaxExposureAmount: formData.paymentMaxExposure,
-          MaxExposureMonths: formData.paymentMaxExposureMonth,
-          PeakDeficit: formData.paymentPeakDeficit,
-          PeakSurplus: formData.paymentPeakSurplus,
-          AverageDeficit: formData.paymentAverageDeficit,
-          AverageSurplus: formData.paymentAverageSurplus,
-          RiskLevel: formData.paymentCashRiskCode,
-          DegreeRiskType3:formData.paymentPeriodRiskCode,
-        },
-  
-        Bonds: {
-          TenderValue: formData.bondTenderValue,
-          TenderCallBasis: formData.bondTenderCallBasis,
-          TenderExpiry: formData.bondTenderExpiryDate,
-          TenderRemark: formData.bondTenderRemark,
-          TenderRisk: formData.bondTenderRiskCode,
-          tenderUnit: formData.bondTenderPercentage,
-  
-          PerformanceValue: formData.bondPerformanceValue,
-          PerformanceCallBasis: formData.bondPerformanceCallBasis,
-          PerformanceExpiry: formData.bondPerformanceExpiryDate,
-          PerformanceRemark: formData.bondPerformanceRemark,
-          degreeRisk2: formData.bondPerformanceRiskCode,
-          performanceUnit: formData.bondPerformancePercentage,
-  
-          AdvanceValue: formData.bondPaymentValue,
-          AdvanceCallBasis: formData.bondPaymentCallBasis,
-          AdvanceExpiry: formData.bondPaymentExpiryDate,
-          AdvanceRemark: formData.bondPaymentRemark,
-          AdvanceRisk: formData.bondPaymentRiskCode, 
-          advanceUnit: formData.bondPaymentPercentage,
-  
-          RetentionValue: formData.bondRetentionValue,
-          RetentionCallBasis: formData.bondRetentionCallBasis,
-          RetentionExpiry: formData.bondRetentionExpiryDate,
-          RetentionRemark: formData.bondRetentionRemark,
-          RetentionRisk: formData.bondRetentionRiskCode,
-          retentionUnit: formData.bondRetentionPercentage,
-  
-          MaintenanceValue: formData.bondMaintenanceValue,
-          MaintenanceCallBasis: formData.bondMaintenanceCallBasis,
-          MaintenanceExpiry: formData.bondMaintenanceExpiryDate,
-          MaintenanceRemark: formData.bondMaintenanceRemark,
-          MaintenanceRisk: formData.bondMaintenanceRiskCode,
-          maintenanceUnit: formData.bondMaintenancePercentage,
-  
-          OtherValue: formData.bondOtherValue,
-          OtherCallBasis: formData.bondOtherCallBasis,
-          OtherExpiry: formData.bondOtherExpiryDate,
-          OtherRemark: formData.bondOtherRemark,
-          OtherRisk: formData.bondOtherRiskCode,
-          otherUnit: formData.bondOtherPercentage,
-          OtherName: formData.bondOtherName,
-        },
-  
-        Warranties: {
-          ParentCompanyGuarantee: normalizeYesNo(formData.warrantGuranteeIsParentCompanyGuarantee),
-          ParentCompanyDetails: formData.warrantGuranteeParentCompanyGuarantee,
-          ParentCompanyRisk: formData.warrantGuranteeParentCompanyGuaranteeRiskCode ,
-  
-          ParentCompanyUndertaking: normalizeYesNo(formData.warrantGuranteeIsParentCompanyUnderTaking),
-          ParentCompanyUndertakingDetails: formData.warrantGuranteeParentCompanyUnderTaking,
-          ParentCompanyUndertakingRisk: formData.warrantGuranteeParentCompanyUnderTakingRiskCode ,
-  
-          CollateralWarranties: normalizeYesNo(formData.warrantGuranteeIsCollateralWarranties),
-          CollateralWarrantiesDetails: formData.warrantGuranteeCollateralWarranties,
-          CollateralWarrantiesRisk: formData.warrantGuranteeCollateralWarrantiesRiskCode ,
-  
-          OtherContingent: normalizeYesNo(formData.warrantGuranteeIsOtherLiabilities),
-          OtherContingentDetails: formData.warrantGuranteeOtherLiabilities,
-          OtherContingentRisk: formData.warrantGuranteeOtherLiabilitiesRiskCode ,
-  
-          ProvidedByEmployer: normalizeYesNo(formData.insuranceIsProvidedByEmployer),
-          ProvidedByEmployerDetails: formData.insuranceProvidedByEmployer,
-          ProvidedByEmployerRisk: formData.insuranceProvidedByEmployerRiskCode
-        },
-  
-        Insurance: {
-          ProvidedByEmployer: normalizeYesNo(formData.insuranceIsProvidedByEmployer),
-          ProvidedByEmployerDetails: formData.insuranceProvidedByEmployer,
-          ProvidedByEmployerRisk: formData.insuranceProvidedByEmployerRiskCode,
-          ThirdPartyAmount: formData.insuranceThirdPartyAmount,
-          ThirdPartyRisk: formData.insuranceThirdPartyRiskCode ,
-          OnerousRequirements: normalizeYesNo(formData.insuranceIsOnerousRequirement),
-          OnerousRequirementsDetails: formData.insuranceOnerousRequirement,
-          OnerousRequirementsRisk: formData.insuranceOnerousRequirementRiskCode,
-          ShortfallInCover: normalizeYesNo(formData.insuranceIsShortFallInCover),
-          ShortfallInCoverDetails: formData.insuranceShortFallInCover,
-          ShortfallInCoverRisk: formData.insuranceShortFallInCoverRiskCode 
-        },
-  
-        OtherIssue: {
-          NewPlantDetails: formData.otherPlantInvestmentRequirement,
-          NewPlantRisk: formData.otherPlantInvestmnetRequirementRiskCode ,
-          PFIorPPPBid: normalizeYesNo(formData.otherIsPFIPPP),
-          PFIorPPPBidDetails: formData.otherIsPFIPPP,
-          pfiOrPPPBidRisk: formData.otherPFIPPPRiskCode ,
-          FinancingRequired: normalizeYesNo(formData.otherFinancingRequired),
-          FinancingRequiredDetails: formData.otherFinancingRequired,
-          FinancingRequiredRisk: formData.otherFinancingRequiredRiskCode,
-          ForeignCurrencyContentDetails: formData.otherForeignCurrency,
-          ForeignCurrencyContentRisk: formData.otherForeignCurrencyRiskCode
-        },
-  
-        'Consultant & Competitor': {
-          CivilStructuralDetails: formData.consultantCivilStructure,
-          CivilStructuralRisk: formData.consultantCivilStructureRiskCode,
-          ArchitectDetails: formData.consultantArchitect,
-          ArchitectRisk: formData.consultantArchitectRiskCode,
-          EMDetails: formData.consultantEM,
-          EMRisk: formData.consultantEMRiskCode,
-          QuantitySurveyorDetails: formData.consultantQuantitySurveyor,
-          QuantitySurveyorRisk: formData.consultantQuantitySurveyorRiskCode,
-          OtherDetails: formData.consultantOthers,
-          OtherRisk: formData.consultantOthersRiskCode,
-          competitorDetails: formData.competitor
-        },
-  
-        Evaluation: {
-          AcceptibilityRadio: normalizeYesNo(formData.evaluationIsContractCondition),
-          AcceptibilityRemark: formData.evaluationContractCondition,
-          PaymentTermsRadio: normalizeYesNo(formData.evaluationIsPaymentTerm),
-          PaymentTermsRemark: formData.evaluationPaymentTerm,
-          BondandGuaranteesRadio: normalizeYesNo(formData.evaluationIsBondGuarantee),
-          BondandGuaranteesRemark: formData.evaluationBondGuarantee,
-          ContractValueRadio: normalizeYesNo(formData.evaluationIsValueExtendContract),
-          ContractValueRemark: formData.evaluationValueExtendContract,
-          PlantEquipmentRadio: normalizeYesNo(formData.evaluationIsPlantEquipmentRequired),
-          PlantEquipmentRemark: formData.evaluationPlantEquipmentRequired,
-          SiteManagementRadio: normalizeYesNo(formData.evaluationIsSiteManagement),
-          SiteManagementRemark: formData.evaluationSiteManagement,
-          CurrentWorkloadRadio: normalizeYesNo(formData.evaluationIsCompanyWorkload),
-          CurrentWorkloadRemark: formData.evaluationCompanyWorkload,
-          TimeAllowedRadio: normalizeYesNo(formData.evaluationIsTimeAllowed),
-          TimeAllowedRemark: formData.evaluationTimeAllowed,
-          previousRecordRadio: normalizeYesNo(formData.evaluationIsConsultantRecord),
-          previousRecordRemark: formData.evaluationConsultantRecord,
-          HealthSafetyEnvironmentRadio: normalizeYesNo(formData.evaluationIsHealthSafetyEnvironment),
-          HealthSafetyEnvironmentRemark: formData.evaluationHealthSafetyEnvironment,
-          CompetitionRadio: normalizeYesNo(formData.evaluationIsCompetition),
-          CompetitionRemark: formData.evaluationCompetition,
-          EvaluationComments: formData.evaluationComments
-        },
-  
-        Distribution: {
-          ChiefExecutive: formData.distributionCE,
-          ExecutiveDirector: formData.distributionExeDir,
-          Director: formData.distributionDir,
-          BidManager: formData.distributionBidMgr,
-          FinanceDirector: formData.distributionFinDir,
-          CommercialDirector: formData.distributionComDir,
-          GeneralCounselLegal: formData.distributionGenC,
-          DivisionCommercialManager: formData.distributionDivComM,
-          InsuranceManager: formData.distributionInsMgr,
-          HeadofLambeth: formData.distributionLambeth,
-          HeadOfProcurement: formData.distributionProc,
-          RiskOpportunityManager: formData.distributionRiskOpp,
-          HSEQ: formData.distributionHSEQ
-        }
+      TenderMarketScheme: formData.isMarkingScheme,
+      FinancialTechnicalSplitValue: formData.splitValueId,
+      BidType: formData.bidTypeId,
+      JvAgreement: formData.jvAgreementId,
+      JvSplit: formData.jvSplit,
+      JvPartner: formData.jvPartner,
+
+      contract: {
+        Type: this.ensureNumber(formData.contractTypeId),
+        Description: this.ensureString(formData.contractFormDescription),
+        DegreeName: this.ensureString(formData.contractFormDescription),
+        DegreeRiskTypeContract: normalizeRiskCode(formData.contractFormRiskCode),
+        DegreeRiskDamage: normalizeRiskCode(formData.contractDamageRiskCode),
+        DesignResponsibility: this.ensureString(formData.contractDesignResponsibility),
+        DegreeRiskMeasurement: normalizeRiskCode(formData.contractMeasurementRiskCode),
+        DegreeRiskfluctuation: normalizeRiskCode(formData.contractFluctuationRiskCode),
+        DegreeRiskWeather: normalizeRiskCode(formData.contractDesignRiskCode),
+        DegreeRiskTypeUnusual: normalizeRiskCode(formData.contractUnusualRiskCode),
+        DegreeRiskTypeDesign: normalizeRiskCode(formData.contractDesignRiskCode),
+        DegreeRiskTypeBIM: normalizeRiskCode(formData.contractBIMRiskCode),
+        DegreeRiskTypeDFMA: normalizeRiskCode(formData.contractDFMARiskCode),
+        BIMRequired: normalizeYesNo(formData.contractBIMRequired),
+        DFMARequired: normalizeYesNo(formData.contractDFMARequired),
+        Adverse: normalizeYesNo(formData.contractIsAdversePhyiscal),
+        TimeExtension: normalizeYesNo(formData.contractIsTimeExtension),
+        WeatherExtention: this.ensureString(formData.contractIsTimeExtensionValue),
+        OtherUnusualConditions: this.ensureString(formData.contractUnusualConditions),
+        RateOfDamages: this.ensureString(formData.contractDamageRateRemark),
+        LimitOfLiability: this.ensureString(formData.contractLiabilityLimit),
+        MeasurementDetails: this.ensureNumber(formData.contractMeasurementId),
+        Fluctuations: this.ensureNumber(formData.contractFluctuationId),
+      },
+
+      payment: {
+        maintenanceValue: this.ensureNumber(formData.maintenanceDefectPeriod),
+        maintenanceStatus: formData.maintenanceDefectUnit,
+        Period: this.ensureNumber(formData.paymentCertificationPeriod),
+        Months: formData.paymentCertificationPeriodUnit,
+        DegreeRiskType: formData.paymentCertificationRiskCode,
+        Retention: formData.paymentRetentionAmount,
+        DegreeRiskType2: formData.paymentRetentionRiskCode,
+        Percent: formData.paymentRetentionAmountPercent,
+        Remarks: formData.paymentRetentionAmountRemark,
+        PaymentPeriod: this.ensureNumber(formData.paymentPeriod),
+        Months2: formData.paymentPeriodUnit,
+        Remarks2: formData.paymentCertificationPeriodRemark,
+        LimitofRetention: formData.paymentRetentionLimit,
+        LimitofRetentionselect: formData.paymentRetentionLimitRiskCode,
+        MaxExposureAmount: formData.paymentMaxExposure,
+        MaxExposureMonths: formData.paymentMaxExposureMonth,
+        PeakDeficit: formData.paymentPeakDeficit,
+        PeakSurplus: formData.paymentPeakSurplus,
+        AverageDeficit: formData.paymentAverageDeficit,
+        AverageSurplus: formData.paymentAverageSurplus,
+        RiskLevel: formData.paymentCashRiskCode,
+        DegreeRiskType3: formData.paymentPeriodRiskCode,
+      },
+
+      Bonds: {
+        TenderValue: formData.bondTenderValue,
+        TenderCallBasis: formData.bondTenderCallBasis,
+        TenderExpiry: formData.bondTenderExpiryDate,
+        TenderRemark: formData.bondTenderRemark,
+        TenderRisk: formData.bondTenderRiskCode,
+        tenderUnit: formData.bondTenderPercentage,
+
+        PerformanceValue: formData.bondPerformanceValue,
+        PerformanceCallBasis: formData.bondPerformanceCallBasis,
+        PerformanceExpiry: formData.bondPerformanceExpiryDate,
+        PerformanceRemark: formData.bondPerformanceRemark,
+        degreeRisk2: formData.bondPerformanceRiskCode,
+        performanceUnit: formData.bondPerformancePercentage,
+
+        AdvanceValue: formData.bondPaymentValue,
+        AdvanceCallBasis: formData.bondPaymentCallBasis,
+        AdvanceExpiry: formData.bondPaymentExpiryDate,
+        AdvanceRemark: formData.bondPaymentRemark,
+        AdvanceRisk: formData.bondPaymentRiskCode,
+        advanceUnit: formData.bondPaymentPercentage,
+
+        RetentionValue: formData.bondRetentionValue,
+        RetentionCallBasis: formData.bondRetentionCallBasis,
+        RetentionExpiry: formData.bondRetentionExpiryDate,
+        RetentionRemark: formData.bondRetentionRemark,
+        RetentionRisk: formData.bondRetentionRiskCode,
+        retentionUnit: formData.bondRetentionPercentage,
+
+        MaintenanceValue: formData.bondMaintenanceValue,
+        MaintenanceCallBasis: formData.bondMaintenanceCallBasis,
+        MaintenanceExpiry: formData.bondMaintenanceExpiryDate,
+        MaintenanceRemark: formData.bondMaintenanceRemark,
+        MaintenanceRisk: formData.bondMaintenanceRiskCode,
+        maintenanceUnit: formData.bondMaintenancePercentage,
+
+        OtherValue: formData.bondOtherValue,
+        OtherCallBasis: formData.bondOtherCallBasis,
+        OtherExpiry: formData.bondOtherExpiryDate,
+        OtherRemark: formData.bondOtherRemark,
+        OtherRisk: formData.bondOtherRiskCode,
+        otherUnit: formData.bondOtherPercentage,
+        OtherName: formData.bondOtherName,
+      },
+
+      Warranties: {
+        ParentCompanyGuarantee: normalizeYesNo(formData.warrantGuranteeIsParentCompanyGuarantee),
+        ParentCompanyDetails: formData.warrantGuranteeParentCompanyGuarantee,
+        ParentCompanyRisk: formData.warrantGuranteeParentCompanyGuaranteeRiskCode,
+
+        ParentCompanyUndertaking: normalizeYesNo(
+          formData.warrantGuranteeIsParentCompanyUnderTaking
+        ),
+        ParentCompanyUndertakingDetails: formData.warrantGuranteeParentCompanyUnderTaking,
+        ParentCompanyUndertakingRisk: formData.warrantGuranteeParentCompanyUnderTakingRiskCode,
+
+        CollateralWarranties: normalizeYesNo(formData.warrantGuranteeIsCollateralWarranties),
+        CollateralWarrantiesDetails: formData.warrantGuranteeCollateralWarranties,
+        CollateralWarrantiesRisk: formData.warrantGuranteeCollateralWarrantiesRiskCode,
+
+        OtherContingent: normalizeYesNo(formData.warrantGuranteeIsOtherLiabilities),
+        OtherContingentDetails: formData.warrantGuranteeOtherLiabilities,
+        OtherContingentRisk: formData.warrantGuranteeOtherLiabilitiesRiskCode,
+
+        ProvidedByEmployer: normalizeYesNo(formData.insuranceIsProvidedByEmployer),
+        ProvidedByEmployerDetails: formData.insuranceProvidedByEmployer,
+        ProvidedByEmployerRisk: formData.insuranceProvidedByEmployerRiskCode,
+      },
+
+      Insurance: {
+        ProvidedByEmployer: normalizeYesNo(formData.insuranceIsProvidedByEmployer),
+        ProvidedByEmployerDetails: formData.insuranceProvidedByEmployer,
+        ProvidedByEmployerRisk: formData.insuranceProvidedByEmployerRiskCode,
+        ThirdPartyDetails: this.ensureNumber(formData.insuranceThirdPartyAmount),
+        ThirdPartyRisk: formData.insuranceThirdPartyRiskCode,
+        OnerousRequirements: normalizeYesNo(formData.insuranceIsOnerousRequirement),
+        OnerousRequirementsDetails: formData.insuranceOnerousRequirement,
+        OnerousRequirementsRisk: formData.insuranceOnerousRequirementRiskCode,
+        ShortfallInCover: normalizeYesNo(formData.insuranceIsShortFallInCover),
+        ShortfallInCoverDetails: formData.insuranceShortFallInCover,
+        ShortfallInCoverRisk: formData.insuranceShortFallInCoverRiskCode,
+      },
+
+      OtherIssue: {
+        NewPlantDetails: formData.otherPlantInvestmentRequirement,
+        NewPlantRisk: formData.otherPlantInvestmnetRequirementRiskCode,
+        PFIorPPPBid: normalizeYesNo(formData.otherIsPFIPPP),
+        PFIorPPPBidDetails: formData.otherIsPFIPPP,
+        pfiOrPPPBidRisk: formData.otherPFIPPPRiskCode,
+        FinancingRequired: normalizeYesNo(formData.otherFinancingRequired),
+        FinancingRequiredRisk: formData.otherFinancingRequiredRiskCode,
+        ForeignCurrencyContentDetails: formData.otherForeignCurrency,
+        ForeignCurrencyContentRisk: formData.otherForeignCurrencyRiskCode,
+      },
+
+      'Consultant & Competitor': {
+        CivilStructuralDetails: formData.consultantCivilStructure,
+        CivilStructuralRisk: formData.consultantCivilStructureRiskCode,
+        ArchitectDetails: formData.consultantArchitect,
+        ArchitectRisk: formData.consultantArchitectRiskCode,
+        EMDetails: formData.consultantEM,
+        EMRisk: formData.consultantEMRiskCode,
+        QuantitySurveyorDetails: formData.consultantQuantitySurveyor,
+        QuantitySurveyorRisk: formData.consultantQuantitySurveyorRiskCode,
+        OtherDetails: formData.consultantOthers,
+        OtherRisk: formData.consultantOthersRiskCode,
+        competitorDetails: formData.competitor,
+      },
+
+      Evaluation: {
+        AcceptibilityRadio: normalizeYesNo(formData.evaluationIsContractCondition),
+        AcceptibilityRemark: formData.evaluationContractCondition,
+        PaymentTermsRadio: normalizeYesNo(formData.evaluationIsPaymentTerm),
+        PaymentTermsRemark: formData.evaluationPaymentTerm,
+        BondandGuaranteesRadio: normalizeYesNo(formData.evaluationIsBondGuarantee),
+        BondandGuaranteesRemark: formData.evaluationBondGuarantee,
+        ContractValueRadio: normalizeYesNo(formData.evaluationIsValueExtendContract),
+        ContractValueRemark: formData.evaluationValueExtendContract,
+        PlantEquipmentRadio: normalizeYesNo(formData.evaluationIsPlantEquipmentRequired),
+        PlantEquipmentRemark: formData.evaluationPlantEquipmentRequired,
+        SiteManagementRadio: normalizeYesNo(formData.evaluationIsSiteManagement),
+        SiteManagementRemark: formData.evaluationSiteManagement,
+        CurrentWorkloadRadio: normalizeYesNo(formData.evaluationIsCompanyWorkload),
+        CurrentWorkloadRemark: formData.evaluationCompanyWorkload,
+        TimeAllowedRadio: normalizeYesNo(formData.evaluationIsTimeAllowed),
+        TimeAllowedRemark: formData.evaluationTimeAllowed,
+        previousRecordRadio: normalizeYesNo(formData.evaluationIsConsultantRecord),
+        previousRecordRemark: formData.evaluationConsultantRecord,
+        HealthSafetyEnvironmentRadio: normalizeYesNo(formData.evaluationIsHealthSafetyEnvironment),
+        HealthSafetyEnvironmentRemark: formData.evaluationHealthSafetyEnvironment,
+        CompetitionRadio: normalizeYesNo(formData.evaluationIsCompetition),
+        CompetitionRemark: formData.evaluationCompetition,
+        EvaluationComments: formData.evaluationComments,
+      },
+
+      Distribution: {
+        ChiefExecutive: formData.distributionCE,
+        ExecutiveDirector: formData.distributionExeDir,
+        Director: formData.distributionDir,
+        BidManager: formData.distributionBidMgr,
+        FinanceDirector: formData.distributionFinDir,
+        CommercialDirector: formData.distributionComDir,
+        GeneralCounselLegal: formData.distributionGenC,
+        DivisionCommercialManager: formData.distributionDivComM,
+        InsuranceManager: formData.distributionInsMgr,
+        HeadofLambeth: formData.distributionLambeth,
+        HeadOfProcurement: formData.distributionProc,
+        RiskOpportunityManager: formData.distributionRiskOpp,
+        HSEQ: formData.distributionHSEQ,
+      },
     });
 
     // Debug: Log the value that was set for JvAgreement
     setTimeout(() => {
       const jvAgreementValue = this.formGroup.get('JvAgreement')?.value;
-      console.log('JV Agreement form value after patching:', jvAgreementValue, 'Type:', typeof jvAgreementValue);
+      console.log(
+        'JV Agreement form value after patching:',
+        jvAgreementValue,
+        'Type:',
+        typeof jvAgreementValue
+      );
       console.log('Full form value:', this.formGroup.value);
     }, 100);
   }
@@ -1108,23 +1093,23 @@ export class FormDetailComponent implements OnInit {
       8: ['Consultant & Competitor'],
       9: ['Evaluation'],
       10: ['Distribution'],
-      11: [] // Attachment step has no required fields
+      11: [], // Attachment step has no required fields
     };
 
     const currentStepFields = stepControls[this.currentStep as keyof typeof stepControls] || [];
     if (!currentStepFields.length) return true;
 
     let isValid = true;
-    
+
     // Helper function to validate nested form group
     const validateNestedGroup = (control: AbstractControl | null, basePath: string): boolean => {
       if (!control || !(control instanceof FormGroup)) return true;
-      
+
       let groupValid = true;
-      Object.keys(control.controls).forEach(key => {
+      Object.keys(control.controls).forEach((key) => {
         const childControl = control.get(key);
         const fieldPath = basePath ? `${basePath}.${key}` : key;
-        
+
         if (childControl instanceof FormGroup) {
           // Recursively validate nested groups
           if (!validateNestedGroup(childControl, fieldPath)) {
@@ -1143,7 +1128,7 @@ export class FormDetailComponent implements OnInit {
     // Validate each field in current step
     for (const field of currentStepFields) {
       const control = this.formGroup.get(field);
-      
+
       if (control instanceof FormGroup) {
         // Handle nested form groups
         if (!validateNestedGroup(control, field)) {
@@ -1156,17 +1141,18 @@ export class FormDetailComponent implements OnInit {
         }
       }
     }
-    
+
     if (!isValid) {
       // Build detailed error message
       const errorMessages: string[] = [];
-      Object.keys(this.validationErrors).forEach(field => {
+      Object.keys(this.validationErrors).forEach((field) => {
         // Split nested paths for proper section name lookup
         const fieldParts = field.split('.');
-        const sectionName = this.sectionNames[fieldParts[0] as keyof typeof this.sectionNames] || fieldParts[0];
+        const sectionName =
+          this.sectionNames[fieldParts[0] as keyof typeof this.sectionNames] || fieldParts[0];
         const subField = fieldParts.length > 1 ? ` (${fieldParts.slice(1).join('.')})` : '';
-        
-        this.validationErrors[field].forEach(error => {
+
+        this.validationErrors[field].forEach((error) => {
           errorMessages.push(`${sectionName}${subField}: ${error}`);
         });
       });
@@ -1176,14 +1162,14 @@ export class FormDetailComponent implements OnInit {
       } else {
         this.loadError = 'Please fill in all required fields before proceeding.';
       }
-      
-      setTimeout(() => this.loadError = null, 5000);
+
+      setTimeout(() => (this.loadError = null), 5000);
     }
     return isValid;
   }
   private validateField(control: AbstractControl | null, fieldName: string): boolean {
     if (!control) return true;
-    
+
     const errors: string[] = [];
     if (control.hasError('required')) {
       errors.push('This field is required');
@@ -1205,35 +1191,33 @@ export class FormDetailComponent implements OnInit {
     return true;
   }
 
-  
   nextStep(): void {
-  if (this.currentStep < this.steps.length) {
-    if (this.validateCurrentStep()) {
-      const normalizedValue = this.normalizeFormValues(this.formGroup.value);
-      
-      // First page - initial save
-      if (this.currentStep === 1 && !this.isEditMode) {
-        this.form20Service.saveForm20({ ...normalizedValue }).subscribe({
-          next: (response) => {
-            console.log('Form saved with ID:', response.id);
-            this.formId = response.id;
-            this.isEditMode = true;
-            this.loadError = 'Form saved successfully';
-            setTimeout(() => {
-              this.loadError = null;
-              this.currentStep++;
-            }, 1000);
-          },
-          error: (err) => {
-            this.loadError = 'Failed to save form. Please try again.';
+    if (this.currentStep < this.steps.length) {
+      if (this.validateCurrentStep()) {
+        const normalizedValue = this.normalizeFormValues(this.formGroup.value);
+
+        // First page - initial save
+        if (this.currentStep === 1 && !this.isEditMode) {
+          this.form20Service.saveForm20({ ...normalizedValue }).subscribe({
+            next: (response) => {
+              console.log('Form saved with ID:', response.id);
+              this.formId = response.id;
+              this.isEditMode = true;
+              this.loadError = 'Form saved successfully';
+              setTimeout(() => {
+                this.loadError = null;
+                this.currentStep++;
+              }, 1000);
+            },
+            error: (err) => {
+              this.loadError = 'Failed to save form. Please try again.';
               console.error('Error saving form:', err);
               console.error('Error details:', err.error); // Log validation errors
               console.error('Missing fields:', err.error?.errors); // Log specific missing fields
-              setTimeout(() => this.loadError = null, 5000);
-          }
-        });
-      }
-      else if (this.formId) {
+              setTimeout(() => (this.loadError = null), 5000);
+            },
+          });
+        } else if (this.formId) {
           this.form20Service.saveForm20(normalizedValue).subscribe({
             next: () => {
               console.log('Form updated successfully');
@@ -1246,18 +1230,16 @@ export class FormDetailComponent implements OnInit {
             error: (err) => {
               this.loadError = 'Failed to update form. Please try again.';
               console.error('Error updating form:', err);
-              setTimeout(() => this.loadError = null, 5000);
-            }
+              setTimeout(() => (this.loadError = null), 5000);
+            },
           });
-        }
-
-         else {
+        } else {
           this.currentStep++;
           this.loadError = null;
         }
+      }
     }
   }
-}
 
   previousStep(): void {
     if (this.currentStep > 1) {
@@ -1294,7 +1276,7 @@ export class FormDetailComponent implements OnInit {
     // Validate all steps before submission
     let isValid = true;
     const originalStep = this.currentStep;
-    
+
     try {
       for (let step = 1; step <= this.steps.length; step++) {
         this.currentStep = step;
@@ -1312,8 +1294,10 @@ export class FormDetailComponent implements OnInit {
 
     if (!isValid) {
       const errorCount = Object.keys(this.validationErrors).length;
-      this.loadError = `Form validation failed with ${errorCount} error${errorCount > 1 ? 's' : ''}. Please check highlighted fields.`;
-      setTimeout(() => this.loadError = null, 5000);
+      this.loadError = `Form validation failed with ${errorCount} error${
+        errorCount > 1 ? 's' : ''
+      }. Please check highlighted fields.`;
+      setTimeout(() => (this.loadError = null), 5000);
       return;
     }
 
@@ -1332,25 +1316,25 @@ export class FormDetailComponent implements OnInit {
           error: (err: HttpErrorResponse) => {
             this.loadError = 'Failed to save form. Please try again.';
             console.error('Error saving form:', err);
-            setTimeout(() => this.loadError = null, 5000);
-          }
+            setTimeout(() => (this.loadError = null), 5000);
+          },
         });
       } else {
         this.openApprovalDialog();
       }
     } else {
       this.loadError = 'Form validation failed. Please check all required fields.';
-      setTimeout(() => this.loadError = null, 5000);
+      setTimeout(() => (this.loadError = null), 5000);
     }
   }
 
   private openApprovalDialog(): void {
     const dialogRef = this.dialog.open(FormApprovalComponent, {
       width: '800px',
-      data: { formData: this.formGroup.value }
+      data: { formData: this.formGroup.value },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.processFormSubmission();
       }
@@ -1359,7 +1343,7 @@ export class FormDetailComponent implements OnInit {
 
   private processFormSubmission(): void {
     const normalizedValue = this.normalizeFormValues(this.formGroup.value);
-    
+
     // Update status for final submission
     normalizedValue.Status = 'Submitted';
 
@@ -1369,29 +1353,27 @@ export class FormDetailComponent implements OnInit {
     }
 
     this.form20Service.saveForm20(normalizedValue).subscribe({
-    next: (response) => {
-      console.log('Form submitted successfully:', response);
-      this.loadError = 'Form submitted successfully';
-      setTimeout(() => {
-        this.loadError = null;
-        this.goBack();
-      }, 2000);
-    },
-    error: (err: HttpErrorResponse) => {
-      // ... error handling
-    }
-  });
-}
-
-
+      next: (response) => {
+        console.log('Form submitted successfully:', response);
+        this.loadError = 'Form submitted successfully';
+        setTimeout(() => {
+          this.loadError = null;
+          this.goBack();
+        }, 2000);
+      },
+      error: (err: HttpErrorResponse) => {
+        // ... error handling
+      },
+    });
+  }
 
   saveDraft(): void {
     if (this.formGroup.value) {
       // First normalize the form values
       const normalizedValue = this.normalizeFormValues(this.formGroup.value);
-      
+
       // Set status as Draft
-      normalizedValue.Status = "Draft";
+      normalizedValue.Status = 'Draft';
 
       // Add form ID if in edit mode
       if (this.formId) {
@@ -1399,61 +1381,71 @@ export class FormDetailComponent implements OnInit {
       }
 
       // Ensure arrays are properly set for distribution fields
-      normalizedValue.distributionComDir = normalizedValue.distributionComDir || ["00001"];
-      normalizedValue.distributionDivComM = normalizedValue.distributionDivComM || ["00001"];
-      normalizedValue.distributionExeDir = normalizedValue.distributionExeDir || ["00001"];
-      normalizedValue.distributionFinDir = normalizedValue.distributionFinDir || ["00001"];
-      normalizedValue.distributionCE = normalizedValue.distributionCE || ["00001"];
-      normalizedValue.distributionDir = normalizedValue.distributionDir || ["00001"];
-      normalizedValue.distributionGenC = normalizedValue.distributionGenC || ["00001"];
-      normalizedValue.distributionInsMgr = normalizedValue.distributionInsMgr || ["00001"];
-      normalizedValue.distributionProc = normalizedValue.distributionProc || ["00001"];
-      normalizedValue.distributionRiskOpp = normalizedValue.distributionRiskOpp || ["00001"];
-      normalizedValue.distributionLambeth = normalizedValue.distributionLambeth || ["00001"];
-      normalizedValue.distributionHSEQ = normalizedValue.distributionHSEQ || ["00001"];
+      normalizedValue.distributionComDir = normalizedValue.distributionComDir || ['00001'];
+      normalizedValue.distributionDivComM = normalizedValue.distributionDivComM || ['00001'];
+      normalizedValue.distributionExeDir = normalizedValue.distributionExeDir || ['00001'];
+      normalizedValue.distributionFinDir = normalizedValue.distributionFinDir || ['00001'];
+      normalizedValue.distributionCE = normalizedValue.distributionCE || ['00001'];
+      normalizedValue.distributionDir = normalizedValue.distributionDir || ['00001'];
+      normalizedValue.distributionGenC = normalizedValue.distributionGenC || ['00001'];
+      normalizedValue.distributionInsMgr = normalizedValue.distributionInsMgr || ['00001'];
+      normalizedValue.distributionProc = normalizedValue.distributionProc || ['00001'];
+      normalizedValue.distributionRiskOpp = normalizedValue.distributionRiskOpp || ['00001'];
+      normalizedValue.distributionLambeth = normalizedValue.distributionLambeth || ['00001'];
+      normalizedValue.distributionHSEQ = normalizedValue.distributionHSEQ || ['00001'];
       normalizedValue.distributionBidMgr = normalizedValue.distributionBidMgr || [];
 
       // Ensure approval arrays are properly initialized
-    // Add approval arrays with correct property names
-    const approvalFields = {
-      ceApproval: [{
-        Title: "",
-        Comments: "",
-        Decision: "",
-        StaffNo: "",
-        ApproverName: ""
-      }],
-      cmApproval: [{
-        Title: "",
-        Comments: "",
-        Decision: "",
-        StaffNo: "",
-        ApproverName: ""
-      }],
-      edApproval: [{
-        Title: "",
-        Comments: "",
-        Decision: "",
-        StaffNo: "",
-        ApproverName: ""
-      }],
-      dirApproval: [{
-        Title: "",
-        Comments: "",
-        Decision: "",
-        StaffNo: "",
-        ApproverName: ""
-      }],
-      hoEApproval: [{
-        Title: "",
-        Comments: "",
-        Decision: "",
-        StaffNo: "",
-        ApproverName: ""
-      }]
-    };
+      // Add approval arrays with correct property names
+      const approvalFields = {
+        ceApproval: [
+          {
+            Title: '',
+            Comments: '',
+            Decision: '',
+            StaffNo: '',
+            ApproverName: '',
+          },
+        ],
+        cmApproval: [
+          {
+            Title: '',
+            Comments: '',
+            Decision: '',
+            StaffNo: '',
+            ApproverName: '',
+          },
+        ],
+        edApproval: [
+          {
+            Title: '',
+            Comments: '',
+            Decision: '',
+            StaffNo: '',
+            ApproverName: '',
+          },
+        ],
+        dirApproval: [
+          {
+            Title: '',
+            Comments: '',
+            Decision: '',
+            StaffNo: '',
+            ApproverName: '',
+          },
+        ],
+        hoEApproval: [
+          {
+            Title: '',
+            Comments: '',
+            Decision: '',
+            StaffNo: '',
+            ApproverName: '',
+          },
+        ],
+      };
 
-    Object.assign(normalizedValue, approvalFields);
+      Object.assign(normalizedValue, approvalFields);
 
       this.form20Service.saveForm20(normalizedValue).subscribe({
         next: (response) => {
@@ -1475,22 +1467,27 @@ export class FormDetailComponent implements OnInit {
           console.error('Error saving draft:', err);
           console.error('Error details:', err.error);
           console.error('Missing fields:', err.error?.errors);
-          setTimeout(() => this.loadError = null, 5000);
-        }
+          setTimeout(() => (this.loadError = null), 5000);
+        },
       });
     } else {
       this.goBack();
     }
-}
+  }
 
-
-  private createDefaultApproval(value?: any): { Title: string; Comments: string; Decision: string; StaffNo: string; ApproverName: string } {
+  private createDefaultApproval(value?: any): {
+    Title: string;
+    Comments: string;
+    Decision: string;
+    StaffNo: string;
+    ApproverName: string;
+  } {
     return {
       Title: this.ensureString(value?.Title),
       Comments: this.ensureString(value?.Comments),
       Decision: this.ensureString(value?.Decision),
       StaffNo: this.ensureString(value?.StaffNo),
-      ApproverName: this.ensureString(value?.ApproverName)
+      ApproverName: this.ensureString(value?.ApproverName),
     };
   }
 
@@ -1519,12 +1516,12 @@ export class FormDetailComponent implements OnInit {
     // Helper functions
     const toNumberOrNull = (value: any): number | null => {
       if (value === null || value === undefined || value === '') return null;
-      
+
       // Remove currency symbols, commas and spaces if present
       if (typeof value === 'string') {
         value = value.replace(/[$,\s]/g, '');
       }
-      
+
       const num = Number(value);
       return isNaN(num) ? null : num;
     };
@@ -1544,10 +1541,8 @@ export class FormDetailComponent implements OnInit {
       businessUnitId: toNumberOrNull(formValue.businessUnit),
       title: formValue.projectTitle,
       businessUnitCode: formValue.businessUnit,
-      Status: "Draft",
+      Status: 'Draft',
       maintenanceDefectId: this.ensureNumber(formValue.maintenanceType),
-      
-      
       periodUnit: formValue.contractPeriodUnit,
       period: toNumberOrNull(formValue.contractPeriodValue),
       periodDetail: formValue.ComplexContractPeriod || '',
@@ -1559,39 +1554,31 @@ export class FormDetailComponent implements OnInit {
       JvPartner: ensureString(formValue.JvPartner),
       jvAgreementId: this.ensureNumber(formValue.JvAgreement),
 
-
-      
-
-      paymentRetentionAmountPercent: "%",
-
-      // Required unit fields
-
       // Distribution arrays with default values
-      distributionComDir: ["00001"],
-      distributionDivComM: ["00001"],
-      distributionExeDir: ["00001"],
-      distributionFinDir: ["00001"],
-      distributionCE: ["00001"],
-      distributionDir: ["00001"],
-      distributionGenC: ["00001"],
-      distributionInsMgr: ["00001"],
-      distributionProc: ["00001"],
-      distributionRiskOpp: ["00001"],
-      distributionLambeth: ["00001"],
-      distributionHSEQ: ["00001"],
+      distributionComDir: ['00001'],
+      distributionDivComM: ['00001'],
+      distributionExeDir: ['00001'],
+      distributionFinDir: ['00001'],
+      distributionCE: ['00001'],
+      distributionDir: ['00001'],
+      distributionGenC: ['00001'],
+      distributionInsMgr: ['00001'],
+      distributionProc: ['00001'],
+      distributionRiskOpp: ['00001'],
+      distributionLambeth: ['00001'],
+      distributionHSEQ: ['00001'],
       distributionBidMgr: [],
 
       // Approval arrays with empty default objects
-      CEApproval: [{Title: "", Comments: "", Decision: "", StaffNo: "", ApproverName: ""}],
-      CMApproval: [{Title: "", Comments: "", Decision: "", StaffNo: "", ApproverName: ""}],
-      EDApproval: [{Title: "", Comments: "", Decision: "", StaffNo: "", ApproverName: ""}],
-      DirApproval: [{Title: "", Comments: "", Decision: "", StaffNo: "", ApproverName: ""}],
-      HoEApproval: [{Title: "", Comments: "", Decision: "", StaffNo: "", ApproverName: ""}],
+      CEApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
+      CMApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
+      EDApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
+      DirApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
+      HoEApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
 
       // Nullable numeric fields
-      approximateValue: approximateVal,  // Send validated decimal value
+      approximateValue: approximateVal, // Send validated decimal value
       profitMargin: formValue.Approxmargin,
-     
       currencyId: formValue.ApproximateValueType,
       tenderTypeId: tenderTypeId,
       countryId: formValue.Region,
@@ -1599,187 +1586,204 @@ export class FormDetailComponent implements OnInit {
 
       // Contract fields with default values (will be overridden in if block if contract exists)
       contractTypeId: null,
-      contractFormRiskCode: "",
-      contractFormDescription: "",
-      contractDamageRateRemark: "",
-      contractLiabilityLimit: "",
-      contractDamageRiskCode: "",
+      contractFormRiskCode: '',
+      contractFormDescription: '',
+      contractDamageRateRemark: '',
+      contractLiabilityLimit: '',
+      contractDamageRiskCode: '',
       contractMeasurementId: null,
-      contractMeasurementRiskCode: "",
+      contractMeasurementRiskCode: '',
       contractFluctuationId: null,
-      contractFluctuationRiskCode: "",
-      contractIsAdversePhyiscal: "",
-      contractIsTimeExtension: "",
-      contractIsTimeExtensionValue: "",
-      contractClausesRiskCode: "",
-      contractUnusualConditions : "",
-      contractUnusualRiskCode: "",
-      contractDesignResponsibility: "",
-      contractDesignRiskCode: "",
-      contractBIMRequired:"",
-      contractBIMRiskCode: "",
-      contractDFMARequired: "",
-      contractDFMARiskCode: "",
+      contractFluctuationRiskCode: '',
+      contractIsAdversePhyiscal: '',
+      contractIsTimeExtension: '',
+      contractIsTimeExtensionValue: '',
+      contractClausesRiskCode: '',
+      contractUnusualConditions: '',
+      contractUnusualRiskCode: '',
+      contractDesignResponsibility: '',
+      contractDesignRiskCode: '',
+      contractBIMRequired: '',
+      contractBIMRiskCode: '',
+      contractDFMARequired: '',
+      contractDFMARiskCode: '',
 
       /* Page 3  payment value */
       maintenanceDefectPeriod: null,
-      maintenanceDefectUnit: "",
+      maintenanceDefectUnit: '',
       paymentCertificationPeriod: null,
       paymentRetentionAmount: null,
-      paymentRetentionRiskCode: "",
+      paymentRetentionRiskCode: '',
       paymentPeriod: null,
-      paymentPeriodUnit: "",
+      paymentPeriodUnit: '',
       paymentMaxExposure: null,
       paymentMaxExposureMonth: null,
       paymentPeakDeficit: null,
       paymentPeakSurplus: null,
       paymentAverageDeficit: null,
       paymentAverageSurplus: null,
-      paymentCashRiskCode: "",
-      paymentRetentionLimit: "",
-      
+      paymentCashRiskCode: '',
+      paymentRetentionLimit: '',
+      paymentRetentionAmountPercent: '',
+
       /* page 4*/
       bondTenderValue: null,
-      bondTenderCallBasis: "",
-      bondTenderExpiryDate: "",
-      bondTenderPercentage: "",
-      bondTenderRemark: "",
-      bondTenderRiskCode: "",
+      bondTenderCallBasis: '',
+      bondTenderExpiryDate: '',
+      bondTenderPercentage: '',
+      bondTenderRemark: '',
+      bondTenderRiskCode: '',
 
       bondPerformanceValue: null,
-      bondPerformanceCallBasis: "",
-      bondPerformanceExpiryDate: "",
-      bondPerformancePercentage: "",
-      bondPerformanceRemark: "",
-      bondPerformanceRiskCode: "",
+      bondPerformanceCallBasis: '',
+      bondPerformanceExpiryDate: '',
+      bondPerformancePercentage: '',
+      bondPerformanceRemark: '',
+      bondPerformanceRiskCode: '',
 
-      bondPaymentValue: null, 
-      bondPaymentCallBasis: "",
-      bondPaymentExpiryDate: "",
-      bondPaymentPercentage: "",
-      bondPaymentRemark: "",
-      bondPaymentRiskCode: "",
+      bondPaymentValue: null,
+      bondPaymentCallBasis: '',
+      bondPaymentExpiryDate: '',
+      bondPaymentPercentage: '',
+      bondPaymentRemark: '',
+      bondPaymentRiskCode: '',
 
       bondRetentionValue: null,
-      bondRetentionCallBasis: "",
-      bondRetentionExpiryDate: "",
-      bondRetentionPercentage: "",
-      bondRetentionRemark: "",
-      bondRetentionRiskCode: "",
+      bondRetentionCallBasis: '',
+      bondRetentionExpiryDate: '',
+      bondRetentionPercentage: '',
+      bondRetentionRemark: '',
+      bondRetentionRiskCode: '',
 
       bondMaintenanceValue: null,
-      bondMaintenanceCallBasis: "",
-      bondMaintenanceExpiryDate: "",
-      bondMaintenancePercentage: "",
-      bondMaintenanceRemark: "",
-      bondMaintenanceRiskCode: "",
+      bondMaintenanceCallBasis: '',
+      bondMaintenanceExpiryDate: '',
+      bondMaintenancePercentage: '',
+      bondMaintenanceRemark: '',
+      bondMaintenanceRiskCode: '',
 
       bondOtherValue: null,
-      bondOtherCallBasis: "",
-      bondOtherExpiryDate: "",
-      bondOtherPercentage: "",
-      bondOtherRemark: "",
-      bondOtherRiskCode: "",
-      bondOtherName: "",
+      bondOtherCallBasis: '',
+      bondOtherExpiryDate: '',
+      bondOtherPercentage: '',
+      bondOtherRemark: '',
+      bondOtherRiskCode: '',
+      bondOtherName: '',
 
       /* page 5 Warranties*/
-      warrantGuranteeIsParentCompanyGuarantee: "",
-      warrantGuranteeParentCompanyGuarantee: "",
-      warrantGuranteeParentCompanyGuaranteeRiskCode: "",
+      warrantGuranteeIsParentCompanyGuarantee: '',
+      warrantGuranteeParentCompanyGuarantee: '',
+      warrantGuranteeParentCompanyGuaranteeRiskCode: '',
 
-      warrantGuranteeIsParentCompanyUnderTaking: "",
-      warrantGuranteeParentCompanyUnderTaking: "",
-      warrantGuranteeParentCompanyUnderTakingRiskCode: "",
+      warrantGuranteeIsParentCompanyUnderTaking: '',
+      warrantGuranteeParentCompanyUnderTaking: '',
+      warrantGuranteeParentCompanyUnderTakingRiskCode: '',
 
-      warrantGuranteeIsCollateralWarranties: "",
-      warrantGuranteeCollateralWarranties: "",
-      warrantGuranteeCollateralWarrantiesRiskCode: "",
+      warrantGuranteeIsCollateralWarranties: '',
+      warrantGuranteeCollateralWarranties: '',
+      warrantGuranteeCollateralWarrantiesRiskCode: '',
 
-      warrantGuranteeIsOtherLiabilities: "",
-      warrantGuranteeOtherLiabilities: "",
-      warrantGuranteeOtherLiabilitiesRiskCode: "",
+      warrantGuranteeIsOtherLiabilities: '',
+      warrantGuranteeOtherLiabilities: '',
+      warrantGuranteeOtherLiabilitiesRiskCode: '',
 
-      
+      /* 6th insurance page*/
+      insuranceIsProvidedByEmployer: '',
+      insuranceProvidedByEmployer: '',
+      insuranceProvidedByEmployerRiskCode: '',
+      insuranceThirdPartyAmount: null,
+      insuranceThirdPartyRiskCode: '',
+      insuranceIsOnerousRequirement: '',
+      insuranceOnerousRequirement: '',
+      insuranceOnerousRequirementRiskCode: '',
+      insuranceIsShortFallInCover: '',
+      insuranceShortFallInCover: '',
+      insuranceShortFallInCoverRiskCode: '',
+
+      /* 7th other issues page*/
+      otherPlantInvestmentRequirement: '',
+      otherPlantInvestmnetRequirementRiskCode: '',
+      otherIsPFIPPP: '',
+      otherPFIPPPRiskCode: '',
+      otherFinancingRequired: '',
+      otherFinancingRequiredRiskCode: '',
+      otherForeignCurrency: '',
+      otherForeignCurrencyRiskCode: '',
+
+      /*8th consultant */
+      consultantCivilStructure: '',
+      consultantCivilStructureRiskCode: '',
+      consultantArchitect: '',
+      consultantArchitectRiskCode: '',
+      consultantEM: '',
+      consultantEMRiskCode: '',
+      consultantQuantitySurveyor: '',
+      consultantQuantitySurveyorRiskCode: '',
+      consultantOthers: '',
+      consultantOthersRiskCode: '',
+      competitor: '',
+
       Planner: ensureString(formValue.Planner),
       Location: ensureString(formValue.Location),
       TenderNo: ensureString(formValue.tenderNo),
       Estimator: ensureString(formValue.Estimator),
-     
+
       BidManager: ensureString(formValue.BidManager),
       clientName: ensureString(formValue.clientName),
-      Competitor: ensureString(formValue.Competitor),
+      
       Description: ensureString(formValue.BriefDescription),
 
-      ConsultantEM: "",
-      
-      OtherIsPFIPPP: "",
-      ConsultantOthers: "",   
-      CompetitorRiskCode: "",
-      EvaluationCashFlow: "",
-      EvaluationComments: "",
-      ConsultantArchitect: "",
-      OtherPFIPPPRiskCode: "",
-      ConsultantEMRiskCode: "",
-      EvaluationIsCashFlow: "",
-      OtherForeignCurrency: "",
-      EvaluationCompetition: "",
-      EvaluationPaymentTerm: "",
-      EvaluationTimeAllowed: "",
-      PaymentPeriodRiskCode: "",
+
+      CompetitorRiskCode: '',
+      EvaluationCashFlow: '',
+      EvaluationComments: '',
+      EvaluationIsCashFlow: '',
+      EvaluationCompetition: '',
+      EvaluationPaymentTerm: '',
+      EvaluationTimeAllowed: '',
+      PaymentPeriodRiskCode: '',
       approximateValueRemark: formValue.ApproximateValue || '',
-      ContractDamageRateUnit: "",
-      OtherFinancingRequired: "",
-      EvaluationBondGuarantee: "",
-      EvaluationIsCompetition: "",
-      EvaluationIsPaymentTerm: "",
-      EvaluationIsTimeAllowed: "",
-      ConsultantCivilStructure: "",
-      ConsultantOthersRiskCode: "",
-      EvaluationSiteManagement: "",
-      EvaluationCompanyWorkload: "",
-      EvaluationIsBondGuarantee: "",
-      InsuranceShortFallInCover: "",
-      ConsultantQuantitySurveyor: "",
-      EvaluationConsultantRecord: "",
-      EvaluationIsSiteManagement: "",
-      ConsultantArchitectRiskCode: "",
+      ContractDamageRateUnit: '',
+      EvaluationBondGuarantee: '',
+      EvaluationIsCompetition: '',
+      EvaluationIsPaymentTerm: '',
+      EvaluationIsTimeAllowed: '',
       
-      EvaluationContractCondition: "",
-      EvaluationIsCompanyWorkload: "",
-      InsuranceIsShortFallInCover: "",
-      InsuranceOnerousRequirement: "",
-      InsuranceProvidedByEmployer: "",
-      InsuranceThirdPartyRiskCode: "",
-      OtherForeignCurrencyRiskCode: "",
-      paymentCertificationRiskCode: "",
-      paymentRetentionAmountRemark:  "",
-      EvaluationIsContractCondition: "",
-      EvaluationValueExtendContract: "",
-      InsuranceIsOnerousRequirement: "",
-      InsuranceIsProvidedByEmployer: "",
-      paymentRetentionLimitRiskCode: "",
-      OtherFinancingRequiredRiskCode: "",
-      PaymentCertificationPeriodUnit: "",
-      EvaluationClientFinancialStatus: "",
-      EvaluationIsValueExtendContract: "",
-      OtherPlantInvestmentRequirement: "",
-      ConsultantCivilStructureRiskCode: "",
-      EvaluationPlantEquipmentRequired: "",
-      paymentCertificationPeriodRemark: "",
-      EvaluationHealthSafetyEnvironment: "",
-      EvaluationIsClientFinancialStatus: "",
-      InsuranceShortFallInCoverRiskCode: "",
-      ConsultantQuantitySurveyorRiskCode: "",
-      EvaluationIsPlantEquipmentRequired: "",
-      EvaluationIsHealthSafetyEnvironment: "",
-      InsuranceOnerousRequirementRiskCode: "",
-      InsuranceProvidedByEmployerRiskCode: "",
-      EvaluationEstimatingDepartmentWorkload: "",
-      OtherPlantInvestmnetRequirementRiskCode: "",
-      EvaluationIsEstimatingDepartmentWorkload: "",
       
-      // Missing evaluation "Is" fields 
-      EvaluationIsConsultantRecord: "",
+      EvaluationSiteManagement: '',
+      EvaluationCompanyWorkload: '',
+      EvaluationIsBondGuarantee: '',
+      
+      EvaluationConsultantRecord: '',
+      EvaluationIsSiteManagement: '',
+      
+
+      EvaluationContractCondition: '',
+      EvaluationIsCompanyWorkload: '',
+      paymentCertificationRiskCode: '',
+      paymentRetentionAmountRemark: '',
+      EvaluationIsContractCondition: '',
+      EvaluationValueExtendContract: '',
+      paymentRetentionLimitRiskCode: '',
+
+      PaymentCertificationPeriodUnit: '',
+      EvaluationClientFinancialStatus: '',
+      EvaluationIsValueExtendContract: '',
+
+      
+      EvaluationPlantEquipmentRequired: '',
+      paymentCertificationPeriodRemark: '',
+      EvaluationHealthSafetyEnvironment: '',
+      EvaluationIsClientFinancialStatus: '',
+      
+      EvaluationIsPlantEquipmentRequired: '',
+      EvaluationIsHealthSafetyEnvironment: '',
+      EvaluationEstimatingDepartmentWorkload: '',
+
+      EvaluationIsEstimatingDepartmentWorkload: '',
+
+      // Missing evaluation "Is" fields
+      EvaluationIsConsultantRecord: '',
     };
 
     // Apply any contract form group values
@@ -1848,35 +1852,35 @@ export class FormDetailComponent implements OnInit {
         bondTenderExpiryDate: ensureString(formValue.Bonds.TenderExpiry),
         bondTenderRemark: ensureString(formValue.Bonds.TenderRemark),
         bondTenderRiskCode: ensureString(formValue.Bonds.TenderRisk),
-        
+
         bondPerformanceValue: toNumberOrNull(formValue.Bonds.PerformanceValue),
         bondPerformancePercentage: ensureString(formValue.Bonds.performanceUnit),
         bondPerformanceCallBasis: ensureString(formValue.Bonds.PerformanceCallBasis),
         bondPerformanceExpiryDate: ensureString(formValue.Bonds.PerformanceExpiry),
         bondPerformanceRemark: ensureString(formValue.Bonds.PerformanceRemark),
         bondPerformanceRiskCode: ensureString(formValue.Bonds.degreeRisk2),
-        
+
         bondPaymentValue: toNumberOrNull(formValue.Bonds.AdvanceValue),
         bondPaymentPercentage: ensureString(formValue.Bonds.advanceUnit),
         bondPaymentCallBasis: ensureString(formValue.Bonds.AdvanceCallBasis),
         bondPaymentExpiryDate: ensureString(formValue.Bonds.AdvanceExpiry),
         bondPaymentRemark: ensureString(formValue.Bonds.AdvanceRemark),
         bondPaymentRiskCode: ensureString(formValue.Bonds.AdvanceRisk),
-        
+
         bondRetentionValue: toNumberOrNull(formValue.Bonds.RetentionValue),
         bondRetentionPercentage: ensureString(formValue.Bonds.retentionUnit),
         bondRetentionCallBasis: ensureString(formValue.Bonds.RetentionCallBasis),
         bondRetentionExpiryDate: ensureString(formValue.Bonds.RetentionExpiry),
         bondRetentionRemark: ensureString(formValue.Bonds.RetentionRemark),
         bondRetentionRiskCode: ensureString(formValue.Bonds.RetentionRisk),
-        
+
         bondMaintenanceValue: toNumberOrNull(formValue.Bonds.MaintenanceValue),
         bondMaintenancePercentage: ensureString(formValue.Bonds.maintenanceUnit),
         bondMaintenanceCallBasis: ensureString(formValue.Bonds.MaintenanceCallBasis),
         bondMaintenanceExpiryDate: ensureString(formValue.Bonds.MaintenanceExpiry),
         bondMaintenanceRemark: ensureString(formValue.Bonds.MaintenanceRemark),
         bondMaintenanceRiskCode: ensureString(formValue.Bonds.MaintenanceRisk),
-        
+
         bondOtherValue: toNumberOrNull(formValue.Bonds.OtherValue),
         bondOtherPercentage: ensureString(formValue.Bonds.otherUnit),
         bondOtherCallBasis: ensureString(formValue.Bonds.OtherCallBasis),
@@ -1890,21 +1894,41 @@ export class FormDetailComponent implements OnInit {
     // Apply any Warranties form group values
     if (formValue.Warranties) {
       Object.assign(baseForm, {
-        warrantGuranteeIsParentCompanyGuarantee: ensureString(formValue.warrantGuranteeIsParentCompanyGuarantee),
-        warrantGuranteeParentCompanyGuarantee: ensureString(formValue.Warranties.ParentCompanyDetails),
-        warrantGuranteeParentCompanyGuaranteeRiskCode: ensureString(formValue.Warranties.ParentCompanyRisk),
-        
-        warrantGuranteeIsParentCompanyUnderTaking: ensureString(formValue.Warranties.ParentCompanyUndertaking),
-        warrantGuranteeParentCompanyUnderTaking: ensureString(formValue.Warranties.ParentCompanyUndertakingDetails),
-        warrantGuranteeParentCompanyUnderTakingRiskCode: ensureString(formValue.Warranties.ParentCompanyUndertakingRisk),
-        
-        warrantGuranteeIsCollateralWarranties: ensureString(formValue.Warranties.CollateralWarranties),
-        warrantGuranteeCollateralWarranties: ensureString(formValue.Warranties.CollateralWarrantiesDetails),
-        warrantGuranteeCollateralWarrantiesRiskCode: ensureString(formValue.Warranties.CollateralWarrantiesRisk),
-        
+        warrantGuranteeIsParentCompanyGuarantee: ensureString(
+          formValue.warrantGuranteeIsParentCompanyGuarantee
+        ),
+        warrantGuranteeParentCompanyGuarantee: ensureString(
+          formValue.Warranties.ParentCompanyDetails
+        ),
+        warrantGuranteeParentCompanyGuaranteeRiskCode: ensureString(
+          formValue.Warranties.ParentCompanyRisk
+        ),
+
+        warrantGuranteeIsParentCompanyUnderTaking: ensureString(
+          formValue.Warranties.ParentCompanyUndertaking
+        ),
+        warrantGuranteeParentCompanyUnderTaking: ensureString(
+          formValue.Warranties.ParentCompanyUndertakingDetails
+        ),
+        warrantGuranteeParentCompanyUnderTakingRiskCode: ensureString(
+          formValue.Warranties.ParentCompanyUndertakingRisk
+        ),
+
+        warrantGuranteeIsCollateralWarranties: ensureString(
+          formValue.Warranties.CollateralWarranties
+        ),
+        warrantGuranteeCollateralWarranties: ensureString(
+          formValue.Warranties.CollateralWarrantiesDetails
+        ),
+        warrantGuranteeCollateralWarrantiesRiskCode: ensureString(
+          formValue.Warranties.CollateralWarrantiesRisk
+        ),
+
         warrantGuranteeIsOtherLiabilities: ensureString(formValue.Warranties.OtherContingent),
         warrantGuranteeOtherLiabilities: ensureString(formValue.Warranties.OtherContingentDetails),
-        warrantGuranteeOtherLiabilitiesRiskCode: ensureString(formValue.Warranties.OtherContingentRisk),
+        warrantGuranteeOtherLiabilitiesRiskCode: ensureString(
+          formValue.Warranties.OtherContingentRisk
+        ),
       });
     }
 
@@ -1913,15 +1937,19 @@ export class FormDetailComponent implements OnInit {
       Object.assign(baseForm, {
         insuranceIsProvidedByEmployer: ensureString(formValue.Insurance.ProvidedByEmployer),
         insuranceProvidedByEmployer: ensureString(formValue.Insurance.ProvidedByEmployerDetails),
-        insuranceProvidedByEmployerRiskCode: ensureString(formValue.Insurance.ProvidedByEmployerRisk),
-        
+        insuranceProvidedByEmployerRiskCode: ensureString(
+          formValue.Insurance.ProvidedByEmployerRisk
+        ),
+
         insuranceThirdPartyAmount: toNumberOrNull(formValue.Insurance.ThirdPartyAmount),
         insuranceThirdPartyRiskCode: ensureString(formValue.Insurance.ThirdPartyRisk),
-        
+
         insuranceIsOnerousRequirement: ensureString(formValue.Insurance.OnerousRequirements),
         insuranceOnerousRequirement: ensureString(formValue.Insurance.OnerousRequirementsDetails),
-        insuranceOnerousRequirementRiskCode: ensureString(formValue.Insurance.OnerousRequirementsRisk),
-        
+        insuranceOnerousRequirementRiskCode: ensureString(
+          formValue.Insurance.OnerousRequirementsRisk
+        ),
+
         insuranceIsShortFallInCover: ensureString(formValue.Insurance.ShortfallInCover),
         insuranceShortFallInCover: ensureString(formValue.Insurance.ShortfallInCoverDetails),
         insuranceShortFallInCoverRiskCode: ensureString(formValue.Insurance.ShortfallInCoverRisk),
@@ -1933,22 +1961,37 @@ export class FormDetailComponent implements OnInit {
       Object.assign(baseForm, {
         otherPlantInvestmentRequirement: ensureString(formValue.OtherIssue.NewPlantDetails),
         otherPlantInvestmnetRequirementRiskCode: ensureString(formValue.OtherIssue.NewPlantRisk),
-        
+
         otherIsPFIPPP: ensureString(formValue.OtherIssue.PFIorPPPBid),
         otherPFIPPPRiskCode: ensureString(formValue.OtherIssue.pfiOrPPPBidRisk),
-        
+
         otherFinancingRequired: ensureString(formValue.OtherIssue.FinancingRequired),
         otherFinancingRequiredRiskCode: ensureString(formValue.OtherIssue.FinancingRequiredRisk),
-        
+
         otherForeignCurrency: ensureString(formValue.OtherIssue.ForeignCurrencyContentDetails),
         otherForeignCurrencyRiskCode: ensureString(formValue.OtherIssue.ForeignCurrencyContentRisk),
+      });
+    }
+
+    if (formValue['Consultant & Competitor']) {
+      Object.assign(baseForm, {
+        consultantCivilStructure: ensureString(formValue['Consultant & Competitor'].CivilStructuralDetails),
+        consultantCivilStructureRiskCode: ensureString(formValue['Consultant & Competitor'].CivilStructuralRisk),
+        consultantArchitect: ensureString(formValue['Consultant & Competitor'].ArchitectDetails),
+        consultantArchitectRiskCode: ensureString(formValue['Consultant & Competitor'].ArchitectRisk),
+        consultantEM: ensureString(formValue['Consultant & Competitor'].EMDetails),
+        consultantEMRiskCode: ensureString(formValue['Consultant & Competitor'].EMRisk),
+        consultantQuantitySurveyor: ensureString(formValue['Consultant & Competitor'].QuantitySurveyorDetails),
+        consultantQuantitySurveyorRiskCode: ensureString(formValue['Consultant & Competitor'].QuantitySurveyorRisk),
+        consultantOthers: ensureString(formValue['Consultant & Competitor'].OtherDetails),
+        consultantOthersRiskCode: ensureString(formValue['Consultant & Competitor'].OtherRisk),
+        competitor: ensureString(formValue['Consultant & Competitor'].competitorDetails),
       });
     }
 
     // Return the normalized form values
     return baseForm;
   }
-
 
   goBack(): void {
     this.router.navigate(['/pts20/forms']);
