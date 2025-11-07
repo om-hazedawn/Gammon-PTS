@@ -23,10 +23,8 @@ export interface SaveForm20 {
   JvPartner: string;
   jvAgreementId: number | null;
   distributionComDir: string[];
-  distributionDivComM: string[];
   distributionExeDir: string[];
   distributionFinDir: string[];
-  distributionCE: string[];
   distributionDir: string[];
   distributionGenC: string[];
   distributionInsMgr: string[];
@@ -183,36 +181,56 @@ export interface SaveForm20 {
   competitor: string;
 
   /*9th evaluation */
-  EvaluationCashFlow: string;
-  EvaluationComments: string;
-  EvaluationIsCashFlow: string;
-  EvaluationCompetition: string;
-  EvaluationPaymentTerm: string;
-  EvaluationTimeAllowed: string;
-  EvaluationBondGuarantee: string;
-  EvaluationIsCompetition: string;
-  EvaluationIsPaymentTerm: string;
-  EvaluationIsTimeAllowed: string; 
-  EvaluationSiteManagement: string;
-  EvaluationCompanyWorkload: string;
-  EvaluationIsBondGuarantee: string;
-  EvaluationConsultantRecord: string;
-  EvaluationIsSiteManagement: string;
-  EvaluationContractCondition: string;
-  EvaluationIsCompanyWorkload: string;
-  EvaluationIsContractCondition: string;
-  EvaluationValueExtendContract: string;
-  EvaluationClientFinancialStatus: string;
-  EvaluationIsValueExtendContract: string;
-  EvaluationPlantEquipmentRequired: string;
-  EvaluationHealthSafetyEnvironment: string;
-  EvaluationIsClientFinancialStatus: string;
-  EvaluationIsPlantEquipmentRequired: string;
-  EvaluationIsHealthSafetyEnvironment: string;
-  EvaluationEstimatingDepartmentWorkload: string;
-  EvaluationIsEstimatingDepartmentWorkload: string;
-  EvaluationIsConsultantRecord: string;
+  evaluationIsContractCondition: string;
+  evaluationContractCondition: string;
+
+  evaluationIsBondGuarantee: string;
+  evaluationBondGuarantee: string;
+
+  evaluationIsPlantEquipmentRequired: string;
+  evaluationPlantEquipmentRequired: string;
+
+  evaluationIsCompanyWorkload: string;
+  evaluationCompanyWorkload: string;
+
+  evaluationIsConsultantRecord: string;
+  evaluationConsultantRecord: string;
+
+  evaluationIsCompetition: string;
+  evaluationCompetition: string;
+
+  evaluationIsPaymentTerm: string;
+  evaluationPaymentTerm: string;
+
+  evaluationIsValueExtendContract: string;
+  evaluationValueExtendContract: string;
+
+  evaluationIsSiteManagement: string;
+  evaluationSiteManagement: string;
+
+  evaluationIsTimeAllowed: string;
+  evaluationTimeAllowed: string;
+
+  evaluationIsHealthSafetyEnvironment: string;
+  evaluationHealthSafetyEnvironment: string;
+
+  evaluationComments: string;
   
+  /*  10  */
+  distributionCE: ApprovalInfo[],
+  distributionDivComM: ApprovalInfo[],
+
+
+
+
+
+  CEApproval: ApprovalInfo[];
+  CMApproval: ApprovalInfo[];
+  EDApproval: ApprovalInfo[];
+  DirApproval: ApprovalInfo[];
+  HoEApproval: ApprovalInfo[];
+  
+
 
   Planner: string;
   Location: string;
@@ -236,22 +254,17 @@ export interface SaveForm20 {
   approximateValueRemark: string;
  
   ContractDamageRateUnit: string;
-  
- 
- 
- 
+
+  /* this field not found*/
+
+  evaluationCashFlow: string;
+  evaluationIsCashFlow: string;
+  evaluationClientFinancialStatus: string;
+  evaluationIsClientFinancialStatus: string;
+  EvaluationEstimatingDepartmentWorkload: string;
+  EvaluationIsEstimatingDepartmentWorkload: string;
 
   
- 
-  
- 
-  
-  
-  CEApproval: ApprovalInfo[];
-  CMApproval: ApprovalInfo[];
-  EDApproval: ApprovalInfo[];
-  DirApproval: ApprovalInfo[];
-  HoEApproval: ApprovalInfo[];
 }
 
 interface ApprovalInfo {

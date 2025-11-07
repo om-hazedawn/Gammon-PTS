@@ -1553,28 +1553,16 @@ export class FormDetailComponent implements OnInit {
       JvSplit: ensureString(formValue.JvSplit),
       JvPartner: ensureString(formValue.JvPartner),
       jvAgreementId: this.ensureNumber(formValue.JvAgreement),
+      Planner: ensureString(formValue.Planner),
+      Location: ensureString(formValue.Location),
+      TenderNo: ensureString(formValue.tenderNo),
+      Estimator: ensureString(formValue.Estimator),
+      BidManager: ensureString(formValue.BidManager),
+      clientName: ensureString(formValue.clientName),
+      Description: ensureString(formValue.BriefDescription),
+      approximateValueRemark: formValue.ApproximateValue || '',
 
-      // Distribution arrays with default values
-      distributionComDir: ['00001'],
-      distributionDivComM: ['00001'],
-      distributionExeDir: ['00001'],
-      distributionFinDir: ['00001'],
-      distributionCE: ['00001'],
-      distributionDir: ['00001'],
-      distributionGenC: ['00001'],
-      distributionInsMgr: ['00001'],
-      distributionProc: ['00001'],
-      distributionRiskOpp: ['00001'],
-      distributionLambeth: ['00001'],
-      distributionHSEQ: ['00001'],
-      distributionBidMgr: [],
-
-      // Approval arrays with empty default objects
-      CEApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
-      CMApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
-      EDApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
-      DirApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
-      HoEApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
+    
 
       // Nullable numeric fields
       approximateValue: approximateVal, // Send validated decimal value
@@ -1723,67 +1711,88 @@ export class FormDetailComponent implements OnInit {
       consultantOthersRiskCode: '',
       competitor: '',
 
-      Planner: ensureString(formValue.Planner),
-      Location: ensureString(formValue.Location),
-      TenderNo: ensureString(formValue.tenderNo),
-      Estimator: ensureString(formValue.Estimator),
+      /*9th evaluation page*/
+      evaluationIsContractCondition: '',
+      evaluationContractCondition: '',
 
-      BidManager: ensureString(formValue.BidManager),
-      clientName: ensureString(formValue.clientName),
+      evaluationIsBondGuarantee: '',
+      evaluationBondGuarantee: '',
+
+      evaluationIsPlantEquipmentRequired: '',
+      evaluationPlantEquipmentRequired: '',
+
+      evaluationIsCompanyWorkload: '',
+      evaluationCompanyWorkload: '',
+
+      evaluationIsConsultantRecord: '',
+      evaluationConsultantRecord: '',
+
+      evaluationIsCompetition: '',
+      evaluationCompetition: '',
+
+      evaluationIsPaymentTerm: '',
+      evaluationPaymentTerm: '',
+
+      evaluationIsValueExtendContract: '',
+      evaluationValueExtendContract: '',
+
+      evaluationIsSiteManagement: '',
+      evaluationSiteManagement: '',
+
+      evaluationIsTimeAllowed: '',
+      evaluationTimeAllowed: '',
+
+      evaluationIsHealthSafetyEnvironment: '',
+      evaluationHealthSafetyEnvironment: '',
+
+      evaluationComments: '',
+
+      /* 10th Distribution page*/
+      distributionCE: [],
+      distributionDivComM: [],
+
+
+
+      CEApproval: [],
+
+        // Distribution arrays with default values
+      distributionComDir: ['00001'],
+      distributionExeDir: ['00001'],
+      distributionFinDir: ['00001'],
+      distributionDir: ['00001'],
+      distributionGenC: ['00001'],
+      distributionInsMgr: ['00001'],
+      distributionProc: ['00001'],
+      distributionRiskOpp: ['00001'],
+      distributionLambeth: ['00001'],
+      distributionHSEQ: ['00001'],
+      distributionBidMgr: [],
+
+      // Approval arrays with empty default objects
       
-      Description: ensureString(formValue.BriefDescription),
+      CMApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
+      EDApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
+      DirApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
+      HoEApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
 
 
+      
       CompetitorRiskCode: '',
-      EvaluationCashFlow: '',
-      EvaluationComments: '',
-      EvaluationIsCashFlow: '',
-      EvaluationCompetition: '',
-      EvaluationPaymentTerm: '',
-      EvaluationTimeAllowed: '',
       PaymentPeriodRiskCode: '',
-      approximateValueRemark: formValue.ApproximateValue || '',
+      
       ContractDamageRateUnit: '',
-      EvaluationBondGuarantee: '',
-      EvaluationIsCompetition: '',
-      EvaluationIsPaymentTerm: '',
-      EvaluationIsTimeAllowed: '',
-      
-      
-      EvaluationSiteManagement: '',
-      EvaluationCompanyWorkload: '',
-      EvaluationIsBondGuarantee: '',
-      
-      EvaluationConsultantRecord: '',
-      EvaluationIsSiteManagement: '',
-      
-
-      EvaluationContractCondition: '',
-      EvaluationIsCompanyWorkload: '',
       paymentCertificationRiskCode: '',
       paymentRetentionAmountRemark: '',
-      EvaluationIsContractCondition: '',
-      EvaluationValueExtendContract: '',
       paymentRetentionLimitRiskCode: '',
-
       PaymentCertificationPeriodUnit: '',
-      EvaluationClientFinancialStatus: '',
-      EvaluationIsValueExtendContract: '',
-
-      
-      EvaluationPlantEquipmentRequired: '',
       paymentCertificationPeriodRemark: '',
-      EvaluationHealthSafetyEnvironment: '',
-      EvaluationIsClientFinancialStatus: '',
-      
-      EvaluationIsPlantEquipmentRequired: '',
-      EvaluationIsHealthSafetyEnvironment: '',
-      EvaluationEstimatingDepartmentWorkload: '',
 
-      EvaluationIsEstimatingDepartmentWorkload: '',
-
-      // Missing evaluation "Is" fields
-      EvaluationIsConsultantRecord: '',
+      evaluationCashFlow:'',
+      evaluationIsCashFlow:'',
+      evaluationClientFinancialStatus:'',
+      evaluationIsClientFinancialStatus:'',
+      EvaluationEstimatingDepartmentWorkload:'',
+      EvaluationIsEstimatingDepartmentWorkload:'',
     };
 
     // Apply any contract form group values
@@ -1975,21 +1984,88 @@ export class FormDetailComponent implements OnInit {
 
     if (formValue['Consultant & Competitor']) {
       Object.assign(baseForm, {
-        consultantCivilStructure: ensureString(formValue['Consultant & Competitor'].CivilStructuralDetails),
-        consultantCivilStructureRiskCode: ensureString(formValue['Consultant & Competitor'].CivilStructuralRisk),
+        consultantCivilStructure: ensureString(
+          formValue['Consultant & Competitor'].CivilStructuralDetails
+        ),
+        consultantCivilStructureRiskCode: ensureString(
+          formValue['Consultant & Competitor'].CivilStructuralRisk
+        ),
         consultantArchitect: ensureString(formValue['Consultant & Competitor'].ArchitectDetails),
-        consultantArchitectRiskCode: ensureString(formValue['Consultant & Competitor'].ArchitectRisk),
+        consultantArchitectRiskCode: ensureString(
+          formValue['Consultant & Competitor'].ArchitectRisk
+        ),
         consultantEM: ensureString(formValue['Consultant & Competitor'].EMDetails),
         consultantEMRiskCode: ensureString(formValue['Consultant & Competitor'].EMRisk),
-        consultantQuantitySurveyor: ensureString(formValue['Consultant & Competitor'].QuantitySurveyorDetails),
-        consultantQuantitySurveyorRiskCode: ensureString(formValue['Consultant & Competitor'].QuantitySurveyorRisk),
+        consultantQuantitySurveyor: ensureString(
+          formValue['Consultant & Competitor'].QuantitySurveyorDetails
+        ),
+        consultantQuantitySurveyorRiskCode: ensureString(
+          formValue['Consultant & Competitor'].QuantitySurveyorRisk
+        ),
         consultantOthers: ensureString(formValue['Consultant & Competitor'].OtherDetails),
         consultantOthersRiskCode: ensureString(formValue['Consultant & Competitor'].OtherRisk),
         competitor: ensureString(formValue['Consultant & Competitor'].competitorDetails),
       });
     }
 
-    // Return the normalized form values
+    if (formValue.Evaluation) {
+      Object.assign(baseForm, {
+      evaluationIsContractCondition: ensureString(formValue.Evaluation.AcceptibilityRadio),
+      evaluationContractCondition: ensureString(formValue.Evaluation.AcceptibilityRemark),
+
+      evaluationIsBondGuarantee: ensureString(formValue.Evaluation.BondandGuaranteesRadio),
+      evaluationBondGuarantee: ensureString(formValue.Evaluation.BondandGuaranteesRemark),
+
+      evaluationIsPlantEquipmentRequired: ensureString(formValue.Evaluation.PlantEquipmentRadio),
+      evaluationPlantEquipmentRequired: ensureString(formValue.Evaluation.PlantEquipmentRemark),
+
+      evaluationIsCompanyWorkload: ensureString(formValue.Evaluation.CurrentWorkloadRadio),
+      evaluationCompanyWorkload: ensureString(formValue.Evaluation.CurrentWorkloadRemark),
+
+      evaluationIsConsultantRecord: ensureString(formValue.Evaluation.previousRecordRadio),
+      evaluationConsultantRecord: ensureString(formValue.Evaluation.previousRecordRemark),
+
+      evaluationIsCompetition: ensureString(formValue.Evaluation.CompetitionRadio),
+      evaluationCompetition: ensureString(formValue.Evaluation.CompetitionRemark),
+
+      evaluationIsPaymentTerm: ensureString(formValue.Evaluation.PaymentTermsRadio),
+      evaluationPaymentTerm: ensureString(formValue.Evaluation.PaymentTermsRemark),
+
+      evaluationIsValueExtendContract: ensureString(formValue.Evaluation.ContractValueRadio),
+      evaluationValueExtendContract: ensureString(formValue.Evaluation.ContractValueRemark),
+
+      evaluationIsSiteManagement: ensureString(formValue.Evaluation.SiteManagementRadio),
+      evaluationSiteManagement: ensureString(formValue.Evaluation.SiteManagementRemark),
+
+      evaluationIsTimeAllowed: ensureString(formValue.Evaluation.TimeAllowedRadio),
+      evaluationTimeAllowed: ensureString(formValue.Evaluation.TimeAllowedRemark),
+
+      evaluationIsHealthSafetyEnvironment: ensureString(formValue.Evaluation.HealthSafetyEnvironmentRadio),
+      evaluationHealthSafetyEnvironment: ensureString(formValue.Evaluation.HealthSafetyEnvironmentRemark),
+
+      evaluationComments: ensureString(formValue.Evaluation.EvaluationComments),
+      });
+    }
+
+    if (formValue.Distribution) {
+      Object.assign(baseForm, {
+        distributionCE: formValue.Distribution.ChiefExecutive || [],
+        distributionExeDir: formValue.Distribution.ExecutiveDirector || [],
+        distributionDir: formValue.Distribution.Director || [],
+        distributionBidMgr: formValue.Distribution.BidManager || [],
+        distributionFinDir: formValue.Distribution.FinanceDirector || [],
+        distributionComDir: formValue.Distribution.CommercialDirector || [],
+        distributionGenC: formValue.Distribution.GeneralCounselLegal || [],
+        distributionDivComM: formValue.Distribution.DivisionCommercialManager || [],
+        distributionInsMgr: formValue.Distribution.InsuranceManager || [],
+        distributionLambeth: formValue.Distribution.HeadofLambeth || [],
+        distributionProc: formValue.Distribution.HeadOfProcurement || [],
+        distributionRiskOpp: formValue.Distribution.RiskOpportunityManager || [],
+        distributionHSEQ: formValue.Distribution.HSEQ || [],
+      });
+    }
+
+
     return baseForm;
   }
 
