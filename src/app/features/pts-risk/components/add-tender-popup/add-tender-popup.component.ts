@@ -14,24 +14,24 @@ import { TenderListApiService } from '../../../../core/services/tender-list-api.
 import { TenderAttachmentApiService } from '../../../../core/services/tenderAttchemnt-api.service';
 import {
   BusinessUnitApiService,
-  BusinessUnit,
 } from '../../../../core/services/business-unit-api.service';
+import { BusinessUnit } from '../../../../model/entity/pts-risk/business-unit';
 import {
   CurrencyListApiService,
-  Currency,
 } from '../../../../core/services/currency-list-api.service';
+import { Currency } from '../../../../model/entity/pts-risk/currency-list';
 import {
   GammonEntityApiService,
-  GammonEntity,
 } from '../../../../core/services/gammon-entity-api.service';
+import { GammonEntity } from '../../../../model/entity/pts-risk/gammon-entity';
 import {
   RiskAssessmentCriteriaApiService,
-  RiskAssessmentCriteria,
 } from '../../../../core/services/risk-assessment-criteria-api.service';
+import { RiskAssessmentCriteria } from '../../../../model/entity/pts-risk/risk-assessment-criteria';
 import {
   PriorityLevelListApiService,
-  PriorityLevel,
 } from '../../../../core/services/priority-level-list-api.service';
+import { PriorityLevel } from "../../../../model/entity/pts-risk/priority-level-list";
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,

@@ -8,9 +8,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar,MatSnackBarModule } from '@angular/material/snack-bar';
 import { RiskAssessmentCriteriaListPopupComponent } from '../risk-assessment-criteria-listpopup/risk-assessment-criteria-listpopup.component';
 import {
-  RiskAssessmentCriteria,
   RiskAssessmentCriteriaApiService,
 } from '../../../../core/services/risk-assessment-criteria-api.service';
+import { RiskAssessmentCriteria } from '../../../../model/entity/pts-risk/risk-assessment-criteria';
 @Component({
   selector: 'app-risk-assessment-criteria-list',
   standalone: true,

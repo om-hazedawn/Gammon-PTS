@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { RiskAssessmentCriteria } from '../../../../core/services/risk-assessment-criteria-api.service';
+import { RiskAssessmentCriteria } from '../../../../model/entity/pts-risk/risk-assessment-criteria';
 import {
   ReactiveFormsModule,
   FormBuilder,

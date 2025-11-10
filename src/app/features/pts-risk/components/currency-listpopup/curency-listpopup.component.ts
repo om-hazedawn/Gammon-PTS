@@ -1,7 +1,7 @@
 import { Component,Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MatDialogModule,MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Currency } from '../../../../core/services/currency-list-api.service';
+import { Currency } from '../../../../model/entity/pts-risk/currency-list';
 import {
   ReactiveFormsModule,
   FormBuilder,

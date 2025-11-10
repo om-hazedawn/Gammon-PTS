@@ -2,15 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-export type KeyDateType = 'Commercial Reviewed on' | 'Financial Reviewed on' | 'Legal Reviewed on' | 'EXCO Meeting on' | 'CTC Meeting on' | 'GTC Meeting on' | 'BB Board & JP Fin Com on';
-export interface TenderKeyDate {
-  id: number;
-  tenderId: number;
-  type: KeyDateType;
-  keyDate: string;
-  remark: string;
-}
+import { CreateKeyDateRequest } from '../../model/entity/pts-risk/CreateKeyDateRequest';
+import { TenderKeyDate } from '../../model/entity/pts-risk/tenderkeydate';
 
 interface ApiResponse<T> {
   data: T;
@@ -18,12 +11,6 @@ interface ApiResponse<T> {
   message: string | null;
 }
 
-export interface CreateKeyDateRequest {
-  id: number; 
-  type: KeyDateType;
-  keyDate: string;
-  remark: string;
-}
 
 @Injectable({
   providedIn: 'root'

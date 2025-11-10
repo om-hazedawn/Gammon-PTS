@@ -15,7 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
-import { SystemConfig } from '../../../../core/services/system-config-api.service';
+import { SystemConfig } from '../../../../model/entity/pts-risk/system-config';
 
 @Component({
   selector: '',

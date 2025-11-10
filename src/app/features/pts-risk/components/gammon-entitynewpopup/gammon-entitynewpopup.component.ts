@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { GammonEntity } from '../../../../core/services/gammon-entity-api.service';
+import { GammonEntity } from '../../../../model/entity/pts-risk/gammon-entity';
 import {
   ReactiveFormsModule,
   FormBuilder,

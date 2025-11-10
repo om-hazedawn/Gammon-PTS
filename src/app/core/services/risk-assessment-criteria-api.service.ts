@@ -3,19 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-
-export interface RiskAssessmentCriteria {
-  id: number;
-  code: string;
-  title: string;
-  seqNo: number;
-  createdBy: string;
-  createdOn: string;
-  lastModifiedBy: string;
-  lastModifiedOn: string;
-  status: string;
-}
-
+import { RiskAssessmentCriteria } from '../../model/entity/pts-risk/risk-assessment-criteria';
 interface RiskAssessmentCriteriaApiResponse {
   data: RiskAssessmentCriteria[];
 }

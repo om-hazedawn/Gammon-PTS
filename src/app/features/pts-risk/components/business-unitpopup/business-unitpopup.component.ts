@@ -15,7 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
-import { BusinessUnit } from '../../../../core/services/business-unit-api.service';
+import { BusinessUnit } from '../../../../model/entity/pts-risk/business-unit';
 
 @Component({
   selector: '',

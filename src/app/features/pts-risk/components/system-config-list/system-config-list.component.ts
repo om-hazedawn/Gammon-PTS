@@ -8,9 +8,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SystemConfigPopupComponent } from '../system-config-list-popup/system-config-popup.component';
 import {
-  SystemConfig,
   SystemConfigApiService,
 } from '../../../../core/services/system-config-api.service';
+import { SystemConfig } from '../../../../model/entity/pts-risk/system-config';
 @Component({
   selector: 'app-system-config-list',
   standalone: true,

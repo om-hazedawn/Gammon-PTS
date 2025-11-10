@@ -3,18 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-
-export interface BusinessUnit {
-  id: number;
-  name: string;
-  shortName: string;
-  tailThreshold: number;
-  createdBy: string;
-  createdOn: string;
-  lastModifiedBy: string;
-  lastModifiedOn: string;
-  status: string;
-}
+import { BusinessUnit } from '../../model/entity/pts-risk/business-unit';
 
 
 interface BusinessApiResponse {

@@ -22,18 +22,7 @@ export interface SaveForm20 {
   JvSplit: string;
   JvPartner: string;
   jvAgreementId: number | null;
-  distributionComDir: string[];
-  distributionExeDir: string[];
-  distributionFinDir: string[];
-  distributionDir: string[];
-  distributionGenC: string[];
-  distributionInsMgr: string[];
-  distributionProc: string[];
-  distributionRiskOpp: string[];
-  distributionLambeth: string[];
-  distributionHSEQ: string[];
-  businessUnitCode: string;
-  distributionBidMgr: string[];
+  
   Status: string;
 
   //page 2 
@@ -217,8 +206,20 @@ export interface SaveForm20 {
   evaluationComments: string;
   
   /*  10  */
-  distributionCE: ApprovalInfo[],
-  distributionDivComM: ApprovalInfo[],
+  distributionCE: [],
+  distributionDivComM: [],
+  distributionComDir: string[];
+  distributionExeDir: string[];
+  distributionFinDir: string[];
+  distributionDir: string[];
+  distributionGenC: string[];
+  distributionInsMgr: string[];
+  distributionProc: string[];
+  distributionRiskOpp: string[];
+  distributionLambeth: string[];
+  distributionHSEQ: string[];
+  businessUnitCode: string;
+  distributionBidMgr: string[];
 
 
 

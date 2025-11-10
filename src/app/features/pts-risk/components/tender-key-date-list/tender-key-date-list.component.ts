@@ -5,7 +5,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { TenderKeyDateApiService, TenderKeyDate } from '../../../../core/services/tender.keydate-api.service';
+import { TenderKeyDateApiService} from '../../../../core/services/tender.keydate-api.service';
+import { TenderKeyDate } from '../../../../model/entity/pts-risk/tenderkeydate';
 import { TenderKeyDateComponent } from '../tender-key-date/tender-key-date.component';
 
 @Component({

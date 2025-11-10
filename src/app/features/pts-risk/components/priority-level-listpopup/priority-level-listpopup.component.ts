@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PriorityLevel } from '../../../../core/services/priority-level-list-api.service';
+import { PriorityLevel } from '../../../../model/entity/pts-risk/priority-level-list';
 import {
   ReactiveFormsModule,
   FormBuilder,

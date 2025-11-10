@@ -3,19 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-
-export interface SystemConfig {
-  id: number;
-  key: string;
-  description: string;
-  value: string;
-  createdBy: string;
-  createdOn: string;
-  lastModifiedBy: string;
-  lastModifiedOn: string;
-  status: string;
-}
-
+import { SystemConfig } from '../../model/entity/pts-risk/system-config';
 interface SystemConfigApiResponse {
   data: SystemConfig[];
 }

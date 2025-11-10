@@ -8,9 +8,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CurrencyListPopupComponent } from '../currency-listpopup/curency-listpopup.component';
 import {
-  Currency,
   CurrencyListApiService,
 } from '../../../../core/services/currency-list-api.service';
+import { Currency } from '../../../../model/entity/pts-risk/currency-list';
 @Component({
   selector: 'app-currency-list',
   standalone: true,

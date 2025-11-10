@@ -7,8 +7,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { BusinessUnitPopupComponent } from '../business-unitpopup/business-unitpopup.component';
-import { BusinessUnit, BusinessUnitApiService } from '../../../../core/services/business-unit-api.service';
-
+import { BusinessUnitApiService } from '../../../../core/services/business-unit-api.service';
+import { BusinessUnit } from '../../../../model/entity/pts-risk/business-unit';
 @Component({
   selector: 'app-business-unit-list',
   standalone: true,

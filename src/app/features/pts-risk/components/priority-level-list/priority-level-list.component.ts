@@ -8,9 +8,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PriorityLevelListPopupComponent } from '../priority-level-listpopup/priority-level-listpopup.component';
 import {
-  PriorityLevel,
   PriorityLevelListApiService,
 } from '../../../../core/services/priority-level-list-api.service';
+import { PriorityLevel } from '../../../../model/entity/pts-risk/priority-level-list';
 @Component({
   selector: 'app-priority-level-list',
   standalone: true,

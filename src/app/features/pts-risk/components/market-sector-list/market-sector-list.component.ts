@@ -9,8 +9,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {
   MarketSectorListApiService,
-  MarketSector,
 } from '../../../../core/services/market-sector-list.api.service';
+import { MarketSector } from '../../../../model/entity/pts-risk/market-sector-list';
 import { MarketSectorListPopupComponent } from '../market-sector-list-popup/market-sector-list-popup.component';
 @Component({
   selector: 'app-market-sector-list',

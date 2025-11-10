@@ -3,18 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-
-export interface PriorityLevel {
-  id: number;
-  title: string;
-  ranking: number;
-  createdBy: string;
-  createdOn: string;
-  lastModifiedBy: string;
-  lastModifiedOn: string;
-  status: string;
-}
-
+import { PriorityLevel } from '../../model/entity/pts-risk/priority-level-list';
 interface PriorityLevelApiResponse {
   data: PriorityLevel[];
 }

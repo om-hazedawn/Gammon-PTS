@@ -15,7 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
-import { MarketSector } from '../../../../core/services/market-sector-list.api.service';
+import { MarketSector } from '../../../../../app/model/entity/pts-risk/market-sector-list';
 
 @Component({
   selector: 'app-market-sector-list-popup',

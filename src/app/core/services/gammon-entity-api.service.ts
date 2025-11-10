@@ -3,18 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-
-export interface GammonEntity {
-  id: number;
-  name: string;
-  shortName: string;
-  createdBy: string;
-  createdOn: string;
-  lastModifiedBy: string;
-  lastModifiedOn: string;
-  status: string;
-}
-
+import { GammonEntity } from '../../model/entity/pts-risk/gammon-entity';
 interface ApiResponse<T> {
   data: T;
 }

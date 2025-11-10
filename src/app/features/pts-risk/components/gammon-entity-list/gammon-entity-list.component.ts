@@ -9,8 +9,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { GammonEntitynewpopupComponent } from '../gammon-entitynewpopup/gammon-entitynewpopup.component';
 import {
   GammonEntityApiService,
-  GammonEntity,
 } from '../../../../core/services/gammon-entity-api.service';
+import { GammonEntity } from '../../../../model/entity/pts-risk/gammon-entity';
 @Component({
   selector: 'app-gammon-entity-list',
   standalone: true,

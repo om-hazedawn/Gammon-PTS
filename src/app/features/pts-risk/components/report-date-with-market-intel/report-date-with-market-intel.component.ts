@@ -9,8 +9,9 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { finalize } from 'rxjs';
-import { TenderItem } from '../../../../core/services/tender-list-api.service';
-import { TenderListApiService, UpdateTenderMarketIntelligenceRequest } from '../../../../core/services/tender-list-api.service';
+import { TenderItem } from '../../../../model/entity/pts-risk/TenderItem';
+import { TenderListApiService } from '../../../../core/services/tender-list-api.service';
+import { UpdateTenderMarketIntelligenceRequest } from '../../../../model/entity/pts-risk/UpdateTenderMarketIntelligenceRequest';
 import { AlertDialog } from '../alert-dialog/alert-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
 

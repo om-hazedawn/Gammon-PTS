@@ -1,0 +1,1 @@
+export type KeyDateType = 'Commercial Reviewed on' | 'Financial Reviewed on' | 'Legal Reviewed on' | 'EXCO Meeting on' | 'CTC Meeting on' | 'GTC Meeting on' | 'BB Board & JP Fin Com on';
