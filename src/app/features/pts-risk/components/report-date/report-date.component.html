@@ -1,9 +1,9 @@
 <h1 mat-dialog-title>Report Date</h1>
 <div mat-dialog-content>
     <mat-card class="edit-base-card">
-        <div fxLayoutAlign="start center" fxLayoutGap="20px">
-            <div fxFlex="30">Report Date:</div>
-            <mat-form-field fxFlex="70" >
+        <div style="display: flex; align-items: center; margin-bottom: 16px;">
+            <div style="flex: 30%;">Report Date:</div>
+            <mat-form-field style="flex: 70%;">
                 <input matInput [matDatepicker]="picker" readonly [formControl]="reportdateFC">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>

@@ -1,6 +1,5 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { TenderKeyDateComponent } from '../tender-key-date/tender-key-date.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TenderListApiService, TenderItem, TenderSorted } from '../../../../core/services/tender-list-api.service';
@@ -122,7 +121,16 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
             <!-- Response Column -->
             <ng-container matColumnDef="response">
               <th mat-header-cell *matHeaderCellDef>Response</th>
-              <td mat-cell *matCellDef="let element">{{ element.standardResponsePriorityLevel?.title }}</td>
+              <td mat-cell *matCellDef="let element">
+                <div style="display:flex; gap:6px;">
+                  <span style="flex: 0 0 80%;">{{ element.standardResponsePriorityLevel?.title }}</span>
+                  <span class="ud-icon" style="flex: 0 0 20%; display:flex; gap:4px; justify-content: flex-end; align-items: center;">
+                    <mat-icon *ngIf="isUpgrade(element)">arrow_upward</mat-icon>
+                    <mat-icon *ngIf="isDowngrade(element)">arrow_downward</mat-icon>
+                    <mat-icon *ngIf="isLevel(element)">swap_horiz</mat-icon>
+                  </span>
+                </div>
+              </td>
             </ng-container>
 
             <!-- Up/Downgrade Column -->
@@ -437,9 +445,10 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private tenderListApiService: TenderListApiService
   ) {}
+
   tenderSort: TenderSorted = {
     column: '',
-    order: 'asc',
+    order: 'desc',
     pageSize: this.pageSize,
     page: this.currentPage,
   };
@@ -482,7 +491,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       console.log('AddTenderPopup closed with result:', result);
       if (result) {
         // Refresh the table
-        this.loadTenders({ page: this.currentPage, pageSize: this.pageSize });
+        this.refreshDataSource();
       }
     });
   }
@@ -512,7 +521,6 @@ export class TenderListComponent implements OnInit, AfterViewInit {
         // Refresh the table while maintaining pagination
         const currentData = [...this.dataSource.data];
         this.dataSource = new MatTableDataSource<TenderItem>(currentData);
-        this.dataSource.paginator = this.paginator;
       }
     });
   }
@@ -621,26 +629,6 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     'form20',
   ];
 
-  loadTenders(tenderSorted: TenderSorted) {
-    this.isLoading = true;
-    // Fetch all data at once using pageSize=-1
-    this.tenderListApiService.getTenderPageSorted(tenderSorted).subscribe({
-      next: (response) => {
-        if (response.totalCount > 0) {
-          const items = response.items ?? [];
-          this.dataSource.data = items;
-          this.totalItems = response.totalCount ?? items.length;
-        }
-      },
-      error: (error) => {
-        console.error('Error loading tenders:', error);
-      },
-      complete: () => {
-        this.isLoading = false;
-      }
-    });
-  }
-
   exportExcel(): void {
     this.tenderListApiService.exportTenderExcel().subscribe(
       (response: Blob) => {
@@ -661,16 +649,16 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   handlePageEvent(event: any) {
     this.pageSize = event.pageSize;
     this.currentPage = event.pageIndex + 1;
-    this.loadTenders({ page: this.currentPage, pageSize: this.pageSize });
     this.tenderSort = {
       ...this.tenderSort,
       page: this.currentPage,
       pageSize: this.pageSize,
     };
+    this.refreshDataSource();
   }
 
   ngOnInit() {
-    this.loadTenders({ page: this.currentPage, pageSize: this.pageSize });
+    this.refreshDataSource();
   }
 
   changeStatus($event: MouseEvent, tenderStatus: string, element: TenderItem) {
@@ -785,7 +773,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       .getTenderPageSorted(this.tenderSort)
       .subscribe((response) => {
         const list: TenderItem[] = response.items ?? [];
-
+        this.totalItems = response.totalCount ?? list.length;
         this.dataSource.data = list.filter((tender: TenderItem) => this._filter(tender));
 
         this.divisionList = list.reduce(
@@ -888,7 +876,6 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
   }
 
   stopPropagation(event: Event) {
@@ -1000,6 +987,42 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     // if (checker === true) console.log('checker', checker);
     return checker;
     // return true;
+  }
+
+  isUpgrade(tender: TenderItem): boolean {
+    const sr = tender.standardResponsePriorityLevel?.ranking;
+    const ud = tender.upgradeDowngradePriorityLevel?.ranking;
+
+    if (sr === undefined || ud === undefined || ud === -1) return false;
+    if (sr === ud) return false;
+    if (sr < ud) return true;
+
+    return false;
+  }
+
+  isDowngrade(tender: TenderItem): boolean {
+    const sr = tender.standardResponsePriorityLevel?.ranking;
+    const ud = tender.upgradeDowngradePriorityLevel?.ranking;
+
+    if (sr === undefined || ud === undefined || ud === -1) return false;
+    if (sr === ud) return false;
+    if (sr > ud) return true;
+
+    return false;
+  }
+
+  isLevel(tender: TenderItem): boolean {
+    if (tender.upgradeDowngradePriorityLevel?.ranking === -1) return true;
+
+    if (!this.isUpgrade(tender) && !this.isDowngrade(tender)) {
+      if (
+        tender.upgradeDowngradePriorityLevelId !== undefined &&
+        (tender.upgradeDowngradePriorityLevelId ?? 0) > 0
+      )
+        return true;
+      return false;
+    }
+    return false;
   }
 }
 

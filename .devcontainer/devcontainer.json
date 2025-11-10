@@ -8,10 +8,10 @@
   },
   "features": {},
   "mounts": [
-    "source=/home/orca/.gitconfig,target=/root/.gitconfig,type=bind,consistency=cached",
-    "source=/home/orca/.gnupg,target=/root/.gnupg,type=bind,consistency=cached",
-    "source=/home/orca/.azure,target=/root/.azure,type=bind,consistency=cached",
-    "source=/home/orca/.bashrc,target=/root/.bashrc,type=bind,consistency=cached"
+    "source=/home/orca/.gitconfig,target=/home/node/.gitconfig,type=bind,consistency=cached",
+    "source=/home/orca/.gnupg,target=/home/node/.gnupg,type=bind,consistency=cached",
+    "source=/home/orca/.azure,target=/home/node/.azure,type=bind,consistency=cached",
+    "source=/home/orca/.bashrc,target=/home/node/.bashrc,type=bind,consistency=cached"
   ],
   "postCreateCommand": "npm install && npm install -g @angular/cli",
   "customizations": {
