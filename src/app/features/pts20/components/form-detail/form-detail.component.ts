@@ -356,7 +356,7 @@ export class FormDetailComponent implements OnInit {
     businessUnit: 'Business Unit',
     projectTitle: 'Project Title',
     tenderNo: 'Tender Number',
-    Location: 'Location',
+    location: 'Location',
     BriefDescription: 'Brief Description',
     contract: 'Contract Details',
     payment: 'Payment Details',
@@ -461,7 +461,7 @@ export class FormDetailComponent implements OnInit {
 
       maintenanceType: [''],
       maintenanceValue: [''],
-      maintenanceStatus: [''],
+      maintenanceStatus1: [''],
 
       // Contract Period fields
       contractPeriodValue: [''],
@@ -850,7 +850,8 @@ export class FormDetailComponent implements OnInit {
       ApproximateValueType: formData.currencyId,
       ApproximateValueInput: formData.approximateValue, // Map approximate value to input field
       maintenanceType: this.ensureNumber(formData.maintenanceDefectId),
-
+      maintenanceStatus1: this.ensureString(formData.maintenanceDefectUnit),
+      maintenanceValue: this.ensureNumber(formData.maintenanceDefectPeriod),
       periodUnit: formData.periodUnit || '',
       period: this.ensureNumber(formData.period),
 
@@ -1344,8 +1345,6 @@ export class FormDetailComponent implements OnInit {
   private processFormSubmission(): void {
     const normalizedValue = this.normalizeFormValues(this.formGroup.value);
 
-    // Update status for final submission
-    normalizedValue.Status = 'Submitted';
 
     // For edit mode, ensure we have the correct ID
     if (this.formId) {
@@ -1373,7 +1372,7 @@ export class FormDetailComponent implements OnInit {
       const normalizedValue = this.normalizeFormValues(this.formGroup.value);
 
       // Set status as Draft
-      normalizedValue.Status = 'Draft';
+      normalizedValue.status = 'Draft';
 
       // Add form ID if in edit mode
       if (this.formId) {
@@ -1491,30 +1490,30 @@ export class FormDetailComponent implements OnInit {
     // Create base object with required fields and default values
     const baseForm: SaveForm20 = {
       id: this.formId || 0,
-      businessUnitId: toNumberOrNull(formValue.businessUnit),
       title: formValue.projectTitle,
       businessUnitCode: formValue.businessUnit,
-      Status: 'Draft',
+      status: 'Draft',
       maintenanceDefectId: this.ensureNumber(formValue.maintenanceType),
       periodUnit: formValue.contractPeriodUnit,
       period: toNumberOrNull(formValue.contractPeriodValue),
       periodDetail: formValue.ComplexContractPeriod || '',
-      ContractPeriod: formValue.contractPeriodUnit || '',
       isMarkingScheme: formValue.TenderMarketScheme || '',
       splitValueId: this.ensureNumber(formValue.FinancialTechnicalSplitValue),
       bidTypeId: this.ensureNumber(formValue.BidType),
-      JvSplit: ensureString(formValue.JvSplit),
-      JvPartner: ensureString(formValue.JvPartner),
+      jvSplit: ensureString(formValue.JvSplit),
+      jvPartner: ensureString(formValue.JvPartner),
       jvAgreementId: this.ensureNumber(formValue.JvAgreement),
-      Planner: ensureString(formValue.Planner),
-      Location: ensureString(formValue.Location),
-      TenderNo: ensureString(formValue.tenderNo),
-      Estimator: ensureString(formValue.Estimator),
+      planner: ensureString(formValue.Planner),
+      location: ensureString(formValue.Location),
+      tenderNo: ensureString(formValue.tenderNo),
+      estimator: ensureString(formValue.Estimator),
       bidManager: ensureString(formValue.BidManager),
       clientName: ensureString(formValue.clientName),
-      Description: ensureString(formValue.BriefDescription),
+      description: ensureString(formValue.BriefDescription),
       approximateValueRemark: formValue.ApproximateValue || '',
-
+      form30Id: formValue.form30Id,
+      maintenanceDefectPeriod: toNumberOrNull(formValue.maintenanceValue),
+      maintenanceDefectUnit: ensureString(formValue.maintenanceStatus1),
       // Nullable numeric fields
       approximateValue: approximateVal, // Send validated decimal value
       profitMargin: formValue.Approxmargin,
@@ -1548,8 +1547,6 @@ export class FormDetailComponent implements OnInit {
       contractDFMARiskCode: '',
 
       /* Page 3  payment value */
-      maintenanceDefectPeriod: null,
-      maintenanceDefectUnit: '',
       paymentCertificationPeriod: null,
       paymentRetentionAmount: null,
       paymentRetentionRiskCode: '',
@@ -1770,22 +1767,22 @@ export class FormDetailComponent implements OnInit {
         },
       ],
 
-      CompetitorRiskCode: '',
-      PaymentPeriodRiskCode: '',
+      competitorRiskCode: '',
+      paymentPeriodRiskCode: '',
 
-      ContractDamageRateUnit: '',
+      contractDamageRateUnit: '',
       paymentCertificationRiskCode: '',
       paymentRetentionAmountRemark: '',
       paymentRetentionLimitRiskCode: '',
-      PaymentCertificationPeriodUnit: '',
+      paymentCertificationPeriodUnit: '',
       paymentCertificationPeriodRemark: '',
 
       evaluationCashFlow: '',
       evaluationIsCashFlow: '',
       evaluationClientFinancialStatus: '',
       evaluationIsClientFinancialStatus: '',
-      EvaluationEstimatingDepartmentWorkload: '',
-      EvaluationIsEstimatingDepartmentWorkload: '',
+      evaluationEstimatingDepartmentWorkload: '',
+      evaluationIsEstimatingDepartmentWorkload: '',
     };
 
     // Apply any contract form group values
@@ -1820,10 +1817,8 @@ export class FormDetailComponent implements OnInit {
     // Apply any payment form group values
     if (formValue.payment) {
       Object.assign(baseForm, {
-        maintenanceDefectPeriod: this.ensureNumber(formValue.maintenanceValue),
-        maintenanceDefectUnit: formValue.maintenanceStatus,
         paymentCertificationPeriod: toNumberOrNull(formValue.payment.Period),
-        PaymentCertificationPeriodUnit: ensureString(formValue.payment.Months),
+        paymentCertificationPeriodUnit: ensureString(formValue.payment.Months),
         paymentCertificationRiskCode: ensureString(formValue.payment.DegreeRiskType),
         paymentCertificationPeriodRemark: ensureString(formValue.payment.Remarks2),
         paymentRetentionAmount: toNumberOrNull(formValue.payment.Retention),
@@ -1831,8 +1826,8 @@ export class FormDetailComponent implements OnInit {
         paymentRetentionRiskCode: ensureString(formValue.payment.DegreeRiskType2),
         paymentRetentionAmountRemark: ensureString(formValue.payment.Remarks),
         paymentPeriod: toNumberOrNull(formValue.payment.PaymentPeriod),
-        PaymentPeriodUnit: ensureString(formValue.payment.Months2),
-        PaymentPeriodRiskCode: ensureString(formValue.payment.DegreeRiskType3),
+        paymentPeriodUnit: ensureString(formValue.payment.Months2),
+        paymentPeriodRiskCode: ensureString(formValue.payment.DegreeRiskType3),
         paymentRetentionLimit: ensureString(formValue.payment.LimitofRetention),
         paymentRetentionLimitRiskCode: ensureString(formValue.payment.LimitofRetentionselect),
         paymentMaxExposure: toNumberOrNull(formValue.payment.MaxExposureAmount),

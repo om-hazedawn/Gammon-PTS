@@ -1,31 +1,39 @@
 export interface SaveForm20 {
   id: number;
-  businessUnitId: number | null;
-  approximateValue: number | null;
-  profitMargin: number | null;
+  title: string;
+  businessUnitCode: string;
+  status: string;
   periodUnit: string;
   period: number | null;
   periodDetail: string;
+  isMarkingScheme: string;
+  splitValueId: number | null;
+  bidTypeId: number | null;
+  jvSplit: string;
+  jvPartner: string;
+  jvAgreementId: number | null;
+  form30Id: number | null;
+  // dueDate: string;
+
   maintenanceDefectId: number | null;
-  ContractPeriod: string;
-  title: string;
+  maintenanceDefectPeriod: number | null;
+  maintenanceDefectUnit: string;
+  approximateValue: number | null;
+  profitMargin: number | null;
   currencyId: number | null;
   tenderTypeId: number | null;
   clientFinanceStanding: string | null;
-  splitValueId: number | null;
   countryId: number | null;
-  bidTypeId: number | null;
-  JvSplit: string;
-  JvPartner: string;
-  jvAgreementId: number | null;
-  Status: string;
-  Planner: string;
-  Location: string;
-  TenderNo: string;
-  Estimator: string;
+ 
+  
+  
+  planner: string;
+  location: string;
+  tenderNo: string;
+  estimator: string;
   bidManager: string;
   clientName: string;
-  Description: string;
+  description: string;
 
   //page 2 
   contractTypeId : number | null;
@@ -52,8 +60,6 @@ export interface SaveForm20 {
   contractDFMARiskCode: string;
 
   /* page 3*/
-  maintenanceDefectPeriod: number | null;
-  maintenanceDefectUnit: string;
   paymentCertificationPeriod: number | null;
   paymentCertificationPeriodRemark: string;
   paymentCertificationRiskCode: string;
@@ -220,7 +226,7 @@ export interface SaveForm20 {
   distributionRiskOpp: string[];
   distributionLambeth: string[];
   distributionHSEQ: string[];
-  businessUnitCode: string;
+ 
   distributionBidMgr: string[];
 
   /* Approval Info 11th*/
@@ -232,12 +238,12 @@ export interface SaveForm20 {
 
  
   
-  isMarkingScheme: string;
-  PaymentCertificationPeriodUnit: string;
-  CompetitorRiskCode: string;
-  PaymentPeriodRiskCode: string;
+  
+  paymentCertificationPeriodUnit: string;
+  competitorRiskCode: string;
+  paymentPeriodRiskCode: string;
   approximateValueRemark: string;
-  ContractDamageRateUnit: string;
+  contractDamageRateUnit: string;
 
   /* this field not found*/
 
@@ -245,8 +251,8 @@ export interface SaveForm20 {
   evaluationIsCashFlow: string;
   evaluationClientFinancialStatus: string;
   evaluationIsClientFinancialStatus: string;
-  EvaluationEstimatingDepartmentWorkload: string;
-  EvaluationIsEstimatingDepartmentWorkload: string;
+  evaluationEstimatingDepartmentWorkload: string;
+  evaluationIsEstimatingDepartmentWorkload: string;
 
   
 }
