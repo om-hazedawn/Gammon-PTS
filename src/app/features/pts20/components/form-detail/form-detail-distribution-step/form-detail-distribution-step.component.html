@@ -208,7 +208,19 @@
           <div class="flex items-center gap-4">
             <div class="w-40 font-semibold">Bid Manager</div>
             <mat-form-field appearance="fill" class="w-full">
-              <input matInput formControlName="BidManager" />
+              <input matInput
+                     placeholder="Type to search..."
+                     [matAutocomplete]="autoBidManager"
+                     [formControl]="bidManagerSearchCtrl">
+              <mat-autocomplete #autoBidManager="matAutocomplete"
+                               (optionSelected)="selectBidManager($event)"
+                               [displayWith]="displayFn">
+                @for (user of FORM20_BID_MGR; track user.employeeNo) {
+                  <mat-option [value]="user">
+                    {{user.fullName}} - {{user.title}}
+                  </mat-option>
+                }
+              </mat-autocomplete>
             </mat-form-field>
           </div>
         </div>

@@ -24,10 +24,12 @@ export interface ApprovalUser {
 export class Form20ListDropdownService {
   private baseUrl: string;
   private buildingunit: string;
+  private baseUrl2: string;
 
   constructor(private http: HttpClient) {
     this.baseUrl = '/api/pts20/Form20';
     this.buildingunit = '/api/pts20/Authorize';
+    this.baseUrl2 = '/api/Form20';
   }
 
   obtainBuildingUnit(): Observable<ObtainRegion> {
@@ -295,52 +297,67 @@ export class Form20ListDropdownService {
 
   FORM20_ALL_HOE(): Observable<ApprovalUser[]> {
     return this.http
-    .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_ALL_HOE`, {}).pipe(
-      catchError((error) => {
-        console.error('Error fetching approval users:', error);
-        throw error;
-      })
-    );
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_ALL_HOE`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
   }
 
   FORM20_CSD_HOE(): Observable<ApprovalUser[]> {
     return this.http
-    .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_CSD_HOE`, {}).pipe(
-      catchError((error) => {
-        console.error('Error fetching approval users:', error);
-        throw error;
-      })
-    );
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_CSD_HOE`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
   }
 
   FORM20_CSD_CM(): Observable<ApprovalUser[]> {
     return this.http
-    .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_CSD_CM`, {}).pipe(
-      catchError((error) => {
-        console.error('Error fetching approval users:', error);
-        throw error;
-      })
-    );
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_CSD_CM`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
   }
 
   FORM20_CSD_DIR(): Observable<ApprovalUser[]> {
     return this.http
-    .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_CSD_DIR`, {}).pipe(
-      catchError((error) => {
-        console.error('Error fetching approval users:', error);
-        throw error;
-      })
-    );
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_CSD_DIR`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
   }
 
   FORM20_CSD_ED(): Observable<ApprovalUser[]> {
     return this.http
-    .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_CSD_ED`, {}).pipe(
-      catchError((error) => {
-        console.error('Error fetching approval users:', error);
-        throw error;
-      })
-    );
+      .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_CSD_ED`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching approval users:', error);
+          throw error;
+        })
+      );
   }
+
+  searchPeople(text: string): Observable<any[]> {
+      const searchValue = text && text.trim() ? text.trim() : '';
+      return this.http.post<any[]>(
+        `${this.baseUrl2}/searchPeople`,
+        searchValue,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+  }
+
   
 }

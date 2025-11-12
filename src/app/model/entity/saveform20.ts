@@ -1,18 +1,14 @@
 export interface SaveForm20 {
   id: number;
-  
   businessUnitId: number | null;
   approximateValue: number | null;
   profitMargin: number | null;
   periodUnit: string;
   period: number | null;
   periodDetail: string;
-  
-  
   maintenanceDefectId: number | null;
   ContractPeriod: string;
   title: string;
-
   currencyId: number | null;
   tenderTypeId: number | null;
   clientFinanceStanding: string | null;
@@ -22,8 +18,14 @@ export interface SaveForm20 {
   JvSplit: string;
   JvPartner: string;
   jvAgreementId: number | null;
-  
   Status: string;
+  Planner: string;
+  Location: string;
+  TenderNo: string;
+  Estimator: string;
+  bidManager: string;
+  clientName: string;
+  Description: string;
 
   //page 2 
   contractTypeId : number | null;
@@ -221,39 +223,20 @@ export interface SaveForm20 {
   businessUnitCode: string;
   distributionBidMgr: string[];
 
+  /* Approval Info 11th*/
+  ceApproval: Approvalce[];
+  cmApproval: Approvalce[];
+  edApproval: Approvalce[];
+  dirApproval: Approvalce[];
+  hoEApproval: Approvalce[];
 
-
-
-
-  CEApproval: ApprovalInfo[];
-  CMApproval: ApprovalInfo[];
-  EDApproval: ApprovalInfo[];
-  DirApproval: ApprovalInfo[];
-  HoEApproval: ApprovalInfo[];
-  
-
-
-  Planner: string;
-  Location: string;
-  TenderNo: string;
-  Estimator: string;
-
-  BidManager: string;
-  clientName: string;
-  Description: string;
-  
+ 
   
   isMarkingScheme: string;
- 
- 
   PaymentCertificationPeriodUnit: string;
- 
-  
   CompetitorRiskCode: string;
-  
   PaymentPeriodRiskCode: string;
   approximateValueRemark: string;
- 
   ContractDamageRateUnit: string;
 
   /* this field not found*/
@@ -267,11 +250,20 @@ export interface SaveForm20 {
 
   
 }
-
 interface ApprovalInfo {
-  Title: string;
-  Comments: string;
-  Decision: string;
-  StaffNo: string;
-  ApproverName: string;
+  approverName: string, 
+  approvalDate: string, 
+  comments: string,
+  decision: string, 
+  id: number | null,
+}
+
+interface Approvalce {
+  approvalDate: string,
+  approverName: string,
+  comments: string,
+  decision: string,
+  id: number | null,
+  staffNo: string,
+  title: string ,
 }

@@ -1397,55 +1397,8 @@ export class FormDetailComponent implements OnInit {
 
       // Ensure approval arrays are properly initialized
       // Add approval arrays with correct property names
-      const approvalFields = {
-        ceApproval: [
-          {
-            Title: '',
-            Comments: '',
-            Decision: '',
-            StaffNo: '',
-            ApproverName: '',
-          },
-        ],
-        cmApproval: [
-          {
-            Title: '',
-            Comments: '',
-            Decision: '',
-            StaffNo: '',
-            ApproverName: '',
-          },
-        ],
-        edApproval: [
-          {
-            Title: '',
-            Comments: '',
-            Decision: '',
-            StaffNo: '',
-            ApproverName: '',
-          },
-        ],
-        dirApproval: [
-          {
-            Title: '',
-            Comments: '',
-            Decision: '',
-            StaffNo: '',
-            ApproverName: '',
-          },
-        ],
-        hoEApproval: [
-          {
-            Title: '',
-            Comments: '',
-            Decision: '',
-            StaffNo: '',
-            ApproverName: '',
-          },
-        ],
-      };
 
-      Object.assign(normalizedValue, approvalFields);
+      Object.assign(normalizedValue);
 
       this.form20Service.saveForm20(normalizedValue).subscribe({
         next: (response) => {
@@ -1476,18 +1429,18 @@ export class FormDetailComponent implements OnInit {
   }
 
   private createDefaultApproval(value?: any): {
-    Title: string;
-    Comments: string;
-    Decision: string;
-    StaffNo: string;
-    ApproverName: string;
+    approverName: string;
+    approvalDate: string;
+    comments: string;
+    decision: string;
+    id: number | null;
   } {
     return {
-      Title: this.ensureString(value?.Title),
-      Comments: this.ensureString(value?.Comments),
-      Decision: this.ensureString(value?.Decision),
-      StaffNo: this.ensureString(value?.StaffNo),
-      ApproverName: this.ensureString(value?.ApproverName),
+      approverName: this.ensureString(value?.approverName),
+      approvalDate: this.ensureString(value?.approvalDate),
+      comments: this.ensureString(value?.comments),
+      decision: this.ensureString(value?.decision),
+      id: value?.id ?? null,
     };
   }
 
@@ -1557,12 +1510,10 @@ export class FormDetailComponent implements OnInit {
       Location: ensureString(formValue.Location),
       TenderNo: ensureString(formValue.tenderNo),
       Estimator: ensureString(formValue.Estimator),
-      BidManager: ensureString(formValue.BidManager),
+      bidManager: ensureString(formValue.BidManager),
       clientName: ensureString(formValue.clientName),
       Description: ensureString(formValue.BriefDescription),
       approximateValueRemark: formValue.ApproximateValue || '',
-
-    
 
       // Nullable numeric fields
       approximateValue: approximateVal, // Send validated decimal value
@@ -1750,36 +1701,78 @@ export class FormDetailComponent implements OnInit {
       /* 10th Distribution page*/
       distributionCE: [],
       distributionDivComM: [],
-
-
-
-      CEApproval: [],
-
-        // Distribution arrays with default values
-      distributionComDir: ['00001'],
-      distributionExeDir: ['00001'],
-      distributionFinDir: ['00001'],
-      distributionDir: ['00001'],
-      distributionGenC: ['00001'],
-      distributionInsMgr: ['00001'],
-      distributionProc: ['00001'],
-      distributionRiskOpp: ['00001'],
-      distributionLambeth: ['00001'],
-      distributionHSEQ: ['00001'],
+      distributionComDir: [],
+      distributionExeDir: [],
+      distributionFinDir: [],
+      distributionDir: [],
+      distributionGenC: [],
+      distributionInsMgr: [],
+      distributionProc: [],
+      distributionRiskOpp: [],
+      distributionLambeth: [],
+      distributionHSEQ: [],
       distributionBidMgr: [],
 
       // Approval arrays with empty default objects
-      
-      CMApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
-      EDApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
-      DirApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
-      HoEApproval: [{ Title: '', Comments: '', Decision: '', StaffNo: '', ApproverName: '' }],
+      ceApproval: [
+        {
+          approvalDate: '',
+          approverName: '',
+          comments: '',
+          decision: '',
+          id: null,
+          staffNo: '',
+          title: '',
+        },
+      ],
+      cmApproval: [
+        {
+          approverName: '',
+          approvalDate: '',
+          comments: '',
+          decision: '',
+          id: null,
+          staffNo: '',
+          title: '',
+        },
+      ],
+      edApproval: [
+        {
+          approverName: '',
+          approvalDate: '',
+          comments: '',
+          decision: '',
+          id: null,
+          staffNo: '',
+          title: '',
+        },
+      ],
+      dirApproval: [
+        {
+          approverName: '',
+          approvalDate: '',
+          comments: '',
+          decision: '',
+          id: null,
+          staffNo: '',
+          title: '',
+        },
+      ],
+      hoEApproval: [
+        {
+          approverName: '',
+          approvalDate: '',
+          comments: '',
+          decision: '',
+          id: null,
+          staffNo: '',
+          title: '',
+        },
+      ],
 
-
-      
       CompetitorRiskCode: '',
       PaymentPeriodRiskCode: '',
-      
+
       ContractDamageRateUnit: '',
       paymentCertificationRiskCode: '',
       paymentRetentionAmountRemark: '',
@@ -1787,12 +1780,12 @@ export class FormDetailComponent implements OnInit {
       PaymentCertificationPeriodUnit: '',
       paymentCertificationPeriodRemark: '',
 
-      evaluationCashFlow:'',
-      evaluationIsCashFlow:'',
-      evaluationClientFinancialStatus:'',
-      evaluationIsClientFinancialStatus:'',
-      EvaluationEstimatingDepartmentWorkload:'',
-      EvaluationIsEstimatingDepartmentWorkload:'',
+      evaluationCashFlow: '',
+      evaluationIsCashFlow: '',
+      evaluationClientFinancialStatus: '',
+      evaluationIsClientFinancialStatus: '',
+      EvaluationEstimatingDepartmentWorkload: '',
+      EvaluationIsEstimatingDepartmentWorkload: '',
     };
 
     // Apply any contract form group values
@@ -2010,40 +2003,44 @@ export class FormDetailComponent implements OnInit {
 
     if (formValue.Evaluation) {
       Object.assign(baseForm, {
-      evaluationIsContractCondition: ensureString(formValue.Evaluation.AcceptibilityRadio),
-      evaluationContractCondition: ensureString(formValue.Evaluation.AcceptibilityRemark),
+        evaluationIsContractCondition: ensureString(formValue.Evaluation.AcceptibilityRadio),
+        evaluationContractCondition: ensureString(formValue.Evaluation.AcceptibilityRemark),
 
-      evaluationIsBondGuarantee: ensureString(formValue.Evaluation.BondandGuaranteesRadio),
-      evaluationBondGuarantee: ensureString(formValue.Evaluation.BondandGuaranteesRemark),
+        evaluationIsBondGuarantee: ensureString(formValue.Evaluation.BondandGuaranteesRadio),
+        evaluationBondGuarantee: ensureString(formValue.Evaluation.BondandGuaranteesRemark),
 
-      evaluationIsPlantEquipmentRequired: ensureString(formValue.Evaluation.PlantEquipmentRadio),
-      evaluationPlantEquipmentRequired: ensureString(formValue.Evaluation.PlantEquipmentRemark),
+        evaluationIsPlantEquipmentRequired: ensureString(formValue.Evaluation.PlantEquipmentRadio),
+        evaluationPlantEquipmentRequired: ensureString(formValue.Evaluation.PlantEquipmentRemark),
 
-      evaluationIsCompanyWorkload: ensureString(formValue.Evaluation.CurrentWorkloadRadio),
-      evaluationCompanyWorkload: ensureString(formValue.Evaluation.CurrentWorkloadRemark),
+        evaluationIsCompanyWorkload: ensureString(formValue.Evaluation.CurrentWorkloadRadio),
+        evaluationCompanyWorkload: ensureString(formValue.Evaluation.CurrentWorkloadRemark),
 
-      evaluationIsConsultantRecord: ensureString(formValue.Evaluation.previousRecordRadio),
-      evaluationConsultantRecord: ensureString(formValue.Evaluation.previousRecordRemark),
+        evaluationIsConsultantRecord: ensureString(formValue.Evaluation.previousRecordRadio),
+        evaluationConsultantRecord: ensureString(formValue.Evaluation.previousRecordRemark),
 
-      evaluationIsCompetition: ensureString(formValue.Evaluation.CompetitionRadio),
-      evaluationCompetition: ensureString(formValue.Evaluation.CompetitionRemark),
+        evaluationIsCompetition: ensureString(formValue.Evaluation.CompetitionRadio),
+        evaluationCompetition: ensureString(formValue.Evaluation.CompetitionRemark),
 
-      evaluationIsPaymentTerm: ensureString(formValue.Evaluation.PaymentTermsRadio),
-      evaluationPaymentTerm: ensureString(formValue.Evaluation.PaymentTermsRemark),
+        evaluationIsPaymentTerm: ensureString(formValue.Evaluation.PaymentTermsRadio),
+        evaluationPaymentTerm: ensureString(formValue.Evaluation.PaymentTermsRemark),
 
-      evaluationIsValueExtendContract: ensureString(formValue.Evaluation.ContractValueRadio),
-      evaluationValueExtendContract: ensureString(formValue.Evaluation.ContractValueRemark),
+        evaluationIsValueExtendContract: ensureString(formValue.Evaluation.ContractValueRadio),
+        evaluationValueExtendContract: ensureString(formValue.Evaluation.ContractValueRemark),
 
-      evaluationIsSiteManagement: ensureString(formValue.Evaluation.SiteManagementRadio),
-      evaluationSiteManagement: ensureString(formValue.Evaluation.SiteManagementRemark),
+        evaluationIsSiteManagement: ensureString(formValue.Evaluation.SiteManagementRadio),
+        evaluationSiteManagement: ensureString(formValue.Evaluation.SiteManagementRemark),
 
-      evaluationIsTimeAllowed: ensureString(formValue.Evaluation.TimeAllowedRadio),
-      evaluationTimeAllowed: ensureString(formValue.Evaluation.TimeAllowedRemark),
+        evaluationIsTimeAllowed: ensureString(formValue.Evaluation.TimeAllowedRadio),
+        evaluationTimeAllowed: ensureString(formValue.Evaluation.TimeAllowedRemark),
 
-      evaluationIsHealthSafetyEnvironment: ensureString(formValue.Evaluation.HealthSafetyEnvironmentRadio),
-      evaluationHealthSafetyEnvironment: ensureString(formValue.Evaluation.HealthSafetyEnvironmentRemark),
+        evaluationIsHealthSafetyEnvironment: ensureString(
+          formValue.Evaluation.HealthSafetyEnvironmentRadio
+        ),
+        evaluationHealthSafetyEnvironment: ensureString(
+          formValue.Evaluation.HealthSafetyEnvironmentRemark
+        ),
 
-      evaluationComments: ensureString(formValue.Evaluation.EvaluationComments),
+        evaluationComments: ensureString(formValue.Evaluation.EvaluationComments),
       });
     }
 
@@ -2064,7 +2061,6 @@ export class FormDetailComponent implements OnInit {
         distributionHSEQ: formValue.Distribution.HSEQ || [],
       });
     }
-
 
     return baseForm;
   }

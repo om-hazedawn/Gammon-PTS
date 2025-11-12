@@ -17,6 +17,7 @@ import {
   ApprovalUser,
 } from '../../../../../core/services/Form20/form20listdropdown.service';
 
+
 @Component({
   selector: 'app-form-detail-distribution-step',
 
@@ -114,9 +115,15 @@ export class FormDetailDistributionStepComponent implements OnInit {
   filteredGEN_COUN!: Observable<ApprovalUser[]>;
 
 
+  // Bid Managers
+  FORM20_BID_MGR: ApprovalUser[] = [];
+  selectedBidManagers: ApprovalUser[] = [];
+  bidManagerSearchCtrl = new FormControl('');
+  filteredBidManagers!: Observable<ApprovalUser[]>;
+
+
   constructor(
     private form20ListDropdownService: Form20ListDropdownService,
-
     private dialog: MatDialog,
 
     private formGroupDirective: FormGroupDirective
@@ -198,8 +205,20 @@ export class FormDetailDistributionStepComponent implements OnInit {
     this.loadFORM20_COM_DIR();
     this.loadFORM20_HSEQ();
     this.loadFORM20_GEN_COUN();
+    // Only trigger Bid Manager search when user types input
+    this.bidManagerSearchCtrl.valueChanges
+      .pipe(startWith(''))
+      .subscribe((searchTerm: string | null) => {
+        const value = searchTerm ? searchTerm.trim() : '';
+        if (value.length > 0) {
+          this.loadBidManager(value);
+        } else {
+          this.FORM20_BID_MGR = [];
+        }
+      });
   }
 
+  
   private loadForm20_CE(): void {
     this.form20ListDropdownService.FORM20_CE().subscribe({
       next: (data: ApprovalUser[]) => {
@@ -446,6 +465,17 @@ export class FormDetailDistributionStepComponent implements OnInit {
       },
     });
   }
+
+private loadBidManager(searchTerm: string): void {
+  this.form20ListDropdownService.searchPeople(searchTerm).subscribe({
+    next: (data: ApprovalUser[]) => {
+      this.FORM20_BID_MGR = data;
+    },
+    error: (error: unknown) => {
+      console.error('Error loading Bid Managers:', error);
+    },
+  });
+}
 
   private _filterCE(value: string | ApprovalUser | null): ApprovalUser[] {
     if (!value) return this.Form20_CE;
@@ -886,4 +916,23 @@ export class FormDetailDistributionStepComponent implements OnInit {
   displayFn = (user: ApprovalUser): string => {
     return user ? user.fullName : '';
   };
+  
+    selectBidManager(event: MatAutocompleteSelectedEvent): void {
+      const selectedUser = event.option.value as ApprovalUser;
+      if (!this.selectedBidManagers.some((user) => user.employeeNo === selectedUser.employeeNo)) {
+        this.selectedBidManagers.push(selectedUser);
+        const currentValue = this.selectedBidManagers.map((user) => user.employeeNo);
+        this.formGroupDirective.form.get('Distribution.BidManager')?.setValue(currentValue);
+      }
+      this.bidManagerSearchCtrl.setValue('');
+    }
+
+    removeBidManager(user: ApprovalUser): void {
+      const index = this.selectedBidManagers.indexOf(user);
+      if (index >= 0) {
+        this.selectedBidManagers.splice(index, 1);
+        const currentValue = this.selectedBidManagers.map((u) => u.employeeNo);
+        this.formGroupDirective.form.get('Distribution.BidManager')?.setValue(currentValue.length ? currentValue : null);
+      }
+    }
 }

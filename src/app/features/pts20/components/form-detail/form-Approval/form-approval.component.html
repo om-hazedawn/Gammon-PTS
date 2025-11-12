@@ -17,22 +17,35 @@
             <label class="block font-medium">Head of Estimating</label>
           </div>
           <mat-form-field class="flex-1">
-            <input type="text"
-                   matInput
-                   [formControl]="hoeSearchCtrl"
-                   [matAutocomplete]="hoeAuto"
-                   placeholder="Search Head of Estimating">
-            <mat-autocomplete #hoeAuto="matAutocomplete" 
-                            [displayWith]="displayFn"
-                            (optionSelected)="onOptionSelected($event, 'headOfEstimating')">
-              @for (user of filteredHeadOfEstimatingOptions; track user.employeeNo) {
-                <mat-option [value]="user">
-                  {{user.fullName}} ({{user.employeeNo}})
-                </mat-option>
+            <mat-chip-grid #chipGridHOE aria-label="Head of Estimating selection">
+              @for (user of selectedHeadOfEstimating; track user) {
+              <mat-chip-row (removed)="removeHeadOfEstimating(user)">
+                {{ user.fullName }} ({{ user.employeeNo }})
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              }
+            </mat-chip-grid>
+            <input
+              matInput
+              placeholder="Type to search..."
+              [matChipInputFor]="chipGridHOE"
+              [matAutocomplete]="autoHOE"
+              [formControl]="hoeSearchCtrl"
+            />
+            <mat-autocomplete
+              #autoHOE="matAutocomplete"
+              (optionSelected)="addHeadOfEstimating($event)"
+              [displayWith]="displayFn"
+            >
+              @for (user of filteredHeadOfEstimatingOptions$ | async; track user) {
+              <mat-option [value]="user"> {{ user.fullName }} ({{ user.employeeNo }}) </mat-option>
               }
             </mat-autocomplete>
-            @if (approvalForm.get('headOfEstimating')?.errors?.['required'] && approvalForm.get('headOfEstimating')?.touched) {
-              <mat-error>Head of Estimating is required</mat-error>
+            @if (approvalForm.get('headOfEstimating')?.errors?.['required'] &&
+            approvalForm.get('headOfEstimating')?.touched) {
+            <mat-error>Head of Estimating is required</mat-error>
             }
           </mat-form-field>
         </div>
@@ -44,22 +57,35 @@
             <small class="text-gray-500">(DLOA Level 4)</small>
           </div>
           <mat-form-field class="flex-1">
-            <input type="text"
-                   matInput
-                   [formControl]="cmSearchCtrl"
-                   [matAutocomplete]="cmAuto"
-                   placeholder="Search Contract Manager">
-            <mat-autocomplete #cmAuto="matAutocomplete"
-                            [displayWith]="displayFn"
-                            (optionSelected)="onOptionSelected($event, 'contractManager')">
-              @for (user of filteredContractManagerOptions; track user.employeeNo) {
-                <mat-option [value]="user">
-                  {{user.fullName}} ({{user.employeeNo}})
-                </mat-option>
-              }
-            </mat-autocomplete>
-            @if (approvalForm.get('contractManager')?.errors?.['required'] && approvalForm.get('contractManager')?.touched) {
-              <mat-error>Contract Manager is required</mat-error>
+              <mat-chip-grid #chipGridCM aria-label="Contract Manager selection">
+                @for (user of selectedContractManager; track user) {
+                <mat-chip-row (removed)="removeContractManager(user)">
+                  {{ user.fullName }} ({{ user.employeeNo }})
+                  <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+                }
+              </mat-chip-grid>
+              <input
+                matInput
+                placeholder="Type to search..."
+                [matChipInputFor]="chipGridCM"
+                [matAutocomplete]="autoCM"
+                [formControl]="cmSearchCtrl"
+              />
+              <mat-autocomplete
+                #autoCM="matAutocomplete"
+                (optionSelected)="addContractManager($event)"
+                [displayWith]="displayFn"
+              >
+                @for (user of filteredContractManagerOptions$ | async; track user) {
+                <mat-option [value]="user"> {{ user.fullName }} ({{ user.employeeNo }}) </mat-option>
+                }
+              </mat-autocomplete>
+            @if (approvalForm.get('contractManager')?.errors?.['required'] &&
+            approvalForm.get('contractManager')?.touched) {
+            <mat-error>Contract Manager is required</mat-error>
             }
           </mat-form-field>
         </div>
@@ -71,22 +97,35 @@
             <small class="text-gray-500">(DLOA Level 3)</small>
           </div>
           <mat-form-field class="flex-1">
-            <input type="text"
-                   matInput
-                   [formControl]="dirSearchCtrl"
-                   [matAutocomplete]="dirAuto"
-                   placeholder="Search Director">
-            <mat-autocomplete #dirAuto="matAutocomplete"
-                            [displayWith]="displayFn"
-                            (optionSelected)="onOptionSelected($event, 'director')">
-              @for (user of filteredDirectorOptions; track user.employeeNo) {
-                <mat-option [value]="user">
-                  {{user.fullName}} ({{user.employeeNo}})
-                </mat-option>
+            <mat-chip-grid #chipGridDIR aria-label="Director selection">
+              @for (user of selectedDirector; track user) {
+              <mat-chip-row (removed)="removeDirector(user)">
+                {{ user.fullName }} ({{ user.employeeNo }})
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              }
+            </mat-chip-grid>
+            <input
+              matInput
+              placeholder="Type to search..."
+              [matChipInputFor]="chipGridDIR"
+              [matAutocomplete]="autoDIR"
+              [formControl]="dirSearchCtrl"
+            />
+            <mat-autocomplete
+              #autoDIR="matAutocomplete"
+              (optionSelected)="addDirector($event)"
+              [displayWith]="displayFn"
+            >
+              @for (user of filteredDirectorOptions$ | async; track user) {
+              <mat-option [value]="user"> {{ user.fullName }} ({{ user.employeeNo }}) </mat-option>
               }
             </mat-autocomplete>
-            @if (approvalForm.get('director')?.errors?.['required'] && approvalForm.get('director')?.touched) {
-              <mat-error>Director is required</mat-error>
+            @if (approvalForm.get('director')?.errors?.['required'] &&
+            approvalForm.get('director')?.touched) {
+            <mat-error>Director is required</mat-error>
             }
           </mat-form-field>
         </div>
@@ -98,22 +137,35 @@
             <small class="text-gray-500">(DLOA Level 2)</small>
           </div>
           <mat-form-field class="flex-1">
-            <input type="text"
-                   matInput
-                   [formControl]="edSearchCtrl"
-                   [matAutocomplete]="edAuto"
-                   placeholder="Search Executive Director">
-            <mat-autocomplete #edAuto="matAutocomplete"
-                            [displayWith]="displayFn"
-                            (optionSelected)="onOptionSelected($event, 'executiveDirector')">
-              @for (user of filteredExecutiveDirectorOptions; track user.employeeNo) {
-                <mat-option [value]="user">
-                  {{user.fullName}} ({{user.employeeNo}})
-                </mat-option>
+            <mat-chip-grid #chipGridED aria-label="Executive Director selection">
+              @for (user of selectedExecutiveDirector; track user) {
+              <mat-chip-row (removed)="removeExecutiveDirector(user)">
+                {{ user.fullName }} ({{ user.employeeNo }})
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              }
+            </mat-chip-grid>
+            <input
+              matInput
+              placeholder="Type to search..."
+              [matChipInputFor]="chipGridED"
+              [matAutocomplete]="autoED"
+              [formControl]="edSearchCtrl"
+            />
+            <mat-autocomplete
+              #autoED="matAutocomplete"
+              (optionSelected)="addExecutiveDirector($event)"
+              [displayWith]="displayFn"
+            >
+              @for (user of filteredExecutiveDirectorOptions$ | async; track user) {
+              <mat-option [value]="user"> {{ user.fullName }} ({{ user.employeeNo }}) </mat-option>
               }
             </mat-autocomplete>
-            @if (approvalForm.get('executiveDirector')?.errors?.['required'] && approvalForm.get('executiveDirector')?.touched) {
-              <mat-error>Executive Director is required</mat-error>
+            @if (approvalForm.get('executiveDirector')?.errors?.['required'] &&
+            approvalForm.get('executiveDirector')?.touched) {
+            <mat-error>Executive Director is required</mat-error>
             }
           </mat-form-field>
         </div>
@@ -124,23 +176,40 @@
             <label class="block font-medium">Chief Executive Officer</label>
             <small class="text-gray-500">(DLOA Level 1)</small>
           </div>
+
           <mat-form-field class="flex-1">
-            <input type="text"
-                   matInput
-                   [formControl]="ceoSearchCtrl"
-                   [matAutocomplete]="ceoAuto"
-                   placeholder="Search CEO">
-            <mat-autocomplete #ceoAuto="matAutocomplete"
-                            [displayWith]="displayFn"
-                            (optionSelected)="onOptionSelected($event, 'ceo')">
-              @for (user of filteredCEOOptions; track user.employeeNo) {
-                <mat-option [value]="user">
-                  {{user.fullName}} ({{user.employeeNo}})
-                </mat-option>
+            <mat-chip-grid #chipGrid aria-label="CEO selection">
+              @for (user of selectedCEO; track user) {
+              <mat-chip-row (removed)="removeCEO(user)">
+                {{ user.fullName }} ({{ user.employeeNo }})
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              }
+            </mat-chip-grid>
+
+            <input
+              matInput
+              placeholder="Type to search..."
+              [matChipInputFor]="chipGrid"
+              [matAutocomplete]="autoCEO"
+              [formControl]="ceoSearchCtrl"
+            />
+
+            <mat-autocomplete
+              #autoCEO="matAutocomplete"
+              (optionSelected)="addCEO($event)"
+              [displayWith]="displayFn"
+            >
+              @for (user of filteredCEOOptions$ | async; track user) {
+              <mat-option [value]="user"> {{ user.fullName }} ({{ user.employeeNo }}) </mat-option>
               }
             </mat-autocomplete>
-            @if (approvalForm.get('ceo')?.errors?.['required'] && approvalForm.get('ceo')?.touched) {
-              <mat-error>Chief Executive Officer is required</mat-error>
+
+            @if (approvalForm.get('ceo')?.errors?.['required'] && approvalForm.get('ceo')?.touched)
+            {
+            <mat-error>Chief Executive Officer is required</mat-error>
             }
           </mat-form-field>
         </div>
