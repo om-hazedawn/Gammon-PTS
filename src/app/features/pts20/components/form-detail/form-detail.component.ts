@@ -739,6 +739,13 @@ export class FormDetailComponent implements OnInit {
 
         GeneralCounselLegal: [''],
       }),
+
+        // Approval arrays
+        ceApproval: [[]],
+        cmApproval: [[]],
+        edApproval: [[]],
+        dirApproval: [[]],
+        hoEApproval: [[]],
     });
   }
 
@@ -787,6 +794,14 @@ export class FormDetailComponent implements OnInit {
   }
 
   patchFormValues(formData: Form20Details): void {
+    // Patch approval arrays for dialog
+    this.formGroup.patchValue({
+      ceApproval: formData.ceApproval || [],
+      cmApproval: formData.cmApproval || [],
+      edApproval: formData.edApproval || [],
+      dirApproval: formData.dirApproval || [],
+      hoEApproval: formData.hoEApproval || [],
+    });
     if (!formData) {
       throw new Error('Invalid form data received');
     }
@@ -1330,9 +1345,27 @@ export class FormDetailComponent implements OnInit {
   }
 
   private openApprovalDialog(): void {
+    // Pass ceApproval array to dialog for CEO field pre-population
+    const ceApproval = this.formGroup.value.ceApproval || [];
+    const edApproval = this.formGroup.value.edApproval || [];
+    const cmApproval = this.formGroup.value.cmApproval || [];
+    const dirApproval = this.formGroup.value.dirApproval || [];
+    const hoEApproval = this.formGroup.value.hoEApproval || [];
+    console.log('openApprovalDialog ceApproval:', ceApproval);
+    console.log('openApprovalDialog edApproval:', edApproval);
+    console.log('openApprovalDialog cmApproval:', cmApproval);
+    console.log('openApprovalDialog dirApproval:', dirApproval);
+    console.log('openApprovalDialog hoEApproval:', hoEApproval);
     const dialogRef = this.dialog.open(FormApprovalComponent, {
       width: '800px',
-      data: { formData: this.formGroup.value },
+      data: {
+        formData: this.formGroup.value,
+        ceApproval: ceApproval,
+        edApproval: edApproval,
+        cmApproval: cmApproval,
+        dirApproval: dirApproval,
+        hoEApproval: hoEApproval,
+      },
     });
 
     dialogRef.afterClosed().subscribe((result) => {

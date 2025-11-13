@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Inject } from '@angular/core';
 import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   MatAutocompleteModule,
@@ -151,12 +151,13 @@ export class FormApprovalComponent implements OnInit {
 
   constructor(
     private form20ListDropdownService: Form20ListDropdownService,
-    public dialogRef: MatDialogRef<FormApprovalComponent>
+    public dialogRef: MatDialogRef<FormApprovalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
   ngOnInit(): void {
+  // Debug: Log incoming ceApproval data
     this.loadForm20_CSD_HOE();
-    // Head of Estimating autocomplete filtering
     this.filteredHeadOfEstimatingOptions$ = this.hoeSearchCtrl.valueChanges.pipe(
       startWith(''),
       map(searchValue => {
@@ -168,7 +169,6 @@ export class FormApprovalComponent implements OnInit {
       })
     );
     this.loadForm20_CSD_CM();
-    // Contract Manager autocomplete filtering
     this.filteredContractManagerOptions$ = this.cmSearchCtrl.valueChanges.pipe(
       startWith(''),
       map(searchValue => {
@@ -180,7 +180,6 @@ export class FormApprovalComponent implements OnInit {
       })
     );
     this.loadForm20_CSD_DIR();
-    // Director autocomplete filtering
     this.filteredDirectorOptions$ = this.dirSearchCtrl.valueChanges.pipe(
       startWith(''),
       map(searchValue => {
@@ -192,7 +191,6 @@ export class FormApprovalComponent implements OnInit {
       })
     );
     this.loadForm20_CSD_ED();
-    // Executive Director autocomplete filtering
     this.filteredExecutiveDirectorOptions$ = this.edSearchCtrl.valueChanges.pipe(
       startWith(''),
       map(searchValue => {
@@ -204,7 +202,6 @@ export class FormApprovalComponent implements OnInit {
       })
     );
     this.loadForm20_CEO();
-    // CEO autocomplete filtering
     this.filteredCEOOptions$ = this.ceoSearchCtrl.valueChanges.pipe(
       startWith(''),
       map(searchValue => {
@@ -215,6 +212,87 @@ export class FormApprovalComponent implements OnInit {
         );
       })
     );
+
+    // Patch CEO field from ceApproval data if available
+    if (this.data && Array.isArray(this.data.ceApproval)) {
+      // Map ceApproval to ApprovalUser[] for chips input
+      const ceoUsers: ApprovalUser[] = this.data.ceApproval
+        .filter((a: any) => a && a.staffNo)
+        .map((a: any) => ({
+          employeeNo: a.staffNo,
+          fullName: a.approverName || '',
+          title: a.title || '',
+        }));
+      console.log('Mapped ceoUsers for CEO field:', ceoUsers);
+      if (ceoUsers.length) {
+        this.ceoControl.setValue(ceoUsers);
+        console.log('Set CEO field value:', this.ceoControl.value);
+      }
+    }
+
+    // Patch Executive Director field from edApproval data if available
+    if (this.data && Array.isArray(this.data.edApproval)) {
+      const edUsers: ApprovalUser[] = this.data.edApproval
+        .filter((a: any) => a && a.staffNo)
+        .map((a: any) => ({
+          employeeNo: a.staffNo,
+          fullName: a.approverName || '',
+          title: a.title || '',
+        }));
+      console.log('Mapped edUsers for Executive Director field:', edUsers);
+      if (edUsers.length) {
+        this.executiveDirectorControl.setValue(edUsers);
+        console.log('Set Executive Director field value:', this.executiveDirectorControl.value);
+      }
+    }
+
+    // Patch Director field from dirApproval data if available
+    if (this.data && Array.isArray(this.data.dirApproval)) {
+      const dirUsers: ApprovalUser[] = this.data.dirApproval
+        .filter((a: any) => a && a.staffNo)
+        .map((a: any) => ({
+          employeeNo: a.staffNo,
+          fullName: a.approverName || '',
+          title: a.title || '',
+        }));
+      console.log('Mapped dirUsers for Director field:', dirUsers);
+      if (dirUsers.length) {
+        this.directorControl.setValue(dirUsers);
+        console.log('Set Director field value:', this.directorControl.value);
+      }
+    }
+    
+    // Patch Contract Manager field from cmApproval data if available
+    if (this.data && Array.isArray(this.data.cmApproval)) {
+      const cmUsers: ApprovalUser[] = this.data.cmApproval
+        .filter((a: any) => a && a.staffNo)
+        .map((a: any) => ({
+          employeeNo: a.staffNo,
+          fullName: a.approverName || '',
+          title: a.title || '',
+        }));
+      console.log('Mapped cmUsers for Contract Manager field:', cmUsers);
+      if (cmUsers.length) {
+        this.contractManagerControl.setValue(cmUsers);
+        console.log('Set Contract Manager field value:', this.contractManagerControl.value);
+      }
+    }
+
+    // Patch Head of Estimating field from hoEApproval data if available
+    if (this.data && Array.isArray(this.data.hoEApproval)) {
+      const hoeUsers: ApprovalUser[] = this.data.hoEApproval
+        .filter((a: any) => a && a.staffNo)
+        .map((a: any) => ({
+          employeeNo: a.staffNo,
+          fullName: a.approverName || '',
+          title: a.title || '',
+        }));
+      console.log('Mapped hoeUsers for Head of Estimating field:', hoeUsers);
+      if (hoeUsers.length) {
+        this.headOfEstimatingControl.setValue(hoeUsers);
+        console.log('Set Head of Estimating field value:', this.headOfEstimatingControl.value);
+      }
+    }
   }
 
   private loadForm20_CEO(): void {
