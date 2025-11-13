@@ -1370,6 +1370,22 @@ export class FormDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        // Patch approval arrays in form group with dialog result
+        if (result.ceApproval) {
+          this.formGroup.patchValue({ ceApproval: result.ceApproval });
+        }
+        if (result.edApproval) {
+          this.formGroup.patchValue({ edApproval: result.edApproval });
+        }
+        if (result.cmApproval) {
+          this.formGroup.patchValue({ cmApproval: result.cmApproval });
+        }
+        if (result.dirApproval) {
+          this.formGroup.patchValue({ dirApproval: result.dirApproval });
+        }
+        if (result.hoEApproval) {
+          this.formGroup.patchValue({ hoEApproval: result.hoEApproval });
+        }
         this.processFormSubmission();
       }
     });
@@ -1744,61 +1760,11 @@ export class FormDetailComponent implements OnInit {
       distributionBidMgr: [],
 
       // Approval arrays with empty default objects
-      ceApproval: [
-        {
-          approvalDate: '',
-          approverName: '',
-          comments: '',
-          decision: '',
-          id: null,
-          staffNo: '',
-          title: '',
-        },
-      ],
-      cmApproval: [
-        {
-          approverName: '',
-          approvalDate: '',
-          comments: '',
-          decision: '',
-          id: null,
-          staffNo: '',
-          title: '',
-        },
-      ],
-      edApproval: [
-        {
-          approverName: '',
-          approvalDate: '',
-          comments: '',
-          decision: '',
-          id: null,
-          staffNo: '',
-          title: '',
-        },
-      ],
-      dirApproval: [
-        {
-          approverName: '',
-          approvalDate: '',
-          comments: '',
-          decision: '',
-          id: null,
-          staffNo: '',
-          title: '',
-        },
-      ],
-      hoEApproval: [
-        {
-          approverName: '',
-          approvalDate: '',
-          comments: '',
-          decision: '',
-          id: null,
-          staffNo: '',
-          title: '',
-        },
-      ],
+      ceApproval: formValue.ceApproval || [],
+      cmApproval: formValue.cmApproval || [],
+      edApproval: formValue.edApproval || [],
+      dirApproval: formValue.dirApproval || [],
+      hoEApproval: formValue.hoEApproval || [],
 
       competitorRiskCode: '',
       paymentPeriodRiskCode: '',

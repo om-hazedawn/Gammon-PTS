@@ -19,6 +19,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormApprovalComponent implements OnInit {
+  // Enable submit if any approval field has at least one entry
+  get canSubmit(): boolean {
+    return (
+      (this.approvalForm.get('ceo')?.value?.length ?? 0) > 0 ||
+      (this.approvalForm.get('contractManager')?.value?.length ?? 0) > 0 ||
+      (this.approvalForm.get('director')?.value?.length ?? 0) > 0 ||
+      (this.approvalForm.get('executiveDirector')?.value?.length ?? 0) > 0 ||
+      (this.approvalForm.get('headOfEstimating')?.value?.length ?? 0) > 0
+    );
+  }
   // Director chips/autocomplete logic
   get selectedDirector(): ApprovalUser[] {
     return this.directorControl.value || [];
@@ -142,11 +152,11 @@ export class FormApprovalComponent implements OnInit {
     }
 
     approvalForm = new FormGroup({
-    headOfEstimating: new FormControl<ApprovalUser[]>([], [Validators.required]),
-    contractManager: new FormControl<ApprovalUser[]>([], [Validators.required]),
-    director: new FormControl<ApprovalUser[]>([], [Validators.required]),
-    executiveDirector: new FormControl<ApprovalUser[]>([], [Validators.required]),
-    ceo: new FormControl<ApprovalUser[]>([], [Validators.required]),
+  headOfEstimating: new FormControl<ApprovalUser[]>([]),
+  contractManager: new FormControl<ApprovalUser[]>([]),
+  director: new FormControl<ApprovalUser[]>([]),
+  executiveDirector: new FormControl<ApprovalUser[]>([]),
+  ceo: new FormControl<ApprovalUser[]>([]),
   });
 
   constructor(
@@ -366,13 +376,21 @@ export class FormApprovalComponent implements OnInit {
   onSubmit(): void {
     if (this.approvalForm.valid) {
       this.isSubmitting = true;
-      // Map selected ApprovalUser[] to employeeNo[] for each field
+      // Map selected ApprovalUser[] to approval arrays for saving
+      const mapApproval = (u: ApprovalUser) => ({
+        staffNo: u.employeeNo,
+        approverName: u.fullName,
+        title: u.title || '',
+        comments: '',
+        decision: '',
+        id: null
+      });
       const result = {
-        headOfEstimating: (this.approvalForm.value.headOfEstimating ?? []).map((u: ApprovalUser) => u.employeeNo),
-        contractManager: (this.approvalForm.value.contractManager ?? []).map((u: ApprovalUser) => u.employeeNo),
-        director: (this.approvalForm.value.director ?? []).map((u: ApprovalUser) => u.employeeNo),
-        executiveDirector: (this.approvalForm.value.executiveDirector ?? []).map((u: ApprovalUser) => u.employeeNo),
-        ceo: (this.approvalForm.value.ceo ?? []).map((u: ApprovalUser) => u.employeeNo),
+        hoEApproval: (this.approvalForm.value.headOfEstimating ?? []).map(mapApproval),
+        cmApproval: (this.approvalForm.value.contractManager ?? []).map(mapApproval),
+        dirApproval: (this.approvalForm.value.director ?? []).map(mapApproval),
+        edApproval: (this.approvalForm.value.executiveDirector ?? []).map(mapApproval),
+        ceApproval: (this.approvalForm.value.ceo ?? []).map(mapApproval),
       };
       this.dialogRef.close(result);
       this.isSubmitting = false;

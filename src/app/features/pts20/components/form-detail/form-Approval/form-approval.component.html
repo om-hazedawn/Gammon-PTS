@@ -221,7 +221,7 @@
           mat-raised-button
           color="primary"
           type="submit"
-          [disabled]="approvalForm.invalid || isSubmitting"
+          [disabled]="!canSubmit || isSubmitting"
         >
           @if (isSubmitting) { Submitting... } @else { Submit }
         </button>

@@ -256,13 +256,6 @@ export interface SaveForm20 {
 
   
 }
-interface ApprovalInfo {
-  approverName: string, 
-  approvalDate: string, 
-  comments: string,
-  decision: string, 
-  id: number | null,
-}
 
 interface Approvalce {
   approvalDate: string,

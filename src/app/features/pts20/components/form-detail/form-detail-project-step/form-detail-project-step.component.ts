@@ -289,8 +289,6 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
     this.form20ListDropdownService.obtainJVAgreement().subscribe({
       next: (data: ObtainRegion) => {
         this.jvAgreementOptions = data;
-        // Debug: Log the JV Agreement options
-        console.log('JV Agreement options loaded:', data);
         this.cdr.detectChanges();
       },
       error: (error: unknown) => {
