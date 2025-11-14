@@ -13,7 +13,7 @@ export interface SaveForm20 {
   jvPartner: string;
   jvAgreementId: number | null;
   form30Id: number | null;
-  // dueDate: string;
+  dueDate: string;
 
   maintenanceDefectId: number | null;
   maintenanceDefectPeriod: number | null;

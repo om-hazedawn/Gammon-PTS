@@ -479,7 +479,6 @@ export class FormDetailComponent implements OnInit {
       JvSplit: [''],
       JvPartner: [''],
 
-      duedate: [''],
       projectDescription: [''],
       contract: this.fb.group({
         contractType: [''],
@@ -740,12 +739,12 @@ export class FormDetailComponent implements OnInit {
         GeneralCounselLegal: [''],
       }),
 
-        // Approval arrays
-        ceApproval: [[]],
-        cmApproval: [[]],
-        edApproval: [[]],
-        dirApproval: [[]],
-        hoEApproval: [[]],
+      // Approval arrays
+      ceApproval: [[]],
+      cmApproval: [[]],
+      edApproval: [[]],
+      dirApproval: [[]],
+      hoEApproval: [[]],
     });
   }
 
@@ -806,13 +805,6 @@ export class FormDetailComponent implements OnInit {
       throw new Error('Invalid form data received');
     }
 
-    // Debug: Log the jvAgreementId value
-    console.log(
-      'JV Agreement ID from API:',
-      formData.jvAgreementId,
-      'Type:',
-      typeof formData.jvAgreementId
-    );
 
     // Set all contract period related fields
     this.formGroup.patchValue({
@@ -849,7 +841,7 @@ export class FormDetailComponent implements OnInit {
       form30: formData.form30Id,
       ApproximateValue: formData.approximateValueRemark,
       businessUnit: formData.businessUnitCode,
-      dueDate: formData.dueDate,
+      dueDate: formData.dueDate ? new Date(formData.dueDate) : null,
       tenderNo: formData.tenderNo,
       projectTitle: formData.title,
       TenderType: formData.tenderTypeId, // Map tenderTypeId to TenderType when loading
@@ -1082,17 +1074,6 @@ export class FormDetailComponent implements OnInit {
       },
     });
 
-    // Debug: Log the value that was set for JvAgreement
-    setTimeout(() => {
-      const jvAgreementValue = this.formGroup.get('JvAgreement')?.value;
-      console.log(
-        'JV Agreement form value after patching:',
-        jvAgreementValue,
-        'Type:',
-        typeof jvAgreementValue
-      );
-      console.log('Full form value:', this.formGroup.value);
-    }, 100);
   }
 
   validateCurrentStep(): boolean {
@@ -1394,7 +1375,6 @@ export class FormDetailComponent implements OnInit {
   private processFormSubmission(): void {
     const normalizedValue = this.normalizeFormValues(this.formGroup.value);
 
-
     // For edit mode, ensure we have the correct ID
     if (this.formId) {
       normalizedValue.id = this.formId;
@@ -1570,6 +1550,15 @@ export class FormDetailComponent implements OnInit {
       tenderTypeId: tenderTypeId,
       countryId: formValue.Region,
       clientFinanceStanding: formValue.FinantialStanding,
+      dueDate: formValue.dueDate
+        ? (() => {
+            const d = new Date(formValue.dueDate);
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}T00:00:00`;
+          })()
+        : '',
 
       // Contract fields with default values (will be overridden in if block if contract exists)
       contractTypeId: null,
@@ -1764,31 +1753,31 @@ export class FormDetailComponent implements OnInit {
         ...obj,
         comments: obj?.comments ?? obj.comments ?? '',
         decision: obj.decision ?? obj.decision ?? '',
-        id: obj.Id ?? obj.id ?? null
+        id: obj.Id ?? obj.id ?? null,
       })),
       cmApproval: (formValue.cmApproval || []).map((obj: any) => ({
         ...obj,
         comments: obj?.comments ?? obj.comments ?? '',
         decision: obj.decision ?? obj.decision ?? '',
-        id: obj.Id ?? obj.id ?? null
+        id: obj.Id ?? obj.id ?? null,
       })),
       edApproval: (formValue.edApproval || []).map((obj: any) => ({
         ...obj,
         comments: obj?.comments ?? obj.comments ?? '',
         decision: obj.decision ?? obj.decision ?? '',
-        id: obj.Id ?? obj.id ?? null
+        id: obj.Id ?? obj.id ?? null,
       })),
       dirApproval: (formValue.dirApproval || []).map((obj: any) => ({
         ...obj,
         comments: obj?.comments ?? obj.comments ?? '',
         decision: obj.decision ?? obj.decision ?? '',
-        id: obj.Id ?? obj.id ?? null
+        id: obj.Id ?? obj.id ?? null,
       })),
       hoEApproval: (formValue.hoEApproval || []).map((obj: any) => ({
         ...obj,
         comments: obj?.comments ?? obj.comments ?? '',
         decision: obj.decision ?? obj.decision ?? '',
-        id: obj.Id ?? obj.id ?? null
+        id: obj.Id ?? obj.id ?? null,
       })),
 
       competitorRiskCode: '',
