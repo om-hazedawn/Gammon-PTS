@@ -1759,12 +1759,37 @@ export class FormDetailComponent implements OnInit {
       distributionHSEQ: [],
       distributionBidMgr: [],
 
-      // Approval arrays with empty default objects
-      ceApproval: formValue.ceApproval || [],
-      cmApproval: formValue.cmApproval || [],
-      edApproval: formValue.edApproval || [],
-      dirApproval: formValue.dirApproval || [],
-      hoEApproval: formValue.hoEApproval || [],
+      // Approval arrays normalized for Comments/Decision only
+      ceApproval: (formValue.ceApproval || []).map((obj: any) => ({
+        ...obj,
+        comments: obj?.comments ?? obj.comments ?? '',
+        decision: obj.decision ?? obj.decision ?? '',
+        id: obj.Id ?? obj.id ?? null
+      })),
+      cmApproval: (formValue.cmApproval || []).map((obj: any) => ({
+        ...obj,
+        comments: obj?.comments ?? obj.comments ?? '',
+        decision: obj.decision ?? obj.decision ?? '',
+        id: obj.Id ?? obj.id ?? null
+      })),
+      edApproval: (formValue.edApproval || []).map((obj: any) => ({
+        ...obj,
+        comments: obj?.comments ?? obj.comments ?? '',
+        decision: obj.decision ?? obj.decision ?? '',
+        id: obj.Id ?? obj.id ?? null
+      })),
+      dirApproval: (formValue.dirApproval || []).map((obj: any) => ({
+        ...obj,
+        comments: obj?.comments ?? obj.comments ?? '',
+        decision: obj.decision ?? obj.decision ?? '',
+        id: obj.Id ?? obj.id ?? null
+      })),
+      hoEApproval: (formValue.hoEApproval || []).map((obj: any) => ({
+        ...obj,
+        comments: obj?.comments ?? obj.comments ?? '',
+        decision: obj.decision ?? obj.decision ?? '',
+        id: obj.Id ?? obj.id ?? null
+      })),
 
       competitorRiskCode: '',
       paymentPeriodRiskCode: '',

@@ -376,14 +376,14 @@ export class FormApprovalComponent implements OnInit {
   onSubmit(): void {
     if (this.approvalForm.valid) {
       this.isSubmitting = true;
-      // Map selected ApprovalUser[] to approval arrays for saving
-      const mapApproval = (u: ApprovalUser) => ({
+      // Map selected ApprovalUser[] to approval arrays for saving, preserving comments, decision, id if present
+      const mapApproval = (u: ApprovalUser & { comments?: string; decision?: string; id?: any }) => ({
         staffNo: u.employeeNo,
         approverName: u.fullName,
         title: u.title || '',
-        comments: '',
-        decision: '',
-        id: null
+        comments: u.comments ?? '',
+        decision: u.decision ?? '',
+        id: u.id ?? null
       });
       const result = {
         hoEApproval: (this.approvalForm.value.headOfEstimating ?? []).map(mapApproval),
