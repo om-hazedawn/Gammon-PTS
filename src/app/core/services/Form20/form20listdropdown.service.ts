@@ -359,5 +359,13 @@ export class Form20ListDropdownService {
       );
   }
 
-  
+  assignTenderNo(formId: number): Observable<any> {
+  return this.http.post<any>(`${this.baseUrl}/assignTenderNo/${formId}`, {}).pipe(
+    catchError((error) => {
+      console.error('Error assigning tender number:', error);
+      throw error;
+    })
+  );
+}
+
 }

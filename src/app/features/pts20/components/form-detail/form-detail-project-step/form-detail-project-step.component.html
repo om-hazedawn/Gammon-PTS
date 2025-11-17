@@ -20,20 +20,31 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="fill">
-  <mat-label>Due Date</mat-label>
-  <input matInput [matDatepicker]="picker" formControlName="dueDate" />
-  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-  <mat-datepicker #picker></mat-datepicker>
-</mat-form-field>
-<div>
-  {{ formGroup.get('dueDate')?.value | date:'dd MMM yyyy' | uppercase }}
-</div>
+      <mat-label>Due Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="dueDate" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <div>
+      {{ formGroup.get('dueDate')?.value | date : 'dd MMM yyyy' | uppercase }}
+    </div>
   </div>
 
   <div class="form-row">
     <mat-form-field appearance="fill">
       <mat-label>Tender no</mat-label>
-      <input matInput formControlName="tenderNo" />
+      <div style="display: flex; align-items: center; gap: 8px">
+        <input matInput formControlName="tenderNo" [disabled]="!formGroup.get('dueDate')?.value" />
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="allocateTenderNo()"
+          [disabled]="!formGroup.get('dueDate')?.value || allocatingTenderNo"
+          type="button"
+        >
+          Allocate Tender No
+        </button>
+      </div>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Project Title</mat-label>

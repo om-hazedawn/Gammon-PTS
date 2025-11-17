@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { Observable, catchError, of, switchMap, map } from 'rxjs';
+import { Form20ListDropdownService } from '../../../../core/services/Form20/form20listdropdown.service';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -14,7 +14,6 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {
   Form20DetailsService,
   Form20Details,
-  Approval,
 } from '../../../../core/services/Form20/form20details.service';
 import { SaveForm20 } from '../../../../model/entity/saveform20';
 import { MatCardModule } from '@angular/material/card';
@@ -111,7 +110,7 @@ import {
 
           <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
             @if (currentStep === 1) {
-            <app-form-detail-project-step [isEditMode]="isEditMode"></app-form-detail-project-step>
+            <app-form-detail-project-step [isEditMode]="isEditMode" [formId]="formId"></app-form-detail-project-step>
             } @if (currentStep === 2) {
             <app-form-detail-contract-step></app-form-detail-contract-step>
             } @if (currentStep === 3) {
@@ -350,6 +349,8 @@ export class FormDetailComponent implements OnInit {
   isLoading = false;
   loadError: string | null = null;
   validationErrors: { [key: string]: string[] } = {};
+  allocatingTenderNo = false;
+
 
   // Mapping of form sections to their display names for error messages
   private readonly sectionNames = {
@@ -411,7 +412,8 @@ export class FormDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private form20Service: Form20DetailsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private form20ListDropdownService: Form20ListDropdownService,
   ) {
     this.initializeForm();
   }
@@ -1545,11 +1547,11 @@ export class FormDetailComponent implements OnInit {
       maintenanceDefectUnit: ensureString(formValue.maintenanceStatus1),
       // Nullable numeric fields
       approximateValue: approximateVal, // Send validated decimal value
-      profitMargin: formValue.Approxmargin,
-      currencyId: formValue.ApproximateValueType,
+      profitMargin: formValue.Approxmargin ? formValue.Approxmargin : null,
+      currencyId: formValue.ApproximateValueType ? formValue.ApproximateValueType : null, 
       tenderTypeId: tenderTypeId,
-      countryId: formValue.Region,
-      clientFinanceStanding: formValue.FinantialStanding,
+      countryId: formValue.Region ? formValue.Region : null,
+      clientFinanceStanding: formValue.FinantialStanding ? formValue.FinantialStanding : null,
       dueDate: formValue.dueDate
         ? (() => {
             const d = new Date(formValue.dueDate);
@@ -2082,4 +2084,5 @@ export class FormDetailComponent implements OnInit {
       this.loadForm(this.formId);
     }
   }
+
 }

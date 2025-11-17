@@ -1,7 +1,18 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+  AfterViewInit,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ControlContainer, FormGroupDirective, FormGroup } from '@angular/forms';
 import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
-import { Form20ListDropdownService, ObtainRegion, BusinessUnitDisplay } from '../../../../../core/services/Form20/form20listdropdown.service';
+import {
+  Form20ListDropdownService,
+  ObtainRegion,
+  BusinessUnitDisplay,
+} from '../../../../../core/services/Form20/form20listdropdown.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,37 +22,57 @@ import { Form30LinkPopupComponent } from '../form30link-component/form30Linkpopu
   providers: [Form20ListDropdownService],
   selector: 'app-form-detail-project-step',
   standalone: true,
-  imports: [
-    ...FORM_DETAIL_STEP_IMPORTS,
-    MatDialogModule,
-    MatIconModule,
-    MatButtonModule,
-  ],
+  imports: [...FORM_DETAIL_STEP_IMPORTS, MatDialogModule, MatIconModule, MatButtonModule],
   templateUrl: './form-detail-project-step.component.html',
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
+        @Input() formId: number | null = null;
+      // @Input() formId: number | null = null; (removed duplicate)
+    allocatingTenderNo = false;
+
+    allocateTenderNo(): void {
+      console.log('Allocate Tender No button clicked. Form ID:', this.formId);
+      if (!this.formId) {
+        console.warn('No form ID found. API will not be called.');
+        return;
+      }
+      this.allocatingTenderNo = true;
+      console.log('Calling assignTenderNo API...');
+      this.form20ListDropdownService.assignTenderNo(this.formId).subscribe({
+        next: () => {
+          this.allocatingTenderNo = false;
+          console.log('API call successful.');
+        },
+        error: (err: any) => {
+          this.allocatingTenderNo = false;
+          console.error('Error allocating Tender No:', err);
+        }
+      });
+    }
   @Input() isEditMode = false;
-  
+
   // Getter to access the parent form
   get formGroup(): FormGroup {
     return this.controlContainer.control as FormGroup;
   }
 
+    // ...existing code...
+
   // Check if bid type is Joint Venture Bid (value 2)
   get isJointVentureBid(): boolean {
     return this.formGroup?.get('BidType')?.value === 2;
   }
-  
+
   businessUnitMapping: { [key: string]: string } = {
-    'ALL': 'All',
-    'BDG': 'Building',
-    'CSD': 'CSD',
-    'BU1': 'BU1',
-    'BU2': 'BU2',
-    'BU3': 'BU3',
-    'BU4': 'BU4'
+    ALL: 'All',
+    BDG: 'Building',
+    CSD: 'CSD',
+    BU1: 'BU1',
+    BU2: 'BU2',
+    BU3: 'BU3',
+    BU4: 'BU4',
   };
   BuildingUnit: BusinessUnitDisplay = {};
   regions: ObtainRegion = {};
@@ -69,19 +100,17 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
   // Helper method to parse approximate value input
   private parseApproximateValue(val: string): number {
     if (!val) return 0;
-    
+
     let trimmedVal = val.toString().trim().replace(/,/g, '').toUpperCase();
-    
+
     if (trimmedVal.endsWith('K')) {
       return Math.round(+trimmedVal.replace('K', '') * 1000);
-    }
-    else if (trimmedVal.endsWith('M')) {
+    } else if (trimmedVal.endsWith('M')) {
       return Math.round(+trimmedVal.replace('M', '') * 1000000);
-    }
-    else if (trimmedVal.endsWith('B') || trimmedVal.endsWith('BN')) {
+    } else if (trimmedVal.endsWith('B') || trimmedVal.endsWith('BN')) {
       return Math.round(+trimmedVal.replace('BN', '').replace('B', '') * 1000000000);
     }
-    
+
     return Math.round(+trimmedVal) || 0;
   }
 
@@ -90,7 +119,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
     if (form) {
       const approximateValueControl = form.get('ApproximateValueInput');
       if (approximateValueControl) {
-        approximateValueControl.valueChanges.subscribe(val => {
+        approximateValueControl.valueChanges.subscribe((val) => {
           if (val) {
             const parsedValue = this.parseApproximateValue(val);
             if (parsedValue > 0) {
@@ -106,7 +135,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
       // Listen to BidType changes to show/hide JV Partners field
       const bidTypeControl = form.get('BidType');
       if (bidTypeControl) {
-        bidTypeControl.valueChanges.subscribe(value => {
+        bidTypeControl.valueChanges.subscribe((value) => {
           this.cdr.detectChanges(); // Trigger change detection when bid type changes
         });
       }
@@ -124,15 +153,29 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
     this.loadBidTypes();
     this.loadYesNoNA();
     this.loadJVAgreementOptions();
+
+    this.formGroup.get('dueDate')?.valueChanges.subscribe((date) => {
+      const tenderNoControl = this.formGroup.get('tenderNo');
+      if (date) {
+        tenderNoControl?.enable();
+      } else {
+        tenderNoControl?.disable();
+      }
+    });
+
+    // Optionally, disable tenderNo initially if dueDate is empty
+    if (!this.formGroup.get('dueDate')?.value) {
+      this.formGroup.get('tenderNo')?.disable();
+    }
   }
 
   openForm30Popup(event: MouseEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    
+
     const dialogRef = this.dialog.open(Form30LinkPopupComponent, {
       width: '900px',
-      disableClose: false
+      disableClose: false,
     });
 
     dialogRef.afterClosed().subscribe((result: string | undefined) => {
@@ -146,7 +189,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
       next: (data: ObtainRegion) => {
         // Create a display object with just the keys and their mapped display names
         const mappedData: BusinessUnitDisplay = {};
-        Object.keys(data).forEach(key => {
+        Object.keys(data).forEach((key) => {
           mappedData[key] = this.businessUnitMapping[key] || key;
         });
         this.BuildingUnit = mappedData;
@@ -154,7 +197,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
       },
       error: (error: unknown) => {
         console.error('Error loading building units:', error);
-      }
+      },
     });
   }
 
@@ -171,7 +214,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
       },
       error: (error: unknown) => {
         console.error('Error loading regions:', error);
-      }
+      },
     });
   }
 
@@ -188,7 +231,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
       },
       error: (error: unknown) => {
         console.error('Error loading currencies:', error);
-      } 
+      },
     });
   }
 
@@ -205,7 +248,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
       },
       error: (error: unknown) => {
         console.error('Error loading tender types:', error);
-      }
+      },
     });
   }
 
@@ -221,10 +264,10 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
       },
       error: (error: unknown) => {
         console.error('Error loading maintenance defects:', error);
-      }
+      },
     });
   }
-  
+
   private loadFinanceStandings(): void {
     this.form20ListDropdownService.obtainFinanceStanding().subscribe({
       next: (data: ObtainRegion) => {
@@ -237,7 +280,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
       },
       error: (error: unknown) => {
         console.error('Error loading finance standings:', error);
-      }
+      },
     });
   }
 
@@ -253,7 +296,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
       },
       error: (error: unknown) => {
         console.error('Error loading finance/technical splits:', error);
-      }
+      },
     });
   }
 
@@ -269,7 +312,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
       },
       error: (error: unknown) => {
         console.error('Error loading bid types:', error);
-      }
+      },
     });
   }
 
@@ -281,7 +324,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
       },
       error: (error: unknown) => {
         console.error('Error loading Yes/No/NA options:', error);
-      }
+      },
     });
   }
 
@@ -293,7 +336,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
       },
       error: (error: unknown) => {
         console.error('Error loading JV Agreement options:', error);
-      }
+      },
     });
   }
 }
