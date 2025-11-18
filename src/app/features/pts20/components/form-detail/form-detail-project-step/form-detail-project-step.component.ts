@@ -5,6 +5,8 @@ import {
   OnInit,
   AfterViewInit,
   ChangeDetectorRef,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { ControlContainer, FormGroupDirective, FormGroup } from '@angular/forms';
 import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
@@ -28,29 +30,17 @@ import { Form30LinkPopupComponent } from '../form30link-component/form30Linkpopu
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
-        @Input() formId: number | null = null;
-      // @Input() formId: number | null = null; (removed duplicate)
-    allocatingTenderNo = false;
+  @Output() allocateTenderNoRequest = new EventEmitter<void>();
+  @Input() formId: number | null = null;
+  // @Input() formId: number | null = null; (removed duplicate)
+  allocatingTenderNo = false;
 
-    allocateTenderNo(): void {
-      console.log('Allocate Tender No button clicked. Form ID:', this.formId);
-      if (!this.formId) {
-        console.warn('No form ID found. API will not be called.');
-        return;
-      }
-      this.allocatingTenderNo = true;
-      console.log('Calling assignTenderNo API...');
-      this.form20ListDropdownService.assignTenderNo(this.formId).subscribe({
-        next: () => {
-          this.allocatingTenderNo = false;
-          console.log('API call successful.');
-        },
-        error: (err: any) => {
-          this.allocatingTenderNo = false;
-          console.error('Error allocating Tender No:', err);
-        }
-      });
-    }
+  allocateTenderNo(): void {
+    console.log(
+      'Allocate Tender No button clicked. Requesting parent to save form and allocate tender no.'
+    );
+    this.allocateTenderNoRequest.emit();
+  }
   @Input() isEditMode = false;
 
   // Getter to access the parent form
@@ -58,7 +48,7 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
     return this.controlContainer.control as FormGroup;
   }
 
-    // ...existing code...
+  // ...existing code...
 
   // Check if bid type is Joint Venture Bid (value 2)
   get isJointVentureBid(): boolean {

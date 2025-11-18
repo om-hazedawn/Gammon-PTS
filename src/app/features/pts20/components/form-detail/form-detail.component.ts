@@ -110,7 +110,7 @@ import {
 
           <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
             @if (currentStep === 1) {
-            <app-form-detail-project-step [isEditMode]="isEditMode" [formId]="formId"></app-form-detail-project-step>
+            <app-form-detail-project-step [isEditMode]="isEditMode" [formId]="formId" (allocateTenderNoRequest)="onAllocateTenderNoRequest()"></app-form-detail-project-step>
             } @if (currentStep === 2) {
             <app-form-detail-contract-step></app-form-detail-contract-step>
             } @if (currentStep === 3) {
@@ -349,7 +349,48 @@ export class FormDetailComponent implements OnInit {
   isLoading = false;
   loadError: string | null = null;
   validationErrors: { [key: string]: string[] } = {};
-  allocatingTenderNo = false;
+
+    allocatingTenderNo = false;
+    onAllocateTenderNoRequest(): void {
+      // Save the form first
+      const normalizedValue = this.normalizeFormValues(this.formGroup.value);
+      this.allocatingTenderNo = true;
+      this.form20Service.saveForm20(normalizedValue).subscribe({
+        next: (response) => {
+          // Update formId if needed
+          if (response?.id) {
+            this.formId = response.id;
+          }
+          // Only call the tender allocation API if formId is a valid number
+          if (typeof this.formId === 'number') {
+            this.form20ListDropdownService.assignTenderNo(this.formId).subscribe({
+              next: () => {
+                this.allocatingTenderNo = false;
+                this.loadError = 'Tender No allocated successfully.';
+                this.loadForm(this.formId!);
+                setTimeout(() => (this.loadError = null), 3000);
+              },
+              error: (err) => {
+                this.allocatingTenderNo = false;
+                this.loadError = 'Error allocating Tender No.';
+                console.error('Error allocating Tender No:', err);
+                setTimeout(() => (this.loadError = null), 5000);
+              }
+            });
+          } else {
+            this.allocatingTenderNo = false;
+            this.loadError = 'Form ID is invalid. Cannot allocate Tender No.';
+            setTimeout(() => (this.loadError = null), 5000);
+          }
+        },
+        error: (err) => {
+          this.allocatingTenderNo = false;
+          this.loadError = 'Error saving form before allocation.';
+          console.error('Error saving form:', err);
+          setTimeout(() => (this.loadError = null), 5000);
+        }
+      });
+    }
 
 
   // Mapping of form sections to their display names for error messages
