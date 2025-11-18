@@ -34,16 +34,18 @@
     <mat-form-field appearance="fill">
       <mat-label>Tender no</mat-label>
       <div style="display: flex; align-items: center; gap: 8px">
-        <input matInput formControlName="tenderNo" [disabled]="!formGroup.get('dueDate')?.value" />
-        <button
-          mat-stroked-button
-          color="primary"
-          (click)="allocateTenderNo()"
-          [disabled]="!formGroup.get('dueDate')?.value || allocatingTenderNo"
-          type="button"
-        >
-          Allocate Tender No
-        </button>
+        <input matInput formControlName="tenderNo" [disabled]="true" readonly />
+        @if (!formGroup.get('tenderNo')?.value || formGroup.get('tenderNo')?.value === 'NEW') {
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="allocateTenderNo()"
+            [disabled]="!formGroup.get('dueDate')?.value || allocatingTenderNo"
+            type="button"
+          >
+            Allocate Tender No
+          </button>
+        }
       </div>
     </mat-form-field>
     <mat-form-field appearance="fill">
