@@ -245,10 +245,10 @@ export class Form20DetailsService {
     );
   }
 
-  saveForm20(formData: SaveForm20): Observable<SaveForm20> {
+  saveForm20(formData: SaveForm20): Observable<number> {
     const url = `${this.baseUrl}/saveForm`;
 
-    return this.http.post<SaveForm20>(url, formData).pipe(
+    return this.http.post<number>(url, formData).pipe(
       catchError(error => {
         console.error('Error saving Form20:', error);
         throw error;

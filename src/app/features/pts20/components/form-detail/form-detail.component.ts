@@ -358,8 +358,8 @@ export class FormDetailComponent implements OnInit {
       this.form20Service.saveForm20(normalizedValue).subscribe({
         next: (response) => {
           // Update formId if needed
-          if (response?.id) {
-            this.formId = response.id;
+          if (response) {
+            this.formId = response;
           }
           // Only call the tender allocation API if formId is a valid number
           if (typeof this.formId === 'number') {
@@ -462,12 +462,11 @@ export class FormDetailComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       const id = params['id'];
-      if (id === '0') {
-        // New form - stay in creation mode
+      // Only set formId to 0 if it is not already set to a valid value
+      if (id === '0' && (!this.formId || this.formId === 0)) {
         this.formId = 0;
         this.isEditMode = false;
-      } else if (id) {
-        // Existing form - load and switch to edit mode
+      } else if (id && id !== '0') {
         this.formId = +id;
         this.isEditMode = true;
         this.loadForm(this.formId);
@@ -843,6 +842,7 @@ export class FormDetailComponent implements OnInit {
       edApproval: formData.edApproval || [],
       dirApproval: formData.dirApproval || [],
       hoEApproval: formData.hoEApproval || [],
+      id: formData.id || null,
     });
     if (!formData) {
       throw new Error('Invalid form data received');
@@ -1145,24 +1145,25 @@ export class FormDetailComponent implements OnInit {
     const validateNestedGroup = (control: AbstractControl | null, basePath: string): boolean => {
       if (!control || !(control instanceof FormGroup)) return true;
 
-      let groupValid = true;
-      Object.keys(control.controls).forEach((key) => {
-        const childControl = control.get(key);
-        const fieldPath = basePath ? `${basePath}.${key}` : key;
-
+      let isValid = true;
+      // Only validate controls of the nested group
+      for (const field of Object.keys((control as FormGroup).controls)) {
+        const childControl = (control as FormGroup).get(field);
         if (childControl instanceof FormGroup) {
-          // Recursively validate nested groups
-          if (!validateNestedGroup(childControl, fieldPath)) {
-            groupValid = false;
+          // Handle deeper nested form groups
+          if (!validateNestedGroup(childControl, field)) {
+            isValid = false;
+            console.log('Validation failed for nested group:', field);
           }
         } else {
-          // Validate individual control
-          if (!this.validateField(childControl, fieldPath)) {
-            groupValid = false;
+          // Handle regular form controls
+          if (!this.validateField(childControl, field)) {
+            isValid = false;
+            console.log('Validation failed for field:', field, 'Errors:', this.validationErrors[field]);
           }
         }
-      });
-      return groupValid;
+      }
+      return isValid;
     };
 
     // Validate each field in current step
@@ -1234,48 +1235,57 @@ export class FormDetailComponent implements OnInit {
   nextStep(): void {
     if (this.currentStep < this.steps.length) {
       if (this.validateCurrentStep()) {
-        const normalizedValue = this.normalizeFormValues(this.formGroup.value);
-
-        // First page - initial save
-        if (this.currentStep === 1 && !this.isEditMode) {
-          this.form20Service.saveForm20({ ...normalizedValue }).subscribe({
-            next: (response) => {
-              console.log('Form saved with ID:', response.id);
-              this.formId = response.id;
-              this.isEditMode = true;
-              this.loadError = 'Form saved successfully';
-              setTimeout(() => {
-                this.loadError = null;
-                this.currentStep++;
-              }, 1000);
+        let normalizedValue = this.normalizeFormValues(this.formGroup.value);
+        this.isLoading = true;
+        // Page 1: create new form
+        if (this.currentStep === 1 && (!this.formId || this.formId === 0)) {
+          normalizedValue = { ...normalizedValue, id: 0 };
+          this.form20Service.saveForm20(normalizedValue).subscribe({
+            next: (response: number) => {
+              console.log('API response formId:', response);
+              if (response) {
+                this.formId = response;
+                this.isEditMode = true;
+                this.formGroup.patchValue({ id: this.formId });
+                // Load the form so we have all backend data
+                this.loadForm(this.formId);
+                this.loadError = 'Form created successfully';
+                setTimeout(() => {
+                  this.loadError = null;
+                  this.currentStep++;
+                  this.isLoading = false;
+                }, 1000);
+              } else {
+                this.isLoading = false;
+              }
             },
-            error: (err) => {
+            error: (err: any) => {
               this.loadError = 'Failed to save form. Please try again.';
               console.error('Error saving form:', err);
-              console.error('Error details:', err.error); // Log validation errors
-              console.error('Missing fields:', err.error?.errors); // Log specific missing fields
-              setTimeout(() => (this.loadError = null), 5000);
-            },
-          });
-        } else if (this.formId) {
-          this.form20Service.saveForm20(normalizedValue).subscribe({
-            next: () => {
-              console.log('Form updated successfully');
-              this.loadError = 'Changes saved successfully';
-              setTimeout(() => {
-                this.loadError = null;
-                this.currentStep++;
-              }, 1000);
-            },
-            error: (err) => {
-              this.loadError = 'Failed to update form. Please try again.';
-              console.error('Error updating form:', err);
+              this.isLoading = false;
               setTimeout(() => (this.loadError = null), 5000);
             },
           });
         } else {
-          this.currentStep++;
-          this.loadError = null;
+          // All other pages: update form
+          normalizedValue = { ...normalizedValue, id: this.formId ?? 0 };
+          this.form20Service.saveForm20(normalizedValue).subscribe({
+            next: (response: number) => {
+              console.log('Form updated, formId:', response);
+              this.loadError = 'Form updated successfully';
+              setTimeout(() => {
+                this.loadError = null;
+                this.currentStep++;
+                this.isLoading = false;
+              }, 1000);
+            },
+            error: (err: any) => {
+              this.loadError = 'Failed to update form. Please try again.';
+              console.error('Error updating form:', err);
+              this.isLoading = false;
+              setTimeout(() => (this.loadError = null), 5000);
+            },
+          });
         }
       }
     }
@@ -1348,8 +1358,8 @@ export class FormDetailComponent implements OnInit {
         const normalizedValue = this.normalizeFormValues(this.formGroup.value);
         this.form20Service.saveForm20(normalizedValue).subscribe({
           next: (response) => {
-            console.log('Form saved with ID:', response.id);
-            this.formId = response.id;
+            console.log('Form saved with ID:', response);
+            this.formId = response;
             this.isEditMode = true;
             this.openApprovalDialog();
           },
@@ -1474,7 +1484,7 @@ export class FormDetailComponent implements OnInit {
       this.form20Service.saveForm20(normalizedValue).subscribe({
         next: (response) => {
           console.log('Draft saved successfully', response);
-          const savedId = response?.id;
+          const savedId = response;
           if (savedId) {
             this.formId = savedId;
             this.isEditMode = true;
