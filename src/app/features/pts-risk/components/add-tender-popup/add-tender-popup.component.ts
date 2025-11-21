@@ -12,26 +12,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TenderListApiService } from '../../../../core/services/tender-list-api.service';
 import { TenderAttachmentApiService } from '../../../../core/services/tenderAttchemnt-api.service';
-import {
-  BusinessUnitApiService,
-} from '../../../../core/services/business-unit-api.service';
+import { BusinessUnitApiService } from '../../../../core/services/business-unit-api.service';
 import { BusinessUnit } from '../../../../model/entity/pts-risk/business-unit';
-import {
-  CurrencyListApiService,
-} from '../../../../core/services/currency-list-api.service';
+import { CurrencyListApiService } from '../../../../core/services/currency-list-api.service';
 import { Currency } from '../../../../model/entity/pts-risk/currency-list';
-import {
-  GammonEntityApiService,
-} from '../../../../core/services/gammon-entity-api.service';
+import { GammonEntityApiService } from '../../../../core/services/gammon-entity-api.service';
 import { GammonEntity } from '../../../../model/entity/pts-risk/gammon-entity';
-import {
-  RiskAssessmentCriteriaApiService,
-} from '../../../../core/services/risk-assessment-criteria-api.service';
+import { RiskAssessmentCriteriaApiService } from '../../../../core/services/risk-assessment-criteria-api.service';
 import { RiskAssessmentCriteria } from '../../../../model/entity/pts-risk/risk-assessment-criteria';
-import {
-  PriorityLevelListApiService,
-} from '../../../../core/services/priority-level-list-api.service';
-import { PriorityLevel } from "../../../../model/entity/pts-risk/priority-level-list";
+import { PriorityLevelListApiService } from '../../../../core/services/priority-level-list-api.service';
+import { PriorityLevel } from '../../../../model/entity/pts-risk/priority-level-list';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -438,40 +428,48 @@ import { MatRadioModule } from '@angular/material/radio';
             ></textarea>
           </mat-form-field>
 
-          <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
-            <mat-label>Attachment</mat-label>
-            <div style="display: flex; align-items: center;">
-              <input
-                type="text"
-                matInput
-                [value]="selectedFileName || ''"
-                placeholder="Choose a file (PDF, Word, Excel)"
-                readonly
-              />
-              @if (selectedFileName) {
-              <a
-                mat-icon-button
-                color="primary"
-                [href]="
-                  '/api/ptsrisk/TenderAttachment/api/tender/' + data.id + '/attachment/download'
-                "
-                target="_blank"
-                matTooltip="Download attachment"
-              >
-                <mat-icon>download</mat-icon>
-              </a>
-              }
+          <div style="width: 100%; margin-bottom: 16px;">
+            <label style="font-weight: 600; color: #1976d2; display: block; margin-bottom: 8px;">Attachments</label>
+            <div *ngIf="tenderAttachments && tenderAttachments.length > 0">
+              <ul style="padding-left: 16px;">
+                <li *ngFor="let att of tenderAttachments">
+                  <span>{{ att.originalFileName }}</span>
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="downloadAttachment(att)"
+                    matTooltip="Download attachment"
+                  >
+                    <mat-icon>download</mat-icon>
+                  </button>
+                </li>
+              </ul>
             </div>
-            <button
-              mat-icon-button
-              matSuffix
-              color="primary"
-              (click)="fileInput.click()"
-              type="button"
-              [matTooltip]="'Maximum file size: 10MB'"
-            >
-              <mat-icon>attach_file</mat-icon>
-            </button>
+            <div *ngIf="!tenderAttachments || tenderAttachments.length === 0">
+              <span>No attachments available.</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+              <button
+                mat-icon-button
+                matSuffix
+                color="primary"
+                (click)="fileInput.click()"
+                type="button"
+                [matTooltip]="'Maximum file size: 10MB'"
+              >
+                <mat-icon>attach_file</mat-icon>
+              </button>
+              <span *ngIf="selectedFileName">{{ selectedFileName }}</span>
+              <button
+                mat-raised-button
+                color="accent"
+                type="button"
+                (click)="uploadSelectedFile()"
+                [disabled]="!selectedFile"
+              >
+                Upload
+              </button>
+            </div>
             <input
               type="file"
               #fileInput
@@ -479,8 +477,8 @@ import { MatRadioModule } from '@angular/material/radio';
               (change)="onFileSelected($event)"
               [accept]="acceptedFileTypes"
             />
-            <mat-hint>Accepted formats: PDF, Word, Excel (max 0MB)</mat-hint>
-          </mat-form-field>
+            <div style="font-size: 12px; color: #888; margin-top: 4px;">Accepted formats: PDF, Word, Excel (max 10MB)</div>
+          </div>
 
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Additional Note</mat-label>
@@ -500,14 +498,7 @@ import { MatRadioModule } from '@angular/material/radio';
       <div class="flex justify-between items-center">
         <div mat-dialog-actions align="start">
           @if(data.id) {
-          <button
-            mat-raised-button
-            color="warn"
-            type="button"
-            (click)="onDelete()"
-          >
-            Delete
-          </button>
+          <button mat-raised-button color="warn" type="button" (click)="onDelete()">Delete</button>
           }
         </div>
         <div mat-dialog-actions align="end">
@@ -615,6 +606,83 @@ import { MatRadioModule } from '@angular/material/radio';
   ],
 })
 export class AddTenderPopupComponent implements OnInit {
+      /**
+       * Download attachment by fetching file blob from API and triggering browser download
+       */
+      downloadAttachment(att: any): void {
+        if (!att?.id) return;
+        this.tenderAttachmentService.getAttachment(att.id).subscribe({
+          next: (blob: Blob) => {
+            const filename = att.originalFileName || 'attachment';
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+              window.URL.revokeObjectURL(url);
+              document.body.removeChild(a);
+            }, 100);
+          },
+          error: (error: any) => {
+            console.error('Error downloading attachment:', error);
+            alert('Failed to download attachment. Please try again.');
+          },
+        });
+      }
+    uploadSelectedFile(): void {
+      if (!this.selectedFile || !this.data?.id) return;
+      const tenderId = this.data.id;
+      const uploadStatus: FileUploadStatus = {
+        file: this.selectedFile,
+        progress: 0,
+        status: 'pending',
+      };
+      this.uploadStatuses.push(uploadStatus);
+      this.tenderAttachmentService.uploadAttachment(tenderId, this.selectedFile).subscribe({
+        next: (event: HttpEvent<any>) => {
+          switch (event.type) {
+            case HttpEventType.UploadProgress:
+              if (event.total) {
+                uploadStatus.progress = Math.round((100 * event.loaded) / event.total);
+                uploadStatus.status = 'uploading';
+              }
+              break;
+            case HttpEventType.Response:
+              uploadStatus.status = 'completed';
+              uploadStatus.progress = 100;
+              this.showUploadSummary = true;
+              // Refresh attachments list after upload
+              this.tenderListApiService.getTenderById(tenderId).subscribe({
+                next: (refreshResponse) => {
+                  const ta = refreshResponse.data.tenderAttachments;
+                  if (Array.isArray(ta)) {
+                    this.tenderAttachments = ta;
+                  } else if (ta) {
+                    this.tenderAttachments = [ta];
+                  } else {
+                    this.tenderAttachments = [];
+                  }
+                },
+                error: (error) => {
+                  console.error('Error refreshing attachments:', error);
+                },
+              });
+              // Clear selected file after upload
+              this.selectedFile = null;
+              this.selectedFileName = null;
+              break;
+          }
+        },
+        error: (error: any) => {
+          uploadStatus.status = 'error';
+          uploadStatus.error = this.getErrorMessage(error);
+          console.error('Error uploading file:', error);
+          this.showUploadSummary = true;
+        },
+      });
+    }
   tenderForm: FormGroup;
   selectedFileName: string | null = null;
   selectedFile: File | null = null;
@@ -633,6 +701,7 @@ export class AddTenderPopupComponent implements OnInit {
   BusinessUnitsOption: BusinessUnit[] = [];
   GammonEntitiesOption: GammonEntity[] = [];
   currencyOption: Currency[] = [];
+  tenderAttachments: any[] = [];
 
   upDownGradeOption: PriorityLevel[] = [];
   whetherSatisfyRiskOption: RiskAssessmentCriteria[] = [];
@@ -738,23 +807,19 @@ export class AddTenderPopupComponent implements OnInit {
       this.tenderListApiService.getTenderById(this.data.id).subscribe({
         next: (response) => {
           if (response && response.data) {
-            // Set attachment data if exists
-            if (response.data.tenderAttachments) {
-              this.selectedFileName = response.data.tenderAttachments.originalFileName;
-              this.tenderForm.patchValue({
-                attachment: response.data.tenderAttachments.originalFileName,
-              });
-            }
-
-            // Patch the form with the response data
             this.tenderForm.patchValue({
               ...response.data,
               projectDescriptionAndLocation: response.data.projectDescription,
               standardResponsePriorityLevel: response.data.standardResponsePriorityLevel,
             });
-
-            // Log the patched values for debugging
-            console.log('Form values after patch:', this.tenderForm.value);
+            const ta = response.data.tenderAttachments;
+            if (Array.isArray(ta)) {
+              this.tenderAttachments = ta;
+            } else if (ta) {
+              this.tenderAttachments = [ta];
+            } else {
+              this.tenderAttachments = [];
+            }
           }
         },
         error: (error) => {
@@ -890,7 +955,23 @@ export class AddTenderPopupComponent implements OnInit {
                     uploadStatus.status = 'completed';
                     uploadStatus.progress = 100;
                     this.showUploadSummary = true;
-                    setTimeout(() => this.dialogRef.close(response), 2000);
+                    // Refresh attachments list after upload
+                    this.tenderListApiService.getTenderById(tenderId).subscribe({
+                      next: (refreshResponse) => {
+                        const ta = refreshResponse.data.tenderAttachments;
+                        if (Array.isArray(ta)) {
+                          this.tenderAttachments = ta;
+                        } else if (ta) {
+                          this.tenderAttachments = [ta];
+                        } else {
+                          this.tenderAttachments = [];
+                        }
+                      },
+                      error: (error) => {
+                        console.error('Error refreshing attachments:', error);
+                      },
+                    });
+                    // Do not close the dialog automatically after upload
                     break;
                 }
               },

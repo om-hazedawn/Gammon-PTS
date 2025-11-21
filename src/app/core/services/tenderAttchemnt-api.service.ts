@@ -7,6 +7,11 @@ import { TenderAttachment } from '../../model/entity/pts-risk/tenderAttchemnt';
   providedIn: 'root',
 })
 export class TenderAttachmentApiService {
+
+  getAttachment(id: number): Observable<Blob> {
+    const url = `${this.baseUrl}/tenderAttachment/${id}`;
+    return this.http.get(url, { responseType: 'blob' });
+  }
   private baseUrl: string;
 
   constructor(private http: HttpClient) {
@@ -18,7 +23,7 @@ export class TenderAttachmentApiService {
   uploadAttachment(tenderId: number, file: File): Observable<HttpEvent<any>> {
     const url = `${this.baseUrl}/tender/${tenderId}/attachment`;
     const formData = new FormData();
-    formData.append('formFile', file);
+    formData.append('file', file);
     console.log('Full attachment upload URL:', url);
     return this.http.post(url, formData, {
       reportProgress: true,
@@ -37,14 +42,6 @@ export class TenderAttachmentApiService {
     );
   }
 
-  getAttachment(id: number): Observable<TenderAttachment> {
-    const url = `${this.baseUrl}/tenderAttachment/${id}`;
-    return this.http.get<TenderAttachment>(url).pipe(
-      tap((response) => console.log('Attachment fetched:', response)),
-      catchError((error) => {
-        console.error('Error fetching attachment:', error);
-        throw error;
-      })
-    );
-  }
+  // ...existing code...
 }
+
