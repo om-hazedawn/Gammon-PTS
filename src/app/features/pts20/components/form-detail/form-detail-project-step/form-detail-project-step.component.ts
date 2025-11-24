@@ -122,6 +122,19 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
         });
       }
 
+      // Add similar logic for Approxmargin, but store as number
+      const approxMarginControl = form.get('Approxmargin');
+      if (approxMarginControl) {
+        approxMarginControl.valueChanges.subscribe((val) => {
+          if (val) {
+            const parsedValue = this.parseApproximateValue(val);
+            if (!isNaN(parsedValue) && parsedValue > 0 && val !== parsedValue) {
+              approxMarginControl.setValue(parsedValue, { emitEvent: false });
+            }
+          }
+        });
+      }
+
       // Listen to BidType changes to show/hide JV Partners field
       const bidTypeControl = form.get('BidType');
       if (bidTypeControl) {

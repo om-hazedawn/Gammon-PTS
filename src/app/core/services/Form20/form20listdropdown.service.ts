@@ -33,7 +33,7 @@ export class Form20ListDropdownService {
   }
 
   obtainBuildingUnit(): Observable<ObtainRegion> {
-    return this.http.post<ObtainRegion>(`${this.buildingunit}//functions`, {}).pipe(
+    return this.http.post<ObtainRegion>(`${this.buildingunit}/functions`, {}).pipe(
       catchError((error) => {
         console.error('Error fetching building units:', error);
         throw error;

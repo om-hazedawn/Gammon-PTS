@@ -87,7 +87,12 @@ import {
           </div>
         </mat-card-header>
         <mat-card-content>
-          @if (isLoading) {
+          @if (formDeleted) {
+          <div class="form-deleted-message">
+            <mat-icon class="icon">warning</mat-icon>
+            <span>This form has been <strong>Deleted</strong>.</span>
+          </div>
+          } @if (isLoading) {
           <div class="loading-container">
             <mat-spinner diameter="40"></mat-spinner>
             <p>Loading form details...</p>
@@ -110,7 +115,11 @@ import {
 
           <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
             @if (currentStep === 1) {
-            <app-form-detail-project-step [isEditMode]="isEditMode" [formId]="formId" (allocateTenderNoRequest)="onAllocateTenderNoRequest()"></app-form-detail-project-step>
+            <app-form-detail-project-step
+              [isEditMode]="isEditMode"
+              [formId]="formId"
+              (allocateTenderNoRequest)="onAllocateTenderNoRequest()"
+            ></app-form-detail-project-step>
             } @if (currentStep === 2) {
             <app-form-detail-contract-step></app-form-detail-contract-step>
             } @if (currentStep === 3) {
@@ -158,188 +167,7 @@ import {
       </mat-card>
     </div>
   `,
-  styles: [
-    `
-      .evaluation-item {
-        background: white;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-      }
-
-      .evaluation-item:hover {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      .mat-radio-button.mat-accent .mat-radio-inner-circle {
-        background-color: #1976d2;
-      }
-
-      .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-        border-color: #1976d2;
-      }
-
-      .mat-radio-button .mat-radio-label-content {
-        font-size: 14px;
-        padding-left: 8px;
-      }
-
-      .header-icons {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-right: 16px;
-      }
-
-      .header-icons button {
-        background: none;
-        border: none;
-        cursor: pointer;
-      }
-
-      .header-icons mat-icon {
-        font-size: 24px;
-        color: #1976d2;
-      }
-
-      .header-icons mat-icon:hover {
-        color: #0056b3;
-      }
-
-      .draft-btn {
-        display: block;
-        margin: 16px auto 0;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        width: 100px;
-        height: 40px;
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-      }
-
-      .draft-btn:hover {
-        background-color: #0056b3;
-      }
-
-      .form-detail-container {
-        padding: 20px;
-        margin: 0 auto;
-      }
-
-      .form-navigation {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-        background-color: #ffffff;
-        padding: 10px 20px;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
-      .step-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        cursor: pointer;
-        padding: 10px;
-        transition: background-color 0.3s, color 0.3s;
-      }
-
-      .step-item.active {
-        background-color: #1976d2;
-        color: white;
-        font-weight: bold;
-        border-radius: 4px;
-      }
-
-      .step-item:hover {
-        background-color: #e0e0e0;
-      }
-
-      .step-number {
-        font-size: 18px;
-        font-weight: bold;
-      }
-
-      .step-label {
-        font-size: 14px;
-      }
-
-      .section {
-        margin-bottom: 30px;
-      }
-
-      .section h3 {
-        color: #1976d2;
-        margin-bottom: 16px;
-        border-bottom: 1px solid #e0e0e0;
-        padding-bottom: 8px;
-      }
-
-      .form-row {
-        display: flex;
-        gap: 16px;
-        margin-bottom: 16px;
-      }
-
-      .form-row mat-form-field {
-        flex: 1;
-      }
-
-      .full-width {
-        width: 100%;
-      }
-
-      .actions {
-        display: flex;
-        gap: 16px;
-        margin-top: 20px;
-        padding-top: 20px;
-        border-top: 1px solid #e0e0e0;
-      }
-
-      mat-form-field {
-        --mat-form-field-padding: 8px;
-      }
-
-      input[matInput] {
-        padding: 8px;
-      }
-
-      textarea[matInput] {
-        padding: 8px;
-      }
-
-      .unit-select {
-        width: 60px;
-      }
-
-      .radio-group-container {
-        display: flex;
-        align-items: center;
-        padding: 8px 0;
-        min-height: 48px;
-      }
-
-      .radio-option {
-        padding: 8px;
-        border-radius: 4px;
-        font-size: 14px;
-      }
-
-      .radio-option:hover {
-        background-color: #f5f5f5;
-      }
-
-      mat-radio-group {
-        margin: 8px 0;
-        align-items: center;
-      }
-    `,
-  ],
+  styleUrls: ['./form-detail.component.css'],
 })
 export class FormDetailComponent implements OnInit {
   formGroup!: FormGroup;
@@ -350,48 +178,49 @@ export class FormDetailComponent implements OnInit {
   loadError: string | null = null;
   validationErrors: { [key: string]: string[] } = {};
 
-    allocatingTenderNo = false;
-    onAllocateTenderNoRequest(): void {
-      // Save the form first
-      const normalizedValue = this.normalizeFormValues(this.formGroup.value);
-      this.allocatingTenderNo = true;
-      this.form20Service.saveForm20(normalizedValue).subscribe({
-        next: (response) => {
-          // Update formId if needed
-          if (response) {
-            this.formId = response;
-          }
-          // Only call the tender allocation API if formId is a valid number
-          if (typeof this.formId === 'number') {
-            this.form20ListDropdownService.assignTenderNo(this.formId).subscribe({
-              next: () => {
-                this.allocatingTenderNo = false;
-                this.loadError = 'Tender No allocated successfully.';
-                this.loadForm(this.formId!);
-                setTimeout(() => (this.loadError = null), 3000);
-              },
-              error: (err) => {
-                this.allocatingTenderNo = false;
-                this.loadError = 'Error allocating Tender No.';
-                console.error('Error allocating Tender No:', err);
-                setTimeout(() => (this.loadError = null), 5000);
-              }
-            });
-          } else {
-            this.allocatingTenderNo = false;
-            this.loadError = 'Form ID is invalid. Cannot allocate Tender No.';
-            setTimeout(() => (this.loadError = null), 5000);
-          }
-        },
-        error: (err) => {
+  formDeleted: boolean = false;
+
+  allocatingTenderNo = false;
+  onAllocateTenderNoRequest(): void {
+    // Save the form first
+    const normalizedValue = this.normalizeFormValues(this.formGroup.value);
+    this.allocatingTenderNo = true;
+    this.form20Service.saveForm20(normalizedValue).subscribe({
+      next: (response) => {
+        // Update formId if needed
+        if (response) {
+          this.formId = response;
+        }
+        // Only call the tender allocation API if formId is a valid number
+        if (typeof this.formId === 'number') {
+          this.form20ListDropdownService.assignTenderNo(this.formId).subscribe({
+            next: () => {
+              this.allocatingTenderNo = false;
+              this.loadError = 'Tender No allocated successfully.';
+              this.loadForm(this.formId!);
+              setTimeout(() => (this.loadError = null), 3000);
+            },
+            error: (err) => {
+              this.allocatingTenderNo = false;
+              this.loadError = 'Error allocating Tender No.';
+              console.error('Error allocating Tender No:', err);
+              setTimeout(() => (this.loadError = null), 5000);
+            },
+          });
+        } else {
           this.allocatingTenderNo = false;
-          this.loadError = 'Error saving form before allocation.';
-          console.error('Error saving form:', err);
+          this.loadError = 'Form ID is invalid. Cannot allocate Tender No.';
           setTimeout(() => (this.loadError = null), 5000);
         }
-      });
-    }
-
+      },
+      error: (err) => {
+        this.allocatingTenderNo = false;
+        this.loadError = 'Error saving form before allocation.';
+        console.error('Error saving form:', err);
+        setTimeout(() => (this.loadError = null), 5000);
+      },
+    });
+  }
 
   // Mapping of form sections to their display names for error messages
   private readonly sectionNames = {
@@ -454,7 +283,7 @@ export class FormDetailComponent implements OnInit {
     private router: Router,
     private form20Service: Form20DetailsService,
     private dialog: MatDialog,
-    private form20ListDropdownService: Form20ListDropdownService,
+    private form20ListDropdownService: Form20ListDropdownService
   ) {
     this.initializeForm();
   }
@@ -471,6 +300,28 @@ export class FormDetailComponent implements OnInit {
         this.isEditMode = true;
         this.loadForm(this.formId);
       }
+    });
+  }
+
+  // Call this after loading form data
+  private checkBusinessUnitMatch(businessUnitCode: string): void {
+    // Call obtainBuildingUnit API and compare keys
+    this.form20ListDropdownService.obtainBuildingUnit().subscribe({
+      next: (unitResponse: any) => {
+        // Keys from API response
+        const validUnits = Object.keys(unitResponse || {});
+        // If businessUnitCode is not in validUnits, mark as deleted
+        if (!validUnits.includes(businessUnitCode)) {
+          this.formDeleted = true;
+        } else {
+          this.formDeleted = false;
+        }
+      },
+      error: (err: any) => {
+        // On error, do not mark as deleted, but log
+        console.error('Error fetching building units:', err);
+        this.formDeleted = false;
+      },
     });
   }
 
@@ -848,6 +699,10 @@ export class FormDetailComponent implements OnInit {
       throw new Error('Invalid form data received');
     }
 
+    // Check businessUnitCode against obtainBuildingUnit API
+    if (formData.businessUnitCode) {
+      this.checkBusinessUnitMatch(formData.businessUnitCode);
+    }
 
     // Set all contract period related fields
     this.formGroup.patchValue({
@@ -1116,7 +971,6 @@ export class FormDetailComponent implements OnInit {
         HSEQ: formData.distributionHSEQ,
       },
     });
-
   }
 
   validateCurrentStep(): boolean {
@@ -1159,7 +1013,12 @@ export class FormDetailComponent implements OnInit {
           // Handle regular form controls
           if (!this.validateField(childControl, field)) {
             isValid = false;
-            console.log('Validation failed for field:', field, 'Errors:', this.validationErrors[field]);
+            console.log(
+              'Validation failed for field:',
+              field,
+              'Errors:',
+              this.validationErrors[field]
+            );
           }
         }
       }
@@ -1235,6 +1094,11 @@ export class FormDetailComponent implements OnInit {
   nextStep(): void {
     if (this.currentStep < this.steps.length) {
       if (this.validateCurrentStep()) {
+        if (this.formDeleted) {
+          // If form is deleted, just go to next step without saving
+          this.currentStep++;
+          return;
+        }
         let normalizedValue = this.normalizeFormValues(this.formGroup.value);
         this.isLoading = true;
         // Page 1: create new form
@@ -1599,7 +1463,7 @@ export class FormDetailComponent implements OnInit {
       // Nullable numeric fields
       approximateValue: approximateVal, // Send validated decimal value
       profitMargin: formValue.Approxmargin ? formValue.Approxmargin : null,
-      currencyId: formValue.ApproximateValueType ? formValue.ApproximateValueType : null, 
+      currencyId: formValue.ApproximateValueType ? formValue.ApproximateValueType : null,
       tenderTypeId: tenderTypeId,
       countryId: formValue.Region ? formValue.Region : null,
       clientFinanceStanding: formValue.FinantialStanding ? formValue.FinantialStanding : null,
@@ -1854,7 +1718,7 @@ export class FormDetailComponent implements OnInit {
     // Apply any contract form group values
     if (formValue.contract) {
       Object.assign(baseForm, {
-        contractTypeId: toNumberOrNull(formValue.contract.ContractForm),
+        contractTypeId: toNumberOrNull(formValue.contract.Type),
         contractFormRiskCode: ensureString(formValue.contract?.DegreeRiskTypeContract),
         contractFormDescription: formValue.contract.Description,
         contractDamageRateRemark: formValue.contract.RateOfDamages,
@@ -1958,7 +1822,7 @@ export class FormDetailComponent implements OnInit {
     if (formValue.Warranties) {
       Object.assign(baseForm, {
         warrantGuranteeIsParentCompanyGuarantee: ensureString(
-          formValue.warrantGuranteeIsParentCompanyGuarantee
+          formValue.Warranties.ParentCompanyGuarantee
         ),
         warrantGuranteeParentCompanyGuarantee: ensureString(
           formValue.Warranties.ParentCompanyDetails
@@ -2004,7 +1868,7 @@ export class FormDetailComponent implements OnInit {
           formValue.Insurance.ProvidedByEmployerRisk
         ),
 
-        insuranceThirdPartyAmount: toNumberOrNull(formValue.Insurance.ThirdPartyAmount),
+        insuranceThirdPartyAmount: toNumberOrNull(formValue.Insurance.ThirdPartyDetails),
         insuranceThirdPartyRiskCode: ensureString(formValue.Insurance.ThirdPartyRisk),
 
         insuranceIsOnerousRequirement: ensureString(formValue.Insurance.OnerousRequirements),
@@ -2135,5 +1999,4 @@ export class FormDetailComponent implements OnInit {
       this.loadForm(this.formId);
     }
   }
-
 }
