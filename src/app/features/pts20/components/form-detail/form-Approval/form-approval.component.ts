@@ -17,10 +17,35 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   imports: [...FORM_DETAIL_STEP_IMPORTS , MatAutocompleteModule, MatChipsModule, MatFormFieldModule],
   templateUrl: './form-approval.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [`
+    .readonly-banner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      background-color: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 4px;
+      color: #856404;
+    }
+    .readonly-banner mat-icon {
+      color: #856404;
+    }
+  `]
 })
 export class FormApprovalComponent implements OnInit {
-  // Enable submit if any approval field has at least one entry
+  // Check if user can edit approvers based on form status and edit rights
+  get isReadOnly(): boolean {
+    const status = this.data?.formData?.status;
+    const businessUnitCode = this.data?.formData?.businessUnitCode;
+    const hasEditRight = this.form20ListDropdownService.hasEditRight(businessUnitCode);
+    return !hasEditRight;
+  }
+
+  // Enable submit if any approval field has at least one entry AND user has edit rights
   get canSubmit(): boolean {
+    if (this.isReadOnly) return false;
     return (
       (this.approvalForm.get('ceo')?.value?.length ?? 0) > 0 ||
       (this.approvalForm.get('contractManager')?.value?.length ?? 0) > 0 ||
@@ -168,6 +193,9 @@ export class FormApprovalComponent implements OnInit {
   ngOnInit(): void {
   // Debug: Log incoming ceApproval data
     this.loadForm20_CSD_HOE();
+    
+    // In readonly mode, we hide interactive elements in template instead of disabling
+    // This allows the form to remain valid for viewing existing approvers
     this.filteredHeadOfEstimatingOptions$ = this.hoeSearchCtrl.valueChanges.pipe(
       startWith(''),
       map(searchValue => {

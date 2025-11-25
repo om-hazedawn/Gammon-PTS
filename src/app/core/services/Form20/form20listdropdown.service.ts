@@ -25,11 +25,39 @@ export class Form20ListDropdownService {
   private baseUrl: string;
   private buildingunit: string;
   private baseUrl2: string;
+  private writableBUList: string[] = [];
 
   constructor(private http: HttpClient) {
     this.baseUrl = '/api/pts20/Form20';
     this.buildingunit = '/api/pts20/Authorize';
     this.baseUrl2 = '/api/Form20';
+    
+    // Load building units on service initialization
+    this.obtainBuildingUnit().subscribe({
+      next: (data) => {
+        this.writableBUList = Object.keys(data);
+      },
+      error: (error) => {
+        console.error('Error loading building units for edit rights:', error);
+      }
+    });
+  }
+
+  canSubmitForm(status: string | null | undefined): boolean {
+    if (!status) return true;
+    const upperStatus = status.toUpperCase();
+    return upperStatus === 'DRAFT' || upperStatus === 'REJECTED';
+  }
+
+  hasEditRight(businessUnitCode: string | null | undefined): boolean {
+    if (!businessUnitCode) return false;
+    const hasRight = this.writableBUList.includes(businessUnitCode);
+    console.log('hasEditRight check:', {
+      businessUnitCode,
+      writableBUList: this.writableBUList,
+      hasRight
+    });
+    return hasRight;
   }
 
   obtainBuildingUnit(): Observable<ObtainRegion> {

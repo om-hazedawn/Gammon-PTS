@@ -157,7 +157,11 @@ import {
               </button>
               } @if (currentStep === 10) {
               <button type="submit" mat-raised-button color="primary" [disabled]="!formGroup.valid">
-                Submit
+                @if (canSubmit() && hasEditRight()) {
+                  Submit
+                } @else {
+                  Approvers
+                }
               </button>
               }
             </div>
@@ -323,6 +327,22 @@ export class FormDetailComponent implements OnInit {
         this.formDeleted = false;
       },
     });
+  }
+
+  /**
+   * Check if the current form can be submitted based on its status
+   */
+  canSubmit(): boolean {
+    const status = this.formGroup?.value?.status;
+    return this.form20ListDropdownService.canSubmitForm(status);
+  }
+
+  /**
+   * Check if the current user has edit rights for the form's business unit
+   */
+  hasEditRight(): boolean {
+    const businessUnitCode = this.formGroup?.value?.businessUnit;
+    return this.form20ListDropdownService.hasEditRight(businessUnitCode);
   }
 
   private initializeForm(): void {
@@ -1257,7 +1277,11 @@ export class FormDetailComponent implements OnInit {
     const dialogRef = this.dialog.open(FormApprovalComponent, {
       width: '800px',
       data: {
-        formData: this.formGroup.value,
+        formData: {
+          ...this.formGroup.value,
+          status: this.formGroup.value.status,
+          businessUnitCode: this.formGroup.value.businessUnit
+        },
         ceApproval: ceApproval,
         edApproval: edApproval,
         cmApproval: cmApproval,

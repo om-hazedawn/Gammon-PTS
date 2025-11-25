@@ -6,6 +6,13 @@
     </button>
   </div>
 
+  @if (isReadOnly) {
+  <div class="readonly-banner">
+    <mat-icon>info</mat-icon>
+    <span>View only mode - You cannot modify approvers</span>
+  </div>
+  }
+
   <div class="p-4 bg-white rounded-lg">
     <form [formGroup]="approvalForm" (ngSubmit)="onSubmit()">
       <div class="mb-6">
@@ -21,9 +28,11 @@
               @for (user of selectedHeadOfEstimating; track user) {
               <mat-chip-row (removed)="removeHeadOfEstimating(user)">
                 {{ user.fullName }} ({{ user.employeeNo }})
+                @if (!isReadOnly) {
                 <button matChipRemove>
                   <mat-icon>cancel</mat-icon>
                 </button>
+                }
               </mat-chip-row>
               }
             </mat-chip-grid>
@@ -33,6 +42,8 @@
               [matChipInputFor]="chipGridHOE"
               [matAutocomplete]="autoHOE"
               [formControl]="hoeSearchCtrl"
+              [style.display]="isReadOnly ? 'none' : 'block'"
+              [disabled]="isReadOnly"
             />
             <mat-autocomplete
               #autoHOE="matAutocomplete"
@@ -61,9 +72,11 @@
                 @for (user of selectedContractManager; track user) {
                 <mat-chip-row (removed)="removeContractManager(user)">
                   {{ user.fullName }} ({{ user.employeeNo }})
+                  @if (!isReadOnly) {
                   <button matChipRemove>
                     <mat-icon>cancel</mat-icon>
                   </button>
+                  }
                 </mat-chip-row>
                 }
               </mat-chip-grid>
@@ -73,6 +86,8 @@
                 [matChipInputFor]="chipGridCM"
                 [matAutocomplete]="autoCM"
                 [formControl]="cmSearchCtrl"
+                [style.display]="isReadOnly ? 'none' : 'block'"
+                [disabled]="isReadOnly"
               />
               <mat-autocomplete
                 #autoCM="matAutocomplete"
@@ -101,9 +116,11 @@
               @for (user of selectedDirector; track user) {
               <mat-chip-row (removed)="removeDirector(user)">
                 {{ user.fullName }} ({{ user.employeeNo }})
+                @if (!isReadOnly) {
                 <button matChipRemove>
                   <mat-icon>cancel</mat-icon>
                 </button>
+                }
               </mat-chip-row>
               }
             </mat-chip-grid>
@@ -113,6 +130,8 @@
               [matChipInputFor]="chipGridDIR"
               [matAutocomplete]="autoDIR"
               [formControl]="dirSearchCtrl"
+              [style.display]="isReadOnly ? 'none' : 'block'"
+              [disabled]="isReadOnly"
             />
             <mat-autocomplete
               #autoDIR="matAutocomplete"
@@ -141,9 +160,11 @@
               @for (user of selectedExecutiveDirector; track user) {
               <mat-chip-row (removed)="removeExecutiveDirector(user)">
                 {{ user.fullName }} ({{ user.employeeNo }})
+                @if (!isReadOnly) {
                 <button matChipRemove>
                   <mat-icon>cancel</mat-icon>
                 </button>
+                }
               </mat-chip-row>
               }
             </mat-chip-grid>
@@ -153,6 +174,8 @@
               [matChipInputFor]="chipGridED"
               [matAutocomplete]="autoED"
               [formControl]="edSearchCtrl"
+              [style.display]="isReadOnly ? 'none' : 'block'"
+              [disabled]="isReadOnly"
             />
             <mat-autocomplete
               #autoED="matAutocomplete"
@@ -182,9 +205,11 @@
               @for (user of selectedCEO; track user) {
               <mat-chip-row (removed)="removeCEO(user)">
                 {{ user.fullName }} ({{ user.employeeNo }})
+                @if (!isReadOnly) {
                 <button matChipRemove>
                   <mat-icon>cancel</mat-icon>
                 </button>
+                }
               </mat-chip-row>
               }
             </mat-chip-grid>
@@ -195,6 +220,8 @@
               [matChipInputFor]="chipGrid"
               [matAutocomplete]="autoCEO"
               [formControl]="ceoSearchCtrl"
+              [style.display]="isReadOnly ? 'none' : 'block'"
+              [disabled]="isReadOnly"
             />
 
             <mat-autocomplete
