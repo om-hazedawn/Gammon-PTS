@@ -139,7 +139,7 @@ import {
             } @if (currentStep === 10) {
             <app-form-detail-distribution-step></app-form-detail-distribution-step>
             } @if (currentStep === 11) {
-            <app-form-detail-attachment-step></app-form-detail-attachment-step>
+            <app-form-detail-attachment-step  [formId]="formId"></app-form-detail-attachment-step>
             }
 
             <div class="actions">

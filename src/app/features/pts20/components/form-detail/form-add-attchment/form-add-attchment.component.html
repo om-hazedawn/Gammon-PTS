@@ -27,7 +27,7 @@
           <input
             type="file"
             class="hidden"
-            accept=".pdf"
+            accept=".pdf,application/pdf"
             #fileInput
             (change)="onFileSelected($event)"
           >
@@ -43,6 +43,9 @@
               Click to select PDF file
             }
           </button>
+          @if (fileError) {
+            <div class="mt-2 text-red-600 text-sm">{{ fileError }}</div>
+          }
           @if (attachmentForm.get('file')?.errors?.['required'] && attachmentForm.get('file')?.touched) {
             <mat-error class="mt-2">Please select a file</mat-error>
           }

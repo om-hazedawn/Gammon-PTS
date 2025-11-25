@@ -29,6 +29,7 @@ export class FormAddAttchmentComponent {
 
   attachmentForm: FormGroup;
   selectedFile: File | null = null;
+  fileError: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -42,8 +43,21 @@ export class FormAddAttchmentComponent {
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
+    this.fileError = null;
+    
     if (input.files?.length) {
-      this.selectedFile = input.files[0];
+      const file = input.files[0];
+      
+      // Validate PDF file type
+      if (file.type !== 'application/pdf') {
+        this.fileError = 'Only PDF files are allowed';
+        this.selectedFile = null;
+        this.attachmentForm.patchValue({ file: null });
+        input.value = '';
+        return;
+      }
+      
+      this.selectedFile = file;
       this.attachmentForm.patchValue({ file: this.selectedFile });
     }
   }
