@@ -28,11 +28,14 @@ export class Form20AttachmentService {
   saveAttachment(file: File, formId: number, attachmentType?: string): Observable<Form20Attachment> {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('formId', formId.toString());
+    
+    // Build query parameters
+    let url = `${this.baseUrl}/saveAttachment?formId=${formId}`;
     if (attachmentType) {
-      formData.append('attachmentType', attachmentType);
+      url += `&type=${attachmentType}`;
     }
-    return this.http.post<Form20Attachment>(`${this.baseUrl}/saveAttachment`, formData);
+    
+    return this.http.post<Form20Attachment>(url, formData);
   }
 
   downloadAttachment(attachmentId: number): Observable<Blob> {

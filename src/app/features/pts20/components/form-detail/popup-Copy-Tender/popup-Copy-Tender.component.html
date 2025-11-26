@@ -1,0 +1,56 @@
+<div class="dialog-container">
+  <div class="flex justify-between items-center mb-4">
+    <h2 mat-dialog-title class="text-2xl font-bold">Detail copy from existing Tender</h2>
+    <button mat-icon-button (click)="onCancel()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content>
+    <p class="mb-4 text-gray-700">Select the Tender that detail copy to</p>
+    
+    @if (isLoading) {
+      <div class="flex justify-center items-center p-8">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    } @else {
+    <mat-form-field class="w-full mb-4">
+      <mat-label>Search</mat-label>
+      <input matInput [(ngModel)]="filterValue" (keyup)="applyFilter(filterValue)" placeholder="Filter tenders...">
+    </mat-form-field>
+
+    <table mat-table [dataSource]="dataSource" class="w-full">
+      <ng-container matColumnDef="tenderNo">
+        <th mat-header-cell *matHeaderCellDef>Tender No</th>
+        <td mat-cell *matCellDef="let row">{{ row.tenderNo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="businessUnit">
+        <th mat-header-cell *matHeaderCellDef>Business Unit</th>
+        <td mat-cell *matCellDef="let row">{{ row.businessUnit }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Title</th>
+        <td mat-cell *matCellDef="let row">{{ row.title }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="clientName">
+        <th mat-header-cell *matHeaderCellDef>Client Name</th>
+        <td mat-cell *matCellDef="let row">{{ row.clientName }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+          (click)="selectRow(row)" 
+          [class.selected-row]="selectedRow === row"
+          class="cursor-pointer hover:bg-gray-100"></tr>
+    </table>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="mt-4">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSelect()" [disabled]="!selectedRow">Select</button>
+  </mat-dialog-actions>
+</div>

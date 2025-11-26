@@ -40,6 +40,8 @@ import {
   FormDetailProjectStepComponent,
   FormDetailWarrantiesStepComponent,
 } from './';
+import { PopupCopyTenderComponent } from './popup-Copy-Tender/popup-Copy-Tender.component';
+import { PopupKeyDateComponent } from './popup-KeyDate/popup-KeyDate.component';
 
 @Component({
   selector: 'app-form-detail',
@@ -76,14 +78,48 @@ import {
       <mat-card>
         <mat-card-header>
           <h3>{{ isEditMode ? 'Edit Form 20' : 'New Form 20' }}</h3>
-          <button class="draft-btn" (click)="saveDraft()">Draft</button>
+          <button class="draft-btn">{{ formStatus }}</button>
           <div class="header-icons">
+            @if (formId && formId !== 0 && formGroup.value.tenderNo && formGroup.value.tenderNo !==
+            'NEW' && hasEditRight()) {
+            <button
+              mat-raised-button
+              color="primary"
+              aria-label="Copy Tender"
+              (click)="openFormCopyDialog()"
+            >
+              <mat-icon>content_copy</mat-icon>
+              Copy Tender
+            </button>
+            } 
+             <!-- canRejectForm this form -->
+            <button mat-icon-button aria-label="rejected">
+              <mat-icon>report_problem</mat-icon>
+            </button>
+
+             <!-- @if (hasEditRight() && (!formId || formId < 1) && formGroup.value.tenderNo == 'NEW') {} -->
+            <button mat-icon-button aria-label="Delete" (click)="deleteForm()">
+              <mat-icon>delete</mat-icon>
+            </button>
+
             <button mat-icon-button aria-label="Save" (click)="onSubmit()">
               <mat-icon>save</mat-icon>
             </button>
-            <button mat-icon-button aria-label="Delete" *ngIf="isEditMode" (click)="deleteForm()">
-              <mat-icon>delete</mat-icon>
+
+            @if (formStatus == 'BID') {
+            <button 
+              mat-icon-button aria-label="Key Dates" 
+              (click)="openKeyDateDialog()"
+            >
+              <mat-icon>event</mat-icon>
             </button>
+            }
+            
+             @if(formId && formId !== 0) {
+            <button mat-icon-button aria-label="print">
+              <mat-icon>print</mat-icon>
+            </button>
+            }
           </div>
         </mat-card-header>
         <mat-card-content>
@@ -139,7 +175,7 @@ import {
             } @if (currentStep === 10) {
             <app-form-detail-distribution-step></app-form-detail-distribution-step>
             } @if (currentStep === 11) {
-            <app-form-detail-attachment-step  [formId]="formId"></app-form-detail-attachment-step>
+            <app-form-detail-attachment-step [formId]="formId"></app-form-detail-attachment-step>
             }
 
             <div class="actions">
@@ -157,11 +193,7 @@ import {
               </button>
               } @if (currentStep === 10) {
               <button type="submit" mat-raised-button color="primary" [disabled]="!formGroup.valid">
-                @if (canSubmit() && hasEditRight()) {
-                  Submit
-                } @else {
-                  Approvers
-                }
+                @if (canSubmit() && hasEditRight()) { Submit } @else { Approvers }
               </button>
               }
             </div>
@@ -181,6 +213,7 @@ export class FormDetailComponent implements OnInit {
   isLoading = false;
   loadError: string | null = null;
   validationErrors: { [key: string]: string[] } = {};
+  formStatus: string = 'Draft'; // Track form status
 
   formDeleted: boolean = false;
 
@@ -343,6 +376,33 @@ export class FormDetailComponent implements OnInit {
   hasEditRight(): boolean {
     const businessUnitCode = this.formGroup?.value?.businessUnit;
     return this.form20ListDropdownService.hasEditRight(businessUnitCode);
+  }
+
+  openFormCopyDialog(): void {
+    const dialogRef = this.dialog.open(PopupCopyTenderComponent, {
+      width: '900px',
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        // Handle the result from the dialog here
+        console.log('Selected tender:', result);
+      }
+    });
+  }
+
+  openKeyDateDialog(): void {
+    const dialogRef = this.dialog.open(PopupKeyDateComponent, {
+      width: '600px',
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        // Handle the result from the dialog here
+        console.log('Key date result:', result);
+      }
+    });
   }
 
   private initializeForm(): void {
@@ -706,6 +766,9 @@ export class FormDetailComponent implements OnInit {
   }
 
   patchFormValues(formData: Form20Details): void {
+    // Update form status
+    this.formStatus = formData.status || 'Draft';
+
     // Patch approval arrays for dialog
     this.formGroup.patchValue({
       ceApproval: formData.ceApproval || [],
@@ -1280,7 +1343,7 @@ export class FormDetailComponent implements OnInit {
         formData: {
           ...this.formGroup.value,
           status: this.formGroup.value.status,
-          businessUnitCode: this.formGroup.value.businessUnit
+          businessUnitCode: this.formGroup.value.businessUnit,
         },
         ceApproval: ceApproval,
         edApproval: edApproval,

@@ -1,0 +1,31 @@
+<div class="dialog-container">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">Key Date Information</h1>
+    <button mat-icon-button (click)="onClose()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content>
+    <table mat-table [dataSource]="dataSource" class="w-full">
+      <ng-container matColumnDef="keyDateType">
+        <th mat-header-cell *matHeaderCellDef>Key Date Type</th>
+        <td mat-cell *matCellDef="let row">{{ row.keyDateType }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let row">{{ row.date | date: 'short' }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="mt-4">
+    <button mat-button (click)="onAdd()">Add</button>
+    <button mat-raised-button color="primary" (click)="onSave()">Save</button>
+    <button mat-button (click)="onClose()">Close</button>
+  </mat-dialog-actions>
+</div>
