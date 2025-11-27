@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
 import { Form20ListService } from '../../../../../core/services/Form20/form20list.service';
+import { Form20ListDropdownService } from '../../../../../core/services/Form20/form20listdropdown.service';
 
 @Component({
   selector: 'app-popup-copy-tender',
@@ -40,15 +41,35 @@ export class PopupCopyTenderComponent implements OnInit {
   dataSource = new MatTableDataSource<any>([]);
   selectedRow: any | null = null;
   isLoading: boolean = false;
+  writableBUList: string[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<PopupCopyTenderComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private form20ListService: Form20ListService
+    private form20ListService: Form20ListService,
+    private form20ListDropdownService: Form20ListDropdownService
   ) {}
 
   ngOnInit(): void {
-    this.loadFormList();
+    this.loadWritableBusinessUnits();
+  }
+
+  loadWritableBusinessUnits(): void {
+    this.form20ListDropdownService.obtainBuildingUnit().subscribe({
+      next: (data) => {
+        // Only include business units where user has WRITE permission
+        this.writableBUList = Object.keys(data).filter(key => 
+          data[key].includes('WRITE')
+        );
+        console.log('Writable Business Units:', this.writableBUList);
+        // Load forms after getting writable business units
+        this.loadFormList();
+      },
+      error: (error) => {
+        console.error('Error loading business units:', error);
+        this.isLoading = false;
+      }
+    });
   }
 
   loadFormList(): void {
@@ -57,14 +78,22 @@ export class PopupCopyTenderComponent implements OnInit {
       next: (response) => {
         console.log('API Response:', response);
         const formList = response.items || [];
-        this.dataSource.data = formList.map(form => ({
+        // Filter only forms with status 'DRAFT', exclude the current form, and check WRITE permission
+        const currentFormId = this.data?.currentFormId;
+        const draftForms = formList.filter(form => {
+          const isDraft = form.status?.toUpperCase() === 'DRAFT';
+          const isNotCurrentForm = form.id !== currentFormId;
+          const hasWritePermission = this.writableBUList.includes(form.businessUnitCode);
+          return isDraft && isNotCurrentForm && hasWritePermission;
+        });
+        this.dataSource.data = draftForms.map(form => ({
           id: form.id,
           tenderNo: form.tenderNo,
           businessUnit: form.businessUnitCode,
           title: form.title,
           clientName: form.client
         }));
-        console.log('DataSource data:', this.dataSource.data);
+        console.log('DataSource data (Draft, WRITE permission, excluding current):', this.dataSource.data);
         this.isLoading = false;
       },
       error: (error) => {

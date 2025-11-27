@@ -382,6 +382,9 @@ export class FormDetailComponent implements OnInit {
     const dialogRef = this.dialog.open(PopupCopyTenderComponent, {
       width: '900px',
       disableClose: true,
+      data: {
+        currentFormId: this.formId
+      }
     });
 
     dialogRef.afterClosed().subscribe((result) => {
