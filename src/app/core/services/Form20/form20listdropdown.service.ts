@@ -52,11 +52,6 @@ export class Form20ListDropdownService {
   hasEditRight(businessUnitCode: string | null | undefined): boolean {
     if (!businessUnitCode) return false;
     const hasRight = this.writableBUList.includes(businessUnitCode);
-    console.log('hasEditRight check:', {
-      businessUnitCode,
-      writableBUList: this.writableBUList,
-      hasRight
-    });
     return hasRight;
   }
 

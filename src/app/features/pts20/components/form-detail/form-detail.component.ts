@@ -389,8 +389,92 @@ export class FormDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        // Handle the result from the dialog here
+        // Copy ALL fields FROM current form TO selected tender EXCEPT: id, tenderNo, title, businessUnitCode, status
         console.log('Selected tender:', result);
+        
+        // Load the selected form details
+        if (result.id) {
+          this.form20Service.getForm20Details(result.id).subscribe({
+            next: (selectedFormData) => {
+              // Store selected form's fields that should NOT be copied
+              const preservedFields = {
+                id: selectedFormData.id,
+                tenderNo: selectedFormData.tenderNo,
+                title: selectedFormData.title,
+                businessUnitCode: selectedFormData.businessUnitCode,
+                status: selectedFormData.status,
+                form30Id: selectedFormData.form30Id,
+                dueDate: selectedFormData.dueDate,
+                distributionDivComM: selectedFormData.distributionDivComM,
+                ceApproval: selectedFormData.ceApproval,
+                cmApproval: selectedFormData.cmApproval,
+                edApproval: selectedFormData.edApproval,
+                dirApproval: selectedFormData.dirApproval,
+                hoEApproval: selectedFormData.hoEApproval,
+                approximateValueRemark: selectedFormData.approximateValueRemark,
+                contractDamageRateUnit: selectedFormData.contractDamageRateUnit,
+                paymentRetentionLimit: selectedFormData.paymentRetentionLimit,
+                evaluationCashFlow: selectedFormData.evaluationCashFlow,
+                evaluationIsCashFlow: selectedFormData.evaluationIsCashFlow,
+                evaluationClientFinancialStatus: selectedFormData.evaluationClientFinancialStatus,
+                evaluationIsClientFinancialStatus: selectedFormData.evaluationIsClientFinancialStatus,
+                evaluationEstimatingDepartmentWorkload: selectedFormData.evaluationEstimatingDepartmentWorkload,
+                evaluationIsEstimatingDepartmentWorkload: selectedFormData.evaluationIsEstimatingDepartmentWorkload
+              };
+              
+              // Store current form data temporarily
+              const currentFormData = { ...this.formGroup.value };
+              
+              // Patch the selected form data into formGroup temporarily
+              this.patchFormValues(selectedFormData);
+              
+              // Update with current form's data, but exclude the preserved fields
+              Object.keys(currentFormData).forEach(key => {
+                if (!preservedFields.hasOwnProperty(key)) {
+                  this.formGroup.patchValue({ [key]: currentFormData[key] });
+                }
+              });
+              
+              // Normalize the form values for saving
+              const normalizedSelectedValue = this.normalizeFormValues(this.formGroup.value);
+              normalizedSelectedValue.id = result.id; // Use selected form's ID
+              
+              this.isLoading = true;
+              
+              // Save the selected form with copied data
+              this.form20Service.saveForm20(normalizedSelectedValue).subscribe({
+                next: (response) => {
+                  this.isLoading = false;
+                  this.loadError = `Copied all data to ${result.tenderNo} (${result.title}) and saved successfully`;
+                  
+                  // Reload current form to restore original data
+                  if (this.formId) {
+                    this.loadForm(this.formId);
+                  }
+                  
+                  setTimeout(() => (this.loadError = null), 3000);
+                },
+                error: (error) => {
+                  this.isLoading = false;
+                  console.error('Error saving selected form:', error);
+                  this.loadError = `Failed to save data to ${result.tenderNo}`;
+                  
+                  // Reload current form to restore original data
+                  if (this.formId) {
+                    this.loadForm(this.formId);
+                  }
+                  
+                  setTimeout(() => (this.loadError = null), 3000);
+                }
+              });
+            },
+            error: (error) => {
+              console.error('Error loading selected form:', error);
+              this.loadError = 'Failed to load selected tender';
+              setTimeout(() => (this.loadError = null), 3000);
+            }
+          });
+        }
       }
     });
   }
