@@ -5,8 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { Form20ListService, Form20List } from '../../core/services/Form20/form20list.service';
-
+import { Form20ListService } from '../../core/services/Form20/form20list.service';
+import { Form20StatusCounts } from '../../model/entity/dashboard-count';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -375,13 +375,9 @@ export class DashboardComponent {
   }
 
   private loadStatusCounts(): void {
-    this.form20ListService.getPagedForm20List({ 
-      filteringItem: {}, 
-      pageSize: -1, 
-      page: 0 
-    }).subscribe({
-      next: (response) => {
-        this.calculateStatusCounts(response.items);
+    this.form20ListService.getForm20StatusCounts().subscribe({
+      next: (response: Form20StatusCounts) => {
+        this.mapStatusCounts(response);
       },
       error: (error) => {
         console.error('Error loading status counts:', error);
@@ -390,42 +386,18 @@ export class DashboardComponent {
     });
   }
 
-  private calculateStatusCounts(forms: Form20List[]): void {
-    // Reset counts
+  private mapStatusCounts(apiResponse: Form20StatusCounts): void {
     this.statusCounts = {
-      draft: 0,
-      submitted: 0,
-      endorsedHOE: 0,
-      endorsedCM: 0,
-      endorsedDirector: 0,
-      approvedED: 0
+      draft: apiResponse.draft + apiResponse.rejected, // Combine draft and rejected
+      submitted: apiResponse.submitted,
+      endorsedHOE: apiResponse.hoeEndorsed,
+      endorsedCM: apiResponse.cmEndorsed,
+      endorsedDirector: apiResponse.dirEndorsed,
+      approvedED: apiResponse.edApproved
     };
-
-    // Count each status
-    forms.forEach(form => {
-      switch (form.status) {
-        case 'DRAFT':
-        case 'REJECTED':
-          this.statusCounts.draft++;
-          break;
-        case 'SUBMITTED':
-          this.statusCounts.submitted++;
-          break;
-        case 'HOE_ENDORSED':
-          this.statusCounts.endorsedHOE++;
-          break;
-        case 'CM_ENDORSED':
-          this.statusCounts.endorsedCM++;
-          break;
-        case 'DIR_ENDORSED':
-          this.statusCounts.endorsedDirector++;
-          break;
-        case 'ED_APPROVED':
-          this.statusCounts.approvedED++;
-          break;
-      }
-    });
   }
+
+
 
   private async loadUserInfo() {
     try {

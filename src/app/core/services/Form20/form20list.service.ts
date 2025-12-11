@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap } from 'rxjs';
-
+import { Form20StatusCounts } from '../../../model/entity/dashboard-count';
 export interface Form20List {
   id: number;
   status: string;
@@ -78,6 +78,16 @@ export class Form20ListService {
     return this.http.post<Form20ListPagedResult>(url, params).pipe(
       catchError(error => {
         console.error('Error fetching Form20 List:', error);
+        throw error;
+      })
+    );
+  }
+
+  getForm20StatusCounts(): Observable<Form20StatusCounts> {
+    const url = `${this.baseUrl}/obtainFormListCount`;
+    return this.http.post<Form20StatusCounts>(url, {}).pipe(
+      catchError(error => {
+        console.error('Error fetching Form20 Status Counts:', error);
         throw error;
       })
     );
