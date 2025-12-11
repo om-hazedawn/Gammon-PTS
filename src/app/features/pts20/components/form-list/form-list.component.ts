@@ -101,25 +101,41 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
               <td mat-cell *matCellDef="let form">{{ form.client }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="contractDetails">
-              <th mat-header-cell *matHeaderCellDef>Contract Value/Period</th>
+            <ng-container matColumnDef="contractValue">
+              <th mat-header-cell *matHeaderCellDef>Approximate Value</th>
               <td mat-cell *matCellDef="let form">
-                {{ form.approximateValue | number }} {{ form.currency }} / {{ form.period }}
-                {{ form.periodUnit }}
-                <span *ngIf="form.approximateValueRemark" class="remark">
-                  ({{ form.approximateValueRemark }})</span
-                >
+                @if (shortFormValue(form.approximateValue?.toString() || '')) {
+                  {{ form.currency }} {{ shortFormValue(form.approximateValue?.toString() || '') }}
+                }
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="contractPeriod">
+              <th mat-header-cell *matHeaderCellDef>Contract Period</th>
+              <td mat-cell *matCellDef="let form">
+                {{ form.period }} {{ form.periodUnit }}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="bidTypeId">
               <th mat-header-cell *matHeaderCellDef>Bid Type</th>
-              <td mat-cell *matCellDef="let form">{{ form.bidTypeId }}</td>
+              <td mat-cell *matCellDef="let form">
+                @if (form.bidTypeId === 1) {
+                  Solo Bid
+                } @else if (form.bidTypeId === 2) {
+                  Joint Venture Bid
+                }
+              </td>
             </ng-container>
 
             <ng-container matColumnDef="dueDate">
               <th mat-header-cell *matHeaderCellDef>Due Date</th>
               <td mat-cell *matCellDef="let form">{{ form.dueDate | date }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="keyDate">
+              <th mat-header-cell *matHeaderCellDef>Key Date</th>
+              <td mat-cell *matCellDef="let form">{{ form.keyDate | date }}</td>
             </ng-container>
 
             <ng-container matColumnDef="print">
@@ -346,9 +362,11 @@ export class FormListComponent implements OnInit, AfterViewInit {
     'title',
     'country',
     'client',
-    'contractDetails',
+    'contractValue',
+    'contractPeriod',
     'bidTypeId',
     'dueDate',
+    'keyDate',
     'print',
     'attachment',
   ];
@@ -437,6 +455,28 @@ export class FormListComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  shortFormValue(numericVal: string): string {
+    if (!numericVal || numericVal === '0' || numericVal === '' || numericVal === 'null' || numericVal === 'undefined') {
+      return '';
+    }
+    
+    let val = numericVal.replace(new RegExp(',', 'g'), '');  // Remove commas
+    if (val && Number(val)) {
+        if (+val >= 1000000000) {
+            return Math.round(+val / 10000000) / 100 + 'B'     // Billions
+        }
+        if (+val >= 1000000) {
+            return Math.round(+val / 10000) / 100 + 'M'        // Millions
+        }
+        if (+val >= 1000) {
+            return Math.round(+val / 10) / 100 + 'K'           // Thousands
+        }
+        return val; // Return original value if less than 1000
+    }
+    return ''; // Return empty string if not a valid number
+  }
+
 
   ngAfterViewInit(): void {
     if (this.dataSource && this.paginator) {

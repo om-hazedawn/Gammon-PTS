@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { Form20ListService, Form20List } from '../../core/services/Form20/form20list.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -83,7 +84,7 @@ import { AuthService } from '../../core/services/auth.service';
           <mat-card-actions>
             <button mat-raised-button color="primary" routerLink="/pts20/forms">
               <mat-icon>list</mat-icon>
-              View Forms
+              Form 20 List (Gate 3)
             </button>
             <button mat-button routerLink="/pts20/form/new">
               <mat-icon>add_circle</mat-icon>
@@ -354,21 +355,76 @@ import { AuthService } from '../../core/services/auth.service';
 export class DashboardComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private form20ListService = inject(Form20ListService);
 
   userInfo: any = null;
 
   // Status counts for Preliminary Tender Summary
   statusCounts = {
-    draft: 12,
-    submitted: 8,
-    endorsedHOE: 5,
-    endorsedCM: 3,
-    endorsedDirector: 2,
-    approvedED: 1
+    draft: 0,
+    submitted: 0,
+    endorsedHOE: 0,
+    endorsedCM: 0,
+    endorsedDirector: 0,
+    approvedED: 0
   };
 
   ngOnInit() {
     this.loadUserInfo();
+    this.loadStatusCounts();
+  }
+
+  private loadStatusCounts(): void {
+    this.form20ListService.getPagedForm20List({ 
+      filteringItem: {}, 
+      pageSize: -1, 
+      page: 0 
+    }).subscribe({
+      next: (response) => {
+        this.calculateStatusCounts(response.items);
+      },
+      error: (error) => {
+        console.error('Error loading status counts:', error);
+        // Keep default counts (0) on error
+      }
+    });
+  }
+
+  private calculateStatusCounts(forms: Form20List[]): void {
+    // Reset counts
+    this.statusCounts = {
+      draft: 0,
+      submitted: 0,
+      endorsedHOE: 0,
+      endorsedCM: 0,
+      endorsedDirector: 0,
+      approvedED: 0
+    };
+
+    // Count each status
+    forms.forEach(form => {
+      switch (form.status) {
+        case 'DRAFT':
+        case 'REJECTED':
+          this.statusCounts.draft++;
+          break;
+        case 'SUBMITTED':
+          this.statusCounts.submitted++;
+          break;
+        case 'HOE_ENDORSED':
+          this.statusCounts.endorsedHOE++;
+          break;
+        case 'CM_ENDORSED':
+          this.statusCounts.endorsedCM++;
+          break;
+        case 'DIR_ENDORSED':
+          this.statusCounts.endorsedDirector++;
+          break;
+        case 'ED_APPROVED':
+          this.statusCounts.approvedED++;
+          break;
+      }
+    });
   }
 
   private async loadUserInfo() {

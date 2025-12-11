@@ -17,6 +17,7 @@ export interface Form20List {
   periodUnit: string;
   bidTypeId: number;
   dueDate: string;
+  keyDate: string;
   approximateValueRemark: string;
 }
 export interface PagedResult<T> {
