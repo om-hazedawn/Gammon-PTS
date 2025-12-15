@@ -429,6 +429,24 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
       }
+      .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 400px;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+        z-index: 100;
+      }
+      .error-message {
+        padding: 20px;
+        background-color: #ffebee;
+        color: #c62828;
+        border-left: 4px solid #c62828;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        font-weight: 500;
+      }
     `,
   ],
 })
@@ -771,36 +789,46 @@ export class TenderListComponent implements OnInit, AfterViewInit {
 
   refreshDataSource() {
     //this.tenderApi.getTenderPage().subscribe((response) => {
+    this.isLoading = true;
+    this.error = null;
     this.tenderListApiService
       .getTenderPageSorted(this.tenderSort)
-      .subscribe((response) => {
-        const list: TenderItem[] = response.items ?? [];
-        this.totalItems = response.totalCount ?? list.length;
-        this.dataSource.data = list.filter((tender: TenderItem) => this._filter(tender));
-
-        this.divisionList = list.reduce(
-          (prev: string[], current: TenderItem) => {
-            if (prev.indexOf(current.division) < 0) {
-              prev.push(current.division);
-            }
-            return prev;
-          },
-          []
-        );
-
-        this.divisionList.sort();
-
-        this.biddingEntityList = list.reduce(
-          (prev: string[], current: TenderItem) => {
-            const entity = current.biddingGammonEntity?.shortName;
-            if (entity === undefined) return prev;
-            if (prev.indexOf(entity) < 0) {
-              prev.push(entity);
-            }
-            return prev;
-          },
-          []
-        );
+      .subscribe({
+        next: (response) => {
+          const list: TenderItem[] = response.items ?? [];
+          this.totalItems = response.totalCount ?? list.length;
+          this.dataSource.data = list.filter((tender: TenderItem) => this._filter(tender));
+  
+          this.divisionList = list.reduce(
+            (prev: string[], current: TenderItem) => {
+              if (prev.indexOf(current.division) < 0) {
+                prev.push(current.division);
+              }
+              return prev;
+            },
+            []
+          );
+  
+          this.divisionList.sort();
+  
+          this.biddingEntityList = list.reduce(
+            (prev: string[], current: TenderItem) => {
+              const entity = current.biddingGammonEntity?.shortName;
+              if (entity === undefined) return prev;
+              if (prev.indexOf(entity) < 0) {
+                prev.push(entity);
+              }
+              return prev;
+            },
+            []
+          );
+          this.isLoading = false;
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.error = 'Error loading tenders. Please try again later.';
+          console.error('Error loading tenders:', error);
+        }
       });
   }
 
