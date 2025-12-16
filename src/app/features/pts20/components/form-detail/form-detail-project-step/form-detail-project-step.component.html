@@ -84,10 +84,6 @@
       <mat-label>Location</mat-label>
       <input matInput formControlName="Location" />
     </mat-form-field>
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Planner</mat-label>
-      <input matInput formControlName="Planner" />
-    </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>TenderType</mat-label>
       <mat-select formControlName="TenderType">
@@ -108,7 +104,9 @@
   </div>
 
   <div class="form-row">
-    <mat-label class="block mb-1">Approximate Value</mat-label>
+     <div class="mb-4 mr-2">
+      <div class="mb-2 font-bold">Approximate Value:</div>
+    </div>
     <div style="display: flex; gap: 10px">
       <mat-form-field appearance="fill" style="flex: 1">
         <mat-select formControlName="ApproximateValueType" placeholder="Select type">
@@ -138,7 +136,9 @@
   </div>
 
   <div class="form-row">
-    <label class="block mb-1">Maintenance / Defect</label>
+     <div class="mb-4 mr-2">
+      <div class="mb-2 font-bold">Maintenance / Defect:</div>
+    </div>
     <div style="display: flex; gap: 10px">
       <mat-form-field appearance="fill" style="flex: 1">
         <mat-select formControlName="maintenanceType" placeholder="Select option">
@@ -175,6 +175,10 @@
       <input matInput formControlName="clientName" placeholder="Enter client name" />
     </mat-form-field>
 
+    <div class="mb-4 mr-2">
+      <div class="mb-2 font-bold">Contract Period:</div>
+    </div>
+
     <mat-form-field appearance="fill" style="width: 100px">
       <input matInput type="number" formControlName="contractPeriodValue" />
     </mat-form-field>
@@ -188,17 +192,16 @@
         <mat-option value="weeks">Weeks</mat-option>
       </mat-select>
     </mat-form-field>
-    <!-- Client Contact Person -->
-    <mat-form-field appearance="fill" style="flex: 1">
+  </div>
+
+  <div class="form-row">
+     <mat-form-field appearance="fill" style="flex: 1">
       <input
         matInput
         formControlName="ComplexContractPeriod"
         placeholder="for complex contract Period"
       />
     </mat-form-field>
-  </div>
-
-  <div class="form-row">
     <mat-form-field appearance="fill">
       <mat-label>Financial Standing</mat-label>
       <mat-select formControlName="FinantialStanding">
