@@ -20,6 +20,11 @@
       </mat-select>
     </mat-form-field>
 
+     <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
+      <mat-label>Remarks</mat-label>
+      <input matInput formControlName="Remarks" />
+    </mat-form-field>
+    
     <mat-form-field appearance="fill" class="w-32">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskType">
@@ -34,7 +39,11 @@
       </mat-select>
     </mat-form-field>
 
-    <div class="mb-4">
+
+  </div>
+
+  <div class="form-row">
+      <div class="mb-4 mr-6">
       <label class="font-bold">Retention Amount:</label>
     </div>
     <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
@@ -48,6 +57,11 @@
         <mat-option value="%">%</mat-option>
         <mat-option value=" "></mat-option>
       </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+      <mat-label>Remarks</mat-label>
+      <input matInput formControlName="Remarks2" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="w-32">
@@ -66,18 +80,7 @@
   </div>
 
   <div class="form-row">
-    <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
-      <mat-label>Remarks</mat-label>
-      <input matInput formControlName="Remarks" />
-    </mat-form-field>
-    <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
-      <mat-label>Remarks</mat-label>
-      <input matInput formControlName="Remarks2" />
-    </mat-form-field>
-  </div>
-
-  <div class="form-row">
-    <div class="mb-4">
+    <div class="mb-4 mr-8">
       <label class="font-bold">Payment Period:</label>
     </div>
     <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
@@ -95,6 +98,11 @@
       </mat-select>
     </mat-form-field>
 
+     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
+      <mat-label>Hidden Field</mat-label>
+      <input matInput />
+    </mat-form-field>
+
     <mat-form-field appearance="fill" class="w-32">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskType3">
@@ -108,12 +116,24 @@
         <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
+  </div>
 
-    <div class="mb-4">
+  <div class="form-row">
+    <div class="mb-4 mr-4">
       <label class="font-bold">Limit of Retention:</label>
     </div>
     <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
       <input matInput formControlName="LimitofRetention" />
+    </mat-form-field>
+
+     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
+      <mat-label>Hidden Field</mat-label>
+      <input matInput />
+    </mat-form-field>
+
+     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
+      <mat-label>Hidden Field</mat-label>
+      <input matInput />
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
@@ -159,7 +179,12 @@
       <mat-label>Peak Surplus</mat-label>
       <input matInput formControlName="PeakSurplus" type="number"/>
     </mat-form-field>
-    <div style="width: 200px">
+
+     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
+      <mat-label>Hidden Field</mat-label>
+      <input matInput />
+    </mat-form-field>
+
       <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
         <mat-label>Degree of Risk</mat-label>
         <mat-select formControlName="RiskLevel">
@@ -173,7 +198,6 @@
           <mat-option value="Pending">Pending</mat-option>
         </mat-select>
       </mat-form-field>
-    </div>
   </div>
 
   <div class="form-row">
@@ -185,6 +209,16 @@
     <mat-form-field appearance="fill">
       <mat-label>Average Surplus</mat-label>
       <input matInput formControlName="AverageSurplus" type="number"/>
+    </mat-form-field>
+
+     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
+      <mat-label>Hidden Field</mat-label>
+      <input matInput />
+    </mat-form-field>
+
+     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
+      <mat-label>Hidden Field</mat-label>
+      <input matInput />
     </mat-form-field>
   </div>
 </div>
