@@ -19,14 +19,23 @@
         }
       </mat-select>
     </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Due Date</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="dueDate" />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-    <div>
-      {{ formGroup.get('dueDate')?.value | date : 'dd MMM yyyy' | uppercase }}
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <input 
+          type="date" 
+          id="dueDate"
+          formControlName="dueDate" 
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          style="color: transparent; caret-color: transparent;"
+        />
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pointer-events-none pl-4">
+          @if (formGroup.get('dueDate')?.value) {
+            <span class="text-gray-900 font-medium">{{ formGroup.get('dueDate')?.value | date: 'dd MMM yyyy' | uppercase }}</span>
+          } @else {
+            <span class="text-gray-500">Due Date</span>
+          }
+        </div>
+      </div>
     </div>
   </div>
 
@@ -219,7 +228,7 @@
       <label class="block mb-1">Tender Market Scheme</label>
       <mat-radio-group formControlName="TenderMarketScheme" class="flex gap-6">
         @for (key of yesNo | keyvalue; track key.key) {
-        <mat-radio-button [value]="key.key">{{ key.value }}</mat-radio-button>
+        <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
         }
       </mat-radio-group>
     </div>

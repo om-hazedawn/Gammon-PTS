@@ -383,12 +383,30 @@ export class Form20ListDropdownService {
   }
 
   assignTenderNo(formId: number): Observable<any> {
-  return this.http.post<any>(`${this.baseUrl}/assignTenderNo/${formId}`, {}).pipe(
-    catchError((error) => {
-      console.error('Error assigning tender number:', error);
-      throw error;
-    })
-  );
-}
+    return this.http.post<any>(`${this.baseUrl}/assignTenderNo/${formId}`, {}).pipe(
+      catchError((error) => {
+        console.error('Error assigning tender number:', error);
+        throw error;
+      })
+    );
+  }
+
+  obtainKeyDates(formId: number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/obtainKeyDates/${formId}`, {}).pipe(
+      catchError((error) => {
+        console.error('Error fetching key dates:', error);
+        throw error;
+      })
+    );
+  }
+
+  updateKeyDates(keyDates: any[]): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/updateKeyDates`, keyDates).pipe(
+      catchError((error) => {
+        console.error('Error updating key dates:', error);
+        throw error;
+      })
+    );
+  }
 
 }

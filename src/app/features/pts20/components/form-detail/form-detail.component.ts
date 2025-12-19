@@ -483,6 +483,9 @@ export class FormDetailComponent implements OnInit {
     const dialogRef = this.dialog.open(PopupKeyDateComponent, {
       width: '600px',
       disableClose: true,
+      data: {
+        formId: this.formId,
+      },
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {

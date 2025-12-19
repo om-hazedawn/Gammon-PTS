@@ -157,6 +157,17 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
     this.loadYesNoNA();
     this.loadJVAgreementOptions();
 
+    // Listen to TenderMarketScheme changes - no conversion needed as backend sends string values
+    const tenderMarketSchemeControl = this.formGroup.get('TenderMarketScheme');
+    if (tenderMarketSchemeControl) {
+      tenderMarketSchemeControl.valueChanges.subscribe((value) => {
+        // Value is already in the correct format (Yes/No/NA) from backend, no conversion needed
+        if (value === null || value === undefined || value === '') {
+          console.log('TenderMarketScheme value cleared');
+        }
+      });
+    }
+
     this.formGroup.get('dueDate')?.valueChanges.subscribe((date) => {
       const tenderNoControl = this.formGroup.get('tenderNo');
       if (date) {
@@ -322,7 +333,13 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
   private loadYesNoNA(): void {
     this.form20ListDropdownService.obtainYesNoNA().subscribe({
       next: (data: ObtainRegion) => {
-        this.yesNo = data;
+        // Filter out empty strings from yes/no options
+        this.yesNo = Object.keys(data)
+          .filter((key) => (data[key] as unknown as string) !== '')
+          .reduce((obj, key) => {
+            obj[key] = data[key];
+            return obj;
+          }, {} as ObtainRegion);
         this.cdr.detectChanges();
       },
       error: (error: unknown) => {
