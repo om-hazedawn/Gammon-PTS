@@ -31,7 +31,7 @@
           <mat-label>Key Date Type</mat-label>
           <mat-select formControlName="keyDateType">
             <mat-option *ngFor="let type of keyDateTypes" [value]="type.value">
-              {{ type.label }}
+              {{ type.value }}
             </mat-option>
           </mat-select>
         </mat-form-field>

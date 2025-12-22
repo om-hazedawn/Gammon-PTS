@@ -37,9 +37,9 @@ export class PopupKeyDateComponent implements OnInit {
   isAddingNew = false;
   newKeyDateForm: FormGroup;
   keyDateTypes = [
-    { value: 'OTC', label: 'OTC (Bid Submission)' },
-    { value: 'CTC', label: 'CTC (Contract Start)' },
-    { value: 'GTC', label: 'GTC (Final Completion)' },
+    { value: 'OTC' },
+    { value: 'CTC' },
+    { value: 'GTC' },
   ];
   formId: number = 0;
 
