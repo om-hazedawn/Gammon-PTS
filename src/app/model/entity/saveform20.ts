@@ -214,8 +214,8 @@ export interface SaveForm20 {
   evaluationComments: string;
   
   /*  10  */
-  distributionCE: [],
-  distributionDivComM: [],
+  distributionCE: string[],
+  distributionDivComM: string[],
   distributionComDir: string[];
   distributionExeDir: string[];
   distributionFinDir: string[];
