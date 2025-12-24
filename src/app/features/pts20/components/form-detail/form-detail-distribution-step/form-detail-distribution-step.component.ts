@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ControlContainer, FormControl, FormGroupDirective } from '@angular/forms';
 import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -125,7 +125,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
   constructor(
     private form20ListDropdownService: Form20ListDropdownService,
     private dialog: MatDialog,
-
+    private cdr: ChangeDetectorRef,
     private formGroupDirective: FormGroupDirective
   ) {
     this.filteredCE = this.ceSearchCtrl.valueChanges.pipe(
@@ -233,6 +233,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
             currentValues.includes(user.employeeNo)
           );
         }
+        this.cdr.markForCheck();
       },
 
       error: (error: unknown) => {
@@ -247,7 +248,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
         this.Form20_ALL_ED = data;
 
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.EDDistribution'
+          'Distribution.ExecutiveDirector'
         )?.value;
 
         if (currentValues && Array.isArray(currentValues)) {
@@ -255,6 +256,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
             currentValues.includes(user.employeeNo)
           );
         }
+        this.cdr.markForCheck();
       },
 
       error: (error: unknown) => {
@@ -269,7 +271,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
         this.FORM20_BDG_DCM = data;
 
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.BDG_DCM_Distribution'
+          'Distribution.DivisionCommercialManager'
         )?.value;
 
         if (currentValues && Array.isArray(currentValues)) {
@@ -277,6 +279,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
             currentValues.includes(user.employeeNo)
           );
         }
+        this.cdr.markForCheck();
       },
 
       error: (error: unknown) => {
@@ -291,7 +294,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
         this.FORM20_INS_MGR = data;
 
         const currentValues = this.formGroupDirective.form.get(
-          'Insurance Manager Distribution'
+          'Distribution.InsuranceManager'
         )?.value;
 
         if (currentValues && Array.isArray(currentValues)) {
@@ -299,6 +302,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
             currentValues.includes(user.employeeNo)
           );
         }
+        this.cdr.markForCheck();
       },
 
       error: (error: unknown) => {
@@ -313,7 +317,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
         this.FORM20_BDG_DIR = data;
 
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.BDG_DIR_Distribution'
+          'Distribution.Director'
         )?.value;
 
         if (currentValues && Array.isArray(currentValues)) {
@@ -321,6 +325,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
             currentValues.includes(user.employeeNo)
           );
         }
+        this.cdr.markForCheck();
       },
 
       error: (error: unknown) => {
@@ -334,7 +339,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
       next: (data: ApprovalUser[]) => {
         this.FORM20_LAM = data;
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.LAM_Distribution'
+          'Distribution.HeadofLambeth'
         )?.value;
 
         if (currentValues && Array.isArray(currentValues)) {
@@ -342,6 +347,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
             currentValues.includes(user.employeeNo)
           );
         }
+        this.cdr.markForCheck();
       },
 
       error: (error: unknown) => {
@@ -355,13 +361,14 @@ export class FormDetailDistributionStepComponent implements OnInit {
       next: (data: ApprovalUser[]) => {
         this.FORM20_PRO = data;
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.PRO_Distribution'
+          'Distribution.HeadOfProcurement'
         )?.value;
         if (currentValues && Array.isArray(currentValues)) {
           this.selectedPRO = this.FORM20_PRO.filter((user) =>
             currentValues.includes(user.employeeNo)
           );
         }
+        this.cdr.markForCheck();
       },
 
       error: (error: unknown) => {
@@ -375,13 +382,14 @@ export class FormDetailDistributionStepComponent implements OnInit {
       next: (data: ApprovalUser[]) => {
         this.FORM20_FIN_DIR = data;
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.FIN_DIR_Distribution'
+          'Distribution.FinanceDirector'
         )?.value;
         if (currentValues && Array.isArray(currentValues)) {
           this.selectedFIN_DIR = this.FORM20_FIN_DIR.filter((user) =>
             currentValues.includes(user.employeeNo)
           );
         }
+        this.cdr.markForCheck();
       },
 
       error: (error: unknown) => {
@@ -402,6 +410,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
             currentValues.includes(user.employeeNo)
           );
         }
+        this.cdr.markForCheck();
       },
       error: (error: unknown) => {
         console.error('Error loading FORM20_RISK_OPP:', error);
@@ -421,6 +430,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
             currentValues.includes(user.employeeNo)
           );
         }
+        this.cdr.markForCheck();
       },
       error: (error: unknown) => {
         console.error('Error loading FORM20_COM_DIR:', error);
@@ -440,6 +450,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
             currentValues.includes(user.employeeNo)
           );
         }
+        this.cdr.markForCheck();
       },
       error: (error: unknown) => {
         console.error('Error loading FORM20_HSEQ:', error);
@@ -459,6 +470,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
             currentValues.includes(user.employeeNo)
           );
         }
+        this.cdr.markForCheck();
       },
       error: (error: unknown) => {
         console.error('Error loading FORM20_GEN_COUN:', error);
@@ -640,7 +652,7 @@ private loadBidManager(searchTerm: string): void {
 
       const currentValue = this.selectedED.map((user) => user.employeeNo);
 
-      this.formGroupDirective.form.get('Distribution.EDDistribution')?.setValue(currentValue);
+      this.formGroupDirective.form.get('Distribution.ExecutiveDirector')?.setValue(currentValue);
     }
 
     this.edSearchCtrl.setValue('');
@@ -653,7 +665,7 @@ private loadBidManager(searchTerm: string): void {
 
       const currentValue = this.selectedBDGDCM.map((user) => user.employeeNo);
       this.formGroupDirective.form
-        .get('Distribution.BDG_DCM_Distribution')
+        .get('Distribution.DivisionCommercialManager')
         ?.setValue(currentValue);
     }
     this.bdgDcmSearchCtrl.setValue('');
@@ -666,7 +678,7 @@ private loadBidManager(searchTerm: string): void {
 
       const currentValue = this.selectedINS_MGR.map((user) => user.employeeNo);
       this.formGroupDirective.form
-        .get('Insurance Manager Distribution')
+        .get('Distribution.InsuranceManager')
         ?.setValue(currentValue);
     }
     this.insMgrSearchCtrl.setValue('');
@@ -679,7 +691,7 @@ private loadBidManager(searchTerm: string): void {
 
       const currentValue = this.selectedDIR.map((user) => user.employeeNo);
       this.formGroupDirective.form
-        .get('Distribution.BDG_DIR_Distribution')
+        .get('Distribution.Director')
         ?.setValue(currentValue);
     }
     this.dirSearchCtrl.setValue('');
@@ -691,7 +703,7 @@ private loadBidManager(searchTerm: string): void {
       this.selectedLAM.push(selectedUser); // Update form control with array of employee numbers
       const currentValue = this.selectedLAM.map((user) => user.employeeNo);
       this.formGroupDirective.form
-        .get('Distribution.LAM_Distribution')
+        .get('Distribution.HeadofLambeth')
         ?.setValue(currentValue);
     }
     this.lamSearchCtrl.setValue('');
@@ -703,7 +715,7 @@ private loadBidManager(searchTerm: string): void {
       this.selectedFIN_DIR.push(selectedUser);
       const currentValue = this.selectedFIN_DIR.map((user) => user.employeeNo);
       this.formGroupDirective.form
-        .get('Distribution.FIN_DIR_Distribution')
+        .get('Distribution.FinanceDirector')
         ?.setValue(currentValue);
     }
     this.finDirSearchCtrl.setValue('');
@@ -735,7 +747,7 @@ private loadBidManager(searchTerm: string): void {
 
       this.formGroupDirective.form
 
-        .get('Distribution.EDDistribution')
+        .get('Distribution.ExecutiveDirector')
 
         ?.setValue(currentValue.length ? currentValue : null);
     }
@@ -749,7 +761,7 @@ private loadBidManager(searchTerm: string): void {
       const currentValue = this.selectedBDGDCM.map((u) => u.employeeNo);
       this.formGroupDirective.form
 
-        .get('Distribution.BDG_DCM_Distribution')
+        .get('Distribution.DivisionCommercialManager')
         ?.setValue(currentValue.length ? currentValue : null);
     }
   }
@@ -760,7 +772,7 @@ private loadBidManager(searchTerm: string): void {
       this.selectedINS_MGR.splice(index, 1); // Update form control with remaining employee numbers
       const currentValue = this.selectedINS_MGR.map((u) => u.employeeNo);
       this.formGroupDirective.form
-        .get('Insurance Manager Distribution')
+        .get('Distribution.InsuranceManager')
         ?.setValue(currentValue.length ? currentValue : null);
     }
   }
@@ -771,7 +783,7 @@ private loadBidManager(searchTerm: string): void {
       this.selectedDIR.splice(index, 1); // Update form control with remaining employee numbers
       const currentValue = this.selectedDIR.map((u) => u.employeeNo);
       this.formGroupDirective.form
-        .get('Distribution.BDG_DIR_Distribution')
+        .get('Distribution.Director')
         ?.setValue(currentValue.length ? currentValue : null);
     }
   }
@@ -782,7 +794,7 @@ private loadBidManager(searchTerm: string): void {
       this.selectedLAM.splice(index, 1); // Update form control with remaining employee numbers
       const currentValue = this.selectedLAM.map((u) => u.employeeNo);
       this.formGroupDirective.form
-        .get('Distribution.LAM_Distribution')
+        .get('Distribution.HeadofLambeth')
         ?.setValue(currentValue.length ? currentValue : null);
     }
   }
@@ -793,7 +805,7 @@ private loadBidManager(searchTerm: string): void {
       this.selectedFIN_DIR.splice(index, 1);
       const currentValue = this.selectedFIN_DIR.map((u) => u.employeeNo);
       this.formGroupDirective.form
-        .get('Distribution.FIN_DIR_Distribution')
+        .get('Distribution.FinanceDirector')
         ?.setValue(currentValue.length ? currentValue : null);
     }
   }

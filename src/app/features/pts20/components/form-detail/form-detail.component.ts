@@ -183,17 +183,23 @@ import { PopupKeyDateComponent } from './popup-KeyDate/popup-KeyDate.component';
                 type="button"
                 mat-button
                 (click)="previousStep()"
-                [disabled]="currentStep === 1"
+                [disabled]="currentStep === 1 || isLoading"
               >
                 Previous
               </button>
               @if (currentStep < 10) {
-              <button type="button" mat-raised-button color="primary" (click)="nextStep()">
-                Next
+              <button type="button" mat-raised-button color="primary" (click)="nextStep()" [disabled]="isLoading">
+                @if (isLoading) { Saving... } @else { Next }
               </button>
               } @if (currentStep === 10) {
-              <button type="submit" mat-raised-button color="primary" [disabled]="!formGroup.valid">
-                @if (canSubmit() && hasEditRight()) { Submit } @else { Approvers }
+              <button type="submit" mat-raised-button color="primary" [disabled]="!formGroup.valid || isLoading">
+                @if (isLoading) { 
+                  Submitting... 
+                } @else if (canSubmit() && hasEditRight()) { 
+                  Submit 
+                } @else { 
+                  Approvers 
+                }
               </button>
               }
             </div>
@@ -1474,17 +1480,22 @@ export class FormDetailComponent implements OnInit {
       normalizedValue.id = this.formId;
     }
 
+    this.isLoading = true;
     this.form20Service.saveForm20(normalizedValue).subscribe({
       next: (response) => {
         console.log('Form submitted successfully:', response);
         this.loadError = 'Form submitted successfully';
         setTimeout(() => {
           this.loadError = null;
+          this.isLoading = false;
           this.goBack();
         }, 2000);
       },
       error: (err: HttpErrorResponse) => {
-        // ... error handling
+        this.isLoading = false;
+        this.loadError = 'Failed to submit form. Please try again.';
+        console.error('Error submitting form:', err);
+        setTimeout(() => (this.loadError = null), 5000);
       },
     });
   }

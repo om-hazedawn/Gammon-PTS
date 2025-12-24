@@ -402,7 +402,7 @@ export class FormApprovalComponent implements OnInit {
 
 
   onSubmit(): void {
-    if (this.approvalForm.valid) {
+    if (this.approvalForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
       // Map selected ApprovalUser[] to approval arrays for saving, preserving comments, decision, id if present
       const mapApproval = (u: ApprovalUser & { comments?: string; decision?: string; id?: any }) => ({
@@ -420,8 +420,10 @@ export class FormApprovalComponent implements OnInit {
         edApproval: (this.approvalForm.value.executiveDirector ?? []).map(mapApproval),
         ceApproval: (this.approvalForm.value.ceo ?? []).map(mapApproval),
       };
-      this.dialogRef.close(result);
-      this.isSubmitting = false;
+      // Delay closing dialog to show loading state
+      setTimeout(() => {
+        this.dialogRef.close(result);
+      }, 500);
     }
   }
 }
