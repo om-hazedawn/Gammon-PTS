@@ -343,6 +343,8 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
       }
       table {
         width: 100%;
+        min-width: auto;
+        max-width: 100%;
         overflow-x: auto;
         display: table;
         margin: 0;
@@ -350,18 +352,21 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         box-shadow: 0 4px 16px rgba(25, 118, 210, 0.13), 0 1.5px 6px rgba(0,0,0,0.08);
         border-collapse: separate;
         border-spacing: 0;
+        font-size: 12px;
       }
       th {
         background-color: #f5f7fa;
         color: #1976d2;
-        font-weight: bold;
+        font-weight: 600;
         white-space: normal;
-        //word-break: normal;
-        line-height: 1.2;
-        padding-top: 12px;
-        padding-bottom: 12px;
+        word-break: break-word;
+        line-height: 1.1;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        padding-left: 6px;
+        padding-right: 6px;
         text-align: center;
-        max-width: 120px;
+        font-size: 12px;
         overflow-wrap: break-word;
         border-bottom: 2px solid #e0e0e0;
       }
@@ -369,11 +374,13 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         text-align: center;
         vertical-align: middle;
         white-space: normal;
-        word-break: break-word;
-        padding: 14px 12px;
+        word-wrap: break-word;
+        padding: 8px 6px;
         background-color: #fff;
-        font-size: 15px;
+        font-size: 12px;
         border-bottom: 1px solid #e0e0e0;
+        max-width: 90px;
+        overflow-wrap: break-word;
       }
       tr.mat-row:nth-child(even) td {
         background-color: #f5f7fa;
@@ -392,10 +399,12 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         padding-bottom: 0;
       }
       .action-btn {
-        min-width: 110px;
+        min-width: 70px;
+        padding: 4px 8px;
         margin: 2px 0 2px 0;
-        border-radius: 8px;
+        border-radius: 6px;
         font-weight: 500;
+        font-size: 12px;
         box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
         transition: background 0.2s, box-shadow 0.2s;
         background-color: var(--primary-color) !important;
@@ -413,10 +422,12 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         box-shadow: 0 4px 16px rgba(25, 118, 210, 0.15);
       }
       .form-btn {
-        min-width: 80px;
-        margin: 2px 6px 2px 0;
-        border-radius: 8px;
+        min-width: 60px;
+        padding: 4px 8px;
+        margin: 2px 4px 2px 0;
+        border-radius: 6px;
         font-weight: 500;
+        font-size: 12px;
         transition: background 0.2s, box-shadow 0.2s;
       }
       .form-btn:hover:not([disabled]) {
@@ -424,7 +435,8 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         color: #fff !important;
       }
       .custom-paginator {
-        margin-top: 16px;
+        margin-top: 12px;
+        padding: 8px 12px !important;
         background-color: #f5f7fa;
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);

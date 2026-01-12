@@ -31,7 +31,7 @@ import { AuthService } from './core/services/auth.service';
             <mat-icon>menu</mat-icon>
           </button>
         }
-        <span>PTS - Procurement Tender System</span>
+        <span>PTS - Preliminary Tender System</span>
         <span class="spacer"></span>
         @if (isAuthenticated) {
           <span>{{ userDisplayName }}</span>

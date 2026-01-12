@@ -1,0 +1,192 @@
+<!-- TAILWIND CSS TEST SECTION - Check which styles are working -->
+<div class="mt-12 p-6 bg-gray-100 border-2 border-red-500">
+  <h3 class="text-2xl font-bold text-red-600 mb-6">Tailwind CSS Test Examples</h3>
+
+  <div class="mb-8 p-4 bg-blue-100 border border-blue-500">
+    <p class="text-lg font-bold text-blue-900">Test 1: Spacing & Colors</p>
+    <p class="m-4 p-4 bg-green-200 text-green-900 rounded">
+      This should have green background, green text, margin and padding
+    </p>
+  </div>
+
+  <div class="mb-8 p-4 bg-yellow-100 border border-yellow-500">
+    <p class="text-lg font-bold text-yellow-900">Test 2: Flexbox & Width</p>
+    <div class="flex gap-4 w-full">
+      <div class="flex-1 min-w-[200px] bg-purple-200 p-4">flex-1 min-w-[200px]</div>
+      <div class="w-40 flex-shrink-0 bg-pink-200 p-4">w-40 flex-shrink-0</div>
+    </div>
+  </div>
+
+  <div class="mb-8 p-4 bg-orange-100 border border-orange-500">
+    <p class="text-lg font-bold text-orange-900">Test 3: Text Styles</p>
+    <p class="text-sm">Text Small</p>
+    <p class="text-base font-semibold">Text Base Semibold</p>
+    <p class="text-lg font-bold">Text Large Bold</p>
+    <p class="text-xl">Text XL</p>
+  </div>
+
+  <div class="mb-8 p-4 bg-indigo-100 border border-indigo-500">
+    <p class="text-lg font-bold text-indigo-900">Test 4: Border & Shadow</p>
+    <div class="p-4 border-2 border-red-400 rounded-lg shadow-lg">
+      Should have red border, rounded corners, and shadow
+    </div>
+  </div>
+
+  <div class="p-4 bg-teal-100 border border-teal-500">
+    <p class="text-lg font-bold text-teal-900">Test 5: Background & Display</p>
+    <div class="inline-block bg-cyan-200 px-4 py-2 rounded">Inline Block with padding</div>
+    <div class="block bg-lime-200 px-4 py-2 rounded mt-2">Block with padding</div>
+  </div>
+</div>
+
+<!-- ANGULAR MATERIAL COMPONENTS TEST - Testing with Material components -->
+<div class="mt-12 p-6 bg-gray-100 border-2 border-blue-500">
+  <h3 class="text-2xl font-bold text-blue-600 mb-6">Angular Material Component Tests</h3>
+
+  <div class="mb-8 p-4 bg-blue-50 border border-blue-300">
+    <p class="text-lg font-bold text-blue-900 mb-4">Test 1: Mat-Form-Field with Tailwind Classes</p>
+    <div class="flex gap-4">
+      <mat-form-field appearance="fill" class="flex-1 min-w-[200px] bg-yellow-50">
+        <mat-label class="text-red-600">Tailwind Test - Should be yellow background</mat-label>
+        <input matInput placeholder="Test input with Tailwind" class="bg-orange-100" />
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="w-40 flex-shrink-0 border-4 border-red-500">
+        <mat-label>Fixed Width w-40</mat-label>
+        <mat-select>
+          <mat-option value="test">Test Option</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="mb-8 p-4 bg-green-50 border border-green-300">
+    <p class="text-lg font-bold text-green-900 mb-4">
+      Test 2: Mat-Radio-Group with Tailwind Classes
+    </p>
+    <div class="flex gap-6 bg-purple-100 p-4 rounded-lg">
+      <mat-radio-group class="flex gap-6">
+        <mat-radio-button value="YES" class="bg-red-200">Yes</mat-radio-button>
+        <mat-radio-button value="NO" class="bg-green-200">No</mat-radio-button>
+        <mat-radio-button value="NA" class="bg-blue-200">N.A.</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </div>
+
+  <div class="mb-8 p-4 bg-orange-50 border border-orange-300">
+    <p class="text-lg font-bold text-orange-900 mb-4">Test 3: Form Row with Material Components</p>
+    <div class="form-row bg-gradient-to-r from-pink-100 to-purple-100 p-4 rounded-lg">
+      <div class="mb-4">
+        <div class="mb-2 font-bold text-red-700">Test Label:</div>
+      </div>
+      <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
+        <mat-label>Field 1</mat-label>
+        <mat-select>
+          <mat-option value="1">Option 1</mat-option>
+          <mat-option value="2">Option 2</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+        <mat-label>Field 2</mat-label>
+        <input matInput placeholder="Input field" />
+      </mat-form-field>
+
+      <mat-form-field
+        appearance="fill"
+        class="w-40 flex-shrink-0 shadow-lg border-4 border-indigo-500"
+      >
+        <mat-label>Degree</mat-label>
+        <mat-select>
+          <mat-option value="L">L</mat-option>
+          <mat-option value="M">M</mat-option>
+          <mat-option value="H">H</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="p-4 bg-red-50 border border-red-300">
+    <p class="text-lg font-bold text-red-900 mb-4">Test 4: Nested Material Components</p>
+    <div class="p-4 bg-indigo-100 rounded-lg shadow-md">
+      <mat-form-field appearance="fill" class="w-full mb-4">
+        <mat-label class="font-bold">Full Width Field with Tailwind mb-4</mat-label>
+        <input matInput />
+      </mat-form-field>
+      <p class="text-sm text-gray-700 mb-4 p-2 bg-yellow-100 rounded">
+        Text below with Tailwind (mb-4, p-2, bg-yellow-100, rounded)
+      </p>
+      <div class="flex gap-4 items-center">
+        <span class="font-bold text-lg">Radio Test:</span>
+        <mat-radio-group class="flex gap-4">
+          <mat-radio-button value="yes">Yes</mat-radio-button>
+          <mat-radio-button value="no">No</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-4 bg-cyan-50 border border-cyan-300">
+    <p class="text-lg font-bold text-cyan-900 mb-4">
+      Test 5: Simple - Field 1 + Degree Only (Like Actual Form)
+    </p>
+    <div class="form-row bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg">
+      <div class="mb-4">
+        <div class="mb-2 font-bold text-cyan-700">Simple Label:</div>
+      </div>
+      <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
+        <mat-label>Field 1</mat-label>
+        <mat-select>
+          <mat-option value="opt1">Option 1</mat-option>
+          <mat-option value="opt2">Option 2</mat-option>
+          <mat-option value="opt3">Option 3</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
+        <mat-label>Hidden Field</mat-label>
+        <input matInput />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="w-40 flex-shrink-0 border-2 border-yellow-400">
+        <mat-label>Degree of Risk</mat-label>
+        <mat-select>
+          <mat-option value="L">L</mat-option>
+          <mat-option value="M">M</mat-option>
+          <mat-option value="H">H</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+
+
+ <div class="clause-block mt-4 flex flex-row items-center gap-6">
+    <div>
+      <label class="block mb-1">Time Extension For Weather:</label>
+      <mat-radio-group formControlName="TimeExtension" class="flex flex-row gap-4">
+        <mat-radio-button value="YES">Yes</mat-radio-button>
+        <mat-radio-button value="NO">No</mat-radio-button>
+        <mat-radio-button value="N/A">N.A.</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="flex flex-row gap-4 flex-1">
+      <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+        <mat-label>Weather Extension Description</mat-label>
+        <input matInput formControlName="WeatherExtention" />
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="w-125 flex-shrink-0">
+        <mat-label>Degree of Risk</mat-label>
+        <mat-select formControlName="DegreeRiskWeather">
+          <mat-option value="L">L</mat-option>
+          <mat-option value="L/M">L/M</mat-option>
+          <mat-option value="M">M</mat-option>
+          <mat-option value="M/H">M/H</mat-option>
+          <mat-option value="H">H</mat-option>
+          <mat-option value="NA">N/A</mat-option>
+          <mat-option value="NSR">NSR</mat-option>
+          <mat-option value="Pending">Pending</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
