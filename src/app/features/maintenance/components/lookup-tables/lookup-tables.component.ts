@@ -7,6 +7,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { LookupTableDialogComponent } from './lookup-table-dialog.component';
 import { SetTenderNoComponent } from '../set-tender-no/set-tender-no.component';
+import { MigrationComponent } from '../migration/migration.component';
+import { TenderNoRunningNoComponent } from '../Tender-no-running-no/tender-no-running-no.component';
+import { CancelApprovalComponent } from '../cancle-aaproval/cancel-approval.component';
+import { TenderValueRemarkComponent } from '../Tender-value-remark/tender-value-remark.component';
 
 @Component({
   selector: 'app-lookup-tables',
@@ -245,22 +249,30 @@ export class LookupTablesComponent {
   }
 
   migratePTS(): void {
-    console.log('Migrate From Old PTS clicked');
-    // Implement your logic here
+    this.dialog.open(MigrationComponent, {
+      width: '700px',
+      data: {},
+    });
   }
 
   updateTenderNoRunningNo(): void {
-    console.log('Next Tender No Maintenance clicked');
-    // Implement your logic here
+    this.dialog.open(TenderNoRunningNoComponent, {
+      width: '650px',
+      data: {},
+    });
   }
 
   others(): void {
-    console.log('Others clicked');
-    // Implement your logic here
+    this.dialog.open(CancelApprovalComponent, {
+      width: '500px',
+      data: {},
+    });
   }
 
   tenderValueRemark(): void {
-    console.log('Tender Approximate Value clicked');
-    // Implement your logic here
+    this.dialog.open(TenderValueRemarkComponent, {
+      width: '900px',
+      data: {},
+    });
   }
 }

@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class Form20MaintenanceService {
   private baseUrl = '/api/pts20/Maintenance';
+  private form20BaseUrl = '/api/pts20/Form20';
 
   constructor(private http: HttpClient) {}
 
@@ -36,12 +37,19 @@ export class Form20MaintenanceService {
   }
 
   /**
-   * Set Tender No
+   * Set Tender No for a specific form
+   * @param formId - Form ID to update
    * @param tenderNo - Tender number to set
    * @returns Observable of response
    */
-  setTenderNo(tenderNo: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/setTenderNo`, { tenderNo });
+  setTenderNo(formId: number, tenderNo: string): Observable<any> {
+    return this.http.post<any>(
+      `${this.form20BaseUrl}/setTenderNo/${formId}`, 
+      JSON.stringify(tenderNo),
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
   }
 
   /**
@@ -58,6 +66,14 @@ export class Form20MaintenanceService {
    */
   updateTenderNoRunningNo(): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/updateTenderNo`, {});
+  }
+
+  /**
+   * Get Tender No Running No list
+   * @returns Observable of tender no running numbers
+   */
+  getTenderNoRunningNo(): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/obtainTenderNoRunningNo`, {});
   }
 
   /**

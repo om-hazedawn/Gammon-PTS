@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Form20MaintenanceService } from '../../../../core/services/Form20/form20Maintainance.service';
@@ -215,12 +215,18 @@ export class SetTenderNoComponent implements OnInit {
   isLoading = false;
 
   constructor(
+    private dialogRef: MatDialogRef<SetTenderNoComponent>,
     private maintenanceService: Form20MaintenanceService,
     private form20ListService: Form20ListService
   ) {}
 
   ngOnInit(): void {
     this.loadData();
+    
+    // Subscribe to tender no filter changes
+    this.tenderNoFilterFC.valueChanges.subscribe(() => {
+      this.applyTenderNoFilter();
+    });
   }
 
   loadData(): void {
@@ -261,7 +267,8 @@ export class SetTenderNoComponent implements OnInit {
           this.dataSource = [];
         }
         
-        this.filteredData = [...this.dataSource];
+        this.filteredData = [...this.dataSource].reverse();
+        this.applyTenderNoFilter(); // Apply tender no filter after loading data
         console.log('DataSource length:', this.dataSource.length);
         console.log('FilteredData length:', this.filteredData.length);
       },
@@ -288,11 +295,44 @@ export class SetTenderNoComponent implements OnInit {
     return labels[col] || col;
   }
 
+  applyTenderNoFilter(): void {
+    const tenderNoFilter = this.tenderNoFilterFC.value?.toLowerCase() || '';
+    
+    if (!tenderNoFilter) {
+      // No filter, show all data
+      this.filteredData = [...this.dataSource].reverse();
+    } else {
+      // Filter by tender no containing the filter value
+      this.filteredData = this.dataSource.filter((item) => {
+        const tenderNo = (item.tenderNo || '').toLowerCase();
+        return tenderNo.includes(tenderNoFilter);
+      }).reverse();
+    }
+  }
+
   applyFilter(event: any): void {
     const filterValue = event.target.value.toLowerCase();
-    this.filteredData = this.dataSource.filter((item) =>
-      JSON.stringify(item).toLowerCase().includes(filterValue)
-    );
+    
+    // First apply tender no filter, then apply general search filter
+    let dataToFilter = [...this.dataSource];
+    
+    // Apply tender no filter
+    const tenderNoFilter = this.tenderNoFilterFC.value?.toLowerCase() || '';
+    if (tenderNoFilter) {
+      dataToFilter = dataToFilter.filter((item) => {
+        const tenderNo = (item.tenderNo || '').toLowerCase();
+        return tenderNo.includes(tenderNoFilter);
+      });
+    }
+    
+    // Apply general search filter
+    if (filterValue) {
+      this.filteredData = dataToFilter.filter((item) =>
+        JSON.stringify(item).toLowerCase().includes(filterValue)
+      ).reverse();
+    } else {
+      this.filteredData = dataToFilter.reverse();
+    }
   }
 
   inputClick(element: any): void {
@@ -303,7 +343,15 @@ export class SetTenderNoComponent implements OnInit {
 
   saveTenderNo(element: any): void {
     console.log('Saving tender no:', element);
-    this.maintenanceService.setTenderNo(element['tenderNo']).subscribe({
+    const formId = element['id'];
+    const tenderNo = element['tenderNo'];
+    
+    if (!formId) {
+      console.error('Form ID is missing');
+      return;
+    }
+    
+    this.maintenanceService.setTenderNo(formId, tenderNo).subscribe({
       next: (response) => {
         console.log('Tender No saved:', response);
         element['_oldTenderNo'] = element['tenderNo'];
@@ -315,10 +363,10 @@ export class SetTenderNoComponent implements OnInit {
   }
 
   cancel(): void {
-    console.log('Dialog cancelled');
+    this.dialogRef.close();
   }
 
   save(): void {
-    console.log('Dialog saved');
+    this.dialogRef.close();
   }
 }
