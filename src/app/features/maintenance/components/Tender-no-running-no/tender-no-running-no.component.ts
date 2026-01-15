@@ -205,17 +205,27 @@ export class TenderNoRunningNoComponent implements OnInit {
   update(element: RunningNoItem): void {
     console.log('Updating:', element);
     
-    // TODO: Replace with actual API call
-    // For now, just update the original values to match current
-    element._originalYear = element.control ? element.control.value || element.tenderYear : element.tenderYear;
-    element._originalLastNo = element.lastNo;
+    const tenderYear = element.control ? (element.control.value || element.tenderYear) : element.tenderYear;
+    const lastNo = element.lastNo;
     
-    if (element.control) {
-      element.tenderYear = element.control.value || element.tenderYear;
-      element.control = undefined;
-    }
-    
-    console.log('Updated successfully');
+    this.maintenanceService.updateTenderNoRunningNoByYear(tenderYear, lastNo).subscribe({
+      next: (response: any) => {
+        console.log('Updated successfully:', response);
+        
+        // Update the original values to match current
+        element._originalYear = tenderYear;
+        element._originalLastNo = lastNo;
+        
+        if (element.control) {
+          element.tenderYear = tenderYear;
+          element.control = undefined;
+        }
+      },
+      error: (error: any) => {
+        console.error('Error updating Tender No Running No:', error);
+        alert('Failed to update. Please try again.');
+      }
+    });
   }
 
   disableSaveButton(element: RunningNoItem): boolean {
@@ -225,15 +235,11 @@ export class TenderNoRunningNoComponent implements OnInit {
   }
 
   addRunningNoYear(): void {
-    const currentYear = new Date().getFullYear();
-    const maxYear = Math.max(...this.dataSource.map(item => item.tenderYear));
-    const newYear = maxYear >= currentYear ? maxYear + 1 : currentYear;
-    
     const newItem: RunningNoItem = {
-      tenderYear: newYear,
+      tenderYear: 0,
       lastNo: 0,
-      control: new FormControl(newYear),
-      _originalYear: newYear,
+      control: new FormControl(null),
+      _originalYear: 0, // Set to 0 to indicate this is a new item
       _originalLastNo: 0,
     };
     

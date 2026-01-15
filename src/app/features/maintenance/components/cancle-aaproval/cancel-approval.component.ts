@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { Form20MaintenanceService } from '../../../../core/services/Form20/form20Maintainance.service';
 
 @Component({
   selector: 'app-cancel-approval',
@@ -82,7 +83,10 @@ import { MatInputModule } from '@angular/material/input';
 export class CancelApprovalComponent {
   control = new FormControl('');
 
-  constructor(private dialogRef: MatDialogRef<CancelApprovalComponent>) {}
+  constructor(
+    private dialogRef: MatDialogRef<CancelApprovalComponent>,
+    private maintenanceService: Form20MaintenanceService
+  ) {}
 
   updateStatus(): void {
     const approvalHeaderId = this.control.value;
@@ -93,20 +97,17 @@ export class CancelApprovalComponent {
 
     console.log('Updating approval status to cancel for ID:', approvalHeaderId);
     
-    // TODO: Replace with actual API call
-    // Example:
-    // this.approvalService.cancelApproval(approvalHeaderId).subscribe({
-    //   next: (response) => {
-    //     console.log('Status updated successfully', response);
-    //     this.dialogRef.close(true);
-    //   },
-    //   error: (error) => {
-    //     console.error('Error updating status:', error);
-    //   }
-    // });
-    
-    // For now, just close the dialog
-    this.dialogRef.close(approvalHeaderId);
+    this.maintenanceService.cancelApproval(Number(approvalHeaderId)).subscribe({
+      next: (response) => {
+        console.log('Status updated successfully', response);
+        alert('Approval cancelled successfully');
+        this.dialogRef.close(true);
+      },
+      error: (error) => {
+        console.error('Error updating status:', error);
+        alert('Failed to cancel approval. Please try again.');
+      }
+    });
   }
 
   close(): void {

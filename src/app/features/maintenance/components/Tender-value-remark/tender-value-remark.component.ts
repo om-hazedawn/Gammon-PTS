@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { Form20ListService } from '../../../../core/services/Form20/form20list.service';
 
 interface TenderValueItem {
   tenderNo: string;
@@ -145,44 +146,51 @@ export class TenderValueRemarkComponent implements OnInit {
   displayedColumns: string[] = ['tenderno', 'approximateValue', 'approximateValueRemark', 'currency'];
   datasource: TenderValueItem[] = [];
 
-  constructor(private dialogRef: MatDialogRef<TenderValueRemarkComponent>) {}
+  constructor(
+    private dialogRef: MatDialogRef<TenderValueRemarkComponent>,
+    private form20ListService: Form20ListService
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
   }
 
   loadData(): void {
-    // TODO: Replace with actual API call
-    // Sample data for demonstration
-    this.datasource = [
-      {
-        tenderNo: 'TND-2024-001',
-        approximateValue: 1000000,
-        approximateValueRemark: 'Initial estimate',
-        currency: 'HKD',
-        _originalValue: 1000000,
-        _originalRemark: 'Initial estimate',
-        _originalCurrency: 'HKD',
+    this.form20ListService.getForm20List().subscribe({
+      next: (response: any) => {
+        console.log('Form20 List Response:', response);
+        
+        let items: any[] = [];
+        
+        // Handle different response formats
+        if (Array.isArray(response)) {
+          items = response;
+        } else if (response && response.items && Array.isArray(response.items)) {
+          items = response.items;
+        } else if (response && response.data && Array.isArray(response.data)) {
+          items = response.data;
+        }
+        
+        if (items && items.length > 0) {
+          this.datasource = items.map((item: any) => ({
+            tenderNo: item.tenderNo || '',
+            approximateValue: item.approximateValue ?? null,
+            approximateValueRemark: item.approximateValueRemark || '',
+            currency: item.currency || 'HKD',
+            _originalValue: item.approximateValue ?? null,
+            _originalRemark: item.approximateValueRemark || '',
+            _originalCurrency: item.currency || 'HKD',
+          }));
+        } else {
+          this.datasource = [];
+          console.log('No data found in response');
+        }
       },
-      {
-        tenderNo: 'TND-2024-002',
-        approximateValue: 2500000,
-        approximateValueRemark: 'Based on market analysis',
-        currency: 'HKD',
-        _originalValue: 2500000,
-        _originalRemark: 'Based on market analysis',
-        _originalCurrency: 'HKD',
-      },
-      {
-        tenderNo: 'TND-2024-003',
-        approximateValue: null,
-        approximateValueRemark: '',
-        currency: 'HKD',
-        _originalValue: null,
-        _originalRemark: '',
-        _originalCurrency: 'HKD',
-      },
-    ];
+      error: (error: any) => {
+        console.error('Error loading form list:', error);
+        this.datasource = [];
+      }
+    });
   }
 
   save(element: TenderValueItem): void {
