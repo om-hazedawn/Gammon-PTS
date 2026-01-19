@@ -69,13 +69,14 @@ interface MigrationItem {
           <ng-container matColumnDef="statusIcon">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
-              <mat-spinner diameter="30" *ngIf="element.statusIcon === 'processing'"></mat-spinner>
-              <mat-icon 
-                [color]="iconColor(element.statusIcon)"
-                *ngIf="element.statusIcon !== 'processing'"
-              >
-                {{element.statusIcon}}
-              </mat-icon>
+              @if (element.statusIcon === 'processing') {
+                <mat-spinner diameter="30"></mat-spinner>
+              }
+              @if (element.statusIcon !== 'processing') {
+                <mat-icon [color]="iconColor(element.statusIcon)">
+                  {{element.statusIcon}}
+                </mat-icon>
+              }
             </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>

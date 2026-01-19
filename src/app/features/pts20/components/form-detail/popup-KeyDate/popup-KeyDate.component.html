@@ -24,17 +24,20 @@
     </table>
 
     <!-- Add New Key Date Form -->
-    <div *ngIf="isAddingNew" class="mt-6 p-4 border border-gray-300 rounded">
-      <h3 class="text-lg font-semibold mb-4">Add New Key Date</h3>
-      <form [formGroup]="newKeyDateForm" class="flex gap-4 items-end">
-        <mat-form-field appearance="fill" class="flex-1">
-          <mat-label>Key Date Type</mat-label>
-          <mat-select formControlName="keyDateType">
-            <mat-option *ngFor="let type of keyDateTypes" [value]="type.value">
-              {{ type.value }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+    @if (isAddingNew) {
+      <div class="mt-6 p-4 border border-gray-300 rounded">
+        <h3 class="text-lg font-semibold mb-4">Add New Key Date</h3>
+        <form [formGroup]="newKeyDateForm" class="flex gap-4 items-end">
+          <mat-form-field appearance="fill" class="flex-1">
+            <mat-label>Key Date Type</mat-label>
+            <mat-select formControlName="keyDateType">
+              @for (type of keyDateTypes; track type.value) {
+                <mat-option [value]="type.value">
+                  {{ type.value }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
 
         <mat-form-field appearance="fill" class="flex-1">
           <mat-label>Date</mat-label>
@@ -52,6 +55,7 @@
         </button>
       </form>
     </div>
+    }
   </mat-dialog-content>
 
   <mat-dialog-actions align="end" class="mt-4">

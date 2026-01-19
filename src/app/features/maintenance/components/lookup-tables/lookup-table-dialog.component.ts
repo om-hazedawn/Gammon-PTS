@@ -27,31 +27,37 @@ import { Form20MaintenanceService } from '../../../../core/services/Form20/form2
   template: `
     <h1 mat-dialog-title>{{ data['title'] }}</h1>
     <div mat-dialog-content class="dialog-content">
-      <div *ngIf="isLoading" class="loading-container">
-        <mat-spinner diameter="40"></mat-spinner>
-        <p>Loading...</p>
-      </div>
-      <div *ngIf="!isLoading">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let control of dataSource; let i = index">
-                <td>
-                  <input type="text" [formControl]="control" placeholder="Enter value" class="table-input">
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      @if (isLoading) {
+        <div class="loading-container">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Loading...</p>
         </div>
-        <button mat-raised-button color="primary" (click)="addItem()" class="add-button">
-          <mat-icon>add</mat-icon> Add Item
-        </button>
-      </div>
+      }
+      @if (!isLoading) {
+        <div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (control of dataSource; track control; let i = $index) {
+                  <tr>
+                    <td>
+                      <input type="text" [formControl]="control" placeholder="Enter value" class="table-input">
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <button mat-raised-button color="primary" (click)="addItem()" class="add-button">
+            <mat-icon>add</mat-icon> Add Item
+          </button>
+        </div>
+      }
     </div>
     <div mat-dialog-actions align="end">
       <button mat-button (click)="cancel()">Cancel</button>
@@ -152,6 +158,7 @@ import { Form20MaintenanceService } from '../../../../core/services/Form20/form2
 export class LookupTableDialogComponent implements OnInit {
   displayedColumns: string[] = ['value'];
   dataSource: FormControl[] = [];
+  originalData: { [key: string]: string } = {}; // Store original data with IDs
   isLoading = false;
 
   constructor(
@@ -178,32 +185,26 @@ export class LookupTableDialogComponent implements OnInit {
         console.log('API Response:', response);
         console.log('Response Type:', typeof response);
 
-        let items: string[] = [];
-
-        // Check if response contains an array of items
-        if (Array.isArray(response)) {
-          console.log('Response is array');
-          items = response;
-        } else if (response && response.data && Array.isArray(response.data)) {
-          console.log('Response has data property');
-          items = response.data;
-        } else if (response && response.value && Array.isArray(response.value)) {
-          console.log('Response has value property');
-          items = response.value;
-        } else if (response && typeof response === 'object') {
-          console.log('Response is object, converting to array');
-          items = Object.values(response);
+        // Store original data as object with ID keys
+        if (response && typeof response === 'object' && !Array.isArray(response)) {
+          this.originalData = { ...response };
+          console.log('Original data stored:', this.originalData);
+          
+          // Create form controls from the object values
+          const entries = Object.entries(response);
+          if (entries.length > 0) {
+            this.dataSource = entries.map(([id, value]) => {
+              const control = new FormControl(value);
+              // Store the ID as a property on the control for later reference
+              (control as any)['originalId'] = id;
+              return control;
+            });
+          } else {
+            this.dataSource = [new FormControl('')];
+          }
         } else {
-          console.log('No valid data found in response');
-          items = [];
-        }
-
-        console.log('Parsed items:', items);
-
-        if (items && items.length > 0) {
-          this.dataSource = items.map((item: any) => new FormControl(item));
-        } else {
-          // Initialize with one empty field if no data
+          console.log('Response format not as expected, initializing empty');
+          this.originalData = {};
           this.dataSource = [new FormControl('')];
         }
 
@@ -223,20 +224,41 @@ export class LookupTableDialogComponent implements OnInit {
   }
 
   save(): void {
-    const values = this.dataSource
-      .map((control) => control.value)
-      .filter((value) => value && value.trim() !== '');
+    const changedValues: { [key: string]: string } = {};
 
-    console.log('Saving values:', values);
+    this.dataSource.forEach((control) => {
+      const value = control.value?.trim();
+      if (!value) return; // Skip empty values
 
-    this.maintenanceService.saveLookupTableData(this.data['key'], values).subscribe({
+      const originalId = (control as any)['originalId'];
+      
+      if (originalId) {
+        // Existing item - check if it changed
+        if (this.originalData[originalId] !== value) {
+          changedValues[originalId] = value;
+        }
+      } else {
+        // New item - use "0" as the ID
+        changedValues["0"] = value;
+      }
+    });
+
+    console.log('Saving changed values:', changedValues);
+
+    // Only save if there are changes
+    if (Object.keys(changedValues).length === 0) {
+      console.log('No changes to save');
+      this.dialogRef.close();
+      return;
+    }
+
+    this.maintenanceService.saveLookupTableData(this.data['key'], changedValues).subscribe({
       next: (response) => {
         console.log('Data saved successfully:', response);
-        this.dialogRef.close(values);
+        this.dialogRef.close(changedValues);
       },
       error: (error) => {
         console.error('Error saving data:', error);
-        // Still close dialog but show the error
         alert('Error saving data. Please try again.');
       },
     });

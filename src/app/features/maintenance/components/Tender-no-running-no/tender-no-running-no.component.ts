@@ -43,10 +43,14 @@ interface RunningNoItem {
           <ng-container matColumnDef="tenderYear">
             <mat-header-cell *matHeaderCellDef> Tender Year </mat-header-cell>
             <mat-cell *matCellDef="let element">
-              <span *ngIf="!element.control"> {{element.tenderYear}}</span>
-              <mat-form-field *ngIf="element.control" class="full-width input-field">
-                <input matInput autocomplete="off" type="number" [formControl]="element.control" />
-              </mat-form-field>
+              @if (!element.control) {
+                <span>{{element.tenderYear}}</span>
+              }
+              @if (element.control) {
+                <mat-form-field class="full-width input-field">
+                  <input matInput autocomplete="off" type="number" [formControl]="element.control" />
+                </mat-form-field>
+              }
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="lastNo">

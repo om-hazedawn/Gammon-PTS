@@ -430,24 +430,30 @@ import { MatRadioModule } from '@angular/material/radio';
 
           <div style="width: 100%; margin-bottom: 16px;">
             <label style="font-weight: 600; color: #1976d2; display: block; margin-bottom: 8px;">Attachments</label>
-            <div *ngIf="tenderAttachments && tenderAttachments.length > 0">
-              <ul style="padding-left: 16px;">
-                <li *ngFor="let att of tenderAttachments">
-                  <span>{{ att.originalFileName }}</span>
-                  <button
-                    mat-icon-button
-                    color="primary"
-                    (click)="downloadAttachment(att)"
-                    matTooltip="Download attachment"
-                  >
-                    <mat-icon>download</mat-icon>
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div *ngIf="!tenderAttachments || tenderAttachments.length === 0">
-              <span>No attachments available.</span>
-            </div>
+            @if (tenderAttachments && tenderAttachments.length > 0) {
+              <div>
+                <ul style="padding-left: 16px;">
+                  @for (att of tenderAttachments; track att.id) {
+                    <li>
+                      <span>{{ att.originalFileName }}</span>
+                      <button
+                        mat-icon-button
+                        color="primary"
+                        (click)="downloadAttachment(att)"
+                        matTooltip="Download attachment"
+                      >
+                        <mat-icon>download</mat-icon>
+                      </button>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+            @if (!tenderAttachments || tenderAttachments.length === 0) {
+              <div>
+                <span>No attachments available.</span>
+              </div>
+            }
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
               <button
                 mat-icon-button
@@ -459,7 +465,9 @@ import { MatRadioModule } from '@angular/material/radio';
               >
                 <mat-icon>attach_file</mat-icon>
               </button>
-              <span *ngIf="selectedFileName">{{ selectedFileName }}</span>
+              @if (selectedFileName) {
+                <span>{{ selectedFileName }}</span>
+              }
               <button
                 mat-raised-button
                 color="accent"
@@ -510,20 +518,26 @@ import { MatRadioModule } from '@angular/material/radio';
       </div>
     </form>
     <!-- Upload Status Summary -->
-    <div *ngIf="showUploadSummary" class="upload-summary">
-      <h3>Upload Summary</h3>
-      <div *ngFor="let status of uploadStatuses" class="upload-status-item">
-        <div class="file-info">
-          <span>{{ status.file.name }}</span>
-          <span [class]="'status-' + status.status">
-            {{ status.status === 'uploading' ? status.progress + '%' : status.status }}
-          </span>
-        </div>
-        <div *ngIf="status.error" class="error-message">
-          {{ status.error }}
-        </div>
+    @if (showUploadSummary) {
+      <div class="upload-summary">
+        <h3>Upload Summary</h3>
+        @for (status of uploadStatuses; track status.file.name) {
+          <div class="upload-status-item">
+            <div class="file-info">
+              <span>{{ status.file.name }}</span>
+              <span [class]="'status-' + status.status">
+                {{ status.status === 'uploading' ? status.progress + '%' : status.status }}
+              </span>
+            </div>
+            @if (status.error) {
+              <div class="error-message">
+                {{ status.error }}
+              </div>
+            }
+          </div>
+        }
       </div>
-    </div>
+    }
   `,
   styles: [
     `

@@ -33,35 +33,54 @@ import { Form20ListService } from '../../../../core/services/Form20/form20list.s
       </div>
 
       <div class="table-container">
-        <div *ngIf="isLoading" class="loading-state">
-          <p>Loading data...</p>
-        </div>
-        <div *ngIf="!isLoading && filteredData.length === 0" class="empty-state">
-          <p>No data found</p>
-        </div>
-        <table class="data-table" *ngIf="!isLoading && filteredData.length > 0">
-          <thead>
-            <tr>
-              <th *ngFor="let col of displayedColumns">
-                <span *ngIf="col !== 'updateButton'">{{ getColumnLabel(col) }}</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let element of filteredData">
-              <td *ngFor="let col of displayedColumns">
-                <span *ngIf="col !== 'tenderNo' && col !== 'updateButton'">{{ element[col] }}</span>
-                <span *ngIf="col === 'tenderNo'" class="tender-no-input">
-                  <input type="text" [(ngModel)]="element[col]" autocomplete="off" (click)="inputClick(element)">
-                </span>
-                <button *ngIf="col === 'updateButton' && element['tenderNo'] !== element['_oldTenderNo'] && element['tenderNo']" 
-                        (click)="saveTenderNo(element)" class="save-button">
-                  <mat-icon>save</mat-icon>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        @if (isLoading) {
+          <div class="loading-state">
+            <p>Loading data...</p>
+          </div>
+        }
+        @if (!isLoading && filteredData.length === 0) {
+          <div class="empty-state">
+            <p>No data found</p>
+          </div>
+        }
+        @if (!isLoading && filteredData.length > 0) {
+          <table class="data-table">
+            <thead>
+              <tr>
+                @for (col of displayedColumns; track col) {
+                  <th>
+                    @if (col !== 'updateButton') {
+                      <span>{{ getColumnLabel(col) }}</span>
+                    }
+                  </th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (element of filteredData; track element.id) {
+                <tr>
+                  @for (col of displayedColumns; track col) {
+                    <td>
+                      @if (col !== 'tenderNo' && col !== 'updateButton') {
+                        <span>{{ element[col] }}</span>
+                      }
+                      @if (col === 'tenderNo') {
+                        <span class="tender-no-input">
+                          <input type="text" [(ngModel)]="element[col]" autocomplete="off" (click)="inputClick(element)">
+                        </span>
+                      }
+                      @if (col === 'updateButton' && element['tenderNo'] !== element['_oldTenderNo'] && element['tenderNo']) {
+                        <button (click)="saveTenderNo(element)" class="save-button">
+                          <mat-icon>save</mat-icon>
+                        </button>
+                      }
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
       </div>
     </div>
     <div mat-dialog-actions align="end">

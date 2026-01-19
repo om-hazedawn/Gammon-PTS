@@ -127,9 +127,15 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
                 <div style="display:flex; gap:6px;">
                   <span style="flex: 0 0 80%;">{{ element.standardResponsePriorityLevel?.title }}</span>
                   <span class="ud-icon" style="flex: 0 0 20%; display:flex; gap:4px; justify-content: flex-end; align-items: center;">
-                    <mat-icon *ngIf="isUpgrade(element)">arrow_upward</mat-icon>
-                    <mat-icon *ngIf="isDowngrade(element)">arrow_downward</mat-icon>
-                    <mat-icon *ngIf="isLevel(element)">swap_horiz</mat-icon>
+                    @if (isUpgrade(element)) {
+                      <mat-icon>arrow_upward</mat-icon>
+                    }
+                    @if (isDowngrade(element)) {
+                      <mat-icon>arrow_downward</mat-icon>
+                    }
+                    @if (isLevel(element)) {
+                      <mat-icon>swap_horiz</mat-icon>
+                    }
                   </span>
                 </div>
               </td>

@@ -19,12 +19,8 @@ export class Form20MaintenanceService {
   }
 
  
-  saveLookupTableData(tableKey: string, data: string[]): Observable<any> {
-    const payload = {
-      key: tableKey,
-      values: data,
-    };
-    return this.http.post<any>(`${this.baseUrl}/update/${tableKey}`, payload);
+  saveLookupTableData(tableKey: string, data: { [key: string]: string }): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/update/${tableKey}`, data);
   }
 
 
@@ -66,6 +62,10 @@ export class Form20MaintenanceService {
 
   tenderValueRemark(): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/tenderValueRemark`, {});
+  }
+
+  updateTenderValue(tenderData: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/updateTenderValue`, tenderData);
   }
 
   cancelApproval(id: number): Observable<any> {
