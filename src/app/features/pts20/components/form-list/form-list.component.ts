@@ -435,6 +435,10 @@ import { TenderNoFilterComponent } from './tender-no-filter/tender-no-filter.com
         max-width: 60px !important;
         width: 60px !important;
       }
+      .mat-column-print {
+        max-width: 50px !important;
+        width: 50px !important;
+      }
       .mat-column-attachment {
         max-width: 80px !important;
         width: 80px !important;

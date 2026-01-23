@@ -333,11 +333,12 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
   private loadYesNoNA(): void {
     this.form20ListDropdownService.obtainYesNoNA().subscribe({
       next: (data: ObtainRegion) => {
-        // Filter out empty strings from yes/no options
+        // Filter out empty strings and convert values to uppercase to match backend data format
         this.yesNo = Object.keys(data)
           .filter((key) => (data[key] as unknown as string) !== '')
           .reduce((obj, key) => {
-            obj[key] = data[key];
+            const value = data[key] as unknown as string;
+            obj[key] = value.toUpperCase() as unknown as string[];
             return obj;
           }, {} as ObtainRegion);
         this.cdr.detectChanges();

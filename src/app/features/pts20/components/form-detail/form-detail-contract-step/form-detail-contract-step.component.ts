@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ControlContainer, FormGroupDirective } from '@angular/forms';
 import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
 import { Form20ListDropdownService, ObtainRegion } from '../../../../../core/services/Form20/form20listdropdown.service';
@@ -11,11 +11,12 @@ import { Form20ListDropdownService, ObtainRegion } from '../../../../../core/ser
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormDetailContractStepComponent {
+export class FormDetailContractStepComponent implements OnInit {
 
   contractTypes: ObtainRegion = {};
   measurementDetails: ObtainRegion = {};
   fluctuation: ObtainRegion = {};
+  yesNo: ObtainRegion = {};
 
   constructor(
     private form20ListDropdownService: Form20ListDropdownService,
@@ -26,6 +27,7 @@ export class FormDetailContractStepComponent {
     this.loadContractTypes();
     this.loadMeasurementDetails();
     this.loadFluctuation();
+    this.loadYesNoNA();
   }
 
   private loadContractTypes(): void {
@@ -72,6 +74,25 @@ export class FormDetailContractStepComponent {
       error: (error: unknown) => {
         console.error('Error loading fluctuation details:', error);
       }
+    });
+  }
+
+  private loadYesNoNA(): void {
+    this.form20ListDropdownService.obtainYesNoNA().subscribe({
+      next: (data: ObtainRegion) => {
+        // Filter out empty strings and convert values to uppercase to match backend data format
+        this.yesNo = Object.keys(data)
+          .filter((key) => (data[key] as unknown as string) !== '')
+          .reduce((obj, key) => {
+            const value = data[key] as unknown as string;
+            obj[key] = value.toUpperCase() as unknown as string[];
+            return obj;
+          }, {} as ObtainRegion);
+        this.cdr.detectChanges();
+      },
+      error: (error: unknown) => {
+        console.error('Error loading Yes/No/NA options:', error);
+      },
     });
   }
 

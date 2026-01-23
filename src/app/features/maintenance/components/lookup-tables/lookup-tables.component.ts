@@ -52,7 +52,7 @@ import { TenderValueRemarkComponent } from '../Tender-value-remark/tender-value-
         <p class="section-description">System configuration and administrative tasks</p>
         <mat-grid-list cols="4" rowHeight="85px" gutterSize="16px" class="button-grid">
           <mat-grid-tile><button mat-raised-button class="maintenance-button system-button" (click)="setTenderNo()"><span>Set Tender No</span></button></mat-grid-tile>
-          <mat-grid-tile><button mat-raised-button class="maintenance-button system-button" (click)="migratePTS()"><span>Migrate From Old PTS</span></button></mat-grid-tile>
+          <!-- <mat-grid-tile><button mat-raised-button class="maintenance-button system-button" (click)="migratePTS()"><span>Migrate From Old PTS</span></button></mat-grid-tile> -->
           <mat-grid-tile><button mat-raised-button class="maintenance-button system-button" (click)="updateTenderNoRunningNo()"><span>Next Tender No Maintenance</span></button></mat-grid-tile>
           <mat-grid-tile><button mat-raised-button class="maintenance-button system-button" (click)="others()"><span>Others</span></button></mat-grid-tile>
           <mat-grid-tile><button mat-raised-button class="maintenance-button system-button" (click)="tenderValueRemark()"><span>Tender Approximate Value</span></button></mat-grid-tile>

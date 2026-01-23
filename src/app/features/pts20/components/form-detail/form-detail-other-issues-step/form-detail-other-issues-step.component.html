@@ -34,9 +34,9 @@
         <div class="flex flex-wrap gap-8 flex-1">
           <div class="radio-group-container min-w-[200px]">
             <mat-radio-group formControlName="PFIorPPPBid" class="flex gap-6">
-              <mat-radio-button value="YES" class="radio-option">Yes</mat-radio-button>
-              <mat-radio-button value="NO" class="radio-option">No</mat-radio-button>
-              <mat-radio-button value="N/A" class="radio-option">N/A</mat-radio-button>
+              @for (key of yesNo | keyvalue; track key.key) {
+              <mat-radio-button [value]="key.value" class="radio-option">{{ key.value }}</mat-radio-button>
+              }
             </mat-radio-group>
           </div>
 
@@ -71,9 +71,9 @@
         <div class="flex flex-wrap gap-8 flex-1">
           <div class="radio-group-container min-w-[200px]">
             <mat-radio-group formControlName="FinancingRequired" class="flex gap-6">
-              <mat-radio-button value="YES" class="radio-option">Yes</mat-radio-button>
-              <mat-radio-button value="NO" class="radio-option">No</mat-radio-button>
-              <mat-radio-button value="N/A" class="radio-option">N/A</mat-radio-button>
+              @for (key of yesNo | keyvalue; track key.key) {
+              <mat-radio-button [value]="key.value" class="radio-option">{{ key.value }}</mat-radio-button>
+              }
             </mat-radio-group>
           </div>
 

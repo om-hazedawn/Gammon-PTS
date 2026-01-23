@@ -145,9 +145,9 @@
   <div class="clause-block">
     <label class="block mb-1">Adverse Physical Conditions:</label>
     <mat-radio-group formControlName="Adverse" class="flex flex-row gap-4">
-      <mat-radio-button value="YES">Yes</mat-radio-button>
-      <mat-radio-button value="NO">No</mat-radio-button>
-      <mat-radio-button value="N/A">N.A.</mat-radio-button>
+      @for (key of yesNo | keyvalue; track key.key) {
+      <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
+      }
     </mat-radio-group>
   </div>
 
@@ -155,9 +155,9 @@
     <div>
       <label class="block mb-1">Time Extension For Weather:</label>
       <mat-radio-group formControlName="TimeExtension" class="flex flex-row gap-4">
-        <mat-radio-button value="YES">Yes</mat-radio-button>
-        <mat-radio-button value="NO">No</mat-radio-button>
-        <mat-radio-button value="N/A">N.A.</mat-radio-button>
+        @for (key of yesNo | keyvalue; track key.key) {
+        <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
+        }
       </mat-radio-group>
     </div>
     <div class="flex flex-row gap-4 flex-1">
@@ -242,9 +242,9 @@
       <div class="mb-2 font-bold">BIM Required:</div>
     </div>
     <mat-radio-group formControlName="BIMRequired" class="flex gap-6">
-      <mat-radio-button value="YES">Yes</mat-radio-button>
-      <mat-radio-button value="NO">No</mat-radio-button>
-      <mat-radio-button value="N/A">N.A.</mat-radio-button>
+      @for (key of yesNo | keyvalue; track key.key) {
+      <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
+      }
     </mat-radio-group>
     </div>
     <div class="flex flex-row gap-4 flex-1">
@@ -274,9 +274,9 @@
       <div class="mb-2 font-bold">DFMA Required:</div>
     </div>
     <mat-radio-group formControlName="DFMARequired" class="flex gap-6">
-      <mat-radio-button value="YES">Yes</mat-radio-button>
-      <mat-radio-button value="NO">No</mat-radio-button>
-      <mat-radio-button value="N/A">N.A.</mat-radio-button>
+      @for (key of yesNo | keyvalue; track key.key) {
+      <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
+      }
     </mat-radio-group>
   </div>
     <div class="flex flex-row gap-4 flex-1">

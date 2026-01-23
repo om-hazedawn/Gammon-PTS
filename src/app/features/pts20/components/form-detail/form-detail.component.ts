@@ -957,7 +957,7 @@ export class FormDetailComponent implements OnInit {
         DesignResponsibility: this.ensureString(formData.contractDesignResponsibility),
         DegreeRiskMeasurement: normalizeRiskCode(formData.contractMeasurementRiskCode),
         DegreeRiskfluctuation: normalizeRiskCode(formData.contractFluctuationRiskCode),
-        DegreeRiskWeather: normalizeRiskCode(formData.contractDesignRiskCode),
+        DegreeRiskWeather: normalizeRiskCode(formData.contractClausesRiskCode),
         DegreeRiskTypeUnusual: normalizeRiskCode(formData.contractUnusualRiskCode),
         DegreeRiskTypeDesign: normalizeRiskCode(formData.contractDesignRiskCode),
         DegreeRiskTypeBIM: normalizeRiskCode(formData.contractBIMRiskCode),
@@ -1631,7 +1631,7 @@ export class FormDetailComponent implements OnInit {
       periodUnit: formValue.contractPeriodUnit,
       period: toNumberOrNull(formValue.contractPeriodValue),
       periodDetail: formValue.ComplexContractPeriod || '',
-      isMarkingScheme: formValue.TenderMarketScheme || '',
+      isMarkingScheme: formValue.TenderMarketScheme ? formValue.TenderMarketScheme.toUpperCase() : '',
       splitValueId: this.ensureNumber(formValue.FinancialTechnicalSplitValue),
       bidTypeId: this.ensureNumber(formValue.BidType),
       jvSplit: ensureString(formValue.JvSplit),
@@ -1916,17 +1916,25 @@ export class FormDetailComponent implements OnInit {
         contractMeasurementRiskCode: formValue.contract.DegreeRiskMeasurement,
         contractFluctuationId: toNumberOrNull(formValue.contract.Fluctuations),
         contractFluctuationRiskCode: formValue.contract.DegreeRiskfluctuation,
-        contractIsAdversePhyiscal: formValue.contract.Adverse,
-        contractIsTimeExtension: formValue.contract.TimeExtension,
+        contractIsAdversePhyiscal: formValue.contract.Adverse
+          ? formValue.contract.Adverse.toUpperCase()
+          : '',
+        contractIsTimeExtension: formValue.contract.TimeExtension
+          ? formValue.contract.TimeExtension.toUpperCase()
+          : '',
         contractIsTimeExtensionValue: formValue.contract.WeatherExtention,
         contractClausesRiskCode: formValue.contract.DegreeRiskWeather,
         contractUnusualConditions: formValue.contract.OtherUnusualConditions,
         contractUnusualRiskCode: formValue.contract.DegreeRiskTypeUnusual,
         contractDesignResponsibility: formValue.contract.DesignResponsibility,
         contractDesignRiskCode: formValue.contract.DegreeRiskTypeDesign,
-        contractBIMRequired: formValue.contract.BIMRequired,
+        contractBIMRequired: formValue.contract.BIMRequired
+          ? formValue.contract.BIMRequired.toUpperCase()
+          : '',
         contractBIMRiskCode: formValue.contract.DegreeRiskTypeBIM,
-        contractDFMARequired: formValue.contract.DFMARequired,
+        contractDFMARequired: formValue.contract.DFMARequired
+          ? formValue.contract.DFMARequired.toUpperCase()
+          : '',
         contractDFMARiskCode: formValue.contract.DegreeRiskTypeDFMA,
         contractDamageRate: toNumberOrNull(formValue.contract.RateOfDamages),
       });
@@ -2009,9 +2017,10 @@ export class FormDetailComponent implements OnInit {
     // Apply any Warranties form group values
     if (formValue.Warranties) {
       Object.assign(baseForm, {
-        warrantGuranteeIsParentCompanyGuarantee: ensureString(
-          formValue.Warranties.ParentCompanyGuarantee
-        ),
+        warrantGuranteeIsParentCompanyGuarantee: formValue.Warranties.ParentCompanyGuarantee
+          ? formValue.Warranties.ParentCompanyGuarantee.toUpperCase()
+          : '',
+
         warrantGuranteeParentCompanyGuarantee: ensureString(
           formValue.Warranties.ParentCompanyDetails
         ),
@@ -2019,9 +2028,9 @@ export class FormDetailComponent implements OnInit {
           formValue.Warranties.ParentCompanyRisk
         ),
 
-        warrantGuranteeIsParentCompanyUnderTaking: ensureString(
-          formValue.Warranties.ParentCompanyUndertaking
-        ),
+        warrantGuranteeIsParentCompanyUnderTaking: formValue.Warranties.ParentCompanyUndertaking
+          ? formValue.Warranties.ParentCompanyUndertaking.toUpperCase()
+          : '',
         warrantGuranteeParentCompanyUnderTaking: ensureString(
           formValue.Warranties.ParentCompanyUndertakingDetails
         ),
@@ -2029,9 +2038,9 @@ export class FormDetailComponent implements OnInit {
           formValue.Warranties.ParentCompanyUndertakingRisk
         ),
 
-        warrantGuranteeIsCollateralWarranties: ensureString(
-          formValue.Warranties.CollateralWarranties
-        ),
+        warrantGuranteeIsCollateralWarranties: formValue.Warranties.CollateralWarranties
+          ? formValue.Warranties.CollateralWarranties.toUpperCase()
+          : '',
         warrantGuranteeCollateralWarranties: ensureString(
           formValue.Warranties.CollateralWarrantiesDetails
         ),
@@ -2039,7 +2048,9 @@ export class FormDetailComponent implements OnInit {
           formValue.Warranties.CollateralWarrantiesRisk
         ),
 
-        warrantGuranteeIsOtherLiabilities: ensureString(formValue.Warranties.OtherContingent),
+        warrantGuranteeIsOtherLiabilities: formValue.Warranties.OtherContingent
+          ? formValue.Warranties.OtherContingent.toUpperCase()
+          : '',
         warrantGuranteeOtherLiabilities: ensureString(formValue.Warranties.OtherContingentDetails),
         warrantGuranteeOtherLiabilitiesRiskCode: ensureString(
           formValue.Warranties.OtherContingentRisk
@@ -2050,7 +2061,9 @@ export class FormDetailComponent implements OnInit {
     // Apply any Insurance form group values
     if (formValue.Insurance) {
       Object.assign(baseForm, {
-        insuranceIsProvidedByEmployer: ensureString(formValue.Insurance.ProvidedByEmployer),
+        insuranceIsProvidedByEmployer: formValue.Insurance.ProvidedByEmployer
+          ? formValue.Insurance.ProvidedByEmployer.toUpperCase()
+          : '',
         insuranceProvidedByEmployer: ensureString(formValue.Insurance.ProvidedByEmployerDetails),
         insuranceProvidedByEmployerRiskCode: ensureString(
           formValue.Insurance.ProvidedByEmployerRisk
@@ -2059,13 +2072,17 @@ export class FormDetailComponent implements OnInit {
         insuranceThirdPartyAmount: toNumberOrNull(formValue.Insurance.ThirdPartyDetails),
         insuranceThirdPartyRiskCode: ensureString(formValue.Insurance.ThirdPartyRisk),
 
-        insuranceIsOnerousRequirement: ensureString(formValue.Insurance.OnerousRequirements),
+        insuranceIsOnerousRequirement: formValue.Insurance.OnerousRequirements
+          ? formValue.Insurance.OnerousRequirements.toUpperCase()
+          : '',
         insuranceOnerousRequirement: ensureString(formValue.Insurance.OnerousRequirementsDetails),
         insuranceOnerousRequirementRiskCode: ensureString(
           formValue.Insurance.OnerousRequirementsRisk
         ),
 
-        insuranceIsShortFallInCover: ensureString(formValue.Insurance.ShortfallInCover),
+        insuranceIsShortFallInCover: formValue.Insurance.ShortfallInCover
+          ? formValue.Insurance.ShortfallInCover.toUpperCase()
+          : '',
         insuranceShortFallInCover: ensureString(formValue.Insurance.ShortfallInCoverDetails),
         insuranceShortFallInCoverRiskCode: ensureString(formValue.Insurance.ShortfallInCoverRisk),
       });
@@ -2077,10 +2094,14 @@ export class FormDetailComponent implements OnInit {
         otherPlantInvestmentRequirement: ensureString(formValue.OtherIssue.NewPlantDetails),
         otherPlantInvestmnetRequirementRiskCode: ensureString(formValue.OtherIssue.NewPlantRisk),
 
-        otherIsPFIPPP: ensureString(formValue.OtherIssue.PFIorPPPBid),
+        otherIsPFIPPP: formValue.OtherIssue.PFIorPPPBid
+          ? formValue.OtherIssue.PFIorPPPBid.toUpperCase()
+          : '',
         otherPFIPPPRiskCode: ensureString(formValue.OtherIssue.pfiOrPPPBidRisk),
 
-        otherFinancingRequired: ensureString(formValue.OtherIssue.FinancingRequired),
+        otherFinancingRequired: formValue.OtherIssue.FinancingRequired
+          ? formValue.OtherIssue.FinancingRequired.toUpperCase()
+          : '',
         otherFinancingRequiredRiskCode: ensureString(formValue.OtherIssue.FinancingRequiredRisk),
 
         otherForeignCurrency: ensureString(formValue.OtherIssue.ForeignCurrencyContentDetails),
@@ -2116,39 +2137,59 @@ export class FormDetailComponent implements OnInit {
 
     if (formValue.Evaluation) {
       Object.assign(baseForm, {
-        evaluationIsContractCondition: ensureString(formValue.Evaluation.AcceptibilityRadio),
+        evaluationIsContractCondition: formValue.Evaluation.AcceptibilityRadio
+          ? formValue.Evaluation.AcceptibilityRadio.toUpperCase()
+          : '',
         evaluationContractCondition: ensureString(formValue.Evaluation.AcceptibilityRemark),
 
-        evaluationIsBondGuarantee: ensureString(formValue.Evaluation.BondandGuaranteesRadio),
+        evaluationIsBondGuarantee: formValue.Evaluation.BondandGuaranteesRadio
+          ? formValue.Evaluation.BondandGuaranteesRadio.toUpperCase()
+          : '',
         evaluationBondGuarantee: ensureString(formValue.Evaluation.BondandGuaranteesRemark),
 
-        evaluationIsPlantEquipmentRequired: ensureString(formValue.Evaluation.PlantEquipmentRadio),
+        evaluationIsPlantEquipmentRequired: formValue.Evaluation.PlantEquipmentRadio
+          ? formValue.Evaluation.PlantEquipmentRadio.toUpperCase()
+          : '',
         evaluationPlantEquipmentRequired: ensureString(formValue.Evaluation.PlantEquipmentRemark),
 
-        evaluationIsCompanyWorkload: ensureString(formValue.Evaluation.CurrentWorkloadRadio),
+        evaluationIsCompanyWorkload: formValue.Evaluation.CurrentWorkloadRadio
+          ? formValue.Evaluation.CurrentWorkloadRadio.toUpperCase()
+          : '',
         evaluationCompanyWorkload: ensureString(formValue.Evaluation.CurrentWorkloadRemark),
 
-        evaluationIsConsultantRecord: ensureString(formValue.Evaluation.previousRecordRadio),
+        evaluationIsConsultantRecord: formValue.Evaluation.previousRecordRadio
+          ? formValue.Evaluation.previousRecordRadio.toUpperCase()
+          : '',
         evaluationConsultantRecord: ensureString(formValue.Evaluation.previousRecordRemark),
 
-        evaluationIsCompetition: ensureString(formValue.Evaluation.CompetitionRadio),
+        evaluationIsCompetition: formValue.Evaluation.CompetitionRadio
+          ? formValue.Evaluation.CompetitionRadio.toUpperCase()
+          : '',
         evaluationCompetition: ensureString(formValue.Evaluation.CompetitionRemark),
 
-        evaluationIsPaymentTerm: ensureString(formValue.Evaluation.PaymentTermsRadio),
+        evaluationIsPaymentTerm: formValue.Evaluation.PaymentTermsRadio
+          ? formValue.Evaluation.PaymentTermsRadio.toUpperCase()
+          : '',
         evaluationPaymentTerm: ensureString(formValue.Evaluation.PaymentTermsRemark),
 
-        evaluationIsValueExtendContract: ensureString(formValue.Evaluation.ContractValueRadio),
+        evaluationIsValueExtendContract: formValue.Evaluation.ContractValueRadio
+          ? formValue.Evaluation.ContractValueRadio.toUpperCase()
+          : '',
         evaluationValueExtendContract: ensureString(formValue.Evaluation.ContractValueRemark),
 
-        evaluationIsSiteManagement: ensureString(formValue.Evaluation.SiteManagementRadio),
+        evaluationIsSiteManagement: formValue.Evaluation.SiteManagementRadio
+          ? formValue.Evaluation.SiteManagementRadio.toUpperCase()
+          : '',
         evaluationSiteManagement: ensureString(formValue.Evaluation.SiteManagementRemark),
 
-        evaluationIsTimeAllowed: ensureString(formValue.Evaluation.TimeAllowedRadio),
+        evaluationIsTimeAllowed: formValue.Evaluation.TimeAllowedRadio
+          ? formValue.Evaluation.TimeAllowedRadio.toUpperCase()
+          : '',
         evaluationTimeAllowed: ensureString(formValue.Evaluation.TimeAllowedRemark),
 
-        evaluationIsHealthSafetyEnvironment: ensureString(
-          formValue.Evaluation.HealthSafetyEnvironmentRadio
-        ),
+        evaluationIsHealthSafetyEnvironment: formValue.Evaluation.HealthSafetyEnvironmentRadio
+          ? formValue.Evaluation.HealthSafetyEnvironmentRadio.toUpperCase()
+          : '',
         evaluationHealthSafetyEnvironment: ensureString(
           formValue.Evaluation.HealthSafetyEnvironmentRemark
         ),
