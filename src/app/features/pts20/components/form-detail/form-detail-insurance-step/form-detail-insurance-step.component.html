@@ -16,10 +16,17 @@
 
           <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
             <mat-label>Details</mat-label>
-            <input matInput formControlName="ProvidedByEmployerDetails" />
+            <textarea 
+              matInput 
+              formControlName="ProvidedByEmployerDetails"
+              cdkTextareaAutosize
+              [cdkTextareaAutosize]="true"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="5"
+            ></textarea>
           </mat-form-field>
 
-          <mat-form-field appearance="fill" style="max-width: 250px">
+          <mat-form-field appearance="fill" style="max-width: 250px; height:100px">
             <mat-label>Degree of Risk</mat-label>
             <mat-select formControlName="ProvidedByEmployerRisk">
               <mat-option value="L">L</mat-option>
@@ -40,7 +47,7 @@
         <div class="flex flex-wrap gap-6 flex-1">
           <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
             <mat-label>Details</mat-label>
-            <input matInput formControlName="ThirdPartyDetails" type="number" />
+            <input matInput formControlName="ThirdPartyDetails" type="number" placeholder="number only" />
           </mat-form-field>
 
           <mat-form-field appearance="fill" style="max-width: 250px">
@@ -72,10 +79,16 @@
 
           <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
             <mat-label>Details</mat-label>
-            <input matInput formControlName="OnerousRequirementsDetails" />
+            <textarea 
+            matInput formControlName="OnerousRequirementsDetails" 
+            cdkTextareaAutosize
+            [cdkTextareaAutosize]="true"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="5"
+            ></textarea>
           </mat-form-field>
 
-          <mat-form-field appearance="fill" style="max-width: 250px">
+          <mat-form-field appearance="fill" style="max-width: 250px; height:100px">
             <mat-label>Degree of Risk</mat-label>
             <mat-select formControlName="OnerousRequirementsRisk">
               <mat-option value="L">L</mat-option>
@@ -104,10 +117,16 @@
 
           <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
             <mat-label>Details</mat-label>
-            <input matInput formControlName="ShortfallInCoverDetails" />
+            <textarea matInput formControlName="ShortfallInCoverDetails"
+            matInput formControlName="ShortfallInCoverDetails" 
+            cdkTextareaAutosize
+            [cdkTextareaAutosize]="true"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="5"
+            ></textarea>
           </mat-form-field>
 
-          <mat-form-field appearance="fill" style="max-width: 250px">
+          <mat-form-field appearance="fill" style="max-width: 250px; height:100px">
             <mat-label>Degree of Risk</mat-label>
             <mat-select formControlName="ShortfallInCoverRisk">
               <mat-option value="M">L</mat-option>

@@ -4,23 +4,30 @@
     <div class="mb-4 mr-8">
       <div class="mb-2 font-bold">Form of Contract:</div>
     </div>
-    <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
+    <mat-form-field appearance="fill" class="flex-1 min-w-[200px]" style="height: 100px">
       <mat-label>Type</mat-label>
       <mat-select formControlName="Type">
         @for (contracttype of contractTypes | keyvalue; track contracttype.key) {
-        <mat-option [value]="+contracttype.key">
-          {{ contracttype.value }}
-        </mat-option>
+          <mat-option [value]="+contracttype.key">
+            {{ contracttype.value }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
       <mat-label>Description</mat-label>
-      <input matInput formControlName="Description" />
+      <textarea
+        matInput
+        formControlName="Description"
+        cdkTextareaAutosize
+        [cdkTextareaAutosize]="true"
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="5"
+      ></textarea>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="w-40">
+    <mat-form-field appearance="fill" class="w-40" style="height: 100px">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskTypeContract">
         <mat-option value="L">L</mat-option>
@@ -41,19 +48,30 @@
     </div>
     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
       <mat-label>Rate of Damages</mat-label>
-      <input
+      <textarea
         matInput
         formControlName="RateOfDamages"
-        placeholder="Details of Rate of Damage e.g. $300k/Day"
-      />
+        cdkTextareaAutosize
+        [cdkTextareaAutosize]="true"
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="5"
+      ></textarea>
+      <mat-hint>Details of Rate of Damage e.g. $300k/Day</mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
       <mat-label>Limit of Liability</mat-label>
-      <input matInput formControlName="LimitOfLiability" />
+      <textarea
+        matInput
+        formControlName="LimitOfLiability"
+        cdkTextareaAutosize
+        [cdkTextareaAutosize]="true"
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="5"
+      ></textarea>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="w-40">
+    <mat-form-field appearance="fill" class="w-40" style="height:100px">
       <mat-label>Degree of Risk</mat-label>
       <mat-select formControlName="DegreeRiskDamage">
         <mat-option value="L">L</mat-option>
@@ -75,10 +93,10 @@
     <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
       <mat-label>Measurement Details</mat-label>
       <mat-select formControlName="MeasurementDetails">
-        @for(measurementdetail of measurementDetails | keyvalue; track measurementdetail.key) {
-        <mat-option [value]="+measurementdetail.key">
-          {{ measurementdetail.value }}
-        </mat-option>
+        @for (measurementdetail of measurementDetails | keyvalue; track measurementdetail.key) {
+          <mat-option [value]="+measurementdetail.key">
+            {{ measurementdetail.value }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -110,10 +128,10 @@
     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
       <mat-label>Fluctuations</mat-label>
       <mat-select formControlName="Fluctuations">
-        @for(fluctuation of fluctuation | keyvalue; track fluctuation.key) {
-        <mat-option [value]="+fluctuation.key">
-          {{ fluctuation.value }}
-        </mat-option>
+        @for (fluctuation of fluctuation | keyvalue; track fluctuation.key) {
+          <mat-option [value]="+fluctuation.key">
+            {{ fluctuation.value }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -146,7 +164,7 @@
     <label class="block mb-1">Adverse Physical Conditions:</label>
     <mat-radio-group formControlName="Adverse" class="flex flex-row gap-4">
       @for (key of yesNo | keyvalue; track key.key) {
-      <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
+        <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
       }
     </mat-radio-group>
   </div>
@@ -156,16 +174,23 @@
       <label class="block mb-1">Time Extension For Weather:</label>
       <mat-radio-group formControlName="TimeExtension" class="flex flex-row gap-4">
         @for (key of yesNo | keyvalue; track key.key) {
-        <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
+          <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
         }
       </mat-radio-group>
     </div>
     <div class="flex flex-row gap-4 flex-1">
       <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
         <mat-label>Weather Extension Description</mat-label>
-        <input matInput formControlName="WeatherExtention" />
+        <textarea matInput formControlName="WeatherExtention"
+          matInput 
+          formControlName="WeatherExtention" 
+          cdkTextareaAutosize
+          [cdkTextareaAutosize]="true"
+          cdkAutosizeMinRows="1"
+          cdkAutosizeMaxRows="5"
+        ></textarea>
       </mat-form-field>
-      <mat-form-field appearance="fill" class="w-125 flex-shrink-0">
+      <mat-form-field appearance="fill" class="w-125 flex-shrink-0" style="height:100px">
         <mat-label>Degree of Risk</mat-label>
         <mat-select formControlName="DegreeRiskWeather">
           <mat-option value="L">L</mat-option>
@@ -189,7 +214,7 @@
       <mat-label>Details</mat-label>
       <input matInput formControlName="OtherUnusualConditions" />
     </mat-form-field>
-     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
+    <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
       <mat-label>Hidden Field</mat-label>
       <input matInput />
     </mat-form-field>
@@ -206,22 +231,28 @@
         <mat-option value="Pending">Pending</mat-option>
       </mat-select>
     </mat-form-field>
-   
   </div>
 
   <div class="form-row">
     <div class="mb-4">
       <div class="mb-2 mr-6 font-bold">Design Responsibility:</div>
     </div>
-     <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
+    <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
       <mat-label>Design Responsibility</mat-label>
-      <input matInput formControlName="DesignResponsibility" />
+      <textarea 
+        matInput 
+        formControlName="DesignResponsibility"
+        cdkTextareaAutosize
+        [cdkTextareaAutosize]="true"
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="5"
+      ></textarea>
     </mat-form-field>
-     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
+    <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
       <mat-label>Hidden Field</mat-label>
       <input matInput />
     </mat-form-field>
-    <mat-form-field appearance="fill" class="w-40 flex-shrink-0">
+    <mat-form-field appearance="fill" class="w-40 flex-shrink-0" style="height:100px">
       <mat-label>Degree of Risk:</mat-label>
       <mat-select formControlName="DegreeRiskTypeDesign">
         <mat-option value="L">L</mat-option>
@@ -238,67 +269,65 @@
 
   <div class="clause-block mt-4 flex flex-row items-center gap-6">
     <div>
-    <div class="mb-4">
-      <div class="mb-2 font-bold">BIM Required:</div>
-    </div>
-    <mat-radio-group formControlName="BIMRequired" class="flex gap-6">
-      @for (key of yesNo | keyvalue; track key.key) {
-      <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
-      }
-    </mat-radio-group>
+      <div class="mb-4">
+        <div class="mb-2 font-bold">BIM Required:</div>
+      </div>
+      <mat-radio-group formControlName="BIMRequired" class="flex gap-6">
+        @for (key of yesNo | keyvalue; track key.key) {
+          <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
+        }
+      </mat-radio-group>
     </div>
     <div class="flex flex-row gap-4 flex-1">
-     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
-      <mat-label>Hidden Field</mat-label>
-      <input matInput />
-    </mat-form-field>
-    <mat-form-field appearance="fill" class="w-125 flex-shrink-0">
-      <mat-label>Degree of Risk</mat-label>
-      <mat-select formControlName="DegreeRiskTypeBIM">
-        <mat-option value="L">L</mat-option>
-        <mat-option value="L/M">L/M</mat-option>
-        <mat-option value="M">M</mat-option>
-        <mat-option value="M/H">M/H</mat-option>
-        <mat-option value="H">H</mat-option>
-        <mat-option value="NA">N/A</mat-option>
-        <mat-option value="NSR">NSR</mat-option>
-        <mat-option value="Pending">Pending</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
+        <mat-label>Hidden Field</mat-label>
+        <input matInput />
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="w-125 flex-shrink-0">
+        <mat-label>Degree of Risk</mat-label>
+        <mat-select formControlName="DegreeRiskTypeBIM">
+          <mat-option value="L">L</mat-option>
+          <mat-option value="L/M">L/M</mat-option>
+          <mat-option value="M">M</mat-option>
+          <mat-option value="M/H">M/H</mat-option>
+          <mat-option value="H">H</mat-option>
+          <mat-option value="NA">N/A</mat-option>
+          <mat-option value="NSR">NSR</mat-option>
+          <mat-option value="Pending">Pending</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
 
   <div class="clause-block mt-4 flex flex-row items-center gap-6">
     <div>
-    <div class="mb-4">
-      <div class="mb-2 font-bold">DFMA Required:</div>
+      <div class="mb-4">
+        <div class="mb-2 font-bold">DFMA Required:</div>
+      </div>
+      <mat-radio-group formControlName="DFMARequired" class="flex gap-6">
+        @for (key of yesNo | keyvalue; track key.key) {
+          <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
+        }
+      </mat-radio-group>
     </div>
-    <mat-radio-group formControlName="DFMARequired" class="flex gap-6">
-      @for (key of yesNo | keyvalue; track key.key) {
-      <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
-      }
-    </mat-radio-group>
-  </div>
     <div class="flex flex-row gap-4 flex-1">
-     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
-      <mat-label>Hidden Field</mat-label>
-      <input matInput />
-    </mat-form-field>
-    <mat-form-field appearance="fill" class="w-125 flex-shrink-0">
-      <mat-label>Degree of Risk</mat-label>
-      <mat-select formControlName="DegreeRiskTypeDFMA">
-        <mat-option value="L">L</mat-option>
-        <mat-option value="L/M">L/M</mat-option>
-        <mat-option value="M">M</mat-option>
-        <mat-option value="M/H">M/H</mat-option>
-        <mat-option value="H">H</mat-option>
-        <mat-option value="NA">N/A</mat-option>
-        <mat-option value="NSR">NSR</mat-option>
-        <mat-option value="Pending">Pending</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
+        <mat-label>Hidden Field</mat-label>
+        <input matInput />
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="w-125 flex-shrink-0">
+        <mat-label>Degree of Risk</mat-label>
+        <mat-select formControlName="DegreeRiskTypeDFMA">
+          <mat-option value="L">L</mat-option>
+          <mat-option value="L/M">L/M</mat-option>
+          <mat-option value="M">M</mat-option>
+          <mat-option value="M/H">M/H</mat-option>
+          <mat-option value="H">H</mat-option>
+          <mat-option value="NA">N/A</mat-option>
+          <mat-option value="NSR">NSR</mat-option>
+          <mat-option value="Pending">Pending</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
 </div>
-
-

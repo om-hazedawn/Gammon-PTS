@@ -10,7 +10,14 @@
         <div class="flex flex-wrap items-end gap-8 flex-1">
           <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
             <mat-label>Details</mat-label>
-            <textarea matInput formControlName="NewPlantDetails" rows="2"></textarea>
+            <textarea 
+              matInput 
+              formControlName="NewPlantDetails" 
+              cdkTextareaAutosize
+              [cdkTextareaAutosize]="true"
+              cdkAutosizeMinRows="3"
+              cdkAutosizeMaxRows="5"
+              ></textarea>
           </mat-form-field>
 
           <mat-form-field appearance="fill" style="max-width: 250px; height: 100px">
@@ -108,10 +115,17 @@
         <div class="flex flex-wrap gap-8 flex-1">
           <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
             <mat-label>Details</mat-label>
-            <input matInput formControlName="ForeignCurrencyContentDetails" />
+            <textarea matInput formControlName="ForeignCurrencyContentDetails"> 
+              matInput 
+              formControlName="ForeignCurrencyContentDetails"
+              cdkTextareaAutosize
+              [cdkTextareaAutosize]="true"
+              cdkAutosizeMinRows="3"
+              cdkAutosizeMaxRows="5"
+              ></textarea>
           </mat-form-field>
 
-          <mat-form-field appearance="fill" style="max-width: 250px">
+          <mat-form-field appearance="fill" style="max-width: 250px; height:100px">
             <mat-label>Degree of Risk</mat-label>
             <mat-select formControlName="ForeignCurrencyContentRisk">
               <mat-option value="L">L</mat-option>
