@@ -9,16 +9,18 @@
         Link
       </button>
     </div>
-    <mat-form-field appearance="fill">
-      <mat-label>Business Unit</mat-label>
-      <mat-select formControlName="businessUnit" required>
-        @for (unit of BuildingUnit | keyvalue; track unit.key) {
-        <mat-option [value]="unit.key">
-          {{ unit.value }}
-        </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <select id="businessUnit" formControlName="businessUnit" required class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+          @for (unit of BuildingUnit | keyvalue; track unit.key) {
+            <option [value]="unit.key">{{ unit.value }}</option>
+          }
+        </select>
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('businessUnit')?.value, 'text-gray-500': !formGroup.get('businessUnit')?.value}" [style.opacity]="formGroup.get('businessUnit')?.value ? 0 : 1">Business Unit</span>
+        </div>
+      </div>
+    </div>
     <div class="form-group flex-1">
       <div class="relative h-14">
         <input 
@@ -28,88 +30,117 @@
           class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
           style="color: transparent; caret-color: transparent;"
         />
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pointer-events-none pl-4">
-          @if (formGroup.get('dueDate')?.value) {
-            <span class="text-gray-900 font-medium">{{ formGroup.get('dueDate')?.value | date: 'dd MMM yyyy' | uppercase }}</span>
-          } @else {
-            <span class="text-gray-500">Due Date</span>
-          }
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('dueDate')?.value, 'text-gray-500': !formGroup.get('dueDate')?.value}" [style.opacity]="formGroup.get('dueDate')?.value ? 0 : 1">Due Date</span>
         </div>
       </div>
     </div>
   </div>
 
   <div class="form-row">
-    <mat-form-field appearance="fill">
-      <mat-label>Tender no</mat-label>
-      <div style="display: flex; align-items: center; gap: 8px">
-        <input matInput formControlName="tenderNo" [disabled]="true" readonly />
-        @if (!formGroup.get('tenderNo')?.value || formGroup.get('tenderNo')?.value === 'NEW') {
-          <button
-            mat-stroked-button
-            color="primary"
-            (click)="allocateTenderNo()"
-            [disabled]="!formGroup.get('dueDate')?.value || allocatingTenderNo"
-            type="button"
-          >
-            Allocate Tender No
-          </button>
-        }
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <input id="tenderNo" formControlName="tenderNo" [disabled]="true" readonly class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('tenderNo')?.value, 'text-gray-500': !formGroup.get('tenderNo')?.value}" [style.opacity]="formGroup.get('tenderNo')?.value ? 0 : 1">Tender no</span>
+        </div>
+        <div style="position: absolute; right: 0; top: 0; height: 100%; display: flex; align-items: center; gap: 8px;">
+          @if (!formGroup.get('tenderNo')?.value || formGroup.get('tenderNo')?.value === 'NEW') {
+            <button
+              (click)="allocateTenderNo()"
+              [disabled]="!formGroup.get('dueDate')?.value || allocatingTenderNo"
+              type="button"
+              class="border px-3 py-1 rounded bg-blue-100 text-blue-700"
+            >
+              Allocate Tender No
+            </button>
+          }
+        </div>
       </div>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Project Title</mat-label>
-      <input matInput formControlName="projectTitle" required />
-    </mat-form-field>
+    </div>
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <input id="projectTitle" formControlName="projectTitle" required class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('projectTitle')?.value, 'text-gray-500': !formGroup.get('projectTitle')?.value}" [style.opacity]="formGroup.get('projectTitle')?.value ? 0 : 1">Project Title</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="form-row">
-    <mat-form-field appearance="fill">
-      <mat-label>Bid Manager</mat-label>
-      <input matInput formControlName="BidManager" />
-    </mat-form-field>
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Estimator</mat-label>
-      <input matInput formControlName="Estimator" />
-    </mat-form-field>
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Planner</mat-label>
-      <input matInput formControlName="Planner" />
-    </mat-form-field>
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <input id="BidManager" formControlName="BidManager" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('BidManager')?.value, 'text-gray-500': !formGroup.get('BidManager')?.value}" [style.opacity]="formGroup.get('BidManager')?.value ? 0 : 1">Bid Manager</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <input id="Estimator" formControlName="Estimator" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('Estimator')?.value, 'text-gray-500': !formGroup.get('Estimator')?.value}" [style.opacity]="formGroup.get('Estimator')?.value ? 0 : 1">Estimator</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <input id="Planner" formControlName="Planner" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('Planner')?.value, 'text-gray-500': !formGroup.get('Planner')?.value}" [style.opacity]="formGroup.get('Planner')?.value ? 0 : 1">Planner</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="form-row">
-    <mat-form-field appearance="fill">
-      <mat-label>Region</mat-label>
-      <mat-select formControlName="Region">
-        @for (region of regions | keyvalue; track region.key) {
-        <mat-option [value]="+region.key">
-          {{ region.value }}
-        </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Location</mat-label>
-      <input matInput formControlName="Location" />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>TenderType</mat-label>
-      <mat-select formControlName="TenderType">
-        @for (tenderType of tenderTypes | keyvalue; track tenderType.key) {
-        <mat-option [value]="+tenderType.key">
-          {{ tenderType.value }}
-        </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <select id="Region" formControlName="Region" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+          @for (region of regions | keyvalue; track region.key) {
+            <option [value]="+region.key">{{ region.value }}</option>
+          }
+        </select>
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('Region')?.value, 'text-gray-500': !formGroup.get('Region')?.value}" [style.opacity]="formGroup.get('Region')?.value ? 0 : 1">Region</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <input id="Location" formControlName="Location" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pointer-events-none pl-4">
+          @if (formGroup.get('Location')?.value) {
+            <span class="text-gray-900 font-medium">{{ formGroup.get('Location')?.value }}</span>
+          } @else {
+            <span class="text-gray-500">Location</span>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <select id="TenderType" formControlName="TenderType" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+          @for (tenderType of tenderTypes | keyvalue; track tenderType.key) {
+            <option [value]="+tenderType.key">{{ tenderType.value }}</option>
+          }
+        </select>
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('TenderType')?.value, 'text-gray-500': !formGroup.get('TenderType')?.value}" [style.opacity]="formGroup.get('TenderType')?.value ? 0 : 1">Tender Type</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="form-row">
-    <mat-form-field appearance="fill">
-      <mat-label>Brief Description</mat-label>
-      <textarea matInput formControlName="BriefDescription" rows="3"></textarea>
-    </mat-form-field>
+    <div class="mb-4 mr-2">
+      <div class="mb-2 font-bold">Brief Description:</div>
+    </div>
+    <div class="form-group w-full">
+       <textarea id="BriefDescription" formControlName="BriefDescription" rows="3" placeholder="Brief Description" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"></textarea>
+    </div>
   </div>
 
   <div class="form-row">
@@ -117,31 +148,44 @@
       <div class="mb-2 font-bold">Approximate Value:</div>
     </div>
     <div style="display: flex; gap: 10px">
-      <mat-form-field appearance="fill" style="flex: 1">
-        <mat-select formControlName="ApproximateValueType" placeholder="Select type">
-          @for (currency of currencies | keyvalue; track currency.key) {
-          <mat-option [value]="+currency.key">
-            {{ currency.value }}
-          </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="fill" style="flex: 1">
-        <mat-label>e.g. 30M, 5B</mat-label>
-        <input matInput formControlName="ApproximateValueInput" placeholder="Enter value" />
-      </mat-form-field>
+      <div class="form-group flex-1">
+        <div class="relative h-14">
+          <select id="ApproximateValueType" formControlName="ApproximateValueType" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+            @for (currency of currencies | keyvalue; track currency.key) {
+              <option [value]="+currency.key">{{ currency.value }}</option>
+            }
+          </select>
+          <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+            <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('ApproximateValueType')?.value, 'text-gray-500': !formGroup.get('ApproximateValueType')?.value}" [style.opacity]="formGroup.get('ApproximateValueType')?.value ? 0 : 1">Approximate Value Type</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" style="flex: 1">
+        <div class="relative h-14">
+          <input id="ApproximateValueInput" formControlName="ApproximateValueInput" placeholder="e.g. 30M, 5B" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="form-row">
-    <mat-form-field appearance="fill">
-      <mat-label>Approximate Value Remarks</mat-label>
-      <input matInput formControlName="ApproximateValue" />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Approximate Margin</mat-label>
-      <input matInput formControlName="Approxmargin" placeholder="e.g. 1M, 100k"/>
-    </mat-form-field>
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <input id="ApproximateValue" formControlName="ApproximateValue" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pointer-events-none pl-4">
+          @if (formGroup.get('ApproximateValue')?.value) {
+            <span class="text-gray-900 font-medium">{{ formGroup.get('ApproximateValue')?.value }}</span>
+          } @else {
+            <span class="text-gray-500">Approximate Value Remarks</span>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <input id="Approxmargin" formControlName="Approxmargin" placeholder="e.g. 1M, 100k" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+      </div>
+    </div>
   </div>
 
   <div class="form-row">
@@ -149,137 +193,174 @@
       <div class="mb-2 font-bold">Maintenance / Defect:</div>
     </div>
     <div style="display: flex; gap: 10px">
-      <mat-form-field appearance="fill" style="flex: 1">
-        <mat-select formControlName="maintenanceType" placeholder="Select option">
-          @for (maintenanceDefect of maintenanceDefects | keyvalue; track maintenanceDefect.key) {
-          <mat-option [value]="+maintenanceDefect.key">
-            {{ maintenanceDefect.value }}
-          </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="fill" style="flex: 1">
-        <input
-          matInput
-          type="number"
-          formControlName="maintenanceValue"
-          placeholder="Enter number"
-        />
-      </mat-form-field>
-      <mat-form-field appearance="fill" style="flex: 1">
-        <mat-select formControlName="maintenanceStatus1" placeholder="Select status">
-          <mat-option value="months">months</mat-option>
-          <mat-option value="days">days</mat-option>
-          <mat-option value="years">years</mat-option>
-          <mat-option value="weeks">weeks</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <div class="form-group flex-1">
+        <div class="relative h-14">
+          <select id="maintenanceType" formControlName="maintenanceType" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+            @for (maintenanceDefect of maintenanceDefects | keyvalue; track maintenanceDefect.key) {
+              <option [value]="+maintenanceDefect.key">{{ maintenanceDefect.value }}</option>
+            }
+          </select>
+          <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+            <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('maintenanceType')?.value, 'text-gray-500': !formGroup.get('maintenanceType')?.value}" [style.opacity]="formGroup.get('maintenanceType')?.value ? 0 : 1">Maintenance Type</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group flex-1">
+        <div class="relative h-14">
+          <input id="maintenanceValue" type="number" formControlName="maintenanceValue" placeholder="Enter number" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+        </div>
+      </div>
+      <div class="form-group flex-1">
+        <div class="relative h-14">
+          <select id="maintenanceStatus1" formControlName="maintenanceStatus1" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+            <option value="months">months</option>
+            <option value="days">days</option>
+            <option value="years">years</option>
+            <option value="weeks">weeks</option>
+          </select>
+          <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+            <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('maintenanceStatus1')?.value, 'text-gray-500': !formGroup.get('maintenanceStatus1')?.value}" [style.opacity]="formGroup.get('maintenanceStatus1')?.value ? 0 : 1">Maintenance Status</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="form-row" style="display: flex; gap: 1rem; flex-wrap: wrap">
     <!-- Client -->
-    <mat-form-field appearance="fill" style="flex: 1">
-      <mat-label>Client</mat-label>
-      <input matInput formControlName="clientName" placeholder="Enter client name" />
-    </mat-form-field>
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <input id="clientName" formControlName="clientName" placeholder="Enter client name" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+      </div>
+    </div>
 
     <div class="mb-4 mr-2">
       <div class="mb-2 font-bold">Contract Period:</div>
     </div>
 
-    <mat-form-field appearance="fill" style="width: 100px">
-      <input matInput type="number" formControlName="contractPeriodValue" />
-    </mat-form-field>
+    <div class="form-group" style="width: 180px">
+      <div class="relative h-14">
+        <input id="contractPeriodValue" type="number" formControlName="contractPeriodValue" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pointer-events-none pl-4">
+          @if (formGroup.get('contractPeriodValue')?.value) {
+            <span class="text-gray-900 font-medium">{{ formGroup.get('contractPeriodValue')?.value }}</span>
+          } @else {
+            <span class="text-gray-500">Contract Period</span>
+          }
+        </div>
+      </div>
+    </div>
     <!-- Contract Period Unit -->
-    <mat-form-field appearance="fill" style="width: 180px">
-      <mat-label>Contract Period</mat-label>
-      <mat-select formControlName="contractPeriodUnit" placeholder="Select unit">
-        <mat-option value="months">Months</mat-option>
-        <mat-option value="days">Days</mat-option>
-        <mat-option value="years">Years</mat-option>
-        <mat-option value="weeks">Weeks</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="form-group" style="width: 180px">
+      <div class="relative h-14">
+        <select id="contractPeriodUnit" formControlName="contractPeriodUnit" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+          <option value="months">Months</option>
+          <option value="days">Days</option>
+          <option value="years">Years</option>
+          <option value="weeks">Weeks</option>
+        </select>
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('contractPeriodUnit')?.value, 'text-gray-500': !formGroup.get('contractPeriodUnit')?.value}" [style.opacity]="formGroup.get('contractPeriodUnit')?.value ? 0 : 1">Contract Period Unit</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="form-row">
-     <mat-form-field appearance="fill" style="flex: 1">
-      <input
-        matInput
-        formControlName="ComplexContractPeriod"
-        placeholder="for complex contract Period"
-      />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Financial Standing</mat-label>
-      <mat-select formControlName="FinantialStanding">
-        @for (financeStanding of financeStandings | keyvalue; track financeStanding.key) {
-        <mat-option [value]="+financeStanding.key">
-          {{ financeStanding.value }}
-        </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <input id="ComplexContractPeriod" formControlName="ComplexContractPeriod" placeholder="for complex contract Period" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pointer-events-none pl-4">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="relative h-14">
+        <select id="FinantialStanding" formControlName="FinantialStanding" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+          @for (financeStanding of financeStandings | keyvalue; track financeStanding.key) {
+            <option [value]="+financeStanding.key">{{ financeStanding.value }}</option>
+          }
+        </select>
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('FinantialStanding')?.value, 'text-gray-500': !formGroup.get('FinantialStanding')?.value}" [style.opacity]="formGroup.get('FinantialStanding')?.value ? 0 : 1">Financial Standing</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="form-row">
     <div class="form-row">
       <label class="block mb-1">Tender Market Scheme</label>
-      <mat-radio-group formControlName="TenderMarketScheme" class="flex gap-6">
+      <div class="flex gap-6">
         @for (key of yesNo | keyvalue; track key.key) {
-        <mat-radio-button [value]="key.value">{{ key.value }}</mat-radio-button>
+          <label class="inline-flex items-center">
+            <input type="radio" formControlName="TenderMarketScheme" [value]="key.value" class="mr-2" />
+            {{ key.value }}
+          </label>
         }
-      </mat-radio-group>
+      </div>
     </div>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Financial/Technical Split Value</mat-label>
-      <mat-select formControlName="FinancialTechnicalSplitValue">
-        @for (split of financeTechnicalSplits | keyvalue; track split.key) {
-        <mat-option [value]="+split.key">
-          {{ split.value }}
-        </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Bid Type</mat-label>
-      <mat-select formControlName="BidType" placeholder="Select Bid Type">
-        @for(bidtype of bidTypes | keyvalue; track bidtype.key) {
-        <mat-option [value]="+bidtype.key">
-          {{ bidtype.value }}
-        </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+    <div class="form-group">
+      <div class="relative h-14 " style="width: 180px">
+        <select id="FinancialTechnicalSplitValue" formControlName="FinancialTechnicalSplitValue" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+          @for (split of financeTechnicalSplits | keyvalue; track split.key) {
+            <option [value]="+split.key">{{ split.value }}</option>
+          }
+        </select>
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('FinancialTechnicalSplitValue')?.value, 'text-gray-500': !formGroup.get('FinancialTechnicalSplitValue')?.value}" [style.opacity]="formGroup.get('FinancialTechnicalSplitValue')?.value ? 0 : 1">Financial/Technical Split Value</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" style="width: 180px">
+      <div class="relative h-14">
+        <select id="BidType" formControlName="BidType" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+          @for(bidtype of bidTypes | keyvalue; track bidtype.key) {
+            <option [value]="+bidtype.key">{{ bidtype.value }}</option>
+          }
+        </select>
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('BidType')?.value, 'text-gray-500': !formGroup.get('BidType')?.value}" [style.opacity]="formGroup.get('BidType')?.value ? 0 : 1">Bid Type</span>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- JV Partner(s) field - shown only when bid type is Joint Venture Bid (value 2) -->
+  
   @if (isJointVentureBid) {
-  <div class="form-row">
-    <mat-form-field appearance="fill">
-      <mat-label>JV Partner(s)</mat-label>
-      <textarea
-        matInput
-        formControlName="JvPartner"
-        placeholder="Enter Joint Venture Partner details"
-      ></textarea>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>JV Split</mat-label>
-      <input matInput formControlName="JvSplit" placeholder="Enter Joint Venture Split details" />
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>JV Agreement in Place</mat-label>
-      <mat-select formControlName="JvAgreement" placeholder="Select Option">
-        @for (jvAgreement of jvAgreementOptions | keyvalue; track jvAgreement.key) {
-        <mat-option [value]="+jvAgreement.key">
-          {{ jvAgreement.value }}
-        </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-  </div>
+    <div class="form-row">
+      
+      <div class="form-group flex-1">
+        <div class="relative h-14">
+          <textarea id="JvPartner" formControlName="JvPartner" rows="1" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition resize-none"></textarea>
+          <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+            <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('JvPartner')?.value, 'text-gray-500': !formGroup.get('JvPartner')?.value}" [style.opacity]="formGroup.get('JvPartner')?.value ? 0 : 1">JV Partner(s)</span>
+          </div>
+        </div>
+      </div>
+    
+      <div class="form-group flex-1">
+        <div class="relative h-14">
+          <input id="JvSplit" formControlName="JvSplit" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+          <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+            <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('JvSplit')?.value, 'text-gray-500': !formGroup.get('JvSplit')?.value}" [style.opacity]="formGroup.get('JvSplit')?.value ? 0 : 1">JV Split</span>
+          </div>
+        </div>
+      </div>
+    
+      <div class="form-group flex-1">
+        <div class="relative h-14">
+          <select id="JvAgreement" formControlName="JvAgreement" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+            @for (jvAgreement of jvAgreementOptions | keyvalue; track jvAgreement.key) {
+              <option [value]="+jvAgreement.key">{{ jvAgreement.value }}</option>
+            }
+          </select>
+          <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
+            <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('JvAgreement')?.value, 'text-gray-500': !formGroup.get('JvAgreement')?.value}" [style.opacity]="formGroup.get('JvAgreement')?.value ? 0 : 1">JV Agreement in Place</span>
+          </div>
+        </div>
+      </div>
+    </div>
   }
 </div>
