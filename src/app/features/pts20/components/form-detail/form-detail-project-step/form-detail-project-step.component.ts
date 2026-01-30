@@ -50,9 +50,11 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
 
   // ...existing code...
 
-  // Check if bid type is Joint Venture Bid (value 2)
+  // Debugging: Log when isJointVentureBid is accessed
   get isJointVentureBid(): boolean {
-    return this.formGroup?.get('BidType')?.value === 2;
+    const isJV = this.formGroup?.get('BidType')?.value === 2;
+    console.log('isJointVentureBid accessed. Value:', isJV);
+    return isJV;
   }
 
   businessUnitMapping: { [key: string]: string } = {
@@ -181,6 +183,11 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
     if (!this.formGroup.get('dueDate')?.value) {
       this.formGroup.get('tenderNo')?.disable();
     }
+
+    // Subscribe to BidType changes to trigger change detection
+    this.formGroup.get('BidType')?.valueChanges.subscribe(() => {
+      this.cdr.markForCheck();
+    });
   }
 
   openForm30Popup(event: MouseEvent): void {
@@ -198,6 +205,13 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  onBidTypeChange(event: Event): void {
+    const value = +(event.target as HTMLSelectElement).value;
+    this.formGroup.get('BidType')?.setValue(value);
+    this.cdr.markForCheck();
+  }
+
   private loadBuildingUnits(): void {
     this.form20ListDropdownService.obtainBuildingUnit().subscribe({
       next: (data: ObtainRegion) => {

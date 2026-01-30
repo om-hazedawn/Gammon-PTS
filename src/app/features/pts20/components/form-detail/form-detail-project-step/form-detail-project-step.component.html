@@ -1,6 +1,4 @@
 <div class="section">
-  <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Project</h2>
-
   <div class="form-row">
     <div class="flex items-center gap-2">
       <label class="w-40 font-semibold">Form 30</label>
@@ -11,27 +9,47 @@
     </div>
     <div class="form-group flex-1">
       <div class="relative h-14">
-        <select id="businessUnit" formControlName="businessUnit" required class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+        <select
+          id="businessUnit"
+          formControlName="businessUnit"
+          required
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
           @for (unit of BuildingUnit | keyvalue; track unit.key) {
             <option [value]="unit.key">{{ unit.value }}</option>
           }
         </select>
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('businessUnit')?.value, 'text-gray-500': !formGroup.get('businessUnit')?.value}" [style.opacity]="formGroup.get('businessUnit')?.value ? 0 : 1">Business Unit</span>
+        <div
+          class="absolute top-0 left-0 w-full h-full flex items-center pl-4"
+          style="pointer-events: none; z-index: 1"
+        >
+          <span
+            [ngClass]="{
+              'text-gray-900 font-medium': formGroup.get('businessUnit')?.value,
+              'text-gray-500': !formGroup.get('businessUnit')?.value,
+            }"
+            [style.opacity]="formGroup.get('businessUnit')?.value ? 0 : 1"
+            style="color: #bdbdbd;">Business Unit</span>
         </div>
       </div>
     </div>
     <div class="form-group flex-1">
       <div class="relative h-14">
-        <input 
-          type="date" 
+        <input
+          type="date"
           id="dueDate"
-          formControlName="dueDate" 
+          formControlName="dueDate"
           class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
-          style="color: transparent; caret-color: transparent;"
+          style="color: transparent; caret-color: transparent"
         />
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('dueDate')?.value, 'text-gray-500': !formGroup.get('dueDate')?.value}" [style.opacity]="formGroup.get('dueDate')?.value ? 0 : 1">Due Date</span>
+        <div class="absolute top-0 left-0 w-full h-full flex items-center pointer-events-none pl-4">
+          @if (formGroup.get('dueDate')?.value) {
+            <span class="text-gray-900 font-medium">{{
+              formGroup.get('dueDate')?.value | date: 'dd MMM yyyy' | uppercase
+            }}</span>
+          } @else {
+            <span class="text-gray-500">Due Date</span>
+          }
         </div>
       </div>
     </div>
@@ -40,11 +58,25 @@
   <div class="form-row">
     <div class="form-group flex-1">
       <div class="relative h-14">
-        <input id="tenderNo" formControlName="tenderNo" [disabled]="true" readonly class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('tenderNo')?.value, 'text-gray-500': !formGroup.get('tenderNo')?.value}" [style.opacity]="formGroup.get('tenderNo')?.value ? 0 : 1">Tender no</span>
-        </div>
-        <div style="position: absolute; right: 0; top: 0; height: 100%; display: flex; align-items: center; gap: 8px;">
+        <input
+          id="tenderNo"
+          formControlName="tenderNo"
+          [disabled]="true"
+          readonly
+          placeholder="Tender No"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
+        <div
+          style="
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          "
+        >
           @if (!formGroup.get('tenderNo')?.value || formGroup.get('tenderNo')?.value === 'NEW') {
             <button
               (click)="allocateTenderNo()"
@@ -60,10 +92,13 @@
     </div>
     <div class="form-group flex-1">
       <div class="relative h-14">
-        <input id="projectTitle" formControlName="projectTitle" required class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('projectTitle')?.value, 'text-gray-500': !formGroup.get('projectTitle')?.value}" [style.opacity]="formGroup.get('projectTitle')?.value ? 0 : 1">Project Title</span>
-        </div>
+        <input
+          id="projectTitle"
+          formControlName="projectTitle"
+          required
+          placeholder="Project Title"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
       </div>
     </div>
   </div>
@@ -71,119 +106,169 @@
   <div class="form-row">
     <div class="form-group flex-1">
       <div class="relative h-14">
-        <input id="BidManager" formControlName="BidManager" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('BidManager')?.value, 'text-gray-500': !formGroup.get('BidManager')?.value}" [style.opacity]="formGroup.get('BidManager')?.value ? 0 : 1">Bid Manager</span>
-        </div>
+        <input
+          id="BidManager"
+          formControlName="BidManager"
+          placeholder="Bid Manager"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
       </div>
     </div>
     <div class="form-group flex-1">
       <div class="relative h-14">
-        <input id="Estimator" formControlName="Estimator" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('Estimator')?.value, 'text-gray-500': !formGroup.get('Estimator')?.value}" [style.opacity]="formGroup.get('Estimator')?.value ? 0 : 1">Estimator</span>
-        </div>
+        <input
+          id="Estimator"
+          formControlName="Estimator"
+          placeholder="Estimator"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
       </div>
     </div>
     <div class="form-group flex-1">
       <div class="relative h-14">
-        <input id="Planner" formControlName="Planner" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('Planner')?.value, 'text-gray-500': !formGroup.get('Planner')?.value}" [style.opacity]="formGroup.get('Planner')?.value ? 0 : 1">Planner</span>
-        </div>
+        <input
+          id="Planner"
+          formControlName="Planner"
+          placeholder="Planner"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
       </div>
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-group flex-1">
-      <div class="relative h-14">
-        <select id="Region" formControlName="Region" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+      <div class="relative h-14" >
+        <select
+          id="Region"
+          formControlName="Region"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
           @for (region of regions | keyvalue; track region.key) {
             <option [value]="+region.key">{{ region.value }}</option>
           }
         </select>
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('Region')?.value, 'text-gray-500': !formGroup.get('Region')?.value}" [style.opacity]="formGroup.get('Region')?.value ? 0 : 1">Region</span>
+         <div
+          class="absolute top-0 left-0 w-full h-full flex items-center pl-4"
+          style="pointer-events: none; z-index: 1"
+        >
+          <span
+            [ngClass]="{
+              'text-gray-900 font-medium': formGroup.get('Region')?.value,
+              'text-gray-500': !formGroup.get('Region')?.value,
+            }"
+            [style.opacity]="formGroup.get('Region')?.value ? 0 : 1"
+            style="color: #bdbdbd;">Region</span>
         </div>
       </div>
     </div>
     <div class="form-group flex-1">
       <div class="relative h-14">
-        <input id="Location" formControlName="Location" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pointer-events-none pl-4">
-          @if (formGroup.get('Location')?.value) {
-            <span class="text-gray-900 font-medium">{{ formGroup.get('Location')?.value }}</span>
-          } @else {
-            <span class="text-gray-500">Location</span>
-          }
-        </div>
+        <input
+          id="Location"
+          formControlName="Location"
+          placeholder="Location"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
       </div>
     </div>
     <div class="form-group flex-1">
       <div class="relative h-14">
-        <select id="TenderType" formControlName="TenderType" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+        <select
+          id="TenderType"
+          formControlName="TenderType"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
           @for (tenderType of tenderTypes | keyvalue; track tenderType.key) {
             <option [value]="+tenderType.key">{{ tenderType.value }}</option>
           }
         </select>
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('TenderType')?.value, 'text-gray-500': !formGroup.get('TenderType')?.value}" [style.opacity]="formGroup.get('TenderType')?.value ? 0 : 1">Tender Type</span>
+        <div
+          class="absolute top-0 left-0 w-full h-full flex items-center pl-4"
+          style="pointer-events: none; z-index: 1"
+        >
+          <span
+            [ngClass]="{
+              'text-gray-900 font-medium': formGroup.get('TenderType')?.value,
+              'text-gray-500': !formGroup.get('TenderType')?.value,
+            }"
+            [style.opacity]="formGroup.get('TenderType')?.value ? 0 : 1"
+            style="color: #bdbdbd;">Tender Type</span>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="form-row flex items-start gap-4">
+    <div class="flex items-center min-w-[180px] mr-2">
+      <div class="font-bold">Brief Description:</div>
+    </div>
+    <div class="flex-1">
+      <textarea
+        id="BriefDescription"
+        formControlName="BriefDescription"
+        rows="3"
+        class="w-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+      ></textarea>
     </div>
   </div>
 
   <div class="form-row">
     <div class="mb-4 mr-2">
-      <div class="mb-2 font-bold">Brief Description:</div>
-    </div>
-    <div class="form-group w-full">
-       <textarea id="BriefDescription" formControlName="BriefDescription" rows="3" placeholder="Brief Description" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"></textarea>
-    </div>
-  </div>
-
-  <div class="form-row">
-     <div class="mb-4 mr-2">
       <div class="mb-2 font-bold">Approximate Value:</div>
     </div>
     <div style="display: flex; gap: 10px">
       <div class="form-group flex-1">
         <div class="relative h-14">
-          <select id="ApproximateValueType" formControlName="ApproximateValueType" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+          <select
+            id="ApproximateValueType"
+            formControlName="ApproximateValueType"
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+          >
             @for (currency of currencies | keyvalue; track currency.key) {
               <option [value]="+currency.key">{{ currency.value }}</option>
             }
           </select>
-          <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-            <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('ApproximateValueType')?.value, 'text-gray-500': !formGroup.get('ApproximateValueType')?.value}" [style.opacity]="formGroup.get('ApproximateValueType')?.value ? 0 : 1">Approximate Value Type</span>
-          </div>
         </div>
       </div>
       <div class="form-group" style="flex: 1">
         <div class="relative h-14">
-          <input id="ApproximateValueInput" formControlName="ApproximateValueInput" placeholder="e.g. 30M, 5B" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+          <input
+            id="ApproximateValueInput"
+            formControlName="ApproximateValueInput"
+            placeholder="e.g. 30M, 5B"
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          />
         </div>
       </div>
     </div>
   </div>
 
   <div class="form-row">
-    <div class="form-group flex-1">
-      <div class="relative h-14">
-        <input id="ApproximateValue" formControlName="ApproximateValue" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pointer-events-none pl-4">
-          @if (formGroup.get('ApproximateValue')?.value) {
-            <span class="text-gray-900 font-medium">{{ formGroup.get('ApproximateValue')?.value }}</span>
-          } @else {
-            <span class="text-gray-500">Approximate Value Remarks</span>
-          }
-        </div>
-      </div>
+     <div class="mb-4 mr-2">
+      <div class="mb-2 font-bold">Approximate Value Remarks:</div>
     </div>
     <div class="form-group flex-1">
       <div class="relative h-14">
-        <input id="Approxmargin" formControlName="Approxmargin" placeholder="e.g. 1M, 100k" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+        <input
+          id="ApproximateValue"
+          formControlName="ApproximateValue"
+          placeholder="Approximate Value Remarks"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
+      </div>
+    </div>
+     <div class="mb-4 mr-2">
+      <div class="mb-2 font-bold">Approximate Margin:</div>
+    </div>
+    <div class="form-group flex-1">
+      <div class="relative h-14">
+        <input
+          id="Approxmargin"
+          formControlName="Approxmargin"
+          placeholder="e.g. 1M, 100k"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
       </div>
     </div>
   </div>
@@ -195,42 +280,56 @@
     <div style="display: flex; gap: 10px">
       <div class="form-group flex-1">
         <div class="relative h-14">
-          <select id="maintenanceType" formControlName="maintenanceType" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+          <select
+            id="maintenanceType"
+            formControlName="maintenanceType"
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+          >
             @for (maintenanceDefect of maintenanceDefects | keyvalue; track maintenanceDefect.key) {
               <option [value]="+maintenanceDefect.key">{{ maintenanceDefect.value }}</option>
             }
           </select>
-          <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-            <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('maintenanceType')?.value, 'text-gray-500': !formGroup.get('maintenanceType')?.value}" [style.opacity]="formGroup.get('maintenanceType')?.value ? 0 : 1">Maintenance Type</span>
-          </div>
         </div>
       </div>
       <div class="form-group flex-1">
         <div class="relative h-14">
-          <input id="maintenanceValue" type="number" formControlName="maintenanceValue" placeholder="Enter number" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+          <input
+            id="maintenanceValue"
+            type="number"
+            formControlName="maintenanceValue"
+            placeholder="Enter number"
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          />
         </div>
       </div>
       <div class="form-group flex-1">
         <div class="relative h-14">
-          <select id="maintenanceStatus1" formControlName="maintenanceStatus1" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+          <select
+            id="maintenanceStatus1"
+            formControlName="maintenanceStatus1"
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+          >
             <option value="months">months</option>
             <option value="days">days</option>
             <option value="years">years</option>
             <option value="weeks">weeks</option>
           </select>
-          <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-            <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('maintenanceStatus1')?.value, 'text-gray-500': !formGroup.get('maintenanceStatus1')?.value}" [style.opacity]="formGroup.get('maintenanceStatus1')?.value ? 0 : 1">Maintenance Status</span>
-          </div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="form-row" style="display: flex; gap: 1rem; flex-wrap: wrap">
-    <!-- Client -->
-    <div class="form-group flex-1">
+    <div class="mb-4 mr-2">
+      <div class="mb-2 font-bold">Client:</div>
+    </div>
+    <div class="form-group" style="width: 580px">
       <div class="relative h-14">
-        <input id="clientName" formControlName="clientName" placeholder="Enter client name" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
+        <input
+          id="clientName"
+          formControlName="clientName"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
       </div>
     </div>
 
@@ -240,124 +339,181 @@
 
     <div class="form-group" style="width: 180px">
       <div class="relative h-14">
-        <input id="contractPeriodValue" type="number" formControlName="contractPeriodValue" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pointer-events-none pl-4">
-          @if (formGroup.get('contractPeriodValue')?.value) {
-            <span class="text-gray-900 font-medium">{{ formGroup.get('contractPeriodValue')?.value }}</span>
-          } @else {
-            <span class="text-gray-500">Contract Period</span>
-          }
-        </div>
+        <input
+          id="contractPeriodValue"
+          type="number"
+          formControlName="contractPeriodValue"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
       </div>
     </div>
     <!-- Contract Period Unit -->
     <div class="form-group" style="width: 180px">
       <div class="relative h-14">
-        <select id="contractPeriodUnit" formControlName="contractPeriodUnit" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+        <select
+          id="contractPeriodUnit"
+          formControlName="contractPeriodUnit"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
           <option value="months">Months</option>
           <option value="days">Days</option>
           <option value="years">Years</option>
           <option value="weeks">Weeks</option>
         </select>
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('contractPeriodUnit')?.value, 'text-gray-500': !formGroup.get('contractPeriodUnit')?.value}" [style.opacity]="formGroup.get('contractPeriodUnit')?.value ? 0 : 1">Contract Period Unit</span>
+        <div
+          class="absolute top-0 left-0 w-full h-full flex items-center pl-4"
+          style="pointer-events: none; z-index: 1"
+        >
+          <span
+            [ngClass]="{
+              'text-gray-900 font-medium': formGroup.get('contractPeriodUnit')?.value,
+              'text-gray-500': !formGroup.get('contractPeriodUnit')?.value,
+            }"
+            [style.opacity]="formGroup.get('contractPeriodUnit')?.value ? 0 : 1"
+            style="color: #bdbdbd;">Contract Period Unit</span>
         </div>
       </div>
     </div>
   </div>
 
+
   <div class="form-row">
-    <div class="form-group flex-1">
-      <div class="relative h-14">
-        <input id="ComplexContractPeriod" formControlName="ComplexContractPeriod" placeholder="for complex contract Period" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pointer-events-none pl-4">
-        </div>
-      </div>
+    <div class="mb-4 mr-2">
+      <div class="mb-2 font-bold">Financial Standing</div>
     </div>
-    <div class="form-group">
+    <div class="form-group" style="width: 360px">
       <div class="relative h-14">
-        <select id="FinantialStanding" formControlName="FinantialStanding" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+        <select
+          id="FinantialStanding"
+          formControlName="FinantialStanding"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
           @for (financeStanding of financeStandings | keyvalue; track financeStanding.key) {
             <option [value]="+financeStanding.key">{{ financeStanding.value }}</option>
           }
         </select>
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('FinantialStanding')?.value, 'text-gray-500': !formGroup.get('FinantialStanding')?.value}" [style.opacity]="formGroup.get('FinantialStanding')?.value ? 0 : 1">Financial Standing</span>
-        </div>
+      </div>
+    </div>
+    <div style="width: 255px;"></div>
+    <div class="form-group" style="width: 360px">
+      <div class="relative h-14">
+        <input
+          id="ComplexContractPeriod"
+          formControlName="ComplexContractPeriod"
+          placeholder="for complex contract Period"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
+        <div
+          class="absolute top-0 left-0 w-full h-full flex items-center pointer-events-none pl-4"
+        ></div>
       </div>
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-row">
-      <label class="block mb-1">Tender Market Scheme</label>
+       <div class="mb-2 font-bold">Tender Market Scheme</div>
       <div class="flex gap-6">
         @for (key of yesNo | keyvalue; track key.key) {
-          <label class="inline-flex items-center">
-            <input type="radio" formControlName="TenderMarketScheme" [value]="key.value" class="mr-2" />
+          <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
+            <input
+              type="radio"
+              formControlName="TenderMarketScheme"
+              [value]="key.value"
+              class="mr-2 accent-blue-600"
+            />
             {{ key.value }}
           </label>
         }
       </div>
     </div>
 
+    <div class="mb-4 mr-2">
+      <div class="mb-2 font-bold">Financial/Technical Split Value:</div>
+    </div>
     <div class="form-group">
-      <div class="relative h-14 " style="width: 180px">
-        <select id="FinancialTechnicalSplitValue" formControlName="FinancialTechnicalSplitValue" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+      <div class="relative h-14" style="width: 180px">
+        <select
+          id="FinancialTechnicalSplitValue"
+          formControlName="FinancialTechnicalSplitValue"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
           @for (split of financeTechnicalSplits | keyvalue; track split.key) {
             <option [value]="+split.key">{{ split.value }}</option>
           }
         </select>
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('FinancialTechnicalSplitValue')?.value, 'text-gray-500': !formGroup.get('FinancialTechnicalSplitValue')?.value}" [style.opacity]="formGroup.get('FinancialTechnicalSplitValue')?.value ? 0 : 1">Financial/Technical Split Value</span>
-        </div>
       </div>
+    </div>
+
+    <div class="mb-4 mr-2">
+      <div class="mb-2 font-bold">Bid Type</div>
     </div>
     <div class="form-group" style="width: 180px">
       <div class="relative h-14">
-        <select id="BidType" formControlName="BidType" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
-          @for(bidtype of bidTypes | keyvalue; track bidtype.key) {
+        <select
+          id="BidType"
+          formControlName="BidType"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+          (change)="onBidTypeChange($event)"
+        >
+          @for (bidtype of bidTypes | keyvalue; track bidtype.key) {
             <option [value]="+bidtype.key">{{ bidtype.value }}</option>
           }
         </select>
-        <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-          <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('BidType')?.value, 'text-gray-500': !formGroup.get('BidType')?.value}" [style.opacity]="formGroup.get('BidType')?.value ? 0 : 1">Bid Type</span>
-        </div>
       </div>
     </div>
   </div>
 
-  
+  <!-- JV Partner(s) field - shown only when bid type is Joint Venture Bid (value 2) -->
+  <!-- Place this block outside of the previous form-row to avoid template issues -->
   @if (isJointVentureBid) {
     <div class="form-row">
-      
+      <!-- JV Partner(s) textarea with floating label style -->
       <div class="form-group flex-1">
         <div class="relative h-14">
-          <textarea id="JvPartner" formControlName="JvPartner" rows="1" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition resize-none"></textarea>
-          <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-            <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('JvPartner')?.value, 'text-gray-500': !formGroup.get('JvPartner')?.value}" [style.opacity]="formGroup.get('JvPartner')?.value ? 0 : 1">JV Partner(s)</span>
-          </div>
+          <textarea
+            id="JvPartner"
+            formControlName="JvPartner"
+            rows="1"
+            placeholder="JV Partner(s)"
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition resize-none"
+          ></textarea>
         </div>
       </div>
-    
+      <!-- JV Split input with floating label style -->
       <div class="form-group flex-1">
         <div class="relative h-14">
-          <input id="JvSplit" formControlName="JvSplit" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition" />
-          <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-            <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('JvSplit')?.value, 'text-gray-500': !formGroup.get('JvSplit')?.value}" [style.opacity]="formGroup.get('JvSplit')?.value ? 0 : 1">JV Split</span>
-          </div>
+          <input
+            id="JvSplit"
+            formControlName="JvSplit"
+            placeholder="JV Split"
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          />
         </div>
       </div>
-    
+      <!-- JV Agreement in Place select with floating label style -->
       <div class="form-group flex-1">
         <div class="relative h-14">
-          <select id="JvAgreement" formControlName="JvAgreement" class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none">
+          <select
+            id="JvAgreement"
+            formControlName="JvAgreement"
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+          >
             @for (jvAgreement of jvAgreementOptions | keyvalue; track jvAgreement.key) {
               <option [value]="+jvAgreement.key">{{ jvAgreement.value }}</option>
             }
           </select>
-          <div class="absolute top-0 left-0 w-full h-full flex items-center pl-4" style="pointer-events: none; z-index: 1;">
-            <span [ngClass]="{'text-gray-900 font-medium': formGroup.get('JvAgreement')?.value, 'text-gray-500': !formGroup.get('JvAgreement')?.value}" [style.opacity]="formGroup.get('JvAgreement')?.value ? 0 : 1">JV Agreement in Place</span>
+          <div
+            class="absolute top-0 left-0 w-full h-full flex items-center pl-4"
+            style="pointer-events: none; z-index: 1"
+          >
+            <span
+              [ngClass]="{
+                'text-gray-900 font-medium': formGroup.get('JvAgreement')?.value,
+                'text-gray-500': !formGroup.get('JvAgreement')?.value,
+              }"
+              [style.opacity]="formGroup.get('JvAgreement')?.value ? 0 : 1"
+              style="color: #bdbdbd;">JV Agreement in Place</span>
           </div>
         </div>
       </div>

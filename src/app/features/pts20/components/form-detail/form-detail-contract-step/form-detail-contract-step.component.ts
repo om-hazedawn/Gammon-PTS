@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ControlContainer, FormGroupDirective } from '@angular/forms';
+import { ControlContainer, FormGroupDirective, FormGroup } from '@angular/forms';
 import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
 import { Form20ListDropdownService, ObtainRegion } from '../../../../../core/services/Form20/form20listdropdown.service';
 
@@ -18,9 +18,15 @@ export class FormDetailContractStepComponent implements OnInit {
   fluctuation: ObtainRegion = {};
   yesNo: ObtainRegion = {};
 
+  // Getter to access the parent form
+  get formGroup(): FormGroup {
+    return this.controlContainer.control as FormGroup;
+  }
+
   constructor(
     private form20ListDropdownService: Form20ListDropdownService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private controlContainer: ControlContainer
   ) {}
 
   ngOnInit(): void {

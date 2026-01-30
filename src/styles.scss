@@ -12,6 +12,44 @@
   opacity: 1 !important;
 }
 
+/* Custom faint placeholder style for all inputs */
+::placeholder {
+  color: #bdbdbd !important; /* light gray */
+  opacity: 1 !important; /* fully visible, but color is faint */
+}
+
+input::placeholder, textarea::placeholder {
+  color: #bdbdbd !important;
+  opacity: 1 !important;
+}
+
+/* Custom modern select styles */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #f3f4f6;
+  padding: 0.5rem 2.5rem 0.5rem 1rem;
+  font-size: 1rem;
+  color: #222;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.04);
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%231976d2" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.25rem 1.25rem;
+}
+select:focus {
+  border-color: #1976d2;
+  outline: none;
+  box-shadow: 0 0 0 2px #1976d233;
+}
+select option {
+  background: #fff;
+  color: #222;
+  font-size: 1rem;
+}
+
 /* You can add global styles to this file, and also import other style files */
 
 // Import Material Design CSS
