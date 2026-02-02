@@ -19,18 +19,12 @@
             <option [value]="unit.key">{{ unit.value }}</option>
           }
         </select>
-        <div
-          class="absolute top-0 left-0 w-full h-full flex items-center pl-4"
-          style="pointer-events: none; z-index: 1"
+        <label
+          for="businessUnit"
+          class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
         >
-          <span
-            [ngClass]="{
-              'text-gray-900 font-medium': formGroup.get('businessUnit')?.value,
-              'text-gray-500': !formGroup.get('businessUnit')?.value,
-            }"
-            [style.opacity]="formGroup.get('businessUnit')?.value ? 0 : 1"
-            style="color: #bdbdbd;">Business Unit</span>
-        </div>
+          Business Unit
+        </label>
       </div>
     </div>
     <div class="form-group flex-1">
@@ -96,9 +90,15 @@
           id="projectTitle"
           formControlName="projectTitle"
           required
-          placeholder="Project Title"
-          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          placeholder=" "
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
         />
+        <label
+          for="projectTitle"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+        >
+          Project Title
+        </label>
       </div>
     </div>
   </div>
@@ -109,9 +109,15 @@
         <input
           id="BidManager"
           formControlName="BidManager"
-          placeholder="Bid Manager"
-          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          placeholder=" "
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
         />
+        <label
+          for="BidManager"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+        >
+          Bid Manager
+        </label>
       </div>
     </div>
     <div class="form-group flex-1">
@@ -119,9 +125,15 @@
         <input
           id="Estimator"
           formControlName="Estimator"
-          placeholder="Estimator"
-          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          placeholder=" "
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
         />
+        <label
+          for="Estimator"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+        >
+          Estimator
+        </label>
       </div>
     </div>
     <div class="form-group flex-1">
@@ -129,16 +141,22 @@
         <input
           id="Planner"
           formControlName="Planner"
-          placeholder="Planner"
-          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          placeholder=" "
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
         />
+        <label
+          for="Planner"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+        >
+          Planner
+        </label>
       </div>
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-group flex-1">
-      <div class="relative h-14" >
+      <div class="relative h-14">
         <select
           id="Region"
           formControlName="Region"
@@ -148,17 +166,16 @@
             <option [value]="+region.key">{{ region.value }}</option>
           }
         </select>
-         <div
+        <div
           class="absolute top-0 left-0 w-full h-full flex items-center pl-4"
           style="pointer-events: none; z-index: 1"
         >
-          <span
-            [ngClass]="{
-              'text-gray-900 font-medium': formGroup.get('Region')?.value,
-              'text-gray-500': !formGroup.get('Region')?.value,
-            }"
-            [style.opacity]="formGroup.get('Region')?.value ? 0 : 1"
-            style="color: #bdbdbd;">Region</span>
+          <label
+            for="Region"
+            class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+          >
+            Region
+          </label>
         </div>
       </div>
     </div>
@@ -167,9 +184,15 @@
         <input
           id="Location"
           formControlName="Location"
-          placeholder="Location"
-          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          placeholder=" "
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
         />
+        <label
+          for="Location"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+        >
+          Location
+        </label>
       </div>
     </div>
     <div class="form-group flex-1">
@@ -183,18 +206,12 @@
             <option [value]="+tenderType.key">{{ tenderType.value }}</option>
           }
         </select>
-        <div
-          class="absolute top-0 left-0 w-full h-full flex items-center pl-4"
-          style="pointer-events: none; z-index: 1"
+        <label
+          for="TenderType"
+          class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
         >
-          <span
-            [ngClass]="{
-              'text-gray-900 font-medium': formGroup.get('TenderType')?.value,
-              'text-gray-500': !formGroup.get('TenderType')?.value,
-            }"
-            [style.opacity]="formGroup.get('TenderType')?.value ? 0 : 1"
-            style="color: #bdbdbd;">Tender Type</span>
-        </div>
+          Tender Type
+        </label>
       </div>
     </div>
   </div>
@@ -236,16 +253,22 @@
           <input
             id="ApproximateValueInput"
             formControlName="ApproximateValueInput"
-            placeholder="e.g. 30M, 5B"
-            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+            placeholder=""
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
           />
+          <label
+            for="ApproximateValueInput"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+          >
+            e.g. 30M, 5B
+          </label>
         </div>
       </div>
     </div>
   </div>
 
   <div class="form-row">
-     <div class="mb-4 mr-2">
+    <div class="mb-4 mr-2">
       <div class="mb-2 font-bold">Approximate Value Remarks:</div>
     </div>
     <div class="form-group flex-1">
@@ -253,12 +276,11 @@
         <input
           id="ApproximateValue"
           formControlName="ApproximateValue"
-          placeholder="Approximate Value Remarks"
           class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
         />
       </div>
     </div>
-     <div class="mb-4 mr-2">
+    <div class="mb-4 mr-2">
       <div class="mb-2 font-bold">Approximate Margin:</div>
     </div>
     <div class="form-group flex-1">
@@ -266,15 +288,21 @@
         <input
           id="Approxmargin"
           formControlName="Approxmargin"
-          placeholder="e.g. 1M, 100k"
-          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          placeholder=""
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
         />
+        <label
+          for="Approxmargin"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+        >
+          e.g. 1M, 100k
+        </label>
       </div>
     </div>
   </div>
 
   <div class="form-row">
-     <div class="mb-4 mr-2">
+    <div class="mb-4 mr-2">
       <div class="mb-2 font-bold">Maintenance / Defect:</div>
     </div>
     <div style="display: flex; gap: 10px">
@@ -370,12 +398,13 @@
               'text-gray-500': !formGroup.get('contractPeriodUnit')?.value,
             }"
             [style.opacity]="formGroup.get('contractPeriodUnit')?.value ? 0 : 1"
-            style="color: #bdbdbd;">Contract Period Unit</span>
+            style="color: #bdbdbd"
+            >Contract Period Unit</span
+          >
         </div>
       </div>
     </div>
   </div>
-
 
   <div class="form-row">
     <div class="mb-4 mr-2">
@@ -394,28 +423,33 @@
         </select>
       </div>
     </div>
-    <div style="width: 255px;"></div>
+    <div style="width: 255px"></div>
     <div class="form-group" style="width: 360px">
       <div class="relative h-14">
         <input
           id="ComplexContractPeriod"
           formControlName="ComplexContractPeriod"
-          placeholder="for complex contract Period"
-          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          placeholder=" "
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
         />
-        <div
-          class="absolute top-0 left-0 w-full h-full flex items-center pointer-events-none pl-4"
-        ></div>
+        <label
+          for="ComplexContractPeriod"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+        >
+          for complex contract Period
+        </label>
       </div>
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-row">
-       <div class="mb-2 font-bold">Tender Market Scheme</div>
+      <div class="mb-2 font-bold">Tender Market Scheme</div>
       <div class="flex gap-6">
         @for (key of yesNo | keyvalue; track key.key) {
-          <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
+          <label
+            class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300"
+          >
             <input
               type="radio"
               formControlName="TenderMarketScheme"
@@ -475,9 +509,15 @@
             id="JvPartner"
             formControlName="JvPartner"
             rows="1"
-            placeholder="JV Partner(s)"
-            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition resize-none"
+            placeholder=" "
+            class="w-full h-full px-4 pt-6 pb-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer resize-y"
           ></textarea>
+          <label
+            for="JvPartner"
+            class="absolute left-4 top-2 text-xs text-gray-500 transition-all pointer-events-none peer-focus:text-blue-500"
+          >
+            JV Partner(s)
+          </label>
         </div>
       </div>
       <!-- JV Split input with floating label style -->
@@ -486,9 +526,15 @@
           <input
             id="JvSplit"
             formControlName="JvSplit"
-            placeholder="JV Split"
-            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+            placeholder=" "
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
           />
+          <label
+            for="JvSplit"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+          >
+            JV Split
+          </label>
         </div>
       </div>
       <!-- JV Agreement in Place select with floating label style -->
@@ -513,7 +559,9 @@
                 'text-gray-500': !formGroup.get('JvAgreement')?.value,
               }"
               [style.opacity]="formGroup.get('JvAgreement')?.value ? 0 : 1"
-              style="color: #bdbdbd;">JV Agreement in Place</span>
+              style="color: #bdbdbd"
+              >JV Agreement in Place</span
+            >
           </div>
         </div>
       </div>

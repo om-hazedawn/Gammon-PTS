@@ -1,143 +1,195 @@
 <div class="section" formGroupName="OtherIssue">
-  <div class="p-4 bg-white shadow rounded-lg">
-    <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Other issue</h2>
+  <h2 class="text-base font-semibold mb-3 border-b pb-2 text-[#1976d2]">Other issue</h2>
 
-    <div class="space-y-6">
-      <div class="form-row">
-        <div class="w-40 font-semibold">
-          New Plant Requirements and value of Investment Required:
-        </div>
-        <div class="flex flex-wrap items-end gap-8 flex-1">
-          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
-            <mat-label>Details</mat-label>
-            <textarea 
-              matInput 
-              formControlName="NewPlantDetails" 
-              cdkTextareaAutosize
-              [cdkTextareaAutosize]="true"
-              cdkAutosizeMinRows="3"
-              cdkAutosizeMaxRows="5"
-              ></textarea>
-          </mat-form-field>
-
-          <mat-form-field appearance="fill" style="max-width: 250px; height: 100px">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="NewPlantRisk">
-              <mat-option value="L">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="w-40 font-semibold">PFI or PPP Bid:</div>
-        <div class="flex flex-wrap gap-8 flex-1">
-          <div class="radio-group-container min-w-[200px]">
-            <mat-radio-group formControlName="PFIorPPPBid" class="flex gap-6">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" class="radio-option">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
+  <div class="space-y-4">
+    <div class="form-row">
+      <div class="w-40 font-semibold">New Plant Requirements and value of Investment Required:</div>
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="form-group min-w-[250px] flex-1">
+          <div class="relative" style="min-height: 80px">
+            <textarea
+              id="NewPlantDetails"
+              formControlName="NewPlantDetails"
+              rows="2"
+              placeholder=" "
+              class="w-full h-full px-4 pt-6 pb-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer resize-y"
+            ></textarea>
+            <label
+              for="NewPlantDetails"
+              class="absolute left-4 top-2 text-xs text-gray-500 transition-all pointer-events-none peer-focus:text-blue-500"
+            >
+              Details
+            </label>
           </div>
-
-          <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
-            <mat-label>Hidden Field</mat-label>
-            <input matInput />
-          </mat-form-field>
-
-          <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
-            <mat-label>Hidden Field</mat-label>
-            <input matInput />
-          </mat-form-field>
-
-          <mat-form-field appearance="fill" style="max-width: 250px">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="pfiOrPPPBidRisk">
-              <mat-option value="L">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
         </div>
-      </div>
 
-      <div class="form-row">
-        <div class="w-40 font-semibold">Financing Required:</div>
-        <div class="flex flex-wrap gap-8 flex-1">
-          <div class="radio-group-container min-w-[200px]">
-            <mat-radio-group formControlName="FinancingRequired" class="flex gap-6">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" class="radio-option">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
+        <div class="form-group w-40">
+          <div class="relative h-14">
+            <select
+              id="NewPlantRisk"
+              formControlName="NewPlantRisk"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="NewPlantRisk"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
           </div>
-
-          <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
-            <mat-label>Hidden Field</mat-label>
-            <input matInput />
-          </mat-form-field>
-
-          <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
-            <mat-label>Hidden Field</mat-label>
-            <input matInput />
-          </mat-form-field>
-
-          <mat-form-field appearance="fill" style="max-width: 250px">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="FinancingRequiredRisk">
-              <mat-option value="L">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
         </div>
       </div>
+    </div>
 
-      <div class="form-row">
-        <div class="w-40 font-semibold">Foreign Currency Content:</div>
-        <div class="flex flex-wrap gap-8 flex-1">
-          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
-            <mat-label>Details</mat-label>
-            <textarea matInput formControlName="ForeignCurrencyContentDetails"> 
-              matInput 
+    <div class="form-row">
+      <div class="w-40 font-semibold">PFI or PPP Bid:</div>
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="radio-group-container min-w-[200px]">
+          <div class="flex gap-6">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  formControlName="PFIorPPPBid"
+                  [value]="key.value"
+                  class="w-4 h-4 text-blue-500 focus:ring-blue-500"
+                />
+                <span class="text-sm">{{ key.value }}</span>
+              </label>
+            }
+          </div>
+        </div>
+
+        <div class="form-group w-40 ml-auto">
+          <div class="relative h-14">
+            <select
+              id="pfiOrPPPBidRisk"
+              formControlName="pfiOrPPPBidRisk"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="pfiOrPPPBidRisk"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="w-40 font-semibold">Financing Required:</div>
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="radio-group-container min-w-[200px]">
+          <div class="flex gap-6">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  formControlName="FinancingRequired"
+                  [value]="key.value"
+                  class="w-4 h-4 text-blue-500 focus:ring-blue-500"
+                />
+                <span class="text-sm">{{ key.value }}</span>
+              </label>
+            }
+          </div>
+        </div>
+
+        <div class="form-group w-40 ml-auto">
+          <div class="relative h-14">
+            <select
+              id="FinancingRequiredRisk"
+              formControlName="FinancingRequiredRisk"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="FinancingRequiredRisk"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="w-40 font-semibold">Foreign Currency Content:</div>
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="form-group min-w-[250px] flex-1">
+          <div class="relative" style="min-height: 80px">
+            <textarea
+              id="ForeignCurrencyContentDetails"
               formControlName="ForeignCurrencyContentDetails"
-              cdkTextareaAutosize
-              [cdkTextareaAutosize]="true"
-              cdkAutosizeMinRows="3"
-              cdkAutosizeMaxRows="5"
-              ></textarea>
-          </mat-form-field>
+              rows="2"
+              placeholder=" "
+              class="w-full h-full px-4 pt-6 pb-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer resize-y"
+            ></textarea>
+            <label
+              for="ForeignCurrencyContentDetails"
+              class="absolute left-4 top-2 text-xs text-gray-500 transition-all pointer-events-none peer-focus:text-blue-500"
+            >
+              Details
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" style="max-width: 250px; height:100px">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="ForeignCurrencyContentRisk">
-              <mat-option value="L">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group w-40">
+          <div class="relative h-14">
+            <select
+              id="ForeignCurrencyContentRisk"
+              formControlName="ForeignCurrencyContentRisk"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="ForeignCurrencyContentRisk"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
+          </div>
         </div>
       </div>
     </div>

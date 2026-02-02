@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ControlContainer, FormGroupDirective } from '@angular/forms';
+import { ControlContainer, FormGroup, FormGroupDirective } from '@angular/forms';
 import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
 
 @Component({
@@ -11,4 +11,9 @@ import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormDetailBondsStepComponent {
+  constructor(private controlContainer: ControlContainer) {}
+
+  get formGroup(): FormGroup {
+    return this.controlContainer.control as FormGroup;
+  }
 }

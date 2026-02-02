@@ -1,224 +1,399 @@
 <div class="section" formGroupName="payment">
-  <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Payment</h2>
+  <h2 class="text-base font-semibold mb-2 border-b pb-2 text-[#1976d2]">Payment</h2>
 
   <div class="form-row">
     <div class="mb-4">
       <label class="font-bold">Certification of Period:</label>
     </div>
-    <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
-      <mat-label>Period</mat-label>
-      <input matInput formControlName="Period" type="number" />
-    </mat-form-field>
+    <div class="form-group flex-1 min-w-[200px]">
+      <div class="relative h-14">
+        <input
+          id="Period"
+          formControlName="Period"
+          type="number"
+          placeholder=" "
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+        />
+        <label
+          for="Period"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+        >
+          Period
+        </label>
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
-      <mat-label>Months</mat-label>
-      <mat-select formControlName="Months" placeholder="Select Months">
-        <mat-option value="days">days</mat-option>
-        <mat-option value="weeks">weeks</mat-option>
-        <mat-option value="months">months</mat-option>
-        <mat-option value="years">years</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="form-group flex-1 min-w-[250px]">
+      <div class="relative h-14">
+        <select
+          id="Months"
+          formControlName="Months"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
+          <option value="days">days</option>
+          <option value="weeks">weeks</option>
+          <option value="months">months</option>
+          <option value="years">years</option>
+        </select>
+      </div>
+    </div>
 
-     <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
-      <mat-label>Remarks</mat-label>
-      <input matInput formControlName="Remarks" />
-    </mat-form-field>
-    
-    <mat-form-field appearance="fill" class="w-32">
-      <mat-label>Degree of Risk</mat-label>
-      <mat-select formControlName="DegreeRiskType">
-        <mat-option value="L">L</mat-option>
-        <mat-option value="L/M">L/M</mat-option>
-        <mat-option value="M">M</mat-option>
-        <mat-option value="M/H">M/H</mat-option>
-        <mat-option value="H">H</mat-option>
-        <mat-option value="NA">N/A</mat-option>
-        <mat-option value="NSR">NSR</mat-option>
-        <mat-option value="Pending">Pending</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="form-group flex-1 min-w-[200px]">
+      <div class="relative h-14">
+        <input
+          id="Remarks"
+          formControlName="Remarks"
+          placeholder=""
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+        />
+        <label
+          for="Remarks"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+        >
+          Remarks
+        </label>
+      </div>
+    </div>
 
-
+    <div class="form-group w-40">
+      <div class="relative h-14">
+        <select
+          id="DegreeRiskType"
+          formControlName="DegreeRiskType"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
+          <option value=""></option>
+          <option value="L">L</option>
+          <option value="L/M">L/M</option>
+          <option value="M">M</option>
+          <option value="M/H">M/H</option>
+          <option value="H">H</option>
+          <option value="NA">N/A</option>
+          <option value="NSR">NSR</option>
+          <option value="Pending">Pending</option>
+        </select>
+        <label
+          for="DegreeRiskType"
+          class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+        >
+          Degree of Risk
+        </label>
+      </div>
+    </div>
   </div>
 
   <div class="form-row">
-      <div class="mb-4 mr-6">
+    <div class="mb-4 mr-6">
       <label class="font-bold">Retention Amount:</label>
     </div>
-    <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
-      <mat-label>Retention</mat-label>
-      <input matInput formControlName="Retention" type="number"/>
-    </mat-form-field>
+    <div class="form-group flex-1 min-w-[200px]">
+      <div class="relative h-14">
+        <input
+          id="Retention"
+          formControlName="Retention"
+          type="number"
+          placeholder=""
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+        />
+        <label
+          for="Retention"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+        >
+          Retention
+        </label>
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
-      <mat-label>Percent</mat-label>
-      <mat-select formControlName="Percent" placeholder="Select Percent">
-        <mat-option value="%">%</mat-option>
-        <mat-option value=" "></mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="form-group flex-1 min-w-[250px]">
+      <div class="relative h-14">
+        <select
+          id="Percent"
+          formControlName="Percent"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
+          <option value="%">%</option>
+          <option value=" "></option>
+        </select>
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
-      <mat-label>Remarks</mat-label>
-      <input matInput formControlName="Remarks2" />
-    </mat-form-field>
+    <div class="form-group flex-1 min-w-[250px]">
+      <div class="relative h-14">
+        <input
+          id="Remarks2"
+          formControlName="Remarks2"
+          placeholder=" "
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+        />
+        <label
+          for="Remarks2"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+        >
+          Remarks
+        </label>
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill" class="w-32">
-      <mat-label>Degree Name</mat-label>
-      <mat-select formControlName="DegreeRiskType2">
-         <mat-option value="L">L</mat-option>
-        <mat-option value="L/M">L/M</mat-option>
-        <mat-option value="M">M</mat-option>
-        <mat-option value="M/H">M/H</mat-option>
-        <mat-option value="H">H</mat-option>
-        <mat-option value="NA">N/A</mat-option>
-        <mat-option value="NSR">NSR</mat-option>
-        <mat-option value="Pending">Pending</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="form-group w-40">
+      <div class="relative h-14">
+        <select
+          id="DegreeRiskType2"
+          formControlName="DegreeRiskType2"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
+          <option value=""></option>
+          <option value="L">L</option>
+          <option value="L/M">L/M</option>
+          <option value="M">M</option>
+          <option value="M/H">M/H</option>
+          <option value="H">H</option>
+          <option value="NA">N/A</option>
+          <option value="NSR">NSR</option>
+          <option value="Pending">Pending</option>
+        </select>
+        <label
+          for="DegreeRiskType2"
+          class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+        >
+          Degree of Risk
+        </label>
+      </div>
+    </div>
   </div>
 
   <div class="form-row">
     <div class="mb-4 mr-8">
       <label class="font-bold">Payment Period:</label>
     </div>
-    <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
-      <mat-label>Payment Period</mat-label>
-      <input matInput formControlName="PaymentPeriod" type="number" />
-    </mat-form-field>
+    <div class="form-group flex-1 min-w-[200px]">
+      <div class="relative h-14">
+        <input
+          id="PaymentPeriod"
+          formControlName="PaymentPeriod"
+          type="number"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
-      <mat-label>Months</mat-label>
-      <mat-select formControlName="Months2" placeholder="Select Months">
-        <mat-option value="days">days</mat-option>
-        <mat-option value="weeks">weeks</mat-option>
-        <mat-option value="months">months</mat-option>
-        <mat-option value="years">years</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="form-group flex-1 min-w-[250px]">
+      <div class="relative h-14">
+        <select
+          id="Months2"
+          formControlName="Months2"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
+          <option value="days">days</option>
+          <option value="weeks">weeks</option>
+          <option value="months">months</option>
+          <option value="years">years</option>
+        </select>
+      </div>
+    </div>
 
-     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
-      <mat-label>Hidden Field</mat-label>
-      <input matInput />
-    </mat-form-field>
+    <div class="form-group flex-1 min-w-[250px] invisible">
+      <div class="relative h-14">
+        <input class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300" />
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill" class="w-32">
-      <mat-label>Degree of Risk</mat-label>
-      <mat-select formControlName="DegreeRiskType3">
-        <mat-option value="L">L</mat-option>
-        <mat-option value="L/M">L/M</mat-option>
-        <mat-option value="M">M</mat-option>
-        <mat-option value="M/H">M/H</mat-option>
-        <mat-option value="H">H</mat-option>
-        <mat-option value="NA">N/A</mat-option>
-        <mat-option value="NSR">NSR</mat-option>
-        <mat-option value="Pending">Pending</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="form-group w-40">
+      <div class="relative h-14">
+        <select
+          id="DegreeRiskType3"
+          formControlName="DegreeRiskType3"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
+          <option value=""></option>
+          <option value="L">L</option>
+          <option value="L/M">L/M</option>
+          <option value="M">M</option>
+          <option value="M/H">M/H</option>
+          <option value="H">H</option>
+          <option value="NA">N/A</option>
+          <option value="NSR">NSR</option>
+          <option value="Pending">Pending</option>
+        </select>
+        <label
+          for="DegreeRiskType3"
+          class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+        >
+          Degree of Risk
+        </label>
+      </div>
+    </div>
   </div>
 
   <div class="form-row">
     <div class="mb-4 mr-4">
       <label class="font-bold">Limit of Retention:</label>
     </div>
-    <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
-      <input matInput formControlName="LimitofRetention" />
-    </mat-form-field>
+    <div class="form-group flex-1 min-w-[200px]">
+      <div class="relative h-14">
+        <input
+          id="LimitofRetention"
+          formControlName="LimitofRetention"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
+      </div>
+    </div>
 
-     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
-      <mat-label>Hidden Field</mat-label>
-      <input matInput />
-    </mat-form-field>
+    <div class="form-group flex-1 min-w-[250px] invisible">
+      <div class="relative h-14">
+        <input class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300" />
+      </div>
+    </div>
 
-     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
-      <mat-label>Hidden Field</mat-label>
-      <input matInput />
-    </mat-form-field>
+    <div class="form-group flex-1 min-w-[250px] invisible">
+      <div class="relative h-14">
+        <input class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300" />
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
-      <mat-label>Degree of Risk</mat-label>
-      <mat-select formControlName="LimitofRetentionselect">
-        <mat-option value="L">L</mat-option>
-        <mat-option value="L/M">L/M</mat-option>
-        <mat-option value="M">M</mat-option>
-        <mat-option value="M/H">M/H</mat-option>
-        <mat-option value="H">H</mat-option>
-        <mat-option value="NA">N/A</mat-option>
-        <mat-option value="NSR">NSR</mat-option>
-        <mat-option value="Pending">Pending</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="form-group w-40">
+      <div class="relative h-14">
+        <select
+          id="LimitofRetentionselect"
+          formControlName="LimitofRetentionselect"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
+          <option value=""></option>
+          <option value="L">L</option>
+          <option value="L/M">L/M</option>
+          <option value="M">M</option>
+          <option value="M/H">M/H</option>
+          <option value="H">H</option>
+          <option value="NA">N/A</option>
+          <option value="NSR">NSR</option>
+          <option value="Pending">Pending</option>
+        </select>
+        <label
+          for="LimitofRetentionselect"
+          class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+        >
+          Degree of Risk
+        </label>
+      </div>
+    </div>
   </div>
 
   <div class="form-row">
     <div class="mb-4">
       <label class="font-bold">Cash Profile:</label>
     </div>
-    <mat-label>Max Exposure (Amount)</mat-label>
+    <label>Max Exposure (Amount)</label>
     <div style="width: 200px">
-      <mat-form-field appearance="fill">
-        <input matInput formControlName="MaxExposureAmount" type="number" />
-      </mat-form-field>
+      <div class="relative h-14">
+        <input
+          id="MaxExposureAmount"
+          formControlName="MaxExposureAmount"
+          type="number"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
+      </div>
     </div>
     <label>for</label>
     <div style="width: 200px">
-      <mat-form-field appearance="fill">
-        <input matInput formControlName="MaxExposureMonths" type="number" />
-      </mat-form-field>
+      <div class="relative h-14">
+        <input
+          id="MaxExposureMonths"
+          formControlName="MaxExposureMonths"
+          type="number"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
+      </div>
     </div>
     <label>months</label>
   </div>
 
   <div class="form-row">
-    <mat-form-field appearance="fill">
-      <mat-label>Peak deficit</mat-label>
-      <input matInput formControlName="PeakDeficit" type="number"/>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Peak Surplus</mat-label>
-      <input matInput formControlName="PeakSurplus" type="number"/>
-    </mat-form-field>
+    <div class="mb-4 mr-4 ml-20 mr-9">
+      <label class="font-bold">Peak deficit:</label>
+    </div>
+    <div class="form-group">
+      <div class="relative h-14">
+        <input
+          id="PeakDeficit"
+          formControlName="PeakDeficit"
+          type="number"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
+      </div>
+    </div>
+    <div class="mb-4 mr-4 ml-20">
+      <label class="font-bold">Peak Surplus:</label>
+    </div>
+    <div class="form-group ml-5">
+      <div class="relative h-14">
+        <input
+          id="PeakSurplus"
+          formControlName="PeakSurplus"
+          type="number"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
+      </div>
+    </div>
 
-     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
-      <mat-label>Hidden Field</mat-label>
-      <input matInput />
-    </mat-form-field>
+    <div class="form-group flex-1 min-w-[100px] invisible">
+      <div class="relative h-14">
+        <input class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300" />
+      </div>
+    </div>
 
-      <mat-form-field appearance="fill" class="flex-1 min-w-[250px]">
-        <mat-label>Degree of Risk</mat-label>
-        <mat-select formControlName="RiskLevel">
-          <mat-option value="L">L</mat-option>
-          <mat-option value="L/M">L/M</mat-option>
-          <mat-option value="M">M</mat-option>
-          <mat-option value="M/H">M/H</mat-option>
-          <mat-option value="H">H</mat-option>
-          <mat-option value="NA">N/A</mat-option>
-          <mat-option value="NSR">NSR</mat-option>
-          <mat-option value="Pending">Pending</mat-option>
-        </mat-select>
-      </mat-form-field>
+    <div class="form-group w-40">
+      <div class="relative h-14">
+        <select
+          id="RiskLevel"
+          formControlName="RiskLevel"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+        >
+          <option value=""></option>
+          <option value="L">L</option>
+          <option value="L/M">L/M</option>
+          <option value="M">M</option>
+          <option value="M/H">M/H</option>
+          <option value="H">H</option>
+          <option value="NA">N/A</option>
+          <option value="NSR">NSR</option>
+          <option value="Pending">Pending</option>
+        </select>
+        <label
+          for="RiskLevel"
+          class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+        >
+          Degree of Risk
+        </label>
+      </div>
+    </div>
   </div>
 
   <div class="form-row">
-    <mat-form-field appearance="fill">
-      <mat-label>Average deficit</mat-label>
-      <input matInput formControlName="AverageDeficit" type="number"/>
-    </mat-form-field>
+    <div class="mb-4 mr-4 ml-20">
+      <label class="font-bold">Average deficit:</label>
+    </div>
+    <div class="form-group">
+      <div class="relative h-14">
+        <input
+          id="AverageDeficit"
+          formControlName="AverageDeficit"
+          type="number"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Average Surplus</mat-label>
-      <input matInput formControlName="AverageSurplus" type="number"/>
-    </mat-form-field>
-
-     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
-      <mat-label>Hidden Field</mat-label>
-      <input matInput />
-    </mat-form-field>
-
-     <mat-form-field appearance="fill" class="flex-1 min-w-[250px] invisible">
-      <mat-label>Hidden Field</mat-label>
-      <input matInput />
-    </mat-form-field>
+    <div class="mb-4 mr-4 ml-20">
+      <label class="font-bold">Average Surplus:</label>
+    </div>
+    <div class="form-group">
+      <div class="relative h-14">
+        <input
+          id="AverageSurplus"
+          formControlName="AverageSurplus"
+          type="number"
+          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+        />
+      </div>
+    </div>
   </div>
 </div>

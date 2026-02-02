@@ -1,12 +1,11 @@
 <div class="section" formGroupName="contract">
-  <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Contract</h2>
+  <h2 class="text-base font-semibold mb-2 border-b pb-2 text-[#1976d2]">Contract</h2>
   <div class="form-row">
     <div class="mb-4 mr-8">
       <div class="mb-2 font-bold">Form of Contract:</div>
     </div>
     <div class="form-group flex-1 min-w-[200px]">
       <div class="relative h-14">
-         <label for="Description" class="block font-medium mb-1">Type</label>
         <select
           id="Type"
           formControlName="Type"
@@ -16,39 +15,36 @@
             <option [value]="+contracttype.key">{{ contracttype.value }}</option>
           }
         </select>
-        <div
-          class="absolute top-0 left-0 w-full h-full flex items-center pl-4"
-          style="pointer-events: none; z-index: 1"
-        >
-          <span
-            [ngClass]="{
-              'text-gray-900 font-medium': formGroup.get('contract')?.value,
-              'text-gray-500': !formGroup.get('contract')?.value,
-            }"
-            [style.opacity]="formGroup.get('contract')?.value ? 0 : 1"
-            style="color: #bdbdbd;">Type</span>
-        </div>
+        <label for="Type" class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none">
+          Type
+        </label>
       </div>
     </div>
     <div class="form-group flex-1 min-w-[250px]">
-      <div class="relative h-14">
-        <label for="Description" class="block font-medium mb-1">Description</label>
+      <div class="relative" style="min-height: 80px">
         <textarea
           formControlName="Description"
           id="Description"
           rows="2"
-          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          placeholder=" "
+          class="w-full h-full px-4 pt-6 pb-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer resize-y"
         ></textarea>
+        <label
+          for="Description"
+          class="absolute left-4 top-2 text-xs text-gray-500 transition-all pointer-events-none peer-focus:text-blue-500"
+        >
+          Description
+        </label>
       </div>
     </div>
     <div class="form-group w-40" style="height: 100px">
       <div class="relative h-14">
-        <label for="DegreeRiskTypeContract" class="block font-medium mb-1">Degree of Risk</label>
         <select
           formControlName="DegreeRiskTypeContract"
           id="DegreeRiskTypeContract"
           class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
         >
+          <option value=""></option>
           <option value="L">L</option>
           <option value="L/M">L/M</option>
           <option value="M">M</option>
@@ -58,6 +54,12 @@
           <option value="NSR">NSR</option>
           <option value="Pending">Pending</option>
         </select>
+        <label
+          for="DegreeRiskTypeContract"
+          class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+        >
+          Degree of Risk
+        </label>
       </div>
     </div>
   </div>
@@ -67,26 +69,38 @@
       <div class="mb-2 font-bold">Liquidated damages:</div>
     </div>
     <div class="form-group flex-1 min-w-[250px]">
-      <div class="relative h-14">
-        <label for="RateOfDamages" class="block font-medium mb-1">Rate of Damages</label>
+      <div class="relative" style="min-height: 80px">
         <textarea
           formControlName="RateOfDamages"
           id="RateOfDamages"
           rows="2"
-          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          placeholder=" "
+          class="w-full h-full px-4 pt-6 pb-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer resize-y"
         ></textarea>
+        <label
+          for="RateOfDamages"
+          class="absolute left-4 top-2 text-xs text-gray-500 transition-all pointer-events-none peer-focus:text-blue-500"
+        >
+          Rate of Damages
+        </label>
         <div class="text-xs text-gray-500">Details of Rate of Damage e.g. $300k/Day</div>
       </div>
     </div>
     <div class="form-group flex-1 min-w-[250px]">
-      <div class="relative h-14">
-        <label for="LimitOfLiability" class="block font-medium mb-1">Limit of Liability</label>
+      <div class="relative" style="min-height: 80px">
         <textarea
           formControlName="LimitOfLiability"
           id="LimitOfLiability"
           rows="2"
-          class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+          class="w-full h-full px-4 pt-6 pb-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer resize-y"
+          placeholder=" "
         ></textarea>
+        <label
+          for="LimitOfLiability"
+          class="absolute left-4 top-2 text-xs text-gray-500 transition-all pointer-events-none peer-focus:text-blue-500"
+        >
+          Limit of Liability
+        </label>
       </div>
     </div>
     <div class="form-group w-40" style="height: 100px">
@@ -97,6 +111,7 @@
           id="DegreeRiskDamage"
           class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
         >
+          <option value=""></option>
           <option value="L">L</option>
           <option value="L/M">L/M</option>
           <option value="M">M</option>
@@ -106,6 +121,12 @@
           <option value="NSR">NSR</option>
           <option value="Pending">Pending</option>
         </select>
+        <label
+          for="DegreeRiskDamage"
+          class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+        >
+          Degree of Risk
+        </label>
       </div>
     </div>
   </div>
@@ -142,6 +163,7 @@
           id="DegreeRiskMeasurement"
           class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
         >
+          <option value=""></option>
           <option value="L">L</option>
           <option value="L/M">L/M</option>
           <option value="M">M</option>
@@ -151,6 +173,12 @@
           <option value="NSR">NSR</option>
           <option value="Pending">Pending</option>
         </select>
+        <label
+          for="DegreeRiskMeasurement"
+          class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+        >
+          Degree of Risk
+        </label>
       </div>
     </div>
   </div>
@@ -187,6 +215,7 @@
           id="DegreeRiskfluctuation"
           class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
         >
+          <option value=""></option>
           <option value="L">L</option>
           <option value="L/M">L/M</option>
           <option value="M">M</option>
@@ -196,6 +225,12 @@
           <option value="NSR">NSR</option>
           <option value="Pending">Pending</option>
         </select>
+        <label
+          for="DegreeRiskfluctuation"
+          class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+        >
+          Degree of Risk
+        </label>
       </div>
     </div>
   </div>
@@ -214,7 +249,12 @@
             <label
               class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300"
             >
-              <input type="radio" formControlName="Adverse" [value]="key.value" class="mr-2 accent-blue-600" />
+              <input
+                type="radio"
+                formControlName="Adverse"
+                [value]="key.value"
+                class="mr-2 accent-blue-600"
+              />
               {{ key.value }}
             </label>
           }
@@ -261,6 +301,7 @@
             id="DegreeRiskWeather"
             class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
           >
+            <option value=""></option>
             <option value="L">L</option>
             <option value="L/M">L/M</option>
             <option value="M">M</option>
@@ -270,6 +311,12 @@
             <option value="NSR">NSR</option>
             <option value="Pending">Pending</option>
           </select>
+          <label
+            for="DegreeRiskWeather"
+            class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+          >
+            Degree of Risk
+          </label>
         </div>
       </div>
     </div>
@@ -303,6 +350,7 @@
           id="DegreeRiskTypeUnusual"
           class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
         >
+          <option value=""></option>
           <option value="L">L</option>
           <option value="L/M">L/M</option>
           <option value="M">M</option>
@@ -312,6 +360,12 @@
           <option value="NSR">NSR</option>
           <option value="Pending">Pending</option>
         </select>
+        <label
+          for="DegreeRiskTypeUnusual"
+          class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+        >
+          Degree of Risk
+        </label>
       </div>
     </div>
   </div>
@@ -345,6 +399,7 @@
           id="DegreeRiskTypeDesign"
           class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
         >
+          <option value=""></option>
           <option value="L">L</option>
           <option value="L/M">L/M</option>
           <option value="M">M</option>
@@ -354,6 +409,12 @@
           <option value="NSR">NSR</option>
           <option value="Pending">Pending</option>
         </select>
+        <label
+          for="DegreeRiskTypeDesign"
+          class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+        >
+          Degree of Risk
+        </label>
       </div>
     </div>
   </div>
@@ -395,6 +456,7 @@
             id="DegreeRiskTypeBIM"
             class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
           >
+            <option value=""></option>
             <option value="L">L</option>
             <option value="L/M">L/M</option>
             <option value="M">M</option>
@@ -404,6 +466,12 @@
             <option value="NSR">NSR</option>
             <option value="Pending">Pending</option>
           </select>
+          <label
+            for="DegreeRiskTypeBIM"
+            class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+          >
+            Degree of Risk
+          </label>
         </div>
       </div>
     </div>
@@ -446,6 +514,7 @@
             id="DegreeRiskTypeDFMA"
             class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
           >
+            <option value=""></option>
             <option value="L">L</option>
             <option value="L/M">L/M</option>
             <option value="M">M</option>
@@ -455,6 +524,12 @@
             <option value="NSR">NSR</option>
             <option value="Pending">Pending</option>
           </select>
+          <label
+            for="DegreeRiskTypeDFMA"
+            class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+          >
+            Degree of Risk
+          </label>
         </div>
       </div>
     </div>

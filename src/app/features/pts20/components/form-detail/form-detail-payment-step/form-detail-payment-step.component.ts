@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ControlContainer, FormGroupDirective } from '@angular/forms';
+import { ControlContainer, FormGroup, FormGroupDirective } from '@angular/forms';
 import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
 
 @Component({
@@ -11,4 +11,10 @@ import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormDetailPaymentStepComponent {
+  constructor(private controlContainer: ControlContainer) {}
+
+  // Getter to access the parent form
+  get formGroup(): FormGroup {
+    return this.controlContainer.control as FormGroup;
+  }
 }

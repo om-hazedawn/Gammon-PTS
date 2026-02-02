@@ -1,284 +1,699 @@
 <div class="section" formGroupName="Bonds">
-  <div class="p-4 bg-white shadow rounded-lg">
-    <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Bonds</h2>
+  <h2 class="text-base font-semibold mb-3 border-b pb-2 text-[#1976d2]">Bonds</h2>
 
-    <div class="space-y-6">
-      <div class="form-row">
-        <div class="w-40 font-semibold">Tender Bond:</div>
-        <div class="flex flex-wrap gap-8 flex-1">
-          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
-            <mat-label>Value</mat-label>
-            <input matInput type="number" formControlName="TenderValue" />
-          </mat-form-field>
+  <div class="space-y-4">
+    <div class="form-row">
+      <div class="w-40 font-semibold">Tender Bond:</div>
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="form-group min-w-[140px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="TenderValue"
+              formControlName="TenderValue"
+              type="number"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="TenderValue"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Value
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" style="max-width: 60px">
-            <mat-select formControlName="tenderUnit">
-              <mat-option value="%">%</mat-option>
-              <mat-option value=" "> </mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group" style="max-width: 100px">
+          <div class="relative h-14">
+            <select
+              id="tenderUnit"
+              formControlName="tenderUnit"
+              class="w-full h-full px-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value="%">%</option>
+              <option value=" "></option>
+            </select>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
-            <mat-label>Call Basis</mat-label>
-            <input matInput formControlName="TenderCallBasis" />
-          </mat-form-field>
+        <div class="form-group min-w-[140px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="TenderCallBasis"
+              formControlName="TenderCallBasis"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="TenderCallBasis"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Call Basis
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[160px] flex-1">
-            <mat-label>Expiry Date</mat-label>
-            <input matInput formControlName="TenderExpiry" />
-          </mat-form-field>
+        <div class="form-group min-w-[160px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="TenderExpiry"
+              formControlName="TenderExpiry"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="TenderExpiry"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Expiry Date
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[180px] flex-1">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="TenderRemark" />
-          </mat-form-field>
+        <div class="form-group min-w-[180px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="TenderRemark"
+              formControlName="TenderRemark"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="TenderRemark"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Remark
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="w-40">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="TenderRisk">
-              <mat-option value="L">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group w-40">
+          <div class="relative h-14">
+            <select
+              id="TenderRisk"
+              formControlName="TenderRisk"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="TenderRisk"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div class="form-row">
-        <div class="w-40 font-semibold">Performance Bond:</div>
-        <div class="flex flex-wrap gap-8 flex-1">
-          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
-            <mat-label>Value</mat-label>
-            <input matInput type="number" formControlName="PerformanceValue" />
-          </mat-form-field>
+    <div class="form-row">
+      <div class="w-40 font-semibold">Performance Bond:</div>
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="form-group min-w-[140px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="PerformanceValue"
+              formControlName="PerformanceValue"
+              type="number"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="PerformanceValue"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Value
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" style="max-width: 60px">
-            <mat-select formControlName="performanceUnit">
-              <mat-option value="%">%</mat-option>
-              <mat-option value=" "> </mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group" style="max-width: 100px">
+          <div class="relative h-14">
+            <select
+              id="performanceUnit"
+              formControlName="performanceUnit"
+              class="w-full h-full px-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value="%">%</option>
+              <option value=" "></option>
+            </select>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
-            <mat-label>Call Basis</mat-label>
-            <input matInput formControlName="PerformanceCallBasis" />
-          </mat-form-field>
+        <div class="form-group min-w-[140px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="PerformanceCallBasis"
+              formControlName="PerformanceCallBasis"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="PerformanceCallBasis"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Call Basis
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[160px] flex-1">
-            <mat-label>Expiry Date</mat-label>
-            <input matInput formControlName="PerformanceExpiry" />
-          </mat-form-field>
+        <div class="form-group min-w-[160px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="PerformanceExpiry"
+              formControlName="PerformanceExpiry"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="PerformanceExpiry"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Expiry Date
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[180px] flex-1">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="PerformanceRemark" />
-          </mat-form-field>
+        <div class="form-group min-w-[180px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="PerformanceRemark"
+              formControlName="PerformanceRemark"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="PerformanceRemark"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Remark
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="w-40">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="degreeRisk2">
-              <mat-option value="L">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group w-40">
+          <div class="relative h-14">
+            <select
+              id="degreeRisk2"
+              formControlName="degreeRisk2"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="degreeRisk2"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div class="form-row">
-        <div class="w-40 font-semibold">Advance Payment Bond:</div>
-        <div class="flex flex-wrap gap-8 flex-1">
-          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
-            <mat-label>Value</mat-label>
-            <input matInput type="number" formControlName="AdvanceValue" />
-          </mat-form-field>
+    <div class="form-row">
+      <div class="w-40 font-semibold">Advance Payment Bond:</div>
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="form-group min-w-[140px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="AdvanceValue"
+              formControlName="AdvanceValue"
+              type="number"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="AdvanceValue"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Value
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" style="max-width: 60px">
-            <mat-select formControlName="advanceUnit">
-              <mat-option value="%">%</mat-option>
-              <mat-option value=" "> </mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group" style="max-width: 100px">
+          <div class="relative h-14">
+            <select
+              id="advanceUnit"
+              formControlName="advanceUnit"
+              class="w-full h-full px-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value="%">%</option>
+              <option value=" "></option>
+            </select>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
-            <mat-label>Call Basis</mat-label>
-            <input matInput formControlName="AdvanceCallBasis" />
-          </mat-form-field>
+        <div class="form-group min-w-[140px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="AdvanceCallBasis"
+              formControlName="AdvanceCallBasis"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="AdvanceCallBasis"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Call Basis
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[160px] flex-1">
-            <mat-label>Expiry Date</mat-label>
-            <input matInput formControlName="AdvanceExpiry" />
-          </mat-form-field>
+        <div class="form-group min-w-[160px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="AdvanceExpiry"
+              formControlName="AdvanceExpiry"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="AdvanceExpiry"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Expiry Date
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[180px] flex-1">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="AdvanceRemark" />
-          </mat-form-field>
+        <div class="form-group min-w-[180px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="AdvanceRemark"
+              formControlName="AdvanceRemark"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="AdvanceRemark"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Remark
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="w-40">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="AdvanceRisk">
-              <mat-option value="L">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group w-40">
+          <div class="relative h-14">
+            <select
+              id="AdvanceRisk"
+              formControlName="AdvanceRisk"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="AdvanceRisk"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div class="form-row">
-        <div class="w-40 font-semibold">Retention Bond:</div>
-        <div class="flex flex-wrap gap-8 flex-1">
-          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
-            <mat-label>Value</mat-label>
-            <input matInput type="number" formControlName="RetentionValue" />
-          </mat-form-field>
+    <div class="form-row">
+      <div class="w-40 font-semibold">Retention Bond:</div>
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="form-group min-w-[140px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="RetentionValue"
+              formControlName="RetentionValue"
+              type="number"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="RetentionValue"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Value
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" style="max-width: 60px">
-            <mat-select formControlName="retentionUnit">
-              <mat-option value="%">%</mat-option>
-              <mat-option value=" "> </mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group" style="max-width: 100px">
+          <div class="relative h-14">
+            <select
+              id="retentionUnit"
+              formControlName="retentionUnit"
+              class="w-full h-full px-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value="%">%</option>
+              <option value=" "></option>
+            </select>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
-            <mat-label>Call Basis</mat-label>
-            <input matInput formControlName="RetentionCallBasis" />
-          </mat-form-field>
+        <div class="form-group min-w-[140px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="RetentionCallBasis"
+              formControlName="RetentionCallBasis"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="RetentionCallBasis"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Call Basis
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[160px] flex-1">
-            <mat-label>Expiry Date</mat-label>
-            <input matInput formControlName="RetentionExpiry" />
-          </mat-form-field>
+        <div class="form-group min-w-[160px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="RetentionExpiry"
+              formControlName="RetentionExpiry"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="RetentionExpiry"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Expiry Date
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[180px] flex-1">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="RetentionRemark" />
-          </mat-form-field>
+        <div class="form-group min-w-[180px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="RetentionRemark"
+              formControlName="RetentionRemark"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="RetentionRemark"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Remark
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="w-40">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="RetentionRisk">
-              <mat-option value="L">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group w-40">
+          <div class="relative h-14">
+            <select
+              id="RetentionRisk"
+              formControlName="RetentionRisk"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="RetentionRisk"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div class="form-row">
-        <div class="w-40 font-semibold">Maintenance Bond:</div>
-        <div class="flex flex-wrap gap-8 flex-1">
-          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
-            <mat-label>Value</mat-label>
-            <input matInput type="number" formControlName="MaintenanceValue" />
-          </mat-form-field>
+    <div class="form-row">
+      <div class="w-40 font-semibold">Maintenance Bond:</div>
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="form-group min-w-[140px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="MaintenanceValue"
+              formControlName="MaintenanceValue"
+              type="number"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="MaintenanceValue"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Value
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" style="max-width: 60px">
-            <mat-select formControlName="maintenanceUnit">
-              <mat-option value="%">%</mat-option>
-              <mat-option value=" "> </mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group" style="max-width: 100px">
+          <div class="relative h-14">
+            <select
+              id="maintenanceUnit"
+              formControlName="maintenanceUnit"
+              class="w-full h-full px-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value="%">%</option>
+              <option value=" "></option>
+            </select>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
-            <mat-label>Call Basis</mat-label>
-            <input matInput formControlName="MaintenanceCallBasis" />
-          </mat-form-field>
+        <div class="form-group min-w-[140px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="MaintenanceCallBasis"
+              formControlName="MaintenanceCallBasis"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="MaintenanceCallBasis"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Call Basis
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[160px] flex-1">
-            <mat-label>Expiry Date</mat-label>
-            <input matInput formControlName="MaintenanceExpiry" />
-          </mat-form-field>
+        <div class="form-group min-w-[160px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="MaintenanceExpiry"
+              formControlName="MaintenanceExpiry"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="MaintenanceExpiry"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Expiry Date
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[180px] flex-1">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="MaintenanceRemark" />
-          </mat-form-field>
+        <div class="form-group min-w-[180px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="MaintenanceRemark"
+              formControlName="MaintenanceRemark"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="MaintenanceRemark"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Remark
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="w-40">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="MaintenanceRisk">
-              <mat-option value="L">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group w-40">
+          <div class="relative h-14">
+            <select
+              id="MaintenanceRisk"
+              formControlName="MaintenanceRisk"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="MaintenanceRisk"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
+          </div>
         </div>
       </div>
-       <div class="w-40 font-semibold">Other Bond:</div>
-      <div class="form-row">
-        <div class="flex flex-wrap gap-8 flex-1">
-          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
-            <mat-label>Other Name</mat-label>
-            <input matInput type="text" formControlName="OtherName" />
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
-            <mat-label>Value</mat-label>
-            <input matInput type="number" formControlName="OtherValue" />
-          </mat-form-field>
+    </div>
 
-          <mat-form-field appearance="fill" style="max-width: 60px">
-            <mat-select formControlName="otherUnit">
-              <mat-option value="%">%</mat-option>
-              <mat-option value=" "> </mat-option>
-            </mat-select>
-          </mat-form-field>
+    <div class="w-40 font-semibold">Other Bond:</div>
+    <div class="form-row">
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="form-group min-w-[140px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="OtherName"
+              formControlName="OtherName"
+              type="text"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="OtherName"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Other Name
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[140px] flex-1">
-            <mat-label>Call Basis</mat-label>
-            <input matInput formControlName="OtherCallBasis" />
-          </mat-form-field>
+        <div class="form-group min-w-[140px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="OtherValue"
+              formControlName="OtherValue"
+              type="number"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="OtherValue"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Value
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[160px] flex-1">
-            <mat-label>Expiry Date</mat-label>
-            <input matInput formControlName="OtherExpiry" />
-          </mat-form-field>
+        <div class="form-group" style="max-width: 100px">
+          <div class="relative h-14">
+            <select
+              id="otherUnit"
+              formControlName="otherUnit"
+              class="w-full h-full px-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value="%">%</option>
+              <option value=" "></option>
+            </select>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[180px] flex-1">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="OtherRemark" />
-          </mat-form-field>
+        <div class="form-group min-w-[140px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="OtherCallBasis"
+              formControlName="OtherCallBasis"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="OtherCallBasis"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Call Basis
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="w-40">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="OtherRisk">
-              <mat-option value="L">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group min-w-[160px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="OtherExpiry"
+              formControlName="OtherExpiry"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="OtherExpiry"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Expiry Date
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group min-w-[180px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="OtherRemark"
+              formControlName="OtherRemark"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="OtherRemark"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Remark
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group w-40">
+          <div class="relative h-14">
+            <select
+              id="OtherRisk"
+              formControlName="OtherRisk"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="OtherRisk"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
+          </div>
         </div>
       </div>
     </div>

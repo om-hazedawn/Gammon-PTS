@@ -1,144 +1,247 @@
 <div class="section" formGroupName="Insurance">
-  <div class="p-4 bg-white shadow rounded-lg">
-    <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Insurance</h2>
+  <h2 class="text-base font-semibold mb-3 border-b pb-2 text-[#1976d2]">Insurance</h2>
 
-    <div class="space-y-6">
-      <div class="form-row">
-        <div class="w-40 font-semibold">Provided by Employer:</div>
-        <div class="flex flex-wrap gap-6 flex-1">
-          <div class="radio-group-container min-w-[200px]">
-            <mat-radio-group formControlName="ProvidedByEmployer" class="flex gap-6">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" class="radio-option">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
+  <div class="space-y-4">
+    <div class="form-row">
+      <div class="w-40 font-semibold">Provided by Employer:</div>
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="radio-group-container min-w-[200px]">
+          <div class="flex gap-6">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  formControlName="ProvidedByEmployer"
+                  [value]="key.value"
+                  class="w-4 h-4 text-blue-500 focus:ring-blue-500"
+                />
+                <span class="text-sm">{{ key.value }}</span>
+              </label>
+            }
           </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
-            <mat-label>Details</mat-label>
-            <textarea 
-              matInput 
+        <div class="form-group min-w-[250px] flex-1">
+          <div class="relative" style="min-height: 80px">
+            <textarea
+              id="ProvidedByEmployerDetails"
               formControlName="ProvidedByEmployerDetails"
-              cdkTextareaAutosize
-              [cdkTextareaAutosize]="true"
-              cdkAutosizeMinRows="1"
-              cdkAutosizeMaxRows="5"
+              rows="2"
+              placeholder=" "
+              class="w-full h-full px-4 pt-6 pb-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer resize-y"
             ></textarea>
-          </mat-form-field>
-
-          <mat-form-field appearance="fill" style="max-width: 250px; height:100px">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="ProvidedByEmployerRisk">
-              <mat-option value="L">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="w-40 font-semibold">Min Amount of Third Party Liability:</div>
-        <div class="flex flex-wrap gap-6 flex-1">
-          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
-            <mat-label>Details</mat-label>
-            <input matInput formControlName="ThirdPartyDetails" type="number" placeholder="number only" />
-          </mat-form-field>
-
-          <mat-form-field appearance="fill" style="max-width: 250px">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="ThirdPartyRisk">
-              <mat-option value="L">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="w-40 font-semibold">Onerous Requirements:</div>
-        <div class="flex flex-wrap gap-6 flex-1">
-          <div class="radio-group-container min-w-[200px]">
-            <mat-radio-group formControlName="OnerousRequirements" class="flex gap-6">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" class="radio-option">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
+            <label
+              for="ProvidedByEmployerDetails"
+              class="absolute left-4 top-2 text-xs text-gray-500 transition-all pointer-events-none peer-focus:text-blue-500"
+            >
+              Details
+            </label>
           </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
-            <mat-label>Details</mat-label>
-            <textarea 
-            matInput formControlName="OnerousRequirementsDetails" 
-            cdkTextareaAutosize
-            [cdkTextareaAutosize]="true"
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="5"
-            ></textarea>
-          </mat-form-field>
-
-          <mat-form-field appearance="fill" style="max-width: 250px; height:100px">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="OnerousRequirementsRisk">
-              <mat-option value="L">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group w-40">
+          <div class="relative h-14">
+            <select
+              id="ProvidedByEmployerRisk"
+              formControlName="ProvidedByEmployerRisk"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="ProvidedByEmployerRisk"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div class="form-row">
-        <div class="w-40 font-semibold">Shortfall in Cover:</div>
-        <div class="flex flex-wrap gap-6 flex-1">
-          <div class="radio-group-container min-w-[200px]">
-            <mat-radio-group formControlName="ShortfallInCover" class="flex gap-6">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" class="radio-option">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
+    <div class="form-row">
+      <div class="w-40 font-semibold">Min Amount of Third Party Liability:</div>
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="form-group min-w-[250px] flex-1">
+          <div class="relative h-14">
+            <input
+              id="ThirdPartyDetails"
+              formControlName="ThirdPartyDetails"
+              type="number"
+              placeholder=" "
+              class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+            />
+            <label
+              for="ThirdPartyDetails"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+            >
+              Details
+            </label>
           </div>
+        </div>
 
-          <mat-form-field appearance="fill" class="min-w-[250px] flex-1">
-            <mat-label>Details</mat-label>
-            <textarea matInput formControlName="ShortfallInCoverDetails"
-            matInput formControlName="ShortfallInCoverDetails" 
-            cdkTextareaAutosize
-            [cdkTextareaAutosize]="true"
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="5"
+        <div class="form-group w-40">
+          <div class="relative h-14">
+            <select
+              id="ThirdPartyRisk"
+              formControlName="ThirdPartyRisk"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="ThirdPartyRisk"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="w-40 font-semibold">Onerous Requirements:</div>
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="radio-group-container min-w-[200px]">
+          <div class="flex gap-6">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  formControlName="OnerousRequirements"
+                  [value]="key.value"
+                  class="w-4 h-4 text-blue-500 focus:ring-blue-500"
+                />
+                <span class="text-sm">{{ key.value }}</span>
+              </label>
+            }
+          </div>
+        </div>
+
+        <div class="form-group min-w-[250px] flex-1">
+          <div class="relative" style="min-height: 80px">
+            <textarea
+              id="OnerousRequirementsDetails"
+              formControlName="OnerousRequirementsDetails"
+              rows="2"
+              placeholder=" "
+              class="w-full h-full px-4 pt-6 pb-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer resize-y"
             ></textarea>
-          </mat-form-field>
+            <label
+              for="OnerousRequirementsDetails"
+              class="absolute left-4 top-2 text-xs text-gray-500 transition-all pointer-events-none peer-focus:text-blue-500"
+            >
+              Details
+            </label>
+          </div>
+        </div>
 
-          <mat-form-field appearance="fill" style="max-width: 250px; height:100px">
-            <mat-label>Degree of Risk</mat-label>
-            <mat-select formControlName="ShortfallInCoverRisk">
-              <mat-option value="M">L</mat-option>
-              <mat-option value="L/M">L/M</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="M/H">M/H</mat-option>
-              <mat-option value="H">H</mat-option>
-              <mat-option value="NA">N/A</mat-option>
-              <mat-option value="NSR">NSR</mat-option>
-              <mat-option value="Pending">Pending</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="form-group w-40">
+          <div class="relative h-14">
+            <select
+              id="OnerousRequirementsRisk"
+              formControlName="OnerousRequirementsRisk"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="OnerousRequirementsRisk"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="w-40 font-semibold">Shortfall in Cover:</div>
+      <div class="flex flex-wrap gap-4 flex-1">
+        <div class="radio-group-container min-w-[200px]">
+          <div class="flex gap-6">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  formControlName="ShortfallInCover"
+                  [value]="key.value"
+                  class="w-4 h-4 text-blue-500 focus:ring-blue-500"
+                />
+                <span class="text-sm">{{ key.value }}</span>
+              </label>
+            }
+          </div>
+        </div>
+
+        <div class="form-group min-w-[250px] flex-1">
+          <div class="relative" style="min-height: 80px">
+            <textarea
+              id="ShortfallInCoverDetails"
+              formControlName="ShortfallInCoverDetails"
+              rows="2"
+              placeholder=" "
+              class="w-full h-full px-4 pt-6 pb-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer resize-y"
+            ></textarea>
+            <label
+              for="ShortfallInCoverDetails"
+              class="absolute left-4 top-2 text-xs text-gray-500 transition-all pointer-events-none peer-focus:text-blue-500"
+            >
+              Details
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group w-40">
+          <div class="relative h-14">
+            <select
+              id="ShortfallInCoverRisk"
+              formControlName="ShortfallInCoverRisk"
+              class="w-full h-full px-4 pt-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition appearance-none"
+            >
+              <option value=""></option>
+              <option value="L">L</option>
+              <option value="L/M">L/M</option>
+              <option value="M">M</option>
+              <option value="M/H">M/H</option>
+              <option value="H">H</option>
+              <option value="NA">N/A</option>
+              <option value="NSR">NSR</option>
+              <option value="Pending">Pending</option>
+            </select>
+            <label
+              for="ShortfallInCoverRisk"
+              class="absolute left-4 top-1 text-xs text-gray-500 pointer-events-none"
+            >
+              Degree of Risk
+            </label>
+          </div>
         </div>
       </div>
     </div>
