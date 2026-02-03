@@ -57,12 +57,12 @@
         <div class="radio-group-container min-w-[200px]">
           <div class="flex gap-6">
             @for (key of yesNo | keyvalue; track key.key) {
-              <label class="flex items-center gap-2 cursor-pointer">
+              <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
                 <input
                   type="radio"
                   formControlName="PFIorPPPBid"
                   [value]="key.value"
-                  class="w-4 h-4 text-blue-500 focus:ring-blue-500"
+                  class="mr-2 accent-blue-600"
                 />
                 <span class="text-sm">{{ key.value }}</span>
               </label>
@@ -104,12 +104,12 @@
         <div class="radio-group-container min-w-[200px]">
           <div class="flex gap-6">
             @for (key of yesNo | keyvalue; track key.key) {
-              <label class="flex items-center gap-2 cursor-pointer">
+              <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
                 <input
                   type="radio"
                   formControlName="FinancingRequired"
                   [value]="key.value"
-                  class="w-4 h-4 text-blue-500 focus:ring-blue-500"
+                  class="mr-2 accent-blue-600"
                 />
                 <span class="text-sm">{{ key.value }}</span>
               </label>
@@ -195,3 +195,4 @@
     </div>
   </div>
 </div>
+s

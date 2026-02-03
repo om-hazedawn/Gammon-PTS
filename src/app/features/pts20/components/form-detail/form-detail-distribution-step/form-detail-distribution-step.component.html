@@ -1,425 +1,664 @@
 <div class="section" formGroupName="Distribution">
-  <div class="p-6 bg-white shadow-lg rounded-lg">
-    <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Distribution</h2>
+  <div class="px-6 py-3 bg-white shadow-lg rounded-lg">
+     <h2 class="text-base font-semibold mb-2 border-b pb-2 text-[#1976d2]">Distribution</h2>
 
-    <div class="space-y-6">
+    <div class="space-y-3">
       <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Chief Executive</div>
-            <mat-form-field appearance="fill" class="w-full">
-              <mat-chip-grid #chipGridCE aria-label="Chief Executive selection">
-               @for (user of selectedCE; track user.employeeNo) {
-                 <mat-chip-row (removed)="removeChief(user)">
-                   {{user.fullName}}
-                   <button matChipRemove>
-                     <mat-icon>cancel</mat-icon>
-                   </button>
-                 </mat-chip-row>
-               }
-              </mat-chip-grid>
-              <input matInput
-                     placeholder="Type to search..."
-                     [matChipInputFor]="chipGridCE"
-                     [matAutocomplete]="auto"
-                     [formControl]="ceSearchCtrl">
-              <mat-autocomplete #auto="matAutocomplete"
-                             (optionSelected)="selectChief($event)"
-                             [displayWith]="displayFn">
-                @for (user of filteredCE | async; track user.employeeNo) {
-                  <mat-option [value]="user">
-                    {{user.fullName}} - {{user.title}}
-                  </mat-option>
+        <div class="space-y-2">
+          <div class="flex items-start gap-4">
+            <div class="w-40 font-semibold pt-2">Chief Executive</div>
+            <div class="flex-1">
+              <!-- Combined input with selected chips inside -->
+              <div class="relative">
+                <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                  <!-- Selected chips/tags inside input -->
+                  @if (selectedCE.length > 0) {
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      @for (user of selectedCE; track user.employeeNo) {
+                        <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          <span>{{user.fullName}}</span>
+                          <button 
+                            type="button"
+                            (click)="removeChief(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <!-- Search input below chips -->
+                  <input
+                    type="text"
+                    [formControl]="ceSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent outline-none"
+                  />
+                </div>
+                
+                <!-- Dropdown results below -->
+                @if ((filteredCE | async)?.length && ceSearchCtrl.value) {
+                  <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    @for (user of filteredCE | async; track user.employeeNo) {
+                      <div 
+                        (click)="selectChief($any({option: {value: user}}))"
+                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div class="font-medium">{{user.fullName}}</div>
+                        <div class="text-sm text-gray-600">{{user.title}}</div>
+                      </div>
+                    }
+                  </div>
                 }
-              </mat-autocomplete>
-            </mat-form-field>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Division Commercial Manager</div>
-            <mat-form-field appearance="fill" class="w-full">
-              <mat-chip-grid #chipGridBDGDCM aria-label="Division Commercial Manager selection">
-               @for (user of selectedBDGDCM; track user.employeeNo) {
-                  <mat-chip-row (removed)="removeBDGDCM(user)">
-                   {{user.fullName}}
-                   <button matChipRemove>
-                     <mat-icon>cancel</mat-icon>
-                   </button>
-                 </mat-chip-row>
-               }
-              </mat-chip-grid>
-              <input matInput
-                     placeholder="Type to search..."
-                     [matChipInputFor]="chipGridBDGDCM"
-                     [matAutocomplete]="autoBDGDCM"
-                     [formControl]="bdgDcmSearchCtrl">
-              <mat-autocomplete #autoBDGDCM="matAutocomplete"
-                             (optionSelected)="selectBDGDCM($event)"
-                             [displayWith]="displayFn">
-                @for (user of filteredBDGDCM | async; track user.employeeNo) {
-                  <mat-option [value]="user">
-                    {{user.fullName}} - {{user.title}}
-                  </mat-option>
+        <div class="space-y-2">
+          <div class="flex items-start gap-4">
+            <div class="w-40 font-semibold pt-2">Division Commercial Manager</div>
+            <div class="flex-1">
+              <div class="relative">
+                <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                  @if (selectedBDGDCM.length > 0) {
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      @for (user of selectedBDGDCM; track user.employeeNo) {
+                        <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          <span>{{user.fullName}}</span>
+                          <button 
+                            type="button"
+                            (click)="removeBDGDCM(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <input
+                    type="text"
+                    [formControl]="bdgDcmSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent outline-none"
+                  />
+                </div>
+                
+                @if ((filteredBDGDCM | async)?.length && bdgDcmSearchCtrl.value) {
+                  <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    @for (user of filteredBDGDCM | async; track user.employeeNo) {
+                      <div 
+                        (click)="selectBDGDCM($any({option: {value: user}}))"
+                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div class="font-medium">{{user.fullName}}</div>
+                        <div class="text-sm text-gray-600">{{user.title}}</div>
+                      </div>
+                    }
+                  </div>
                 }
-              </mat-autocomplete>
-              
-            </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="space-y-2">
+          <div class="flex items-start gap-4">
+            <div class="w-40 font-semibold pt-2">Executive Director</div>
+            <div class="flex-1">
+              <div class="relative">
+                <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                  @if (selectedED.length > 0) {
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      @for (user of selectedED; track user.employeeNo) {
+                        <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          <span>{{user.fullName}}</span>
+                          <button 
+                            type="button"
+                            (click)="removeED(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <input
+                    type="text"
+                    [formControl]="edSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent outline-none"
+                  />
+                </div>
+                
+                @if ((filteredED | async)?.length && edSearchCtrl.value) {
+                  <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    @for (user of filteredED | async; track user.employeeNo) {
+                      <div 
+                        (click)="selectED($any({option: {value: user}}))"
+                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div class="font-medium">{{user.fullName}}</div>
+                        <div class="text-sm text-gray-600">{{user.title}}</div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-start gap-4">
+            <div class="w-40 font-semibold pt-2">Insurance Manager</div>
+            <div class="flex-1">
+              <div class="relative">
+                <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                  @if (selectedINS_MGR.length > 0) {
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      @for (user of selectedINS_MGR; track user.employeeNo) {
+                        <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          <span>{{user.fullName}}</span>
+                          <button 
+                            type="button"
+                            (click)="removeINS_MGR(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <input
+                    type="text"
+                    [formControl]="insMgrSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent outline-none"
+                  />
+                </div>
+                
+                @if ((filteredINS_MGR | async)?.length && insMgrSearchCtrl.value) {
+                  <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    @for (user of filteredINS_MGR | async; track user.employeeNo) {
+                      <div 
+                        (click)="selectINS_MGR($any({option: {value: user}}))"
+                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div class="font-medium">{{user.fullName}}</div>
+                        <div class="text-sm text-gray-600">{{user.title}}</div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="space-y-2">
+          <div class="flex items-start gap-4">
+            <div class="w-40 font-semibold pt-2">Director</div>
+            <div class="flex-1">
+              <div class="relative">
+                <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                  @if (selectedDIR.length > 0) {
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      @for (user of selectedDIR; track user.employeeNo) {
+                        <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          <span>{{user.fullName}}</span>
+                          <button 
+                            type="button"
+                            (click)="removeDIR(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <input
+                    type="text"
+                    [formControl]="dirSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent outline-none"
+                  />
+                </div>
+                
+                @if ((filteredDIR | async)?.length && dirSearchCtrl.value) {
+                  <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    @for (user of filteredDIR | async; track user.employeeNo) {
+                      <div 
+                        (click)="selectDIR($any({option: {value: user}}))"
+                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div class="font-medium">{{user.fullName}}</div>
+                        <div class="text-sm text-gray-600">{{user.title}}</div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-start gap-4">
+            <div class="w-40 font-semibold pt-2">Head of Lambeth</div>
+            <div class="flex-1">
+              <div class="relative">
+                <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                  @if (selectedLAM.length > 0) {
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      @for (user of selectedLAM; track user.employeeNo) {
+                        <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          <span>{{user.fullName}}</span>
+                          <button 
+                            type="button"
+                            (click)="removeLAM(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <input
+                    type="text"
+                    [formControl]="lamSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent outline-none"
+                  />
+                </div>
+                
+                @if ((filteredLAM | async)?.length && lamSearchCtrl.value) {
+                  <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    @for (user of filteredLAM | async; track user.employeeNo) {
+                      <div 
+                        (click)="selectLAM($any({option: {value: user}}))"
+                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div class="font-medium">{{user.fullName}}</div>
+                        <div class="text-sm text-gray-600">{{user.title}}</div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="space-y-2">
+          <div class="flex items-start gap-4">
+            <div class="w-40 font-semibold pt-2">Bid Manager</div>
+            <div class="flex-1">
+              <div class="relative">
+                <input
+                  type="text"
+                  [formControl]="bidManagerSearchCtrl"
+                  placeholder="Type to search..."
+                  class="w-full h-12 px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+                />
+                
+                @if (FORM20_BID_MGR.length && bidManagerSearchCtrl.value) {
+                  <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    @for (user of FORM20_BID_MGR; track user.employeeNo) {
+                      <div 
+                        (click)="selectBidManager($any({option: {value: user}}))"
+                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div class="font-medium">{{user.fullName}}</div>
+                        <div class="text-sm text-gray-600">{{user.title}}</div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-start gap-4">
+            <div class="w-40 font-semibold pt-2">Head of Procurement</div>
+            <div class="flex-1">
+              <div class="relative">
+                <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                  @if (selectedPRO.length > 0) {
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      @for (user of selectedPRO; track user.employeeNo) {
+                        <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          <span>{{user.fullName}}</span>
+                          <button 
+                            type="button"
+                            (click)="removePRO(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <input
+                    type="text"
+                    [formControl]="proSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent outline-none"
+                  />
+                </div>
+                
+                @if ((filteredPRO | async)?.length && proSearchCtrl.value) {
+                  <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    @for (user of filteredPRO | async; track user.employeeNo) {
+                      <div 
+                        (click)="selectPRO($any({option: {value: user}}))"
+                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div class="font-medium">{{user.fullName}}</div>
+                        <div class="text-sm text-gray-600">{{user.title}}</div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="space-y-2">
+          <div class="flex items-start gap-4">
+            <div class="w-40 font-semibold pt-2">Finance Director</div>
+            <div class="flex-1">
+              <div class="relative">
+                <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                  @if (selectedFIN_DIR.length > 0) {
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      @for (user of selectedFIN_DIR; track user.employeeNo) {
+                        <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          <span>{{user.fullName}}</span>
+                          <button 
+                            type="button"
+                            (click)="removeFIN_DIR(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <input
+                    type="text"
+                    [formControl]="finDirSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent outline-none"
+                  />
+                </div>
+                
+                @if ((filteredFIN_DIR | async)?.length && finDirSearchCtrl.value) {
+                  <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    @for (user of filteredFIN_DIR | async; track user.employeeNo) {
+                      <div 
+                        (click)="selectFIN_DIR($any({option: {value: user}}))"
+                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div class="font-medium">{{user.fullName}}</div>
+                        <div class="text-sm text-gray-600">{{user.title}}</div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-start gap-4">
+            <div class="w-40 font-semibold pt-2">Risk &amp; Opportunity Manager</div>
+            <div class="flex-1">
+              <div class="relative">
+                <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                  @if (selectedRISK_OPP.length > 0) {
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      @for (user of selectedRISK_OPP; track user.employeeNo) {
+                        <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          <span>{{user.fullName}}</span>
+                          <button 
+                            type="button"
+                            (click)="removeRISK_OPP(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <input
+                    type="text"
+                    [formControl]="riskOppSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent outline-none"
+                  />
+                </div>
+                
+                @if ((filteredRISK_OPP | async)?.length && riskOppSearchCtrl.value) {
+                  <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    @for (user of filteredRISK_OPP | async; track user.employeeNo) {
+                      <div 
+                        (click)="selectRISK_OPP($any({option: {value: user}}))"
+                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div class="font-medium">{{user.fullName}}</div>
+                        <div class="text-sm text-gray-600">{{user.title}}</div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="space-y-2">
+          <div class="flex items-start gap-4">
+            <div class="w-40 font-semibold pt-2">Commercial Director</div>
+            <div class="flex-1">
+              <div class="relative">
+                <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                  @if (selectedCOM_DIR.length > 0) {
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      @for (user of selectedCOM_DIR; track user.employeeNo) {
+                        <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          <span>{{user.fullName}}</span>
+                          <button 
+                            type="button"
+                            (click)="removeCOM_DIR(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <input
+                    type="text"
+                    [formControl]="comDirSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent outline-none"
+                  />
+                </div>
+                
+                @if ((filteredCOM_DIR | async)?.length && comDirSearchCtrl.value) {
+                  <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    @for (user of filteredCOM_DIR | async; track user.employeeNo) {
+                      <div 
+                        (click)="selectCOM_DIR($any({option: {value: user}}))"
+                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div class="font-medium">{{user.fullName}}</div>
+                        <div class="text-sm text-gray-600">{{user.title}}</div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-start gap-4">
+            <div class="w-40 font-semibold pt-2">HSEQ</div>
+            <div class="flex-1">
+              <div class="relative">
+                <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                  @if (selectedHSEQ.length > 0) {
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      @for (user of selectedHSEQ; track user.employeeNo) {
+                        <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          <span>{{user.fullName}}</span>
+                          <button 
+                            type="button"
+                            (click)="removeHSEQ(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <input
+                    type="text"
+                    [formControl]="hseqSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent outline-none"
+                  />
+                </div>
+                
+                @if ((filteredHSEQ | async)?.length && hseqSearchCtrl.value) {
+                  <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    @for (user of filteredHSEQ | async; track user.employeeNo) {
+                      <div 
+                        (click)="selectHSEQ($any({option: {value: user}}))"
+                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div class="font-medium">{{user.fullName}}</div>
+                        <div class="text-sm text-gray-600">{{user.title}}</div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Executive Director</div>
-             <mat-form-field appearance="fill" class="w-full">
-              <mat-chip-grid #chipGridED aria-label="Executive Director selection">
-               @for (user of selectedED; track user.employeeNo) {
-                 <mat-chip-row (removed)="removeED(user)">
-                   {{user.fullName}}
-                   <button matChipRemove>
-                     <mat-icon>cancel</mat-icon>
-                   </button>
-                 </mat-chip-row>
-               }
-              </mat-chip-grid>
-              <input matInput
-                     placeholder="Type to search..."
-                     [matChipInputFor]="chipGridED"
-                     [matAutocomplete]="autoED"
-                     [formControl]="edSearchCtrl">
-              <mat-autocomplete #autoED="matAutocomplete"
-                             (optionSelected)="selectED($event)"
-                             [displayWith]="displayFn">
-                @for (user of filteredED | async; track user.employeeNo) {
-                  <mat-option [value]="user">
-                    {{user.fullName}} - {{user.title}}
-                  </mat-option>
+        <div class="space-y-2">
+          <div class="flex items-start gap-4">
+            <div class="w-40 font-semibold pt-2">General Counsel - Legal</div>
+            <div class="flex-1">
+              <div class="relative">
+                <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                  @if (selectedGEN_COUN.length > 0) {
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      @for (user of selectedGEN_COUN; track user.employeeNo) {
+                        <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          <span>{{user.fullName}}</span>
+                          <button 
+                            type="button"
+                            (click)="removeGEN_COUN(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  
+                  <input
+                    type="text"
+                    [formControl]="genCounSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent outline-none"
+                  />
+                </div>
+                
+                @if ((filteredGEN_COUN | async)?.length && genCounSearchCtrl.value) {
+                  <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    @for (user of filteredGEN_COUN | async; track user.employeeNo) {
+                      <div 
+                        (click)="selectGEN_COUN($any({option: {value: user}}))"
+                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div class="font-medium">{{user.fullName}}</div>
+                        <div class="text-sm text-gray-600">{{user.title}}</div>
+                      </div>
+                    }
+                  </div>
                 }
-              </mat-autocomplete>
-              
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Insurance Manager</div>
-            <mat-form-field appearance="fill" class="w-full">
-             <mat-chip-grid #chipGridINS_MGR aria-label="Insurance Manager selection">
-               @for (user of selectedINS_MGR; track user.employeeNo) {
-                 <mat-chip-row (removed)="removeINS_MGR(user)">
-                   {{user.fullName}}
-                   <button matChipRemove>
-                     <mat-icon>cancel</mat-icon>
-                   </button>
-                 </mat-chip-row>
-               }
-              </mat-chip-grid>
-              <input matInput
-                     placeholder="Type to search..."
-                     [matChipInputFor]="chipGridINS_MGR"
-                     [matAutocomplete]="autoINS_MGR"
-                     [formControl]="insMgrSearchCtrl">
-              <mat-autocomplete #autoINS_MGR="matAutocomplete"
-                             (optionSelected)="selectINS_MGR($event)"
-                             [displayWith]="displayFn">
-                @for (user of filteredINS_MGR | async; track user.employeeNo) {
-                  <mat-option [value]="user">
-                    {{user.fullName}} - {{user.title}}
-                  </mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Director</div>
-            <mat-form-field appearance="fill" class="w-full">
-              <mat-chip-grid #chipGridDIR aria-label="Director selection">
-               @for (user of selectedDIR; track user.employeeNo) {
-                 <mat-chip-row (removed)="removeDIR(user)">
-                   {{user.fullName}}
-                   <button matChipRemove>
-                     <mat-icon>cancel</mat-icon>
-                   </button>
-                 </mat-chip-row>
-               }
-              </mat-chip-grid>
-              <input matInput
-                     placeholder="Type to search..."
-                     [matChipInputFor]="chipGridDIR"
-                     [matAutocomplete]="autoDIR"
-                     [formControl]="dirSearchCtrl">
-              <mat-autocomplete #autoDIR="matAutocomplete"
-                             (optionSelected)="selectDIR($event)"
-                             [displayWith]="displayFn">
-                @for (user of filteredDIR | async; track user.employeeNo) {
-                  <mat-option [value]="user">
-                    {{user.fullName}} - {{user.title}}
-                  </mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Head of Lambeth</div>
-            <mat-form-field appearance="fill" class="w-full">
-              <mat-chip-grid #chipGridLAM aria-label="Head of Lambeth selection">
-               @for (user of selectedLAM; track user.employeeNo) {
-                 <mat-chip-row (removed)="removeLAM(user)">
-                   {{user.fullName}}
-                   <button matChipRemove>
-                     <mat-icon>cancel</mat-icon>
-                   </button>
-                 </mat-chip-row>
-               }
-              </mat-chip-grid>
-              <input matInput
-                     placeholder="Type to search..."
-                     [matChipInputFor]="chipGridLAM"
-                     [matAutocomplete]="autoLAM"
-                     [formControl]="lamSearchCtrl">
-              <mat-autocomplete #autoLAM="matAutocomplete"
-                             (optionSelected)="selectLAM($event)"
-                             [displayWith]="displayFn">
-                @for (user of filteredLAM | async; track user.employeeNo) {
-                  <mat-option [value]="user">
-                    {{user.fullName}} - {{user.title}}
-                  </mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Bid Manager</div>
-            <mat-form-field appearance="fill" class="w-full">
-              <input matInput
-                     placeholder="Type to search..."
-                     [matAutocomplete]="autoBidManager"
-                     [formControl]="bidManagerSearchCtrl">
-              <mat-autocomplete #autoBidManager="matAutocomplete"
-                               (optionSelected)="selectBidManager($event)"
-                               [displayWith]="displayFn">
-                @for (user of FORM20_BID_MGR; track user.employeeNo) {
-                  <mat-option [value]="user">
-                    {{user.fullName}} - {{user.title}}
-                  </mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Head of Procurement</div>
-            <mat-form-field appearance="fill" class="w-full">
-              <mat-chip-grid #chipGridPRO aria-label="Head of Procurement selection">
-                @for (user of selectedPRO; track user.employeeNo) {
-                  <mat-chip-row (removed)="removePRO(user)">
-                    {{user.fullName}}
-                    <button matChipRemove>
-                      <mat-icon>cancel</mat-icon>
-                    </button>
-                  </mat-chip-row>
-                }
-              </mat-chip-grid>
-              <input matInput
-                     placeholder="Type to search..."
-                     [matChipInputFor]="chipGridPRO"
-                     [matAutocomplete]="autoPRO"
-                     [formControl]="proSearchCtrl">
-              <mat-autocomplete #autoPRO="matAutocomplete"
-                             (optionSelected)="selectPRO($event)"
-                             [displayWith]="displayFn">
-                @for (user of filteredPRO | async; track user.employeeNo) {
-                  <mat-option [value]="user">
-                    {{user.fullName}} - {{user.title}}
-                  </mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Finance Director</div>
-            <mat-form-field appearance="fill" class="w-full">
-              <mat-chip-grid #chipGridFIN_DIR aria-label="Finance Director selection">
-                @for (user of selectedFIN_DIR; track user.employeeNo) {
-                  <mat-chip-row (removed)="removeFIN_DIR(user)">
-                    {{user.fullName}}
-                    <button matChipRemove>
-                      <mat-icon>cancel</mat-icon>
-                    </button>
-                  </mat-chip-row>
-                }
-              </mat-chip-grid>
-              <input matInput
-                     placeholder="Type to search..."
-                     [matChipInputFor]="chipGridFIN_DIR"
-                     [matAutocomplete]="autoFIN_DIR"
-                     [formControl]="finDirSearchCtrl">
-              <mat-autocomplete #autoFIN_DIR="matAutocomplete"
-                             (optionSelected)="selectFIN_DIR($event)"
-                             [displayWith]="displayFn">
-                @for (user of filteredFIN_DIR | async; track user.employeeNo) {
-                  <mat-option [value]="user">
-                    {{user.fullName}} - {{user.title}}
-                  </mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Risk &amp; Opportunity Manager</div>
-            <mat-form-field appearance="fill" class="w-full">
-              <mat-chip-grid #chipGridRISK_OPP aria-label="Risk & Opportunity Manager selection">
-                @for (user of selectedRISK_OPP; track user.employeeNo) {
-                  <mat-chip-row (removed)="removeRISK_OPP(user)">
-                    {{user.fullName}}
-                    <button matChipRemove>
-                      <mat-icon>cancel</mat-icon>
-                    </button>
-                  </mat-chip-row>
-                }
-              </mat-chip-grid>
-              <input matInput
-                     placeholder="Type to search..."
-                     [matChipInputFor]="chipGridRISK_OPP"
-                     [matAutocomplete]="autoRISK_OPP"
-                     [formControl]="riskOppSearchCtrl">
-              <mat-autocomplete #autoRISK_OPP="matAutocomplete"
-                             (optionSelected)="selectRISK_OPP($event)"
-                             [displayWith]="displayFn">
-                @for (user of filteredRISK_OPP | async; track user.employeeNo) {
-                  <mat-option [value]="user">
-                    {{user.fullName}} - {{user.title}}
-                  </mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Commercial Director</div>
-            <mat-form-field appearance="fill" class="w-full">
-              <mat-chip-grid #chipGridCOM_DIR aria-label="Commercial Director selection">
-                @for (user of selectedCOM_DIR; track user.employeeNo) {
-                  <mat-chip-row (removed)="removeCOM_DIR(user)">
-                    {{user.fullName}}
-                    <button matChipRemove>
-                      <mat-icon>cancel</mat-icon>
-                    </button>
-                  </mat-chip-row>
-                }
-              </mat-chip-grid>
-              <input matInput
-                     placeholder="Type to search..."
-                     [matChipInputFor]="chipGridCOM_DIR"
-                     [matAutocomplete]="autoCOM_DIR"
-                     [formControl]="comDirSearchCtrl">
-              <mat-autocomplete #autoCOM_DIR="matAutocomplete"
-                             (optionSelected)="selectCOM_DIR($event)"
-                             [displayWith]="displayFn">
-                @for (user of filteredCOM_DIR | async; track user.employeeNo) {
-                  <mat-option [value]="user">
-                    {{user.fullName}} - {{user.title}}
-                  </mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">HSEQ</div>
-            <mat-form-field appearance="fill" class="w-full">
-              <mat-chip-grid #chipGridHSEQ aria-label="HSEQ selection">
-                @for (user of selectedHSEQ; track user.employeeNo) {
-                  <mat-chip-row (removed)="removeHSEQ(user)">
-                    {{user.fullName}}
-                    <button matChipRemove>
-                      <mat-icon>cancel</mat-icon>
-                    </button>
-                  </mat-chip-row>
-                }
-              </mat-chip-grid>
-              <input matInput
-                     placeholder="Type to search..."
-                     [matChipInputFor]="chipGridHSEQ"
-                     [matAutocomplete]="autoHSEQ"
-                     [formControl]="hseqSearchCtrl">
-              <mat-autocomplete #autoHSEQ="matAutocomplete"
-                             (optionSelected)="selectHSEQ($event)"
-                             [displayWith]="displayFn">
-                @for (user of filteredHSEQ | async; track user.employeeNo) {
-                  <mat-option [value]="user">
-                    {{user.fullName}} - {{user.title}}
-                  </mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">General Counsel - Legal</div>
-            <mat-form-field appearance="fill" class="w-full">
-              <mat-chip-grid #chipGridGEN_COUN aria-label="General Counsel selection">
-                @for (user of selectedGEN_COUN; track user.employeeNo) {
-                  <mat-chip-row (removed)="removeGEN_COUN(user)">
-                    {{user.fullName}}
-                    <button matChipRemove>
-                      <mat-icon>cancel</mat-icon>
-                    </button>
-                  </mat-chip-row>
-                }
-              </mat-chip-grid>
-              <input matInput
-                     placeholder="Type to search..."
-                     [matChipInputFor]="chipGridGEN_COUN"
-                     [matAutocomplete]="autoGEN_COUN"
-                     [formControl]="genCounSearchCtrl">
-              <mat-autocomplete #autoGEN_COUN="matAutocomplete"
-                             (optionSelected)="selectGEN_COUN($event)"
-                             [displayWith]="displayFn">
-                @for (user of filteredGEN_COUN | async; track user.employeeNo) {
-                  <mat-option [value]="user">
-                    {{user.fullName}} - {{user.title}}
-                  </mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
+              </div>
+            </div>
           </div>
         </div>
       </div>

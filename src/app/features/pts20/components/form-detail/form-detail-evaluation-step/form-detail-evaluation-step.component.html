@@ -1,191 +1,398 @@
 <div class="section" formGroupName="Evaluation">
-  <div class="p-6 bg-white shadow-lg rounded-lg">
-    <h2 class="text-xl font-bold mb-6 border-b pb-3 text-[#1976d2]">Evaluation</h2>
-    <div class="space-y-6">
-      <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Acceptability of Contract Conditions:</div>
-            <mat-radio-group formControlName="AcceptibilityRadio" class="flex gap-4">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" color="primary">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
+  <h2 class="text-base font-semibold mb-3 border-b pb-2 text-[#1976d2]">Evaluation</h2>
+  <div class="space-y-3">
+    <div class="grid grid-cols-2 gap-6">
+      <div class="space-y-2">
+        <div class="flex items-center gap-4">
+          <div class="w-40 font-semibold">Acceptability of Contract Conditions:</div>
+          <div class="flex gap-4">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  [value]="key.value"
+                  formControlName="AcceptibilityRadio"
+                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <span>{{ key.value }}</span>
+              </label>
+            }
           </div>
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="AcceptibilityRemark" />
-          </mat-form-field>
         </div>
-
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Payment Terms Evaluation:</div>
-            <mat-radio-group formControlName="PaymentTermsRadio" class="flex gap-4">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" color="primary">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
-          </div>
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="PaymentTermsRemark" />
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Bonds and Guarantees</div>
-            <mat-radio-group formControlName="BondandGuaranteesRadio" class="flex gap-4">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" color="primary">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
-          </div>
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="BondandGuaranteesRemark" />
-          </mat-form-field>
-        </div>
-
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">The value &amp; extent of the contract</div>
-            <mat-radio-group formControlName="ContractValueRadio" class="flex gap-4">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" color="primary">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
-          </div>
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="ContractValueRemark" />
-          </mat-form-field>
+        <div class="relative h-14">
+          <input
+            id="AcceptibilityRemark"
+            formControlName="AcceptibilityRemark"
+            placeholder=""
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+          />
+          <label
+            for="AcceptibilityRemark"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+          >
+            Remark
+          </label>
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Plant &amp; special equipment requirement</div>
-            <mat-radio-group formControlName="PlantEquipmentRadio" class="flex gap-4">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" color="primary">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
+      <div class="space-y-2">
+        <div class="flex items-center gap-4">
+          <div class="w-40 font-semibold">Payment Terms Evaluation:</div>
+          <div class="flex gap-4">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  [value]="key.value"
+                  formControlName="PaymentTermsRadio"
+                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <span>{{ key.value }}</span>
+              </label>
+            }
           </div>
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="PlantEquipmentRemark" />
-          </mat-form-field>
         </div>
+        <div class="relative h-14">
+          <input
+            id="PaymentTermsRemark"
+            formControlName="PaymentTermsRemark"
+            placeholder=""
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+          />
+          <label
+            for="PaymentTermsRemark"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+          >
+            Remark
+          </label>
+        </div>
+      </div>
+    </div>
 
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">The availability of site management</div>
-            <mat-radio-group formControlName="SiteManagementRadio" class="flex gap-4">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" color="primary">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
+    <div class="grid grid-cols-2 gap-6">
+      <div class="space-y-2">
+        <div class="flex items-center gap-4">
+          <div class="w-40 font-semibold">Bonds and Guarantees</div>
+          <div class="flex gap-4">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  [value]="key.value"
+                  formControlName="BondandGuaranteesRadio"
+                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <span>{{ key.value }}</span>
+              </label>
+            }
           </div>
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="SiteManagementRemark" />
-          </mat-form-field>
+        </div>
+        <div class="relative h-14">
+          <input
+            id="BondandGuaranteesRemark"
+            formControlName="BondandGuaranteesRemark"
+            placeholder=""
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+          />
+          <label
+            for="BondandGuaranteesRemark"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+          >
+            Remark
+          </label>
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">The Company's current workload</div>
-            <mat-radio-group formControlName="CurrentWorkloadRadio" class="flex gap-4">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" color="primary">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
+      <div class="space-y-2">
+        <div class="flex items-center gap-4">
+          <div class="w-40 font-semibold">The value &amp; extent of the contract</div>
+          <div class="flex gap-4">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  [value]="key.value"
+                  formControlName="ContractValueRadio"
+                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <span>{{ key.value }}</span>
+              </label>
+            }
           </div>
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="CurrentWorkloadRemark" />
-          </mat-form-field>
         </div>
+        <div class="relative h-14">
+          <input
+            id="ContractValueRemark"
+            formControlName="ContractValueRemark"
+            placeholder=""
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+          />
+          <label
+            for="ContractValueRemark"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+          >
+            Remark
+          </label>
+        </div>
+      </div>
+    </div>
 
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">The time allowed to tender</div>
-            <mat-radio-group formControlName="TimeAllowedRadio" class="flex gap-4">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" color="primary">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
+    <div class="grid grid-cols-2 gap-6">
+      <div class="space-y-2">
+        <div class="flex items-center gap-4">
+          <div class="w-40 font-semibold">Plant &amp; special equipment requirement</div>
+          <div class="flex gap-4">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  [value]="key.value"
+                  formControlName="PlantEquipmentRadio"
+                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <span>{{ key.value }}</span>
+              </label>
+            }
           </div>
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="TimeAllowedRemark" />
-          </mat-form-field>
+        </div>
+        <div class="relative h-14">
+          <input
+            id="PlantEquipmentRemark"
+            formControlName="PlantEquipmentRemark"
+            placeholder=""
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+          />
+          <label
+            for="PlantEquipmentRemark"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+          >
+            Remark
+          </label>
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">The previous record of the consultants</div>
-            <mat-radio-group formControlName="previousRecordRadio" class="flex gap-4">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" color="primary">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
+      <div class="space-y-2">
+        <div class="flex items-center gap-4">
+          <div class="w-40 font-semibold">The availability of site management</div>
+          <div class="flex gap-4">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  [value]="key.value"
+                  formControlName="SiteManagementRadio"
+                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <span>{{ key.value }}</span>
+              </label>
+            }
           </div>
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="previousRecordRemark" />
-          </mat-form-field>
         </div>
+        <div class="relative h-14">
+          <input
+            id="SiteManagementRemark"
+            formControlName="SiteManagementRemark"
+            placeholder=""
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+          />
+          <label
+            for="SiteManagementRemark"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+          >
+            Remark
+          </label>
+        </div>
+      </div>
+    </div>
 
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">Health Safety &amp; Environment</div>
-            <mat-radio-group formControlName="HealthSafetyEnvironmentRadio" class="flex gap-4">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" color="primary">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
+    <div class="grid grid-cols-2 gap-6">
+      <div class="space-y-2">
+        <div class="flex items-center gap-4">
+          <div class="w-40 font-semibold">The Company's current workload</div>
+          <div class="flex gap-4">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  [value]="key.value"
+                  formControlName="CurrentWorkloadRadio"
+                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <span>{{ key.value }}</span>
+              </label>
+            }
           </div>
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="HealthSafetyEnvironmentRemark" />
-          </mat-form-field>
+        </div>
+        <div class="relative h-14">
+          <input
+            id="CurrentWorkloadRemark"
+            formControlName="CurrentWorkloadRemark"
+            placeholder=""
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+          />
+          <label
+            for="CurrentWorkloadRemark"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+          >
+            Remark
+          </label>
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div class="w-40 font-semibold">The Competition</div>
-            <mat-radio-group formControlName="CompetitionRadio" class="flex gap-4">
-              @for (key of yesNo | keyvalue; track key.key) {
-              <mat-radio-button [value]="key.value" color="primary">{{ key.value }}</mat-radio-button>
-              }
-            </mat-radio-group>
+      <div class="space-y-2">
+        <div class="flex items-center gap-4">
+          <div class="w-40 font-semibold">The time allowed to tender</div>
+          <div class="flex gap-4">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  [value]="key.value"
+                  formControlName="TimeAllowedRadio"
+                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <span>{{ key.value }}</span>
+              </label>
+            }
           </div>
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Remark</mat-label>
-            <input matInput formControlName="CompetitionRemark" />
-          </mat-form-field>
+        </div>
+        <div class="relative h-14">
+          <input
+            id="TimeAllowedRemark"
+            formControlName="TimeAllowedRemark"
+            placeholder=""
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+          />
+          <label
+            for="TimeAllowedRemark"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+          >
+            Remark
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6">
+      <div class="space-y-2">
+        <div class="flex items-center gap-4">
+          <div class="w-40 font-semibold">The previous record of the consultants</div>
+          <div class="flex gap-4">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  [value]="key.value"
+                  formControlName="previousRecordRadio"
+                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <span>{{ key.value }}</span>
+              </label>
+            }
+          </div>
+        </div>
+        <div class="relative h-14">
+          <input
+            id="previousRecordRemark"
+            formControlName="previousRecordRemark"
+            placeholder=""
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+          />
+          <label
+            for="previousRecordRemark"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+          >
+            Remark
+          </label>
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="w-40 font-semibold">Evaluation Comments</div>
-        <div class="flex-1">
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Comments</mat-label>
-            <textarea matInput formControlName="EvaluationComments"></textarea>
-          </mat-form-field>
+      <div class="space-y-2">
+        <div class="flex items-center gap-4">
+          <div class="w-40 font-semibold">Health Safety &amp; Environment</div>
+          <div class="flex gap-4">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  [value]="key.value"
+                  formControlName="HealthSafetyEnvironmentRadio"
+                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <span>{{ key.value }}</span>
+              </label>
+            }
+          </div>
+        </div>
+        <div class="relative h-14">
+          <input
+            id="HealthSafetyEnvironmentRemark"
+            formControlName="HealthSafetyEnvironmentRemark"
+            placeholder=""
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+          />
+          <label
+            for="HealthSafetyEnvironmentRemark"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+          >
+            Remark
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6">
+      <div class="space-y-2">
+        <div class="flex items-center gap-4">
+          <div class="w-40 font-semibold">The Competition</div>
+          <div class="flex gap-4">
+            @for (key of yesNo | keyvalue; track key.key) {
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  [value]="key.value"
+                  formControlName="CompetitionRadio"
+                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <span>{{ key.value }}</span>
+              </label>
+            }
+          </div>
+        </div>
+        <div class="relative h-14">
+          <input
+            id="CompetitionRemark"
+            formControlName="CompetitionRemark"
+            placeholder=""
+            class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
+          />
+          <label
+            for="CompetitionRemark"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-500 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs"
+          >
+            Remark
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="w-40 font-semibold">Evaluation Comments</div>
+      <div class="flex-1">
+        <div class="relative" style="min-height: 80px">
+          <textarea
+            id="EvaluationComments"
+            formControlName="EvaluationComments"
+            rows="3"
+            placeholder=" "
+            class="w-full h-full px-4 pt-6 pb-2 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer resize-y"
+          ></textarea>
+          <label
+            for="EvaluationComments"
+            class="absolute left-4 top-2 text-xs text-gray-500 transition-all pointer-events-none peer-focus:text-blue-500"
+          >
+            Comments
+          </label>
         </div>
       </div>
     </div>
