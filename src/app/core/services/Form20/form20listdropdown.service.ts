@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, tap } from 'rxjs';
+import { Observable, catchError, tap, of } from 'rxjs';
 
 export interface ObtainRegion {
   [key: string]: string[];
@@ -376,9 +376,15 @@ export class Form20ListDropdownService {
   searchPeople(text: string): Observable<any[]> {
       const searchValue = text && text.trim() ? text.trim() : '';
       return this.http.post<any[]>(
-        `${this.baseUrl2}/searchPeople`,
-        searchValue,
+        `${this.baseUrl}/searchPeople`,
+        JSON.stringify(searchValue),
         { headers: { 'Content-Type': 'application/json' } }
+      ).pipe(
+        catchError((error) => {
+          console.error('Error searching people:', error);
+          // Return empty array instead of throwing error when API fails
+          return of([]);
+        })
       );
   }
 

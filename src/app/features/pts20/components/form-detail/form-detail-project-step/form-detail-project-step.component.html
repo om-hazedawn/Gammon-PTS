@@ -108,7 +108,7 @@
       <div class="relative h-14">
         <input
           id="BidManager"
-          formControlName="BidManager"
+          [formControl]="bidManagerSearchCtrl"
           placeholder=" "
           class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
         />
@@ -118,6 +118,20 @@
         >
           Bid Manager
         </label>
+        
+        @if (bidManagerSearchResults.length > 0 && bidManagerSearchCtrl.value && bidManagerSearchCtrl.value.length >= 4) {
+          <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+            @for (user of bidManagerSearchResults; track user.employeeNo) {
+              <div 
+                (click)="selectBidManager(user)"
+                class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+              >
+                <div class="font-medium">{{user.fullName}}</div>
+                <div class="text-sm text-gray-600">{{user.title}}</div>
+              </div>
+            }
+          </div>
+        }
       </div>
     </div>
     <div class="form-group flex-1">
@@ -140,7 +154,7 @@
       <div class="relative h-14">
         <input
           id="Planner"
-          formControlName="Planner"
+          [formControl]="plannerSearchCtrl"
           placeholder=" "
           class="w-full h-full px-4 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition peer"
         />
@@ -150,6 +164,20 @@
         >
           Planner
         </label>
+        
+        @if (plannerSearchResults.length > 0 && plannerSearchCtrl.value && plannerSearchCtrl.value.length >= 4) {
+          <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+            @for (user of plannerSearchResults; track user.employeeNo) {
+              <div 
+                (click)="selectPlanner(user)"
+                class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+              >
+                <div class="font-medium">{{user.fullName}}</div>
+                <div class="text-sm text-gray-600">{{user.title}}</div>
+              </div>
+            }
+          </div>
+        }
       </div>
     </div>
   </div>

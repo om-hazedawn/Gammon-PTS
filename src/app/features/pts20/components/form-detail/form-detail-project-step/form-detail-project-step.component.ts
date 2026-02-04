@@ -8,12 +8,13 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { ControlContainer, FormGroupDirective, FormGroup } from '@angular/forms';
+import { ControlContainer, FormGroupDirective, FormGroup, FormControl } from '@angular/forms';
 import { FORM_DETAIL_STEP_IMPORTS } from '../form-detail-step-imports';
 import {
   Form20ListDropdownService,
   ObtainRegion,
   BusinessUnitDisplay,
+  ApprovalUser,
 } from '../../../../../core/services/Form20/form20listdropdown.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -76,6 +77,14 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
   bidTypes: ObtainRegion = {};
   yesNo: ObtainRegion = {};
   jvAgreementOptions: ObtainRegion = {};
+  
+  // Bid Manager search
+  bidManagerSearchResults: ApprovalUser[] = [];
+  bidManagerSearchCtrl = new FormControl('');
+  
+  // Planner search
+  plannerSearchResults: ApprovalUser[] = [];
+  plannerSearchCtrl = new FormControl('');
 
   constructor(
     private form20ListDropdownService: Form20ListDropdownService,
@@ -158,6 +167,12 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
     this.loadBidTypes();
     this.loadYesNoNA();
     this.loadJVAgreementOptions();
+    
+    // Initialize Bid Manager search
+    this.initializeBidManagerSearch();
+    
+    // Initialize Planner search
+    this.initializePlannerSearch();
 
     // Listen to TenderMarketScheme changes - no conversion needed as backend sends string values
     const tenderMarketSchemeControl = this.formGroup.get('TenderMarketScheme');
@@ -188,6 +203,106 @@ export class FormDetailProjectStepComponent implements OnInit, AfterViewInit {
     this.formGroup.get('BidType')?.valueChanges.subscribe(() => {
       this.cdr.markForCheck();
     });
+  }
+  
+  initializeBidManagerSearch(): void {
+    // Sync existing BidManager value to search control
+    const existingValue = this.formGroup.get('BidManager')?.value;
+    if (existingValue) {
+      this.bidManagerSearchCtrl.setValue(existingValue, { emitEvent: false });
+    }
+    
+    // Subscribe to search control changes
+    this.bidManagerSearchCtrl.valueChanges.subscribe((searchTerm: string | null) => {
+      const value = searchTerm ? searchTerm.trim() : '';
+      if (value.length >= 4) {
+        this.searchBidManagers(value);
+      } else {
+        this.bidManagerSearchResults = [];
+        this.cdr.markForCheck();
+      }
+    });
+    
+    // Also listen to form control changes to keep search control in sync
+    this.formGroup.get('BidManager')?.valueChanges.subscribe((value) => {
+      if (value && value !== this.bidManagerSearchCtrl.value) {
+        this.bidManagerSearchCtrl.setValue(value, { emitEvent: false });
+      }
+    });
+  }
+  
+  searchBidManagers(searchTerm: string): void {
+    this.form20ListDropdownService.searchPeople(searchTerm).subscribe({
+      next: (data: ApprovalUser[]) => {
+        this.bidManagerSearchResults = data || [];
+        this.cdr.markForCheck();
+      },
+      error: (error: unknown) => {
+        console.error('Error searching bid managers:', error);
+        this.bidManagerSearchResults = [];
+        this.cdr.markForCheck();
+      },
+    });
+  }
+  
+  selectBidManager(user: ApprovalUser): void {
+    // Set the full name in the form control
+    this.formGroup.get('BidManager')?.setValue(user.fullName);
+    // Update the search control to show the selected name
+    this.bidManagerSearchCtrl.setValue(user.fullName, { emitEvent: false });
+    // Clear the search results
+    this.bidManagerSearchResults = [];
+    this.cdr.markForCheck();
+  }
+  
+  initializePlannerSearch(): void {
+    // Sync existing Planner value to search control
+    const existingValue = this.formGroup.get('Planner')?.value;
+    if (existingValue) {
+      this.plannerSearchCtrl.setValue(existingValue, { emitEvent: false });
+    }
+    
+    // Subscribe to search control changes
+    this.plannerSearchCtrl.valueChanges.subscribe((searchTerm: string | null) => {
+      const value = searchTerm ? searchTerm.trim() : '';
+      if (value.length >= 4) {
+        this.searchPlanners(value);
+      } else {
+        this.plannerSearchResults = [];
+        this.cdr.markForCheck();
+      }
+    });
+    
+    // Also listen to form control changes to keep search control in sync
+    this.formGroup.get('Planner')?.valueChanges.subscribe((value) => {
+      if (value && value !== this.plannerSearchCtrl.value) {
+        this.plannerSearchCtrl.setValue(value, { emitEvent: false });
+      }
+    });
+  }
+  
+  searchPlanners(searchTerm: string): void {
+    this.form20ListDropdownService.searchPeople(searchTerm).subscribe({
+      next: (data: ApprovalUser[]) => {
+        this.plannerSearchResults = data || [];
+        this.cdr.markForCheck();
+      },
+      error: (error: unknown) => {
+        console.error('Error searching planners:', error);
+        this.plannerSearchResults = [];
+        this.cdr.markForCheck();
+      },
+    });
+  }
+  
+  selectPlanner(user: ApprovalUser): void {
+    // Set the full name in the form control
+    this.formGroup.get('Planner')?.setValue(user.fullName);
+    // Update the search control to show the selected name
+    this.plannerSearchCtrl.setValue(user.fullName, { emitEvent: false });
+    // Clear the search results
+    this.plannerSearchResults = [];
+    this.cdr.markForCheck();
   }
 
   openForm30Popup(event: MouseEvent): void {

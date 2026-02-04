@@ -205,12 +205,12 @@ export class FormDetailDistributionStepComponent implements OnInit {
     this.loadFORM20_COM_DIR();
     this.loadFORM20_HSEQ();
     this.loadFORM20_GEN_COUN();
-    // Only trigger Bid Manager search when user types input
+    this.loadInitialBidManagers();
+    // Only trigger Bid Manager search when user types at least 4 characters
     this.bidManagerSearchCtrl.valueChanges
-      .pipe(startWith(''))
       .subscribe((searchTerm: string | null) => {
         const value = searchTerm ? searchTerm.trim() : '';
-        if (value.length > 0) {
+        if (value.length >= 4) {
           this.loadBidManager(value);
         } else {
           this.FORM20_BID_MGR = [];
@@ -478,13 +478,41 @@ export class FormDetailDistributionStepComponent implements OnInit {
     });
   }
 
+private loadInitialBidManagers(): void {
+  const currentValues = this.formGroupDirective.form.get('Distribution.distributionBidMgr')?.value;
+  
+  if (currentValues && Array.isArray(currentValues) && currentValues.length > 0) {
+    // For each employee number, search for their details
+    currentValues.forEach((employeeNo: string) => {
+      this.form20ListDropdownService.searchPeople(employeeNo).subscribe({
+        next: (data: ApprovalUser[]) => {
+          if (data && data.length > 0) {
+            const user = data[0];
+            if (!this.selectedBidManagers.some((u) => u.employeeNo === user.employeeNo)) {
+              this.selectedBidManagers.push(user);
+            }
+            this.cdr.markForCheck();
+          }
+        },
+        error: (error: unknown) => {
+          console.error('Error loading bid manager details:', error);
+        }
+      });
+    });
+  }
+}
+
 private loadBidManager(searchTerm: string): void {
   this.form20ListDropdownService.searchPeople(searchTerm).subscribe({
     next: (data: ApprovalUser[]) => {
-      this.FORM20_BID_MGR = data;
+      this.FORM20_BID_MGR = data || [];
+      this.cdr.markForCheck();
     },
     error: (error: unknown) => {
       console.error('Error loading Bid Managers:', error);
+      // Set empty array on error to prevent UI issues
+      this.FORM20_BID_MGR = [];
+      this.cdr.markForCheck();
     },
   });
 }
@@ -931,12 +959,19 @@ private loadBidManager(searchTerm: string): void {
   
     selectBidManager(event: MatAutocompleteSelectedEvent): void {
       const selectedUser = event.option.value as ApprovalUser;
+      // Add to selected list if not already present
       if (!this.selectedBidManagers.some((user) => user.employeeNo === selectedUser.employeeNo)) {
         this.selectedBidManagers.push(selectedUser);
-        const currentValue = this.selectedBidManagers.map((user) => user.employeeNo);
-        this.formGroupDirective.form.get('Distribution.BidManager')?.setValue(currentValue);
       }
-      this.bidManagerSearchCtrl.setValue('');
+      // Save all employee numbers to the form
+      const employeeNumbers = this.selectedBidManagers.map(u => u.employeeNo);
+      console.log('Setting distributionBidMgr:', employeeNumbers);
+      this.formGroupDirective.form.get('Distribution.distributionBidMgr')?.setValue(employeeNumbers);
+      console.log('Form value after set:', this.formGroupDirective.form.get('Distribution.distributionBidMgr')?.value);
+      // Clear the search input and dropdown
+      this.bidManagerSearchCtrl.setValue('', { emitEvent: false });
+      this.FORM20_BID_MGR = [];
+      this.cdr.markForCheck();
     }
 
     removeBidManager(user: ApprovalUser): void {
@@ -944,7 +979,7 @@ private loadBidManager(searchTerm: string): void {
       if (index >= 0) {
         this.selectedBidManagers.splice(index, 1);
         const currentValue = this.selectedBidManagers.map((u) => u.employeeNo);
-        this.formGroupDirective.form.get('Distribution.BidManager')?.setValue(currentValue.length ? currentValue : null);
+        this.formGroupDirective.form.get('Distribution.distributionBidMgr')?.setValue(currentValue.length ? currentValue : null);
       }
     }
 }

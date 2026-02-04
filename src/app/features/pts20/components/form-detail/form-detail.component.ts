@@ -802,7 +802,7 @@ export class FormDetailComponent implements OnInit {
         Director: [''],
         HeadofLambeth: [''],
 
-        BidManager: [''],
+        distributionBidMgr: [''],
         HeadOfProcurement: [''],
 
         FinanceDirector: [''],
@@ -1144,7 +1144,7 @@ export class FormDetailComponent implements OnInit {
         ChiefExecutive: formData.distributionCE,
         ExecutiveDirector: formData.distributionExeDir,
         Director: formData.distributionDir,
-        BidManager: formData.distributionBidMgr,
+        distributionBidMgr: formData.distributionBidMgr,
         FinanceDirector: formData.distributionFinDir,
         CommercialDirector: formData.distributionComDir,
         GeneralCounselLegal: formData.distributionGenC,
@@ -2209,7 +2209,7 @@ export class FormDetailComponent implements OnInit {
         distributionCE: formValue.Distribution.ChiefExecutive || [],
         distributionExeDir: formValue.Distribution.ExecutiveDirector || [],
         distributionDir: formValue.Distribution.Director || [],
-        distributionBidMgr: formValue.Distribution.BidManager || [],
+        distributionBidMgr: formValue.Distribution.distributionBidMgr || [],
         distributionFinDir: formValue.Distribution.FinanceDirector || [],
         distributionComDir: formValue.Distribution.CommercialDirector || [],
         distributionGenC: formValue.Distribution.GeneralCounselLegal || [],
