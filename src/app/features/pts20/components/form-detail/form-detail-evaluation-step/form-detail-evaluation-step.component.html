@@ -7,12 +7,12 @@
           <div class="w-40 font-semibold">Acceptability of Contract Conditions:</div>
           <div class="flex gap-4">
             @for (key of yesNo | keyvalue; track key.key) {
-              <label class="flex items-center gap-2 cursor-pointer">
+              <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
                 <input
                   type="radio"
                   [value]="key.value"
                   formControlName="AcceptibilityRadio"
-                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  class="mr-2 accent-blue-600"
                 />
                 <span>{{ key.value }}</span>
               </label>
@@ -40,12 +40,12 @@
           <div class="w-40 font-semibold">Payment Terms Evaluation:</div>
           <div class="flex gap-4">
             @for (key of yesNo | keyvalue; track key.key) {
-              <label class="flex items-center gap-2 cursor-pointer">
+              <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
                 <input
                   type="radio"
                   [value]="key.value"
                   formControlName="PaymentTermsRadio"
-                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  class="mr-2 accent-blue-600"
                 />
                 <span>{{ key.value }}</span>
               </label>
@@ -75,12 +75,12 @@
           <div class="w-40 font-semibold">Bonds and Guarantees</div>
           <div class="flex gap-4">
             @for (key of yesNo | keyvalue; track key.key) {
-              <label class="flex items-center gap-2 cursor-pointer">
+              <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
                 <input
                   type="radio"
                   [value]="key.value"
                   formControlName="BondandGuaranteesRadio"
-                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  class="mr-2 accent-blue-600"
                 />
                 <span>{{ key.value }}</span>
               </label>
@@ -108,12 +108,12 @@
           <div class="w-40 font-semibold">The value &amp; extent of the contract</div>
           <div class="flex gap-4">
             @for (key of yesNo | keyvalue; track key.key) {
-              <label class="flex items-center gap-2 cursor-pointer">
+              <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
                 <input
                   type="radio"
                   [value]="key.value"
                   formControlName="ContractValueRadio"
-                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  class="mr-2 accent-blue-600"
                 />
                 <span>{{ key.value }}</span>
               </label>
@@ -143,12 +143,12 @@
           <div class="w-40 font-semibold">Plant &amp; special equipment requirement</div>
           <div class="flex gap-4">
             @for (key of yesNo | keyvalue; track key.key) {
-              <label class="flex items-center gap-2 cursor-pointer">
+              <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
                 <input
                   type="radio"
                   [value]="key.value"
                   formControlName="PlantEquipmentRadio"
-                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  class="mr-2 accent-blue-600"
                 />
                 <span>{{ key.value }}</span>
               </label>
@@ -176,12 +176,12 @@
           <div class="w-40 font-semibold">The availability of site management</div>
           <div class="flex gap-4">
             @for (key of yesNo | keyvalue; track key.key) {
-              <label class="flex items-center gap-2 cursor-pointer">
+              <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
                 <input
                   type="radio"
                   [value]="key.value"
                   formControlName="SiteManagementRadio"
-                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  class="mr-2 accent-blue-600"
                 />
                 <span>{{ key.value }}</span>
               </label>
@@ -211,12 +211,12 @@
           <div class="w-40 font-semibold">The Company's current workload</div>
           <div class="flex gap-4">
             @for (key of yesNo | keyvalue; track key.key) {
-              <label class="flex items-center gap-2 cursor-pointer">
+              <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
                 <input
                   type="radio"
                   [value]="key.value"
                   formControlName="CurrentWorkloadRadio"
-                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  class="mr-2 accent-blue-600"
                 />
                 <span>{{ key.value }}</span>
               </label>
@@ -244,12 +244,12 @@
           <div class="w-40 font-semibold">The time allowed to tender</div>
           <div class="flex gap-4">
             @for (key of yesNo | keyvalue; track key.key) {
-              <label class="flex items-center gap-2 cursor-pointer">
+              <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
                 <input
                   type="radio"
                   [value]="key.value"
                   formControlName="TimeAllowedRadio"
-                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  class="mr-2 accent-blue-600"
                 />
                 <span>{{ key.value }}</span>
               </label>
@@ -279,12 +279,12 @@
           <div class="w-40 font-semibold">The previous record of the consultants</div>
           <div class="flex gap-4">
             @for (key of yesNo | keyvalue; track key.key) {
-              <label class="flex items-center gap-2 cursor-pointer">
+              <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
                 <input
                   type="radio"
                   [value]="key.value"
                   formControlName="previousRecordRadio"
-                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  class="mr-2 accent-blue-600"
                 />
                 <span>{{ key.value }}</span>
               </label>
@@ -312,12 +312,12 @@
           <div class="w-40 font-semibold">Health Safety &amp; Environment</div>
           <div class="flex gap-4">
             @for (key of yesNo | keyvalue; track key.key) {
-              <label class="flex items-center gap-2 cursor-pointer">
+              <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
                 <input
                   type="radio"
                   [value]="key.value"
                   formControlName="HealthSafetyEnvironmentRadio"
-                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  class="mr-2 accent-blue-600"
                 />
                 <span>{{ key.value }}</span>
               </label>
@@ -347,12 +347,12 @@
           <div class="w-40 font-semibold">The Competition</div>
           <div class="flex gap-4">
             @for (key of yesNo | keyvalue; track key.key) {
-              <label class="flex items-center gap-2 cursor-pointer">
+              <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded border border-gray-300">
                 <input
                   type="radio"
                   [value]="key.value"
                   formControlName="CompetitionRadio"
-                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  class="mr-2 accent-blue-600"
                 />
                 <span>{{ key.value }}</span>
               </label>

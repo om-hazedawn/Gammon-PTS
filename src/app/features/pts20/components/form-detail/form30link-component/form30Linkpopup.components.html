@@ -1,121 +1,63 @@
-<div class="dialog-container">
-  <h2 mat-dialog-title>Form 30 Link</h2>
+<div class="p-5 min-w-[800px]">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold text-[#1976d2]">Form 30 Link</h2>
+  </div>
   
-  <div class="filter-section">
-    <mat-form-field appearance="outline" class="filter-field">
-      <mat-label>Filter</mat-label>
-      <input matInput [(ngModel)]="filterValue" (input)="applyFilter($event.target.value)" placeholder="Type to filter...">
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
+  <div class="mb-5">
+    <div class="relative">
+      <input 
+        type="text"
+        [(ngModel)]="filterValue" 
+        (input)="applyFilter($event.target.value)" 
+        placeholder="Type to filter..."
+        class="w-full px-4 py-3 pr-10 bg-gray-100 rounded border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none focus:bg-white transition"
+      />
+      <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+      </svg>
+    </div>
   </div>
 
-  <mat-dialog-content>
-    <div class="table-container">
-      <table mat-table [dataSource]="dataSource" class="w-full">
-        <!-- Project Name Column -->
-        <ng-container matColumnDef="projectName">
-          <th mat-header-cell *matHeaderCellDef>Project Name</th>
-          <td mat-cell *matCellDef="let element" [class.selected]="selectedRow === element">
-            {{element.projectName}}
-          </td>
-        </ng-container>
-
-        <!-- Project Size Column -->
-        <ng-container matColumnDef="projectSize">
-          <th mat-header-cell *matHeaderCellDef>Project Size</th>
-          <td mat-cell *matCellDef="let element" [class.selected]="selectedRow === element">
-            {{element.projectSize}}
-          </td>
-        </ng-container>
-
-        <!-- Immediate Customer Column -->
-        <ng-container matColumnDef="immediateCustomer">
-          <th mat-header-cell *matHeaderCellDef>Immediate Customer</th>
-          <td mat-cell *matCellDef="let element" [class.selected]="selectedRow === element">
-            {{element.immediateCustomer}}
-          </td>
-        </ng-container>
-
-        <!-- Ultimate Customer Group Column -->
-        <ng-container matColumnDef="ultimateCustomerGroup">
-          <th mat-header-cell *matHeaderCellDef>Ultimate Customer Group</th>
-          <td mat-cell *matCellDef="let element" [class.selected]="selectedRow === element">
-            {{element.ultimateCustomerGroup}}
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
-            (click)="onRowClick(row)"
-            [class.selected-row]="selectedRow === row">
+  <div class="max-h-[400px] overflow-auto border border-gray-300 rounded">
+    <table class="w-full">
+      <thead class="sticky top-0 bg-white">
+        <tr class="border-b-2 border-gray-300">
+          <th class="px-4 py-3 text-left font-bold text-[#1976d2]">Project Name</th>
+          <th class="px-4 py-3 text-left font-bold text-[#1976d2]">Project Size</th>
+          <th class="px-4 py-3 text-left font-bold text-[#1976d2]">Immediate Customer</th>
+          <th class="px-4 py-3 text-left font-bold text-[#1976d2]">Ultimate Customer Group</th>
         </tr>
-      </table>
-    </div>
-  </mat-dialog-content>
+      </thead>
+      <tbody>
+        @for (row of dataSource.filteredData; track row) {
+          <tr 
+            (click)="onRowClick(row)"
+            [class]="selectedRow === row ? 'bg-blue-50 cursor-pointer hover:bg-blue-100' : 'cursor-pointer hover:bg-gray-50'"
+            class="border-b border-gray-200"
+          >
+            <td class="px-4 py-3">{{row.projectName}}</td>
+            <td class="px-4 py-3">{{row.projectSize}}</td>
+            <td class="px-4 py-3">{{row.immediateCustomer}}</td>
+            <td class="px-4 py-3">{{row.ultimateCustomerGroup}}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 
-  <mat-dialog-actions align="end">
-    <button mat-button (click)="onClose()">Close</button>
-    <button mat-raised-button color="primary" (click)="onSelect()" [disabled]="!selectedRow">Select</button>
-  </mat-dialog-actions>
+  <div class="flex justify-end gap-2 mt-5 pt-5 border-t border-gray-300">
+    <button 
+      (click)="onClose()"
+      class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition"
+    >
+      Close
+    </button>
+    <button 
+      (click)="onSelect()" 
+      [disabled]="!selectedRow"
+      class="px-4 py-2 text-white bg-[#1976d2] rounded hover:bg-[#1565c0] disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+    >
+      Select
+    </button>
+  </div>
 </div>
-
-<style>
-  .dialog-container {
-    padding: 20px;
-    min-width: 800px;
-  }
-
-  .filter-section {
-    margin-bottom: 20px;
-  }
-
-  .filter-field {
-    width: 100%;
-  }
-
-  ::ng-deep .mat-mdc-form-field {
-    width: 100%;
-  }
-
-  ::ng-deep .mat-mdc-form-field-wrapper {
-    margin-bottom: 0;
-  }
-
-  .table-container {
-    max-height: 400px;
-    overflow: auto;
-  }
-
-  table {
-    width: 100%;
-  }
-
-  .mat-mdc-row .mat-mdc-cell {
-    border-bottom: 1px solid transparent;
-    border-top: 1px solid transparent;
-    cursor: pointer;
-  }
-
-  .mat-mdc-row:hover .mat-mdc-cell {
-    background-color: #f5f5f5;
-  }
-
-  .selected-row {
-    background-color: #e3f2fd !important;
-  }
-
-  .selected-row .mat-mdc-cell {
-    border-color: #1976d2;
-  }
-
-  mat-dialog-actions {
-    margin-top: 20px;
-    padding: 20px 0 0;
-    border-top: 1px solid #e0e0e0;
-  }
-
-  th.mat-header-cell {
-    font-weight: bold;
-    color: #1976d2;
-  }
-</style>

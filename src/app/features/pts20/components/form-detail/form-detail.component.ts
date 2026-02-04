@@ -129,9 +129,15 @@ import { PopupKeyDateComponent } from './popup-KeyDate/popup-KeyDate.component';
             <span>This form has been <strong>Deleted</strong>.</span>
           </div>
           } @if (isLoading) {
-          <div class="loading-container">
-            <mat-spinner diameter="40"></mat-spinner>
-            <p>Loading form details...</p>
+          <div class="flex flex-col items-center justify-center py-16 px-4">
+            <div class="relative">
+              <div class="w-16 h-16 border-4 border-blue-200 rounded-full"></div>
+              <div class="w-16 h-16 border-4 border-[#1976d2] rounded-full absolute top-0 left-0 animate-spin border-t-transparent"></div>
+            </div>
+            <div class="mt-6 text-center">
+              <p class="text-lg font-semibold text-gray-700 mb-2">Loading Form Details</p>
+              <p class="text-sm text-gray-500">Please wait while we fetch your data...</p>
+            </div>
           </div>
           } @else if (loadError) {
           <div class="error-container">

@@ -17,226 +17,297 @@
     <form [formGroup]="approvalForm" (ngSubmit)="onSubmit()">
       <div>
         <!-- Head of Estimating -->
-        <div class="flex items-start gap-4">
+        <div class="flex items-start gap-2 mb-3">
           <div class="w-48">
             <label class="block font-medium">Head of Estimating</label>
           </div>
-          <mat-form-field class="flex-1">
-            <mat-chip-grid #chipGridHOE aria-label="Head of Estimating selection">
-              @for (user of selectedHeadOfEstimating; track user) {
-              <mat-chip-row (removed)="removeHeadOfEstimating(user)">
-                {{ user.fullName }} ({{ user.employeeNo }})
-                @if (!isReadOnly) {
-                <button matChipRemove>
-                  <mat-icon>cancel</mat-icon>
-                </button>
+          <div class="flex-1">
+            <div class="relative">
+              <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                @if (selectedHeadOfEstimating.length > 0) {
+                  <div class="flex flex-wrap gap-2 mb-2">
+                    @for (user of selectedHeadOfEstimating; track user.employeeNo) {
+                      <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                        <span>{{user.fullName}} ({{user.employeeNo}})</span>
+                        @if (!isReadOnly) {
+                          <button 
+                            type="button"
+                            (click)="removeHeadOfEstimating(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        }
+                      </div>
+                    }
+                  </div>
                 }
-              </mat-chip-row>
+                @if (!isReadOnly) {
+                  <input
+                    type="text"
+                    [formControl]="hoeSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent border-none focus:outline-none"
+                  />
+                }
+              </div>
+              
+              @if ((filteredHeadOfEstimatingOptions$ | async)?.length && hoeSearchCtrl.value && !isReadOnly) {
+                <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  @for (user of filteredHeadOfEstimatingOptions$ | async; track user.employeeNo) {
+                    <div 
+                      (click)="addHeadOfEstimating($any({option: {value: user}}))"
+                      class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                    >
+                      <div class="font-medium">{{user.fullName}} ({{user.employeeNo}})</div>
+                    </div>
+                  }
+                </div>
               }
-            </mat-chip-grid>
-            <input
-              matInput
-              placeholder="Type to search..."
-              [matChipInputFor]="chipGridHOE"
-              [matAutocomplete]="autoHOE"
-              [formControl]="hoeSearchCtrl"
-              [style.display]="isReadOnly ? 'none' : 'block'"
-              [disabled]="isReadOnly"
-            />
-            <mat-autocomplete
-              #autoHOE="matAutocomplete"
-              (optionSelected)="addHeadOfEstimating($event)"
-              [displayWith]="displayFn"
-            >
-              @for (user of filteredHeadOfEstimatingOptions$ | async; track user) {
-              <mat-option [value]="user"> {{ user.fullName }} ({{ user.employeeNo }}) </mat-option>
+              
+              @if (approvalForm.get('headOfEstimating')?.errors?.['required'] && approvalForm.get('headOfEstimating')?.touched) {
+                <div class="text-red-600 text-sm mt-1">Head of Estimating is required</div>
               }
-            </mat-autocomplete>
-            @if (approvalForm.get('headOfEstimating')?.errors?.['required'] &&
-            approvalForm.get('headOfEstimating')?.touched) {
-            <mat-error>Head of Estimating is required</mat-error>
-            }
-          </mat-form-field>
+            </div>
+          </div>
         </div>
 
         <!-- Contract Manager -->
-        <div class="flex items-start gap-2">
+        <div class="flex items-start gap-2 mb-3">
           <div class="w-48">
             <label class="block font-medium">Contract Manager</label>
             <small class="text-gray-500">(DLOA Level 4)</small>
           </div>
-          <mat-form-field class="flex-1">
-              <mat-chip-grid #chipGridCM aria-label="Contract Manager selection">
-                @for (user of selectedContractManager; track user) {
-                <mat-chip-row (removed)="removeContractManager(user)">
-                  {{ user.fullName }} ({{ user.employeeNo }})
-                  @if (!isReadOnly) {
-                  <button matChipRemove>
-                    <mat-icon>cancel</mat-icon>
-                  </button>
+          <div class="flex-1">
+            <div class="relative">
+              <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                @if (selectedContractManager.length > 0) {
+                  <div class="flex flex-wrap gap-2 mb-2">
+                    @for (user of selectedContractManager; track user.employeeNo) {
+                      <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                        <span>{{user.fullName}} ({{user.employeeNo}})</span>
+                        @if (!isReadOnly) {
+                          <button 
+                            type="button"
+                            (click)="removeContractManager(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+                @if (!isReadOnly) {
+                  <input
+                    type="text"
+                    [formControl]="cmSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent border-none focus:outline-none"
+                  />
+                }
+              </div>
+              
+              @if ((filteredContractManagerOptions$ | async)?.length && cmSearchCtrl.value && !isReadOnly) {
+                <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  @for (user of filteredContractManagerOptions$ | async; track user.employeeNo) {
+                    <div 
+                      (click)="addContractManager($any({option: {value: user}}))"
+                      class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                    >
+                      <div class="font-medium">{{user.fullName}} ({{user.employeeNo}})</div>
+                    </div>
                   }
-                </mat-chip-row>
-                }
-              </mat-chip-grid>
-              <input
-                matInput
-                placeholder="Type to search..."
-                [matChipInputFor]="chipGridCM"
-                [matAutocomplete]="autoCM"
-                [formControl]="cmSearchCtrl"
-                [style.display]="isReadOnly ? 'none' : 'block'"
-                [disabled]="isReadOnly"
-              />
-              <mat-autocomplete
-                #autoCM="matAutocomplete"
-                (optionSelected)="addContractManager($event)"
-                [displayWith]="displayFn"
-              >
-                @for (user of filteredContractManagerOptions$ | async; track user) {
-                <mat-option [value]="user"> {{ user.fullName }} ({{ user.employeeNo }}) </mat-option>
-                }
-              </mat-autocomplete>
-            @if (approvalForm.get('contractManager')?.errors?.['required'] &&
-            approvalForm.get('contractManager')?.touched) {
-            <mat-error>Contract Manager is required</mat-error>
-            }
-          </mat-form-field>
+                </div>
+              }
+              
+              @if (approvalForm.get('contractManager')?.errors?.['required'] && approvalForm.get('contractManager')?.touched) {
+                <div class="text-red-600 text-sm mt-1">Contract Manager is required</div>
+              }
+            </div>
+          </div>
         </div>
 
         <!-- Director -->
-        <div class="flex items-start gap-2">
+        <div class="flex items-start gap-2 mb-3">
           <div class="w-48">
             <label class="block font-medium">Director</label>
             <small class="text-gray-500">(DLOA Level 3)</small>
           </div>
-          <mat-form-field class="flex-1">
-            <mat-chip-grid #chipGridDIR aria-label="Director selection">
-              @for (user of selectedDirector; track user) {
-              <mat-chip-row (removed)="removeDirector(user)">
-                {{ user.fullName }} ({{ user.employeeNo }})
-                @if (!isReadOnly) {
-                <button matChipRemove>
-                  <mat-icon>cancel</mat-icon>
-                </button>
+          <div class="flex-1">
+            <div class="relative">
+              <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                @if (selectedDirector.length > 0) {
+                  <div class="flex flex-wrap gap-2 mb-2">
+                    @for (user of selectedDirector; track user.employeeNo) {
+                      <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                        <span>{{user.fullName}} ({{user.employeeNo}})</span>
+                        @if (!isReadOnly) {
+                          <button 
+                            type="button"
+                            (click)="removeDirector(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        }
+                      </div>
+                    }
+                  </div>
                 }
-              </mat-chip-row>
+                @if (!isReadOnly) {
+                  <input
+                    type="text"
+                    [formControl]="dirSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent border-none focus:outline-none"
+                  />
+                }
+              </div>
+              
+              @if ((filteredDirectorOptions$ | async)?.length && dirSearchCtrl.value && !isReadOnly) {
+                <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  @for (user of filteredDirectorOptions$ | async; track user.employeeNo) {
+                    <div 
+                      (click)="addDirector($any({option: {value: user}}))"
+                      class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                    >
+                      <div class="font-medium">{{user.fullName}} ({{user.employeeNo}})</div>
+                    </div>
+                  }
+                </div>
               }
-            </mat-chip-grid>
-            <input
-              matInput
-              placeholder="Type to search..."
-              [matChipInputFor]="chipGridDIR"
-              [matAutocomplete]="autoDIR"
-              [formControl]="dirSearchCtrl"
-              [style.display]="isReadOnly ? 'none' : 'block'"
-              [disabled]="isReadOnly"
-            />
-            <mat-autocomplete
-              #autoDIR="matAutocomplete"
-              (optionSelected)="addDirector($event)"
-              [displayWith]="displayFn"
-            >
-              @for (user of filteredDirectorOptions$ | async; track user) {
-              <mat-option [value]="user"> {{ user.fullName }} ({{ user.employeeNo }}) </mat-option>
+              
+              @if (approvalForm.get('director')?.errors?.['required'] && approvalForm.get('director')?.touched) {
+                <div class="text-red-600 text-sm mt-1">Director is required</div>
               }
-            </mat-autocomplete>
-            @if (approvalForm.get('director')?.errors?.['required'] &&
-            approvalForm.get('director')?.touched) {
-            <mat-error>Director is required</mat-error>
-            }
-          </mat-form-field>
+            </div>
+          </div>
         </div>
 
         <!-- Executive Director -->
-        <div class="flex items-start gap-2">
+        <div class="flex items-start gap-2 mb-3">
           <div class="w-48">
             <label class="block font-medium">Executive Director</label>
             <small class="text-gray-500">(DLOA Level 2)</small>
           </div>
-          <mat-form-field class="flex-1">
-            <mat-chip-grid #chipGridED aria-label="Executive Director selection">
-              @for (user of selectedExecutiveDirector; track user) {
-              <mat-chip-row (removed)="removeExecutiveDirector(user)">
-                {{ user.fullName }} ({{ user.employeeNo }})
-                @if (!isReadOnly) {
-                <button matChipRemove>
-                  <mat-icon>cancel</mat-icon>
-                </button>
+          <div class="flex-1">
+            <div class="relative">
+              <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                @if (selectedExecutiveDirector.length > 0) {
+                  <div class="flex flex-wrap gap-2 mb-2">
+                    @for (user of selectedExecutiveDirector; track user.employeeNo) {
+                      <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                        <span>{{user.fullName}} ({{user.employeeNo}})</span>
+                        @if (!isReadOnly) {
+                          <button 
+                            type="button"
+                            (click)="removeExecutiveDirector(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        }
+                      </div>
+                    }
+                  </div>
                 }
-              </mat-chip-row>
+                @if (!isReadOnly) {
+                  <input
+                    type="text"
+                    [formControl]="edSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent border-none focus:outline-none"
+                  />
+                }
+              </div>
+              
+              @if ((filteredExecutiveDirectorOptions$ | async)?.length && edSearchCtrl.value && !isReadOnly) {
+                <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  @for (user of filteredExecutiveDirectorOptions$ | async; track user.employeeNo) {
+                    <div 
+                      (click)="addExecutiveDirector($any({option: {value: user}}))"
+                      class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                    >
+                      <div class="font-medium">{{user.fullName}} ({{user.employeeNo}})</div>
+                    </div>
+                  }
+                </div>
               }
-            </mat-chip-grid>
-            <input
-              matInput
-              placeholder="Type to search..."
-              [matChipInputFor]="chipGridED"
-              [matAutocomplete]="autoED"
-              [formControl]="edSearchCtrl"
-              [style.display]="isReadOnly ? 'none' : 'block'"
-              [disabled]="isReadOnly"
-            />
-            <mat-autocomplete
-              #autoED="matAutocomplete"
-              (optionSelected)="addExecutiveDirector($event)"
-              [displayWith]="displayFn"
-            >
-              @for (user of filteredExecutiveDirectorOptions$ | async; track user) {
-              <mat-option [value]="user"> {{ user.fullName }} ({{ user.employeeNo }}) </mat-option>
+              
+              @if (approvalForm.get('executiveDirector')?.errors?.['required'] && approvalForm.get('executiveDirector')?.touched) {
+                <div class="text-red-600 text-sm mt-1">Executive Director is required</div>
               }
-            </mat-autocomplete>
-            @if (approvalForm.get('executiveDirector')?.errors?.['required'] &&
-            approvalForm.get('executiveDirector')?.touched) {
-            <mat-error>Executive Director is required</mat-error>
-            }
-          </mat-form-field>
+            </div>
+          </div>
         </div>
 
         <!-- CEO -->
-        <div class="flex items-start gap-2">
+        <div class="flex items-start gap-2 mb-8">
           <div class="w-48">
             <label class="block font-medium">Chief Executive Officer</label>
             <small class="text-gray-500">(DLOA Level 1)</small>
           </div>
-
-          <mat-form-field class="flex-1">
-            <mat-chip-grid #chipGrid aria-label="CEO selection">
-              @for (user of selectedCEO; track user) {
-              <mat-chip-row (removed)="removeCEO(user)">
-                {{ user.fullName }} ({{ user.employeeNo }})
-                @if (!isReadOnly) {
-                <button matChipRemove>
-                  <mat-icon>cancel</mat-icon>
-                </button>
+          <div class="flex-1">
+            <div class="relative">
+              <div class="w-full min-h-12 px-2 py-1 bg-gray-100 rounded border-b-2 border-gray-300 focus-within:border-blue-500 focus-within:bg-white transition">
+                @if (selectedCEO.length > 0) {
+                  <div class="flex flex-wrap gap-2 mb-2">
+                    @for (user of selectedCEO; track user.employeeNo) {
+                      <div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                        <span>{{user.fullName}} ({{user.employeeNo}})</span>
+                        @if (!isReadOnly) {
+                          <button 
+                            type="button"
+                            (click)="removeCEO(user)"
+                            class="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                          </button>
+                        }
+                      </div>
+                    }
+                  </div>
                 }
-              </mat-chip-row>
+                @if (!isReadOnly) {
+                  <input
+                    type="text"
+                    [formControl]="ceoSearchCtrl"
+                    placeholder="Type to search..."
+                    class="w-full px-2 py-1 bg-transparent border-none focus:outline-none"
+                  />
+                }
+              </div>
+              
+              @if ((filteredCEOOptions$ | async)?.length && ceoSearchCtrl.value && !isReadOnly) {
+                <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  @for (user of filteredCEOOptions$ | async; track user.employeeNo) {
+                    <div 
+                      (click)="addCEO($any({option: {value: user}}))"
+                      class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                    >
+                      <div class="font-medium">{{user.fullName}} ({{user.employeeNo}})</div>
+                    </div>
+                  }
+                </div>
               }
-            </mat-chip-grid>
-
-            <input
-              matInput
-              placeholder="Type to search..."
-              [matChipInputFor]="chipGrid"
-              [matAutocomplete]="autoCEO"
-              [formControl]="ceoSearchCtrl"
-              [style.display]="isReadOnly ? 'none' : 'block'"
-              [disabled]="isReadOnly"
-            />
-
-            <mat-autocomplete
-              #autoCEO="matAutocomplete"
-              (optionSelected)="addCEO($event)"
-              [displayWith]="displayFn"
-            >
-              @for (user of filteredCEOOptions$ | async; track user) {
-              <mat-option [value]="user"> {{ user.fullName }} ({{ user.employeeNo }}) </mat-option>
+              
+              @if (approvalForm.get('ceo')?.errors?.['required'] && approvalForm.get('ceo')?.touched) {
+                <div class="text-red-600 text-sm mt-1">Chief Executive Officer is required</div>
               }
-            </mat-autocomplete>
-
-            @if (approvalForm.get('ceo')?.errors?.['required'] && approvalForm.get('ceo')?.touched)
-            {
-            <mat-error>Chief Executive Officer is required</mat-error>
-            }
-          </mat-form-field>
+            </div>
+          </div>
         </div>
       </div>
 
