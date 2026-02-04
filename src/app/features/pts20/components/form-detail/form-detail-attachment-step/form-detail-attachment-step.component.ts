@@ -4,12 +4,13 @@ import { MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { FormAddAttchmentComponent } from '../form-add-attchment/form-add-attchment.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Form20AttachmentService, Form20Attachment } from '../../../../../core/services/Form20/form20Attachment.service';
 
 @Component({
   selector: 'app-form-detail-attachment-step',
   standalone: true,
-  imports: [...FORM_DETAIL_STEP_IMPORTS, MatTableModule, MatButtonModule],
+  imports: [...FORM_DETAIL_STEP_IMPORTS, MatTableModule, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './form-detail-attachment-step.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [Form20AttachmentService]
@@ -18,6 +19,8 @@ export class FormDetailAttachmentStepComponent implements OnInit {
   @Input() formId: number | null = null;
   displayedColumns: string[] = ['type', 'file', 'actions'];
   attachments: Form20Attachment[] = [];
+  isLoadingList = false;
+  downloadingIds = new Set<number>();
 
   constructor(
     private dialog: MatDialog,
@@ -34,13 +37,19 @@ export class FormDetailAttachmentStepComponent implements OnInit {
   loadAttachments(): void {
     if (!this.formId) return;
     
+    this.isLoadingList = true;
+    this.cdr.markForCheck();
+    
     this.attachmentService.obtainAttachmentsList(this.formId).subscribe({
       next: (attachments) => {
         this.attachments = attachments.filter(att => !att.isDeleted);
+        this.isLoadingList = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Error loading attachments:', error);
+        this.isLoadingList = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -49,28 +58,26 @@ export class FormDetailAttachmentStepComponent implements OnInit {
     event.preventDefault();
     event.stopPropagation();
     
+    if (!this.formId) return;
+    
     const dialogRef = this.dialog.open(FormAddAttchmentComponent, {
       width: '500px',
-      disableClose: true
+      disableClose: true,
+      data: { formId: this.formId }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result && result.file && this.formId) {
-        // Save the attachment with formId
-        this.attachmentService.saveAttachment(result.file, this.formId, result.type).subscribe({
-          next: () => {
-            // Reload the attachment list after successful save
-            this.loadAttachments();
-          },
-          error: (error) => {
-            console.error('Error saving attachment:', error);
-          }
-        });
+      if (result && result.success) {
+        // Reload the attachment list after successful save
+        this.loadAttachments();
       }
     });
   }
 
   onDownloadAttachment(attachment: Form20Attachment): void {
+    this.downloadingIds.add(attachment.id);
+    this.cdr.markForCheck();
+    
     this.attachmentService.downloadAttachment(attachment.id).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
@@ -79,10 +86,18 @@ export class FormDetailAttachmentStepComponent implements OnInit {
         link.download = attachment.fileName;
         link.click();
         window.URL.revokeObjectURL(url);
+        this.downloadingIds.delete(attachment.id);
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Error downloading attachment:', error);
+        this.downloadingIds.delete(attachment.id);
+        this.cdr.markForCheck();
       }
     });
+  }
+  
+  isDownloading(attachmentId: number): boolean {
+    return this.downloadingIds.has(attachmentId);
   }
 }

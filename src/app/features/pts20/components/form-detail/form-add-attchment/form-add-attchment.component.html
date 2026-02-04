@@ -1,7 +1,7 @@
 <div class="dialog-container">
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-xl font-bold text-[#1976d2]">Add Attachment</h2>
-    <button mat-icon-button (click)="onCancel()">
+    <button mat-icon-button (click)="onCancel()" [disabled]="isUploading">
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -12,7 +12,7 @@
         <!-- Attachment Type -->
         <mat-form-field class="w-full mb-4">
           <mat-label>Attachment Type</mat-label>
-          <mat-select formControlName="type">
+          <mat-select formControlName="type" [disabled]="isUploading">
             @for (type of attachmentTypes; track type.value) {
               <mat-option [value]="type.value">{{type.label}}</mat-option>
             }
@@ -30,13 +30,15 @@
             accept=".pdf,application/pdf"
             #fileInput
             (change)="onFileSelected($event)"
+            [disabled]="isUploading"
           >
           <button 
             type="button"
             mat-stroked-button 
             color="primary"
             class="w-full p-4 border-2 border-dashed"
-            (click)="fileInput.click()">
+            (click)="fileInput.click()"
+            [disabled]="isUploading">
             @if (selectedFile) {
               Selected: {{selectedFile.name}}
             } @else {
@@ -52,15 +54,27 @@
         </div>
       </div>
 
+      <!-- Loading Indicator -->
+      @if (isUploading) {
+        <div class="flex items-center justify-center gap-3 mb-4 p-4 bg-blue-50 rounded">
+          <mat-spinner diameter="24"></mat-spinner>
+          <span class="text-blue-700 font-medium">Uploading file...</span>
+        </div>
+      }
+
       <!-- Action Buttons -->
       <div class="flex justify-end gap-3">
-        <button mat-button type="button" (click)="onCancel()">Cancel</button>
+        <button mat-button type="button" (click)="onCancel()" [disabled]="isUploading">Cancel</button>
         <button 
           mat-raised-button 
           color="primary" 
           type="submit"
-          [disabled]="!attachmentForm.valid">
-          Add
+          [disabled]="!attachmentForm.valid || isUploading">
+          @if (isUploading) {
+            Uploading...
+          } @else {
+            Add
+          }
         </button>
       </div>
     </form>

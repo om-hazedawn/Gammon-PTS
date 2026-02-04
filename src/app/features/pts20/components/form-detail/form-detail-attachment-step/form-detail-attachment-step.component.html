@@ -6,41 +6,57 @@
       Add Attachment
     </button>
 
-    <table mat-table [dataSource]="attachments" class="w-full mat-elevation-z8">
-      <!-- Type Column -->
-      <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef>Type</th>
-        <td mat-cell *matCellDef="let row">{{ row.attachmentType || 'General' }}</td>
-      </ng-container>
+    @if (isLoadingList) {
+      <div class="flex items-center justify-center gap-3 p-8 bg-blue-50 rounded">
+        <mat-spinner diameter="32"></mat-spinner>
+        <span class="text-blue-700 font-medium">Loading attachments...</span>
+      </div>
+    } @else {
+      <table mat-table [dataSource]="attachments" class="w-full mat-elevation-z8">
+        <!-- Type Column -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let row">{{ row.attachmentType || 'General' }}</td>
+        </ng-container>
 
-      <!-- File Column -->
-      <ng-container matColumnDef="file">
-        <th mat-header-cell *matHeaderCellDef>File Name</th>
-        <td mat-cell *matCellDef="let row">{{ row.fileName }}</td>
-      </ng-container>
+        <!-- File Column -->
+        <ng-container matColumnDef="file">
+          <th mat-header-cell *matHeaderCellDef>File Name</th>
+          <td mat-cell *matCellDef="let row">{{ row.fileName }}</td>
+        </ng-container>
 
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let row">
-          <button mat-icon-button color="primary" title="Download" (click)="onDownloadAttachment(row)">
-            <mat-icon>download</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" title="Delete">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let row">
+            <button 
+              mat-icon-button 
+              color="primary" 
+              title="Download" 
+              (click)="onDownloadAttachment(row)"
+              [disabled]="isDownloading(row.id)">
+              @if (isDownloading(row.id)) {
+                <mat-spinner diameter="20"></mat-spinner>
+              } @else {
+                <mat-icon>download</mat-icon>
+              }
+            </button>
+            <button mat-icon-button color="warn" title="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
 
-      <!-- Header and Data Rows -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      @if (attachments.length > 0) {
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      } @else {
-        <tr>
-          <td class="text-center p-4" colspan="3">No attachments available</td>
-        </tr>
-      }
-    </table>
+        <!-- Header and Data Rows -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        @if (attachments.length > 0) {
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        } @else {
+          <tr>
+            <td class="text-center p-4" colspan="3">No attachments available</td>
+          </tr>
+        }
+      </table>
+    }
   </div>
 </div>
