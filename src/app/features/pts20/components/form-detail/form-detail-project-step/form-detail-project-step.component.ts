@@ -19,13 +19,14 @@ import {
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Form30LinkPopupComponent } from '../form30link-component/form30Linkpopup.components';
 
 @Component({
   providers: [Form20ListDropdownService],
   selector: 'app-form-detail-project-step',
   standalone: true,
-  imports: [...FORM_DETAIL_STEP_IMPORTS, MatDialogModule, MatIconModule, MatButtonModule],
+  imports: [...FORM_DETAIL_STEP_IMPORTS, MatDialogModule, MatIconModule, MatButtonModule, MatTooltipModule],
   templateUrl: './form-detail-project-step.component.html',
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
   changeDetection: ChangeDetectionStrategy.OnPush,

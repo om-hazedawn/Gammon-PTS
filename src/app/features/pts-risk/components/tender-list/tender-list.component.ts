@@ -10,6 +10,7 @@ import { AddTenderPopupComponent } from '../add-tender-popup/add-tender-popup.co
 import { ConfirmDialog } from '../confirm-dialog/confirm-dialog.component';
 import { AlertDialog } from '../alert-dialog/alert-dialog.component';
 import { ReportDateDialog } from '../report-date/report-date.component';
+import { PerMillionPipe } from '../../../../core/pipes/per-million.pipe';
 
 import { FormControl, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -28,7 +29,6 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
 import { ReportDateWithMarketIntelDialog } from '../report-date-with-market-intel/report-date-with-market-intel.component';
 import { Form20ControlsComponent } from '../form20-controls/form20-controls.component';
 
-
 @Component({
   selector: 'app-tender-list',
   standalone: true,
@@ -45,7 +45,8 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
     MatIconModule,
     Form20ControlsComponent,
     MatPaginatorModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    PerMillionPipe,
   ],
   template: `
     <div class="form-list-container">
@@ -53,7 +54,14 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         <mat-card-header>
           <mat-card-title>Tender Risk Management</mat-card-title>
           <mat-card-subtitle>Risk assessment for tenders</mat-card-subtitle>
-          <button mat-raised-button class="action-btn" style="margin-left: auto;" (click)="openAddTenderPopup()">Add New Tender</button>
+          <button
+            mat-raised-button
+            class="action-btn"
+            style="margin-left: auto;"
+            (click)="openAddTenderPopup()"
+          >
+            Add New Tender
+          </button>
         </mat-card-header>
         <mat-card-content>
           @if (isLoading) {
@@ -66,299 +74,529 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
               {{ error }}
             </div>
           }
-           @if (!isLoading && !error) {
-          <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" style="width: 100%;">
-            <!-- Status Column -->
-            <ng-container matColumnDef="status">
-              <th mat-header-cell *matHeaderCellDef>Status</th>
-              <td mat-cell *matCellDef="let element">{{ element.tenderStatus }}</td>
-            </ng-container>
+          @if (!isLoading && !error) {
+            <table
+              mat-table
+              [dataSource]="dataSource"
+              class="mat-elevation-z2"
+              style="width: 100%;"
+            >
+              <!-- Status Column -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let element">{{ element.tenderStatus }}</td>
+              </ng-container>
+              <!-- Division Column -->
+              <ng-container matColumnDef="division">
+                <th mat-header-cell *matHeaderCellDef>Division</th>
+                <td mat-cell *matCellDef="let element">{{ element.division }}</td>
+              </ng-container>
 
-            <!-- Division Column -->
-            <ng-container matColumnDef="division">
-              <th mat-header-cell *matHeaderCellDef>Division</th>
-              <td mat-cell *matCellDef="let element">{{ element.division }}</td>
-            </ng-container>
+              <!-- Expected Tender Submission Date Column -->
+              <ng-container matColumnDef="expectedDate">
+                <th mat-header-cell *matHeaderCellDef>Expected Tender<br />Submission Date</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.expectedTenderSubmissionDate | date }}
+                </td>
+              </ng-container>
 
-            <!-- Expected Tender Submission Date Column -->
-            <ng-container matColumnDef="expectedDate">
-              <th mat-header-cell *matHeaderCellDef>
-                Expected Tender<br />Submission Date
-              </th>
-              <td mat-cell *matCellDef="let element">{{ element.expectedTenderSubmissionDate | date }}</td>
-            </ng-container>
+              <!-- Bidding Gammon Entity Column -->
+              <ng-container matColumnDef="entity">
+                <th mat-header-cell *matHeaderCellDef>Bidding Gammon Entity</th>
+                <td mat-cell *matCellDef="let element">{{ element.biddingGammonEntity?.name }}</td>
+              </ng-container>
 
-            <!-- Bidding Gammon Entity Column -->
-            <ng-container matColumnDef="entity">
-              <th mat-header-cell *matHeaderCellDef>Bidding Gammon Entity</th>
-              <td mat-cell *matCellDef="let element">{{ element.biddingGammonEntity?.name }}</td>
-            </ng-container>
+              <!-- Customer Name Column -->
+              <ng-container matColumnDef="customerName">
+                <th mat-header-cell *matHeaderCellDef>Customer Name</th>
+                <td mat-cell *matCellDef="let element">{{ element.customerName }}</td>
+              </ng-container>
 
-            <!-- Customer Name Column -->
-            <ng-container matColumnDef="customerName">
-              <th mat-header-cell *matHeaderCellDef>Customer Name</th>
-              <td mat-cell *matCellDef="let element">{{ element.customerName }}</td>
-            </ng-container>
+              <!-- Project Name Column -->
+              <ng-container matColumnDef="projectName">
+                <th mat-header-cell *matHeaderCellDef>Project Name</th>
+                <td mat-cell *matCellDef="let element">{{ element.projectName }}</td>
+              </ng-container>
 
-            <!-- Project Name Column -->
-            <ng-container matColumnDef="projectName">
-              <th mat-header-cell *matHeaderCellDef>Project Name</th>
-              <td mat-cell *matCellDef="let element">{{ element.projectName }}</td>
-            </ng-container>
+              <!-- Currency Column -->
+              <ng-container matColumnDef="currency">
+                <th mat-header-cell *matHeaderCellDef>Currency</th>
+                <td mat-cell *matCellDef="let element">{{ element.currency?.code }}</td>
+              </ng-container>
 
-            <!-- Currency Column -->
-            <ng-container matColumnDef="currency">
-              <th mat-header-cell *matHeaderCellDef>Currency</th>
-              <td mat-cell *matCellDef="let element">{{ element.currency?.code }}</td>
-            </ng-container>
+              <!-- Estimated Tender Value (Million) Column -->
+              <ng-container matColumnDef="estimatedValue">
+                <th mat-header-cell *matHeaderCellDef>Estimated Tender Value<br />(Million)</th>
+                <td mat-cell *matCellDef="let element">{{ element.estimatedTenderValue | perMillion }}</td>
+              </ng-container>
 
-            <!-- Estimated Tender Value (Million) Column -->
-            <ng-container matColumnDef="estimatedValue">
-              <th mat-header-cell *matHeaderCellDef>
-                Estimated Tender Value<br />(Million)
-              </th>
-              <td mat-cell *matCellDef="let element">{{ element.estimatedTenderValue }}</td>
-            </ng-container>
+              <!-- Response Column -->
+              <ng-container matColumnDef="response">
+                <th mat-header-cell *matHeaderCellDef>Response</th>
+                <td mat-cell *matCellDef="let element">
+                  <div style="display:flex; gap:0px; align-items: center; width: 100%; justify-content: flex-start;">
+                    <span
+                      style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                      >{{ element.standardResponsePriorityLevel?.title }}</span
+                    >
+                    <span
+                      class="ud-icon"
+                      style="flex-shrink: 0; display:flex; gap:0px; margin-left: 8px;"
+                    >
+                      @if (isUpgrade(element)) {
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          style="color: currentColor;"
+                        >
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      }
+                      @if (isDowngrade(element)) {
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          style="color: currentColor;"
+                        >
+                          <path
+                            d="M7 13L12 18L17 13M7 6L12 11L17 6"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      }
+                      @if (isLevel(element)) {
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M20 17H4M4 17L8 13M4 17L8 21M4 7H20M20 7L16 3M20 7L16 11"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      }
+                    </span>
+                  </div>
+                </td>
+              </ng-container>
 
-            <!-- Response Column -->
-            <ng-container matColumnDef="response">
-              <th mat-header-cell *matHeaderCellDef>Response</th>
-              <td mat-cell *matCellDef="let element">
-                <div style="display:flex; gap:6px;">
-                  <span style="flex: 0 0 80%;">{{ element.standardResponsePriorityLevel?.title }}</span>
-                  <span class="ud-icon" style="flex: 0 0 20%; display:flex; gap:4px; justify-content: flex-end; align-items: center;">
-                    @if (isUpgrade(element)) {
-                      <mat-icon>arrow_upward</mat-icon>
-                    }
-                    @if (isDowngrade(element)) {
-                      <mat-icon>arrow_downward</mat-icon>
-                    }
-                    @if (isLevel(element)) {
-                      <mat-icon>swap_horiz</mat-icon>
-                    }
-                  </span>
-                </div>
-              </td>
-            </ng-container>
+              <!-- Up/Downgrade Column -->
+              <ng-container matColumnDef="upDowngrade">
+                <th mat-header-cell *matHeaderCellDef>Up/Downgrade</th>
+                <td mat-cell *matCellDef="let element">
+                  @if (element.upgradeDowngradePriorityLevel?.title) {
+                    <span style="background-color: #c8e6c9; padding: 4px 8px; border-radius: 4px; display: inline-block;">
+                      {{ element.upgradeDowngradePriorityLevel?.title }}
+                    </span>
+                  }
+                </td>
+              </ng-container>
 
-            <!-- Up/Downgrade Column -->
-            <ng-container matColumnDef="upDowngrade">
-              <th mat-header-cell *matHeaderCellDef>Up/Downgrade</th>
-              <td mat-cell *matCellDef="let element">{{ element.upgradeDowngradePriorityLevel?.title }}</td>
-            </ng-container>
+              <!-- Additional Note Column -->
+              <ng-container matColumnDef="additionalNote">
+                <th mat-header-cell *matHeaderCellDef>Additional Note</th>
+                <td mat-cell *matCellDef="let element">{{ element.additionalNote }}</td>
+              </ng-container>
 
-            <!-- Additional Note Column -->
-            <ng-container matColumnDef="additionalNote">
-              <th mat-header-cell *matHeaderCellDef>Additional Note</th>
-              <td mat-cell *matCellDef="let element">{{ element.additionalNote }}</td>
-            </ng-container>
+              <!-- EXCOM Decision Column -->
+              <ng-container matColumnDef="excomDecision">
+                <th mat-header-cell *matHeaderCellDef>EXCOM Decision</th>
+                <td mat-cell *matCellDef="let element">
+                  <div class="excom-decision-cell">
+                    <button
+                      mat-icon-button
+                      color="primary"
+                      aria-label="Edit EXCOM Decision"
+                      (click)="$event.stopPropagation(); openExcomDecisionPopup(element)"
+                    >
+                      <mat-icon style="color: #1976d2;">edit</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
 
-            <!-- EXCOM Decision Column -->
-            <ng-container matColumnDef="excomDecision">
-              <th mat-header-cell *matHeaderCellDef>EXCOM Decision</th>
-              <td mat-cell *matCellDef="let element">
-                <div class="excom-decision-cell">
-                  <button mat-icon-button color="primary" aria-label="Edit EXCOM Decision" (click)="$event.stopPropagation(); openExcomDecisionPopup(element)">
+              <!-- Market Intelligence Column -->
+              <ng-container matColumnDef="marketIntelligence">
+                <th mat-header-cell *matHeaderCellDef>Market<br />Intelligence</th>
+                <td mat-cell *matCellDef="let element">
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    aria-label="Edit Market Intelligence"
+                    (click)="$event.stopPropagation(); openMarketIntelligencePopup(element)"
+                  >
                     <mat-icon style="color: #1976d2;">edit</mat-icon>
                   </button>
-                </div>
-              </td>
-            </ng-container>
+                </td>
+              </ng-container>
 
-            <!-- Market Intelligence Column -->
-            <ng-container matColumnDef="marketIntelligence">
-              <th mat-header-cell *matHeaderCellDef>Market<br />Intelligence</th>
-              <td mat-cell *matCellDef="let element">
-                <button mat-icon-button color="primary" aria-label="Edit Market Intelligence" (click)="$event.stopPropagation(); openMarketIntelligencePopup(element)">
-                  <mat-icon style="color: #1976d2;">edit</mat-icon>
-                </button>
-              </td>
-            </ng-container>
+              <!-- Change Status for Tender Column -->
+              <ng-container matColumnDef="changeStatus">
+                <th mat-header-cell *matHeaderCellDef>Change Status for Tender</th>
+                <td mat-cell *matCellDef="let element">
+                  <div
+                    style="display: flex; flex-direction: column; align-items: center; gap: 6px;"
+                  >
+                    @if (showPendingExcomReview(element)) {
+                      <button
+                        mat-raised-button
+                        class="action-btn"
+                        (click)="changeStatus($event, 'Pending EXCOM review', element)"
+                      >
+                        Pending EXCOM review
+                      </button>
+                    }
+                    @if (showNoNeedForExcomReview(element)) {
+                      <button
+                        mat-raised-button
+                        class="action-btn"
+                        (click)="changeStatus($event, 'No need for EXCOM approval', element)"
+                      >
+                        No need for EXCOM approval
+                      </button>
+                    }
+                    @if (showWorkInView(element)) {
+                      <button
+                        mat-raised-button
+                        class="action-btn"
+                        (click)="
+                          changeStatus(
+                            $event,
+                            'Work In View (Pending Tender Doc Released)',
+                            element
+                          )
+                        "
+                      >
+                        Work In View (Pending Tender Doc Released)
+                      </button>
+                    }
+                    @if (showUnderPreparation(element)) {
+                      <button
+                        mat-raised-button
+                        class="action-btn"
+                        (click)="changeStatus($event, 'Tender Under Preparation', element)"
+                      >
+                        Tender Under Preparation
+                      </button>
+                    }
+                    @if (showBidSubmitted(element)) {
+                      <button
+                        mat-raised-button
+                        class="action-btn"
+                        (click)="
+                          changeStatus(
+                            $event,
+                            'Bid Submitted (Pending Result Announcement)',
+                            element
+                          )
+                        "
+                      >
+                        Bid submitted
+                      </button>
+                    }
+                    @if (showSuccessful(element)) {
+                      <button
+                        mat-raised-button
+                        class="action-btn"
+                        (click)="changeStatus($event, 'Successful', element)"
+                      >
+                        Successful
+                      </button>
+                    }
+                    @if (showUnsuccessful(element)) {
+                      <button
+                        mat-raised-button
+                        class="action-btn"
+                        (click)="changeStatus($event, 'Unsuccessful', element)"
+                      >
+                        Unsuccessful
+                      </button>
+                    }
+                    @if (showWithdraw(element)) {
+                      <button
+                        mat-raised-button
+                        class="action-btn red"
+                        (click)="changeStatus($event, 'Withdraw / Declined', element)"
+                      >
+                        Withdraw / Declined
+                      </button>
+                    }
+                    @if (showExpired(element)) {
+                      <button
+                        mat-raised-button
+                        class="action-btn red"
+                        (click)="changeStatus($event, 'Expired', element)"
+                      >
+                        Expired
+                      </button>
+                    }
+                    <button mat-raised-button class="action-btn green">Weekly Snapshot</button>
+                    <button mat-raised-button class="action-btn green">Monthly Snapshot</button>
+                  </div>
+                </td>
+              </ng-container>
 
-            <!-- Change Status for Tender Column -->
-            <ng-container matColumnDef="changeStatus">
-              <th mat-header-cell *matHeaderCellDef>
-                Change Status for Tender
-              </th>
-              <td mat-cell *matCellDef="let element">
-                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
-                  @if (showPendingExcomReview(element)) {
-                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'Pending EXCOM review', element)">Pending EXCOM review</button>
-                  }
-                  @if (showNoNeedForExcomReview(element)) {
-                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'No need for EXCOM approval', element)">No need for EXCOM approval</button>
-                  }
-                  @if (showWorkInView(element)) {
-                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'Work In View (Pending Tender Doc Released)', element)">Work In View (Pending Tender Doc Released)</button>
-                  }
-                  @if (showUnderPreparation(element)) {
-                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'Tender Under Preparation', element)">Tender Under Preparation</button>
-                  }
-                  @if (showBidSubmitted(element)) {
-                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'Bid Submitted (Pending Result Announcement)', element)">Bid submitted</button>
-                  }
-                  @if (showSuccessful(element)) {
-                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'Successful', element)">Successful</button>
-                  }
-                  @if (showUnsuccessful(element)) {
-                    <button mat-raised-button class="action-btn" (click)="changeStatus($event, 'Unsuccessful', element)">Unsuccessful</button>
-                  }
-                  @if (showWithdraw(element)) {
-                    <button mat-raised-button class="action-btn red" (click)="changeStatus($event, 'Withdraw / Declined', element)">Withdraw / Declined</button>
-                  }
-                  @if (showExpired(element)) {
-                    <button mat-raised-button class="action-btn red" (click)="changeStatus($event, 'Expired', element)">Expired</button>
-                  }
-                  <button mat-raised-button class="action-btn green">Weekly Snapshot</button>
-                  <button mat-raised-button class="action-btn green">Monthly Snapshot</button>
-                </div>
-              </td>
-            </ng-container>
+              <!-- Key Date Column -->
+              <ng-container matColumnDef="keyDate">
+                <th mat-header-cell *matHeaderCellDef>Key Date</th>
+                <td mat-cell *matCellDef="let element">
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="$event.stopPropagation(); openKeyDatePopup(element)"
+                  >
+                    <mat-icon style="color: #1976d2;">calendar_today</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
 
-            <!-- Key Date Column -->
-            <ng-container matColumnDef="keyDate">
-              <th mat-header-cell *matHeaderCellDef>Key Date</th>
-              <td mat-cell *matCellDef="let element">
-                <button mat-icon-button color="primary" (click)="$event.stopPropagation(); openKeyDatePopup(element)">
-                  <mat-icon style="color: #1976d2;">calendar_today</mat-icon>
-                </button>
-              </td>
-            </ng-container>
+              <!-- Form 20 Column -->
+              <ng-container matColumnDef="form20">
+                <th mat-header-cell *matHeaderCellDef>Form<br />20</th>
+                <td
+                  mat-cell
+                  (click)="stopPropagation($event)"
+                  *matCellDef="let element"
+                  fxLayoutAlign="center center"
+                  [ngClass]="columnBackgroundColor('Form20Id')"
+                >
+                  <app-form20-controls
+                    [riskTenderId]="element.id"
+                    [form20Id]="element.form20Id"
+                    class="form20form30Cell"
+                  ></app-form20-controls>
+                </td>
+              </ng-container>
 
-            <!-- Form 20 Column -->
-            <ng-container matColumnDef="form20">
-              <th mat-header-cell *matHeaderCellDef>
-                Form<br />20
-              </th>
-              <td mat-cell (click)="stopPropagation($event)" *matCellDef="let element"  fxLayoutAlign="center center" [ngClass]="columnBackgroundColor('Form20Id')">
-                  <app-form20-controls [riskTenderId]="element.id" [form20Id]="element.form20Id" class="form20form30Cell"></app-form20-controls>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumns"
                 (click)="onRowClick(row, $event)"
                 [class.selected-row]="selectedRow === row"
-                style="cursor: pointer;"></tr>
-          </table>
-          <mat-paginator
-            [pageSize]="pageSize"
-            [pageSizeOptions]="[5, 10, 25, 50]"
-            [length]="totalItems"
-            [pageIndex]="currentPage - 1"
-            showFirstLastButtons
-            (page)="handlePageEvent($event)"
-            class="custom-paginator"
-            #paginator>
-          </mat-paginator>
-           }
-            <!-- Button Row Below Table -->
-            <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 24px; gap: 24px;">
-              <div style="flex: 1; display: flex; justify-content: center; gap: 12px;">
-                <button mat-raised-button color="accent" class="action-btn">Generate Snapshot</button>
-                <button mat-raised-button color="primary" class="action-btn">Generate Monthly Snapshot</button>
-              </div>
-              <button mat-raised-button color="primary" class="action-btn" (click)="exportExcel()">Export Excel</button>
+                style="cursor: pointer;"
+              ></tr>
+            </table>
+            <mat-paginator
+              [pageSize]="pageSize"
+              [pageSizeOptions]="[5, 10, 25, 50]"
+              [length]="totalItems"
+              [pageIndex]="currentPage - 1"
+              showFirstLastButtons
+              (page)="handlePageEvent($event)"
+              class="custom-paginator"
+              #paginator
+            >
+            </mat-paginator>
+          }
+          <!-- Button Row Below Table -->
+          <div
+            style="display: flex; justify-content: flex-end; align-items: center; margin-top: 24px; gap: 24px;"
+          >
+            <div style="flex: 1; display: flex; justify-content: center; gap: 12px;">
+              <button mat-raised-button color="accent" class="action-btn">Generate Snapshot</button>
+              <button mat-raised-button color="primary" class="action-btn">
+                Generate Monthly Snapshot
+              </button>
             </div>
+            <button mat-raised-button color="primary" class="action-btn" (click)="exportExcel()">
+              Export Excel
+            </button>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
   `,
-  styles: [`
-    .selected-row {
-      background-color: #e3f2fd !important;
-    }
-    .excom-decision-cell {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-    .excom-info {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    .excom-item {
-      font-weight: 500;
-      color: #1976d2;
-    }
-    .excom-level {
-      font-size: 0.9em;
-      color: #666;
-    }
-    .loading-spinner {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
-    }
-    tr.mat-row:hover td {
-      background-color: #e3f2fd;
-      transition: background 0.2s;
-    }
-    .form-list-container {
-      padding: 0;
-      margin: 0;
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-      overflow-x: hidden;
-      mat-card-title {
-        font-size: 2rem;
-        font-weight: 700;
+  styles: [
+    `
+      .selected-row {
+        background-color: #e3f2fd !important;
+      }
+      .excom-decision-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+      .excom-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .excom-item {
+        font-weight: 500;
         color: #1976d2;
-        letter-spacing: 1px;
-        margin-bottom: 4px;
-        text-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
       }
-      mat-card-subtitle {
-        font-size: 1.15rem;
-        font-weight: 400;
-        color: #555;
-        margin-bottom: 12px;
-        letter-spacing: 0.5px;
+      .excom-level {
+        font-size: 0.9em;
+        color: #666;
       }
-    }
-    .mat-column-currency{
-      width: 90px;
-    }
-    .mat-column-changeStatus .action-btn {
-      line-height: 1.2;
-      padding: 8px 12px;
-      height: auto;
-      text-align: center;
-      word-break: break-word;
-    }
-    .mat-column-keyDate {
-      max-width: 70px;
-    }
+      .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+      }
+      tr.mat-row:hover td {
+        background-color: #e3f2fd;
+        transition: background 0.2s;
+      }
+      .form-list-container {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+        mat-card {
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        mat-card-title {
+          font-size: 2rem;
+          font-weight: 700;
+          color: #1976d2;
+          letter-spacing: 1px;
+          margin: 0 !important;
+          text-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+          flex: 0 0 auto;
+        }
+        mat-card-subtitle {
+          font-size: 1.15rem;
+          font-weight: 400;
+          color: #555;
+          margin: 0 !important;
+          letter-spacing: 0.5px;
+          flex: 0 0 100%;
+        }
+      }
+      .mat-column-status {
+        width: 70px;
+        min-width: 70px;
+      }
+      .mat-column-division {
+        width: 45px;
+        min-width: 45px;
+      }
+      .mat-column-expectedDate {
+        width: 65px;
+        min-width: 65px;
+      }
+      .mat-column-entity {
+        width: 100px;
+        min-width: 100px;
+      }
+      .mat-column-currency {
+        width: 50px;
+      }
+      .mat-column-projectName {
+        width: 150px;
+        min-width: 150px;
+      }
+      .mat-column-response {
+        width: 100px;
+        min-width: 100px;
+      }
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        display: inline-block;
+        visibility: visible;
+      }
       mat-card {
-        margin: 0 auto;
+        margin: 0 !important;
+        padding: 0 !important;
         max-width: 100%;
         box-sizing: border-box;
         border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(25, 118, 210, 0.12), 0 1.5px 6px rgba(0,0,0,0.08);
-        overflow-x: auto;
+        box-shadow:
+          0 8px 32px rgba(25, 118, 210, 0.12),
+          0 1.5px 6px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
+      ::ng-deep .mat-mdc-card {
+        padding: 0 !important;
+      }
+      mat-card-header {
+        padding: 16px 16px 0 16px !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: flex-start;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      mat-card-header button {
+        margin-left: auto !important;
+        margin-right: 0 !important;
+        flex-shrink: 0;
+        align-self: center;
+      }
+      ::ng-deep .mat-mdc-card-header {
+        padding: 16px 16px 0 16px !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: flex-start;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      ::ng-deep .mat-mdc-card-header button {
+        margin-left: auto !important;
+        margin-right: 0 !important;
+        flex-shrink: 0;
+        align-self: center;
       }
       .mat-card-content {
         padding: 0 !important;
+        margin: 0 !important;
         border-radius: 0 0 16px 16px;
-        overflow-x: auto;
+        overflow: hidden;
+      }
+      ::ng-deep .mat-mdc-card-content {
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden;
+      }
+      ::ng-deep .mat-mdc-card-content-container {
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden;
       }
       table {
         width: 100%;
         min-width: auto;
         max-width: 100%;
-        overflow-x: auto;
         display: table;
         margin: 0;
-        border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(25, 118, 210, 0.13), 0 1.5px 6px rgba(0,0,0,0.08);
-        border-collapse: separate;
+        margin-left: 0;
+        margin-right: 0;
+        border-radius: 0;
+        box-shadow: none;
+        border-collapse: collapse;
         border-spacing: 0;
         font-size: 12px;
+        padding: 0;
       }
       th {
         background-color: #f5f7fa;
@@ -369,8 +607,8 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         line-height: 1.1;
         padding-top: 8px;
         padding-bottom: 8px;
-        padding-left: 6px;
-        padding-right: 6px;
+        padding-left: 0px;
+        padding-right: 0px;
         text-align: center;
         font-size: 12px;
         overflow-wrap: break-word;
@@ -381,11 +619,10 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         vertical-align: middle;
         white-space: normal;
         word-wrap: break-word;
-        padding: 8px 6px;
+        padding: 8px 0px;
         background-color: #fff;
         font-size: 12px;
         border-bottom: 1px solid #e0e0e0;
-        max-width: 90px;
         overflow-wrap: break-word;
       }
       tr.mat-row:nth-child(even) td {
@@ -412,7 +649,9 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         font-weight: 500;
         font-size: 12px;
         box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
-        transition: background 0.2s, box-shadow 0.2s;
+        transition:
+          background 0.2s,
+          box-shadow 0.2s;
         background-color: var(--primary-color) !important;
         color: #fff !important;
       }
@@ -434,7 +673,9 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         border-radius: 6px;
         font-weight: 500;
         font-size: 12px;
-        transition: background 0.2s, box-shadow 0.2s;
+        transition:
+          background 0.2s,
+          box-shadow 0.2s;
       }
       .form-btn:hover:not([disabled]) {
         background: #43a047 !important;
@@ -477,11 +718,10 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   totalItems = 0;
   currentPage = 1;
   pageSize = 10;
-  
 
   constructor(
     private dialog: MatDialog,
-    private tenderListApiService: TenderListApiService
+    private tenderListApiService: TenderListApiService,
   ) {}
 
   tenderSort: TenderSorted = {
@@ -522,10 +762,10 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       height: '90vh',
       disableClose: false,
       data: data || {}, // Pass the tender data if it exists
-      panelClass: 'tender-details-dialog'
+      panelClass: 'tender-details-dialog',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('AddTenderPopup closed with result:', result);
       if (result) {
         // Refresh the table
@@ -544,11 +784,11 @@ export class TenderListComponent implements OnInit, AfterViewInit {
         excomDecisionItem: element.excomDecisionItem,
         excomDecisionPriorityLevelId: element.excomDecisionPriorityLevelId,
         excomDecisionNotes: element.excomDecisionNotes,
-        excomDecisionDate: element.excomDecisionDate
-      }
+        excomDecisionDate: element.excomDecisionDate,
+      },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         // Update the tender item with the new ExCom decision data
         element.excomDecisionItem = 'Upxxxsks';
@@ -572,11 +812,11 @@ export class TenderListComponent implements OnInit, AfterViewInit {
         tenderId: element.id,
         winningCompetitor: element.winningCompetitor,
         marginLost: element.marginLostPercentage,
-        otherReasonForLoss: element.otherReasonsForLoss
-      }
+        otherReasonForLoss: element.otherReasonsForLoss,
+      },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log('Market Intelligence dialog result:', result);
         // Update the tender item with the market intelligence data
@@ -597,11 +837,11 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       maxWidth: 'none',
       disableClose: false,
       data: {
-        tenderId: element.id
-      }
+        tenderId: element.id,
+      },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         // Handle any updates if necessary
         console.log('Key Date dialog closed with result:', result);
@@ -611,8 +851,10 @@ export class TenderListComponent implements OnInit, AfterViewInit {
 
   onRowClick(row: TenderItem, event: Event): void {
     // Prevent row click if the event came from a button
-    if ((event.target as HTMLElement).tagName === 'BUTTON' ||
-        (event.target as HTMLElement).closest('button')) {
+    if (
+      (event.target as HTMLElement).tagName === 'BUTTON' ||
+      (event.target as HTMLElement).closest('button')
+    ) {
       return;
     }
 
@@ -623,10 +865,10 @@ export class TenderListComponent implements OnInit, AfterViewInit {
 
     this.selectedRow = row;
     console.log('Fetching details for tender ID:', row.id);
-    
+
     // Show loading state
     this.isLoading = true;
-    
+
     // Fetch full tender details when row is clicked
     this.tenderListApiService.getTenderById(row.id).subscribe({
       next: (response) => {
@@ -644,7 +886,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
         this.error = 'Error loading tender details. Please try again later.';
         console.error('Error fetching tender details:', error);
         this.selectedRow = null;
-      }
+      },
     });
   }
 
@@ -680,7 +922,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       },
       (error) => {
         console.error('Error exporting excel:', error);
-      }
+      },
     );
   }
 
@@ -715,12 +957,9 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       .subscribe((confirm) => {
         if (confirm) {
           if (
-            [
-              'Successful',
-              'Unsuccessful',
-              'Withdraw / Declined',
-              'Expired',
-            ].indexOf(tenderStatus) >= 0
+            ['Successful', 'Unsuccessful', 'Withdraw / Declined', 'Expired'].indexOf(
+              tenderStatus,
+            ) >= 0
           ) {
             this.tenderListApiService.getTenderById(element.id).subscribe((tender) => {
               if (['Unsuccessful'].indexOf(tenderStatus) >= 0) {
@@ -740,7 +979,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
                         tenderStatus,
                         element,
                         // convert null -> undefined to match parameter type string | undefined
-                        persistedTender.reportDate ?? undefined
+                        persistedTender.reportDate ?? undefined,
                       );
                     } else {
                       this.dialog.open(AlertDialog, {
@@ -809,71 +1048,59 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     //this.tenderApi.getTenderPage().subscribe((response) => {
     this.isLoading = true;
     this.error = null;
-    this.tenderListApiService
-      .getTenderPageSorted(this.tenderSort)
-      .subscribe({
-        next: (response) => {
-          const list: TenderItem[] = response.items ?? [];
-          this.totalItems = response.totalCount ?? list.length;
-          this.dataSource.data = list.filter((tender: TenderItem) => this._filter(tender));
-  
-          this.divisionList = list.reduce(
-            (prev: string[], current: TenderItem) => {
-              if (prev.indexOf(current.division) < 0) {
-                prev.push(current.division);
-              }
-              return prev;
-            },
-            []
-          );
-  
-          this.divisionList.sort();
-  
-          this.biddingEntityList = list.reduce(
-            (prev: string[], current: TenderItem) => {
-              const entity = current.biddingGammonEntity?.shortName;
-              if (entity === undefined) return prev;
-              if (prev.indexOf(entity) < 0) {
-                prev.push(entity);
-              }
-              return prev;
-            },
-            []
-          );
-          this.isLoading = false;
-        },
-        error: (error) => {
-          this.isLoading = false;
-          this.error = 'Error loading tenders. Please try again later.';
-          console.error('Error loading tenders:', error);
-        }
-      });
+    this.tenderListApiService.getTenderPageSorted(this.tenderSort).subscribe({
+      next: (response) => {
+        const list: TenderItem[] = response.items ?? [];
+        this.totalItems = response.totalCount ?? list.length;
+        this.dataSource.data = list.filter((tender: TenderItem) => this._filter(tender));
+
+        this.divisionList = list.reduce((prev: string[], current: TenderItem) => {
+          if (prev.indexOf(current.division) < 0) {
+            prev.push(current.division);
+          }
+          return prev;
+        }, []);
+
+        this.divisionList.sort();
+
+        this.biddingEntityList = list.reduce((prev: string[], current: TenderItem) => {
+          const entity = current.biddingGammonEntity?.shortName;
+          if (entity === undefined) return prev;
+          if (prev.indexOf(entity) < 0) {
+            prev.push(entity);
+          }
+          return prev;
+        }, []);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.error = 'Error loading tenders. Please try again later.';
+        console.error('Error loading tenders:', error);
+      },
+    });
   }
 
   showPendingExcomReview(element: TenderItem): boolean {
     return (
-      element.tenderStatus.toLowerCase() ==
-        'No need for EXCOM approval'.toLowerCase() ||
+      element.tenderStatus.toLowerCase() == 'No need for EXCOM approval'.toLowerCase() ||
       element.tenderStatus.toLowerCase() ==
         'Work In View (Pending Tender Doc Released)'.toLowerCase()
     );
   }
 
   showNoNeedForExcomReview(element: TenderItem): boolean {
-  return (
-    element.tenderStatus.toLowerCase() ==
-      'Pending EXCOM review'.toLowerCase() ||
-    element.tenderStatus.toLowerCase() ==
-      'Work In View (Pending Tender Doc Released)'.toLowerCase()
+    return (
+      element.tenderStatus.toLowerCase() == 'Pending EXCOM review'.toLowerCase() ||
+      element.tenderStatus.toLowerCase() ==
+        'Work In View (Pending Tender Doc Released)'.toLowerCase()
     );
-}
+  }
 
   showWorkInView(element: TenderItem): boolean {
     return (
-      element.tenderStatus.toLowerCase() ==
-        'Pending EXCOM review'.toLowerCase() ||
-      element.tenderStatus.toLowerCase() ==
-        'No need for EXCOM approval'.toLowerCase()
+      element.tenderStatus.toLowerCase() == 'Pending EXCOM review'.toLowerCase() ||
+      element.tenderStatus.toLowerCase() == 'No need for EXCOM approval'.toLowerCase()
     );
   }
 
@@ -885,10 +1112,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   }
 
   showBidSubmitted(element: TenderItem): boolean {
-    return (
-      element.tenderStatus.toLowerCase() ==
-      'Tender Under Preparation'.toLowerCase()
-    );
+    return element.tenderStatus.toLowerCase() == 'Tender Under Preparation'.toLowerCase();
   }
 
   showSuccessful(element: TenderItem): boolean {
@@ -897,7 +1121,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       'Bid Submitted (Pending Result Announcement)'.toLowerCase()
     );
   }
-  
+
   showUnsuccessful(element: TenderItem): boolean {
     return (
       element.tenderStatus.toLowerCase() ==
@@ -918,13 +1142,12 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   showExpired(element: TenderItem): boolean {
     return (
       ['Bid Submitted (Pending Result Announcement)'.toLowerCase()].indexOf(
-        element.tenderStatus.toLowerCase()
+        element.tenderStatus.toLowerCase(),
       ) >= 0
     );
   }
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   stopPropagation(event: Event) {
     event.stopPropagation();
@@ -984,10 +1207,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
             (Number(this.formGroup.value[aKey].trim().substring(1)) &&
               ['>', '<'].indexOf(this.formGroup.value[aKey].trim()[0]) >= 0)
           ) {
-            if (
-              Number(this.formGroup.value[aKey]) &&
-              +itemVal != +this.formGroup.value[aKey]
-            ) {
+            if (Number(this.formGroup.value[aKey]) && +itemVal != +this.formGroup.value[aKey]) {
               // console.log("3");
               results[i] = false;
               continue;
@@ -1073,4 +1293,3 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     return false;
   }
 }
-

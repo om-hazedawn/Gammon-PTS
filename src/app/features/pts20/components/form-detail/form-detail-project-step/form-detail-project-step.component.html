@@ -74,9 +74,15 @@
           @if (!formGroup.get('tenderNo')?.value || formGroup.get('tenderNo')?.value === 'NEW') {
             <button
               (click)="allocateTenderNo()"
-              [disabled]="!formGroup.get('dueDate')?.value || allocatingTenderNo"
+              [disabled]="!formGroup.get('businessUnit')?.value || !formGroup.get('dueDate')?.value || !formGroup.get('projectTitle')?.value || allocatingTenderNo"
+              [matTooltip]="!formGroup.get('businessUnit')?.value || !formGroup.get('dueDate')?.value || !formGroup.get('projectTitle')?.value ? 'Fill Business Unit, Due Date, and Project Title first' : ''"
+              matTooltipPosition="above"
               type="button"
-              class="border px-3 py-1 rounded bg-blue-100 text-blue-700"
+              [ngClass]="{
+                'bg-blue-500 text-white hover:bg-blue-600 border-blue-600 shadow-md': formGroup.get('businessUnit')?.value && formGroup.get('dueDate')?.value && formGroup.get('projectTitle')?.value && !allocatingTenderNo,
+                'bg-gray-300 text-gray-500 border-gray-400 cursor-not-allowed': !formGroup.get('businessUnit')?.value || !formGroup.get('dueDate')?.value || !formGroup.get('projectTitle')?.value || allocatingTenderNo
+              }"
+              class="border px-4 py-2 rounded font-medium transition-all duration-200"
             >
               Allocate Tender No
             </button>

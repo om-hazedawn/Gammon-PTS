@@ -65,8 +65,16 @@ import { MatRadioModule } from '@angular/material/radio';
           </legend>
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Tender Status</mat-label>
-            <input matInput formControlName="tenderStatus" />
+            <input matInput [value]="tenderStatusValue" disabled />
           </mat-form-field>
+          @if (isShowReportDate()) {
+            <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
+              <mat-label>Report Date</mat-label>
+              <input matInput [matDatepicker]="reportDateDatepicker" formControlName="reportDate" readonly />
+              <mat-datepicker-toggle matSuffix [for]="reportDateDatepicker"></mat-datepicker-toggle>
+              <mat-datepicker #reportDateDatepicker></mat-datepicker>
+            </mat-form-field>
+          }
           <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
             <mat-label>Business Unit</mat-label>
             <mat-select formControlName="businessUnitId">
@@ -698,6 +706,7 @@ export class AddTenderPopupComponent implements OnInit {
       });
     }
   tenderForm: FormGroup;
+  tenderStatusValue: string | null = null;
   selectedFileName: string | null = null;
   selectedFile: File | null = null;
   uploadStatuses: FileUploadStatus[] = [];
@@ -735,7 +744,6 @@ export class AddTenderPopupComponent implements OnInit {
     this.tenderForm = this.fb.group({
       attachment: [''],
       division: [undefined, []],
-      tenderStatus: [undefined, []],
       reportDate: [undefined, []],
       businessUnitId: [undefined, Validators.required],
       isExternal: [undefined, []],
@@ -821,6 +829,9 @@ export class AddTenderPopupComponent implements OnInit {
       this.tenderListApiService.getTenderById(this.data.id).subscribe({
         next: (response) => {
           if (response && response.data) {
+            // Store tender status separately (fetch-only, not user editable)
+            this.tenderStatusValue = response.data.tenderStatus || null;
+            
             this.tenderForm.patchValue({
               ...response.data,
               projectDescriptionAndLocation: response.data.projectDescription,
@@ -928,7 +939,7 @@ export class AddTenderPopupComponent implements OnInit {
           riskAssessmentCriteriaId: this.tenderForm.get('riskAssessmentCriteriaId')?.value,
           riskAssessmentLevel: this.tenderForm.get('riskAssessmentLevel')?.value || null,
           riskAssessmentRationale: this.tenderForm.get('riskAssessmentRationale')?.value || '',
-          tenderStatus: this.tenderForm.get('tenderStatus')?.value || null,
+          tenderStatus: this.tenderStatusValue || null,
           upgradeDowngradePriorityLevelId:
             this.tenderForm.get('upgradeDowngradePriorityLevelId')?.value || null,
           upgradeDowngradeRationale: this.tenderForm.get('upgradeDowngradeRationale')?.value || '',
@@ -1070,8 +1081,13 @@ export class AddTenderPopupComponent implements OnInit {
     return this.tenderForm.get('division') as FormControl;
   }
 
-  get tenderStatusControl(): FormControl {
-    return this.tenderForm.get('tenderStatus') as FormControl;
+
+  isShowReportDate(): boolean {
+    return (
+      ['Expired', 'Successful', 'Unsuccessful', 'Withdraw / Declined'].indexOf(
+        this.tenderStatusValue || ''
+      ) >= 0
+    );
   }
 
   get reportDateControl(): FormControl {
