@@ -18,7 +18,12 @@ export class TenderListApiService {
   }
 
   getTenderPageSorted(request: TenderSorted): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/tenders`, request);
+    // Remove pagination parameters - handle pagination on frontend only
+    const apiRequest = {
+      column: request.column,
+      order: request.order,
+    };
+    return this.http.post<any>(`${this.baseUrl}/tenders`, apiRequest);
   }
 
   getTenderById(

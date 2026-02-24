@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, ViewChild, OnInit, AfterViewInit, Inject } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TenderListApiService } from '../../../../core/services/tender-list-api.service';
@@ -12,7 +12,7 @@ import { AlertDialog } from '../alert-dialog/alert-dialog.component';
 import { ReportDateDialog } from '../report-date/report-date.component';
 import { PerMillionPipe } from '../../../../core/pipes/per-million.pipe';
 
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -28,6 +28,7 @@ import { MarketIntelligencepopup } from '../market-intelligencepopup/market-inte
 import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-date-list.component';
 import { ReportDateWithMarketIntelDialog } from '../report-date-with-market-intel/report-date-with-market-intel.component';
 import { Form20ControlsComponent } from '../form20-controls/form20-controls.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-tender-list',
@@ -42,11 +43,13 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
     MatFormFieldModule,
     MatSelectModule,
     FormsModule,
+    ReactiveFormsModule,
     MatIconModule,
     Form20ControlsComponent,
     MatPaginatorModule,
     MatProgressSpinnerModule,
     PerMillionPipe,
+    MatCheckboxModule,
   ],
   template: `
     <div class="form-list-container">
@@ -83,18 +86,40 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
             >
               <!-- Status Column -->
               <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <th mat-header-cell *matHeaderCellDef 
+                  (click)="openStatusFilterPopup($event)"
+                  style="cursor: pointer; user-select: none;"
+                >
+                  Status
+                </th>
                 <td mat-cell *matCellDef="let element">{{ element.tenderStatus }}</td>
               </ng-container>
               <!-- Division Column -->
               <ng-container matColumnDef="division">
-                <th mat-header-cell *matHeaderCellDef>Division</th>
+                <th mat-header-cell *matHeaderCellDef 
+                  (click)="openDivisionFilterPopup($event)"
+                  style="cursor: pointer; user-select: none;"
+                >
+                  Division
+                </th>
                 <td mat-cell *matCellDef="let element">{{ element.division }}</td>
               </ng-container>
 
               <!-- Expected Tender Submission Date Column -->
               <ng-container matColumnDef="expectedDate">
-                <th mat-header-cell *matHeaderCellDef>Expected Tender<br />Submission Date</th>
+                <th mat-header-cell *matHeaderCellDef 
+                  (click)="toggleSort('expectedTenderSubmissionDate')"
+                  style="cursor: pointer; user-select: none;"
+                >
+                  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;">
+                    <div style="text-align: center;">Expected Tender<br />Submission Date</div>
+                    @if (tenderSort.column === 'expectedTenderSubmissionDate' && tenderSort.order === 'asc') {
+                      <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #1976d2;">arrow_upward</mat-icon>
+                    } @else if (tenderSort.column === 'expectedTenderSubmissionDate' && tenderSort.order === 'desc') {
+                      <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #1976d2;">arrow_downward</mat-icon>
+                    }
+                  </div>
+                </th>
                 <td mat-cell *matCellDef="let element">
                   {{ element.expectedTenderSubmissionDate | date }}
                 </td>
@@ -102,7 +127,12 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
 
               <!-- Bidding Gammon Entity Column -->
               <ng-container matColumnDef="entity">
-                <th mat-header-cell *matHeaderCellDef>Bidding Gammon Entity</th>
+                <th mat-header-cell *matHeaderCellDef 
+                  (click)="openBiddingEntityFilterPopup($event)"
+                  style="cursor: pointer; user-select: none;"
+                >
+                  Bidding Gammon Entity
+                </th>
                 <td mat-cell *matCellDef="let element">{{ element.biddingGammonEntity?.name }}</td>
               </ng-container>
 
@@ -136,7 +166,7 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
                 <td mat-cell *matCellDef="let element">
                   <div style="display:flex; gap:0px; align-items: center; width: 100%; justify-content: flex-start;">
                     <span
-                      style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                      style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1;"
                       >{{ element.standardResponsePriorityLevel?.title }}</span
                     >
                     <span
@@ -152,6 +182,8 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
                           xmlns="http://www.w3.org/2000/svg"
                           style="color: currentColor;"
                         >
+                          <path
+                            d="M7 11L12 6L17 11M7 18L12 13L17 18"
                             stroke="currentColor"
                             stroke-width="2"
                             stroke-linecap="round"
@@ -222,6 +254,11 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
                 <th mat-header-cell *matHeaderCellDef>EXCOM Decision</th>
                 <td mat-cell *matCellDef="let element">
                   <div class="excom-decision-cell">
+                     @if (element.excomDecisionPriorityLevel?.title) {
+                    <span style="background-color: #1976d2; padding: 4px 8px; border-radius: 4px; display: inline-block;">
+                      {{ element.excomDecisionPriorityLevel?.title }}
+                    </span>
+                  }
                     <button
                       mat-icon-button
                       color="primary"
@@ -277,7 +314,7 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
                     @if (showWorkInView(element)) {
                       <button
                         mat-raised-button
-                        class="action-btn"
+                        class="long-text-btn"
                         (click)="
                           changeStatus(
                             $event,
@@ -398,7 +435,7 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
             </table>
             <mat-paginator
               [pageSize]="pageSize"
-              [pageSizeOptions]="[5, 10, 25, 50]"
+              [pageSizeOptions]="[10, 20, 50, 100]"
               [length]="totalItems"
               [pageIndex]="currentPage - 1"
               showFirstLastButtons
@@ -499,8 +536,8 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         min-width: 45px;
       }
       .mat-column-expectedDate {
-        width: 65px;
-        min-width: 65px;
+        width: 90px;
+        min-width: 90px;
       }
       .mat-column-entity {
         width: 100px;
@@ -508,14 +545,21 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
       }
       .mat-column-currency {
         width: 50px;
+        min-width: 50px;
+      }
+      .mat-column-estimatedValue {
+        width: 55
+        px;
+        min-width: 55px;
       }
       .mat-column-projectName {
         width: 150px;
         min-width: 150px;
       }
+      
       .mat-column-response {
-        width: 100px;
-        min-width: 100px;
+        width: 60px;
+        min-width: 60px;
       }
       
       mat-icon {
@@ -609,13 +653,13 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         padding-bottom: 8px;
         padding-left: 0px;
         padding-right: 0px;
-        text-align: center;
+        text-align: left;
         font-size: 12px;
         overflow-wrap: break-word;
         border-bottom: 2px solid #e0e0e0;
       }
       td {
-        text-align: center;
+        text-align: left;
         vertical-align: middle;
         white-space: normal;
         word-wrap: break-word;
@@ -681,6 +725,29 @@ import { Form20ControlsComponent } from '../form20-controls/form20-controls.comp
         background: #43a047 !important;
         color: #fff !important;
       }
+      .long-text-btn {
+        min-width: auto !important;
+        width: 100% !important;
+        padding: 12px 12px !important;
+        min-height: 50px !important;
+        font-size: 12px !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        line-height: 1.4 !important;
+        text-align: center !important;
+        background-color: var(--primary-color) !important;
+        color: #fff !important;
+        font-weight: 500 !important;
+        border-radius: 6px !important;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08) !important;
+        transition: background 0.2s, box-shadow 0.2s !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      .long-text-btn:hover:not([disabled]) {
+        box-shadow: 0 4px 16px rgba(25, 118, 210, 0.15) !important;
+      }
       .custom-paginator {
         margin-top: 12px;
         padding: 8px 12px !important;
@@ -717,7 +784,8 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<TenderItem>([]);
   totalItems = 0;
   currentPage = 1;
-  pageSize = 10;
+  pageSize = 20;
+  allFilteredTenders: TenderItem[] = []; // Store all filtered tenders
 
   constructor(
     private dialog: MatDialog,
@@ -726,12 +794,23 @@ export class TenderListComponent implements OnInit, AfterViewInit {
 
   tenderSort: TenderSorted = {
     column: '',
-    order: 'desc',
+    order: '',
     pageSize: this.pageSize,
     page: this.currentPage,
   };
   biddingEntityList: string[] = [];
   divisionList: string[] = [];
+  statusList: string[] = [
+    'Pending EXCOM review',
+    'No need for EXCOM approval',
+    'Bid Submitted (Pending Result Announcement)',
+    'Work In View (Pending Tender Doc Released)',
+    'Withdraw / Declined',
+    'Successful',
+    'Tender Under Preparation',
+    'Unsuccessful',
+    'Expired',
+  ];
 
   divisionSearchFC: FormControl = new FormControl('', {});
   statusSearchFC: FormControl = new FormControl('', {});
@@ -769,6 +848,84 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       console.log('AddTenderPopup closed with result:', result);
       if (result) {
         // Refresh the table
+        this.refreshDataSource();
+      }
+    });
+  }
+
+  openStatusFilterPopup(event: MouseEvent): void {
+    event.stopPropagation();
+    
+    // Open inline filter dialog
+    const dialogRef = this.dialog.open(StatusFilterDialogComponent, {
+      width: '350px',
+      disableClose: false,
+      data: {
+        statusList: this.statusList,
+        selectedStatus: this.statusSearchFC.value ? [this.statusSearchFC.value] : [],
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((selectedStatuses: string[]) => {
+      if (selectedStatuses !== undefined && selectedStatuses !== null) {
+        // Store as comma-separated string for filtering
+        this.statusSearchFC.setValue(selectedStatuses.length > 0 ? selectedStatuses : '');
+        // Reset paginator to first page and refresh
+        if (this.paginator) {
+          this.paginator.firstPage();
+        }
+        this.refreshDataSource();
+      }
+    });
+  }
+
+  openDivisionFilterPopup(event: MouseEvent): void {
+    event.stopPropagation();
+    
+    // Open inline filter dialog for divisions
+    const dialogRef = this.dialog.open(StatusFilterDialogComponent, {
+      width: '350px',
+      disableClose: false,
+      data: {
+        statusList: this.divisionList,
+        selectedStatus: this.divisionSearchFC.value ? [this.divisionSearchFC.value] : [],
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((selectedDivisions: string[]) => {
+      if (selectedDivisions !== undefined && selectedDivisions !== null) {
+        // Store as array for filtering
+        this.divisionSearchFC.setValue(selectedDivisions.length > 0 ? selectedDivisions : '');
+        // Reset paginator to first page and refresh
+        if (this.paginator) {
+          this.paginator.firstPage();
+        }
+        this.refreshDataSource();
+      }
+    });
+  }
+
+  openBiddingEntityFilterPopup(event: MouseEvent): void {
+    event.stopPropagation();
+    
+    // Open inline filter dialog for bidding entities
+    const dialogRef = this.dialog.open(StatusFilterDialogComponent, {
+      width: '350px',
+      disableClose: false,
+      data: {
+        statusList: this.biddingEntityList,
+        selectedStatus: this.biddingEntitySearchFC.value ? [this.biddingEntitySearchFC.value] : [],
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((selectedEntities: string[]) => {
+      if (selectedEntities !== undefined && selectedEntities !== null) {
+        // Store as array for filtering
+        this.biddingEntitySearchFC.setValue(selectedEntities.length > 0 ? selectedEntities : '');
+        // Reset paginator to first page and refresh
+        if (this.paginator) {
+          this.paginator.firstPage();
+        }
         this.refreshDataSource();
       }
     });
@@ -927,13 +1084,38 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   }
 
   handlePageEvent(event: any) {
+    // Frontend handles pagination - slice data based on page and pageSize
     this.pageSize = event.pageSize;
     this.currentPage = event.pageIndex + 1;
-    this.tenderSort = {
-      ...this.tenderSort,
-      page: this.currentPage,
-      pageSize: this.pageSize,
-    };
+    
+    // Slice the stored filtered list for current page
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    
+    this.dataSource.data = this.allFilteredTenders.slice(startIndex, endIndex);
+  }
+
+  toggleSort(columnName: string) {
+    // If clicking the same column, toggle order (asc -> desc -> blank)
+    if (this.tenderSort.column === columnName) {
+      if (this.tenderSort.order === 'asc') {
+        this.tenderSort.order = 'desc';
+      } else if (this.tenderSort.order === 'desc') {
+        // Clear sort
+        this.tenderSort.column = '';
+        this.tenderSort.order = '';
+      }
+    } else {
+      // Clicking a new column, start with asc
+      this.tenderSort.column = columnName;
+      this.tenderSort.order = 'asc';
+    }
+    
+    // Reset to first page and refresh data
+    this.currentPage = 1;
+    if (this.paginator) {
+      this.paginator.firstPage();
+    }
     this.refreshDataSource();
   }
 
@@ -1051,8 +1233,27 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     this.tenderListApiService.getTenderPageSorted(this.tenderSort).subscribe({
       next: (response) => {
         const list: TenderItem[] = response.items ?? [];
-        this.totalItems = response.totalCount ?? list.length;
-        this.dataSource.data = list.filter((tender: TenderItem) => this._filter(tender));
+        const filteredList = list.filter((tender: TenderItem) => this._filter(tender));
+        
+        // Store full filtered list for pagination
+        this.allFilteredTenders = filteredList;
+        this.totalItems = filteredList.length;
+        
+        // Reset to first page when data is refreshed
+        this.currentPage = 1;
+        
+        // Slice data based on pagination
+        const startIndex = (this.currentPage - 1) * this.pageSize;
+        const endIndex = startIndex + this.pageSize;
+        const paginatedList = filteredList.slice(startIndex, endIndex);
+        
+        // Set paginated data to display
+        this.dataSource.data = paginatedList;
+        
+        // Reset paginator to first page
+        if (this.paginator) {
+          this.paginator.firstPage();
+        }
 
         this.divisionList = list.reduce((prev: string[], current: TenderItem) => {
           if (prev.indexOf(current.division) < 0) {
@@ -1291,5 +1492,68 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       return false;
     }
     return false;
+  }
+}
+
+// Status Filter Dialog Component
+@Component({
+  selector: 'app-status-filter-dialog',
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatSelectModule],
+  template: `
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 mat-dialog-title style="margin: 0; color: #1976d2; font-weight: 600;">Filter by Status</h2>
+      
+      <div style="display: flex; flex-direction: column; gap: 8px; max-height: 350px; overflow-y: auto; padding: 8px 0;">
+        @for (status of data.statusList; track status) {
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background 0.2s;">
+            <input type="checkbox" [checked]="selectedStatuses.includes(status)" (change)="toggleStatus(status)">
+            <span>{{ status }}</span>
+          </label>
+        }
+      </div>
+      
+      <div style="display: flex; gap: 8px; justify-content: flex-end; padding-top: 8px;">
+        <button mat-button (click)="cancel()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="applyFilter()">Apply</button>
+      </div>
+    </div>
+  `,
+  styles: [`
+    label:hover {
+      background-color: #e3f2fd;
+    }
+  `],
+})
+export class StatusFilterDialogComponent {
+  selectedStatuses: string[] = [];
+
+  constructor(
+    public dialogRef: MatDialogRef<StatusFilterDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { statusList: string[]; selectedStatus: string },
+  ) {
+    // Initialize selected statuses from passed data
+    if (data.selectedStatus && data.selectedStatus.length > 0) {
+      this.selectedStatuses = Array.isArray(data.selectedStatus) 
+        ? [...data.selectedStatus] 
+        : [data.selectedStatus];
+    }
+  }
+
+  toggleStatus(status: string): void {
+    const index = this.selectedStatuses.indexOf(status);
+    if (index > -1) {
+      this.selectedStatuses.splice(index, 1);
+    } else {
+      this.selectedStatuses.push(status);
+    }
+  }
+
+  applyFilter(): void {
+    this.dialogRef.close(this.selectedStatuses);
+  }
+
+  cancel(): void {
+    this.dialogRef.close(undefined);
   }
 }
