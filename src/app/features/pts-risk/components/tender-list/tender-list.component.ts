@@ -10,6 +10,8 @@ import { AddTenderPopupComponent } from '../add-tender-popup/add-tender-popup.co
 import { ConfirmDialog } from '../confirm-dialog/confirm-dialog.component';
 import { AlertDialog } from '../alert-dialog/alert-dialog.component';
 import { ReportDateDialog } from '../report-date/report-date.component';
+import { ChangeStatusToggleDialogComponent } from '../change-status-toggle-dialog/change-status-toggle-dialog.component';
+import { ChangeStatusMenuDialogComponent } from '../change-status-menu-dialog/change-status-menu-dialog.component';
 import { PerMillionPipe } from '../../../../core/pipes/per-million.pipe';
 
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -138,13 +140,23 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
               <!-- Customer Name Column -->
               <ng-container matColumnDef="customerName">
-                <th mat-header-cell *matHeaderCellDef>Customer Name</th>
+                <th mat-header-cell *matHeaderCellDef 
+                  (click)="openCustomerNameFilterPopup($event)"
+                  style="cursor: pointer; user-select: none;"
+                >
+                  Customer Name
+                </th>
                 <td mat-cell *matCellDef="let element">{{ element.customerName }}</td>
               </ng-container>
 
               <!-- Project Name Column -->
               <ng-container matColumnDef="projectName">
-                <th mat-header-cell *matHeaderCellDef>Project Name</th>
+                <th mat-header-cell *matHeaderCellDef 
+                  (click)="openProjectNameFilterPopup($event)"
+                  style="cursor: pointer; user-select: none;"
+                >
+                  Project Name
+                </th>
                 <td mat-cell *matCellDef="let element">{{ element.projectName }}</td>
               </ng-container>
 
@@ -288,11 +300,23 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
               <!-- Change Status for Tender Column -->
               <ng-container matColumnDef="changeStatus">
-                <th mat-header-cell *matHeaderCellDef>Change Status for Tender</th>
+                <th 
+                  mat-header-cell 
+                  *matHeaderCellDef
+                  (click)="openChangeStatusTogglePopup($event)"
+                  style="cursor: pointer; user-select: none;"
+                >
+                  @if (!isChangeStatusHidden) {
+                    <span>Change Status for Tender</span>
+                  } @else {
+                    <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #1976d2;">settings</mat-icon>
+                  }
+                </th>
                 <td mat-cell *matCellDef="let element">
-                  <div
-                    style="display: flex; flex-direction: column; align-items: center; gap: 6px;"
-                  >
+                  @if (!isChangeStatusHidden) {
+                    <div
+                      style="display: flex; flex-direction: column; align-items: center; gap: 6px;"
+                    >
                     @if (showPendingExcomReview(element)) {
                       <button
                         mat-raised-button
@@ -389,6 +413,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
                     <button mat-raised-button class="action-btn green">Weekly Snapshot</button>
                     <button mat-raised-button class="action-btn green">Monthly Snapshot</button>
                   </div>
+                  } @else {
+                    <button 
+                      mat-icon-button 
+                      (click)="openStatusMenuPopup($event, element)"
+                      style="color: #1976d2;"
+                    >
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                  }
                 </td>
               </ng-container>
 
@@ -408,7 +441,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
               <!-- Form 20 Column -->
               <ng-container matColumnDef="form20">
-                <th mat-header-cell *matHeaderCellDef>Form<br />20</th>
+                <th mat-header-cell *matHeaderCellDef 
+                  (click)="openForm20FilterPopup($event)"
+                  style="cursor: pointer; user-select: none;"
+                >
+                  Form 20
+                </th>
                 <td
                   mat-cell
                   (click)="stopPropagation($event)"
@@ -536,8 +574,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         min-width: 45px;
       }
       .mat-column-expectedDate {
-        width: 90px;
-        min-width: 90px;
+        width: 70px;
+        min-width: 70px;
       }
       .mat-column-entity {
         width: 100px;
@@ -773,6 +811,20 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         margin-bottom: 16px;
         font-weight: 500;
       }
+      ::ng-deep .change-status-toggle-popup {
+        .mat-mdc-dialog-container {
+          padding: 0 !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+          border-radius: 4px !important;
+        }
+      }
+      ::ng-deep .change-status-menu-popup {
+        .mat-mdc-dialog-container {
+          padding: 0 !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+          border-radius: 4px !important;
+        }
+      }
     `,
   ],
 })
@@ -780,6 +832,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   isLoading = false;
   error: string | null = null;
   selectedRow: TenderItem | null = null;
+  isChangeStatusHidden = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource = new MatTableDataSource<TenderItem>([]);
   totalItems = 0;
@@ -800,6 +853,9 @@ export class TenderListComponent implements OnInit, AfterViewInit {
   };
   biddingEntityList: string[] = [];
   divisionList: string[] = [];
+  customerNameList: string[] = [];
+  projectNameList: string[] = [];
+  form20List: string[] = [];
   statusList: string[] = [
     'Pending EXCOM review',
     'No need for EXCOM approval',
@@ -812,13 +868,14 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     'Expired',
   ];
 
-  divisionSearchFC: FormControl = new FormControl('', {});
-  statusSearchFC: FormControl = new FormControl('', {});
-  biddingEntitySearchFC: FormControl = new FormControl('', {});
+  divisionSearchFC: FormControl = new FormControl<string[]>([], {});
+  statusSearchFC: FormControl = new FormControl<string[]>([], {});
+  biddingEntitySearchFC: FormControl = new FormControl<string[]>([], {});
   projectDescriptionSearchFC: FormControl = new FormControl('', {});
-  projectNameSearchFC: FormControl = new FormControl('', {});
-  customerNameSearchFC: FormControl = new FormControl('', {});
+  customerNameSearchFC: FormControl = new FormControl<string[]>([], {});
+  projectNameSearchFC: FormControl = new FormControl<string[]>([], {});
   tenderNoSearchFC: FormControl = new FormControl('', {});
+  form20SearchFC: FormControl = new FormControl<string[]>([], {});
 
   /**
    * For filter purpose
@@ -831,6 +888,7 @@ export class TenderListComponent implements OnInit, AfterViewInit {
     projectName: this.projectNameSearchFC,
     customerName: this.customerNameSearchFC,
     tenderNoSearchFC: this.tenderNoSearchFC,
+    form20Id: this.form20SearchFC,
   });
 
   openAddTenderPopup(data?: any): void {
@@ -862,14 +920,14 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       disableClose: false,
       data: {
         statusList: this.statusList,
-        selectedStatus: this.statusSearchFC.value ? [this.statusSearchFC.value] : [],
+        selectedStatus: this.statusSearchFC.value || [],
       },
     });
 
     dialogRef.afterClosed().subscribe((selectedStatuses: string[]) => {
       if (selectedStatuses !== undefined && selectedStatuses !== null) {
-        // Store as comma-separated string for filtering
-        this.statusSearchFC.setValue(selectedStatuses.length > 0 ? selectedStatuses : '');
+        // Store as array for filtering
+        this.statusSearchFC.setValue(selectedStatuses);
         // Reset paginator to first page and refresh
         if (this.paginator) {
           this.paginator.firstPage();
@@ -888,14 +946,14 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       disableClose: false,
       data: {
         statusList: this.divisionList,
-        selectedStatus: this.divisionSearchFC.value ? [this.divisionSearchFC.value] : [],
+        selectedStatus: this.divisionSearchFC.value || [],
       },
     });
 
     dialogRef.afterClosed().subscribe((selectedDivisions: string[]) => {
       if (selectedDivisions !== undefined && selectedDivisions !== null) {
         // Store as array for filtering
-        this.divisionSearchFC.setValue(selectedDivisions.length > 0 ? selectedDivisions : '');
+        this.divisionSearchFC.setValue(selectedDivisions);
         // Reset paginator to first page and refresh
         if (this.paginator) {
           this.paginator.firstPage();
@@ -914,14 +972,92 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       disableClose: false,
       data: {
         statusList: this.biddingEntityList,
-        selectedStatus: this.biddingEntitySearchFC.value ? [this.biddingEntitySearchFC.value] : [],
+        selectedStatus: this.biddingEntitySearchFC.value || [],
       },
     });
 
     dialogRef.afterClosed().subscribe((selectedEntities: string[]) => {
       if (selectedEntities !== undefined && selectedEntities !== null) {
         // Store as array for filtering
-        this.biddingEntitySearchFC.setValue(selectedEntities.length > 0 ? selectedEntities : '');
+        this.biddingEntitySearchFC.setValue(selectedEntities);
+        // Reset paginator to first page and refresh
+        if (this.paginator) {
+          this.paginator.firstPage();
+        }
+        this.refreshDataSource();
+      }
+    });
+  }
+
+  openCustomerNameFilterPopup(event: MouseEvent): void {
+    event.stopPropagation();
+    
+    // Open search filter dialog for customer names
+    const dialogRef = this.dialog.open(SearchFilterDialogComponent, {
+      width: '350px',
+      disableClose: false,
+      data: {
+        filterList: this.customerNameList,
+        selectedValue: this.customerNameSearchFC.value?.[0] || '',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((selectedValue: string) => {
+      if (selectedValue !== undefined && selectedValue !== null) {
+        // Store as single search value
+        this.customerNameSearchFC.setValue(selectedValue ? [selectedValue] : []);
+        // Reset paginator to first page and refresh
+        if (this.paginator) {
+          this.paginator.firstPage();
+        }
+        this.refreshDataSource();
+      }
+    });
+  }
+
+  openProjectNameFilterPopup(event: MouseEvent): void {
+    event.stopPropagation();
+    
+    // Open search filter dialog for project names
+    const dialogRef = this.dialog.open(SearchFilterDialogComponent, {
+      width: '350px',
+      disableClose: false,
+      data: {
+        filterList: this.projectNameList,
+        selectedValue: this.projectNameSearchFC.value?.[0] || '',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((selectedValue: string) => {
+      if (selectedValue !== undefined && selectedValue !== null) {
+        // Store as single search value
+        this.projectNameSearchFC.setValue(selectedValue ? [selectedValue] : []);
+        // Reset paginator to first page and refresh
+        if (this.paginator) {
+          this.paginator.firstPage();
+        }
+        this.refreshDataSource();
+      }
+    });
+  }
+
+  openForm20FilterPopup(event: MouseEvent): void {
+    event.stopPropagation();
+    
+    // Open search filter dialog for Form 20
+    const dialogRef = this.dialog.open(SearchFilterDialogComponent, {
+      width: '350px',
+      disableClose: false,
+      data: {
+        filterList: this.form20List,
+        selectedValue: this.form20SearchFC.value?.[0] || '',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((selectedValue: string) => {
+      if (selectedValue !== undefined && selectedValue !== null) {
+        // Store as single search value
+        this.form20SearchFC.setValue(selectedValue ? [selectedValue] : []);
         // Reset paginator to first page and refresh
         if (this.paginator) {
           this.paginator.firstPage();
@@ -1002,6 +1138,93 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       if (result) {
         // Handle any updates if necessary
         console.log('Key Date dialog closed with result:', result);
+      }
+    });
+  }
+
+  openChangeStatusTogglePopup(event: MouseEvent): void {
+    event.stopPropagation();
+    
+    // Position the popup near the clicked header
+    const dialogRef = this.dialog.open(ChangeStatusToggleDialogComponent, {
+      width: 'auto',
+      panelClass: 'change-status-toggle-popup',
+      disableClose: false,
+      data: {
+        isHidden: this.isChangeStatusHidden,
+      },
+      position: {
+        top: (event.clientY + 10) + 'px',
+        left: (event.clientX - 100) + 'px',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined && result !== null) {
+        this.isChangeStatusHidden = result;
+      }
+    });
+  }
+
+  openStatusMenuPopup(event: MouseEvent, element: TenderItem): void {
+    event.stopPropagation();
+    
+    // Build available options based on element status
+    const options: Array<{ status: string; label: string }> = [];
+    
+    if (this.showPendingExcomReview(element)) {
+      options.push({ status: 'Pending EXCOM review', label: 'Pending EXCOM review' });
+    }
+    if (this.showNoNeedForExcomReview(element)) {
+      options.push({ status: 'No need for EXCOM approval', label: 'No need for EXCOM approval' });
+    }
+    if (this.showWorkInView(element)) {
+      options.push({ status: 'Work In View (Pending Tender Doc Released)', label: 'Work In View (Pending Tender Doc Released)' });
+    }
+    if (this.showUnderPreparation(element)) {
+      options.push({ status: 'Tender Under Preparation', label: 'Tender Under Preparation' });
+    }
+    if (this.showBidSubmitted(element)) {
+      options.push({ status: 'Bid Submitted (Pending Result Announcement)', label: 'Bid submitted' });
+    }
+    if (this.showSuccessful(element)) {
+      options.push({ status: 'Successful', label: 'Successful' });
+    }
+    if (this.showUnsuccessful(element)) {
+      options.push({ status: 'Unsuccessful', label: 'Unsuccessful' });
+    }
+    if (this.showWithdraw(element)) {
+      options.push({ status: 'Withdraw / Declined', label: 'Withdraw / Declined' });
+    }
+    if (this.showExpired(element)) {
+      options.push({ status: 'Expired', label: 'Expired' });
+    }
+    options.push({ status: 'Weekly Snapshot', label: 'Weekly Snapshot' });
+    options.push({ status: 'Monthly Snapshot', label: 'Monthly Snapshot' });
+    
+    // Open menu dialog
+    const dialogRef = this.dialog.open(ChangeStatusMenuDialogComponent, {
+      width: 'auto',
+      panelClass: 'change-status-menu-popup',
+      disableClose: false,
+      data: {
+        options: options,
+      },
+      position: {
+        top: (event.clientY + 5) + 'px',
+        left: (event.clientX - 50) + 'px',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((selectedStatus) => {
+      if (selectedStatus) {
+        if (['Weekly Snapshot', 'Monthly Snapshot'].includes(selectedStatus)) {
+          // Handle snapshot buttons separately
+          console.log('Snapshot clicked:', selectedStatus);
+        } else {
+          // Handle status change
+          this.changeStatus(event as any, selectedStatus, element);
+        }
       }
     });
   }
@@ -1272,6 +1495,37 @@ export class TenderListComponent implements OnInit, AfterViewInit {
           }
           return prev;
         }, []);
+
+        this.customerNameList = list.reduce((prev: string[], current: TenderItem) => {
+          const customerName = current.customerName;
+          if (!customerName) return prev;
+          if (prev.indexOf(customerName) < 0) {
+            prev.push(customerName);
+          }
+          return prev;
+        }, []);
+        this.customerNameList.sort();
+
+        this.projectNameList = list.reduce((prev: string[], current: TenderItem) => {
+          const projectName = current.projectName;
+          if (!projectName) return prev;
+          if (prev.indexOf(projectName) < 0) {
+            prev.push(projectName);
+          }
+          return prev;
+        }, []);
+        this.projectNameList.sort();
+
+        this.form20List = list.reduce((prev: string[], current: TenderItem) => {
+          const form20Id = current.form20Id ? current.form20Id.toString() : '';
+          if (!form20Id) return prev;
+          if (prev.indexOf(form20Id) < 0) {
+            prev.push(form20Id);
+          }
+          return prev;
+        }, []);
+        this.form20List.sort();
+
         this.isLoading = false;
       },
       error: (error) => {
@@ -1384,18 +1638,22 @@ export class TenderListComponent implements OnInit, AfterViewInit {
           if (aKey === 'biddingGammonEntity') {
             itemVal = item[aKey]?.shortName;
           }
+          if (aKey === 'form20Id') {
+            itemVal = item[aKey] ? item[aKey].toString() : '';
+          }
 
           // console.log(aKey + '\t' + this.formGroup.value[aKey] + '\t' + itemVal);
           if (Array.isArray(this.formGroup.value[aKey])) {
-            if (
-              this.formGroup.value[aKey].length > 0 &&
-              this.formGroup.value[aKey].indexOf(itemVal) < 0
-            ) {
-              // console.log("1");
-              results[i] = false;
-              continue;
-
-              return false;
+            if (this.formGroup.value[aKey].length > 0) {
+              // Case-insensitive partial matching for array values
+              const searchValue = this.formGroup.value[aKey][0];
+              const normalizedSearch = searchValue.toLowerCase();
+              const normalizedItemVal = itemVal ? itemVal.toLowerCase() : '';
+              
+              if (!normalizedItemVal.includes(normalizedSearch)) {
+                results[i] = false;
+                continue;
+              }
             }
           } else if (!itemVal) {
             // console.log("2");
@@ -1530,13 +1788,11 @@ export class StatusFilterDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<StatusFilterDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { statusList: string[]; selectedStatus: string },
+    @Inject(MAT_DIALOG_DATA) public data: { statusList: string[]; selectedStatus: string[] },
   ) {
     // Initialize selected statuses from passed data
-    if (data.selectedStatus && data.selectedStatus.length > 0) {
-      this.selectedStatuses = Array.isArray(data.selectedStatus) 
-        ? [...data.selectedStatus] 
-        : [data.selectedStatus];
+    if (data.selectedStatus && Array.isArray(data.selectedStatus) && data.selectedStatus.length > 0) {
+      this.selectedStatuses = [...data.selectedStatus];
     }
   }
 
@@ -1551,6 +1807,50 @@ export class StatusFilterDialogComponent {
 
   applyFilter(): void {
     this.dialogRef.close(this.selectedStatuses);
+  }
+
+  cancel(): void {
+    this.dialogRef.close(undefined);
+  }
+}
+
+// Search Filter Dialog Component
+@Component({
+  selector: 'app-search-filter-dialog',
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, FormsModule],
+  template: `
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 mat-dialog-title style="margin: 0; color: #1976d2; font-weight: 600;">Search</h2>
+      
+      <input 
+        type="text"
+        [(ngModel)]="searchValue" 
+        (keyup.enter)="applyFilter()"
+        placeholder="Type to search..."
+        autofocus
+        style="width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; box-sizing: border-box;"
+      />
+      
+      <div style="display: flex; gap: 8px; justify-content: flex-end; padding-top: 8px;">
+        <button mat-button (click)="cancel()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="applyFilter()">Apply</button>
+      </div>
+    </div>
+  `,
+})
+export class SearchFilterDialogComponent {
+  searchValue: string = '';
+
+  constructor(
+    public dialogRef: MatDialogRef<SearchFilterDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { filterList: string[]; selectedValue: string },
+  ) {
+    this.searchValue = data.selectedValue || '';
+  }
+
+  applyFilter(): void {
+    this.dialogRef.close(this.searchValue);
   }
 
   cancel(): void {

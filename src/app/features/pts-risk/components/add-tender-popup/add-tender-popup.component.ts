@@ -111,11 +111,11 @@ import { MatRadioModule } from '@angular/material/radio';
               formControlName="region"
               style="display: flex; flex-direction: row; gap: 16px; margin-top: 8px;"
             >
-              <mat-radio-button value="CN">China</mat-radio-button>
-              <mat-radio-button value="HK">Hongkong</mat-radio-button>
-              <mat-radio-button value="MO">Macau</mat-radio-button>
-              <mat-radio-button value="SG">Singapore</mat-radio-button>
-              <mat-radio-button value="IT">International</mat-radio-button>
+              <mat-radio-button value="CN" [disabled]="isRegionDisabled('CN')">China</mat-radio-button>
+              <mat-radio-button value="HK" [disabled]="isRegionDisabled('HK')">Hongkong</mat-radio-button>
+              <mat-radio-button value="MO" [disabled]="isRegionDisabled('MO')">Macau</mat-radio-button>
+              <mat-radio-button value="SG" [disabled]="isRegionDisabled('SG')">Singapore</mat-radio-button>
+              <mat-radio-button value="IT" [disabled]="isRegionDisabled('IT')">International</mat-radio-button>
             </mat-radio-group>
           </div>
 
@@ -285,6 +285,11 @@ import { MatRadioModule } from '@angular/material/radio';
               <span>Value cannot exceed 999,999.</span>
               }
             </mat-error>
+            }
+            @if (estimatedTenderValueControl.value) {
+            <mat-hint>
+              Actual value: {{ formatActualValue(estimatedTenderValueControl.value) }}
+            </mat-hint>
             }
           </mat-form-field>
 
@@ -587,8 +592,8 @@ import { MatRadioModule } from '@angular/material/radio';
         align-items: center;
         padding: 12px 8px;
         margin: 12px 0;
-        background-color: #f5f7fa;
-        border-radius: 4px;
+        background-color: #f0fff0;
+        border: 4px solid #4bc469;
       }
       .standard-response-label {
         flex: 0 0 30%;
@@ -725,6 +730,7 @@ export class AddTenderPopupComponent implements OnInit {
   GammonEntitiesOption: GammonEntity[] = [];
   currencyOption: Currency[] = [];
   tenderAttachments: any[] = [];
+  selectedBusinessUnit: BusinessUnit | null = null;
 
   upDownGradeOption: PriorityLevel[] = [];
   whetherSatisfyRiskOption: RiskAssessmentCriteria[] = [];
@@ -760,10 +766,10 @@ export class AddTenderPopupComponent implements OnInit {
       currencyId: [undefined, []],
       estimatedTenderValue: [undefined, [Validators.min(0), Validators.max(999999)]],
       isExternalMainContractor: [undefined, []],
-      isKeyCustomer: [undefined, Validators.required],
-      isKeySector: [undefined, Validators.required],
-      isJointVenture: [undefined, Validators.required],
-      foreseenBUCapacity: [undefined, Validators.required],
+      isKeyCustomer: [undefined, []],
+      isKeySector: [undefined, []],
+      isJointVenture: [undefined, []],
+      foreseenBUCapacity: [undefined, []],
       standardResponsePriorityLevelId: [undefined, []],
       standardResponseHint: [undefined, []],
       standardResponsePriorityLevel: [undefined, []],
@@ -772,7 +778,7 @@ export class AddTenderPopupComponent implements OnInit {
         '',
         [Validators.maxLength(this.upgradeDowngradeRationaleMaxLength)],
       ],
-      riskAssessmentCriteriaId: [undefined, Validators.required],
+      riskAssessmentCriteriaId: [undefined, []],
       riskAssessmentLevel: [undefined, []],
       riskAssessmentRationale: ['', [Validators.maxLength(this.riskAssessmentRationaleMaxLength)]],
       additionalNote: ['', [Validators.maxLength(this.additionalNoteMaxLength)]],
@@ -780,9 +786,37 @@ export class AddTenderPopupComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Listen for business unit changes
+    this.tenderForm.get('businessUnitId')?.valueChanges.subscribe((buId) => {
+      if (buId) {
+        this.selectedBusinessUnit = this.BusinessUnitsOption.find((bu) => bu.id === buId) || null;
+        
+        // Auto-select region based on business unit
+        const buName = this.selectedBusinessUnit?.name?.toUpperCase() || '';
+        const isSgp = buName.includes('SGP') || buName === 'SINGAPORE';
+        
+        if (isSgp) {
+          // For SGP, auto-select Singapore region
+          this.tenderForm.patchValue({ region: 'SG' }, { emitEvent: false });
+        } else {
+          // For non-SGP, clear region selection
+          this.tenderForm.patchValue({ region: null }, { emitEvent: false });
+        }
+      } else {
+        this.selectedBusinessUnit = null;
+      }
+    });
+
     this.businessUnitApiService.getBussinessUnitDropdown().subscribe({
       next: (businessUnits) => {
         this.BusinessUnitsOption = businessUnits;
+        // If editing, set the selected business unit
+        if (this.data?.id) {
+          const currentBuId = this.tenderForm.get('businessUnitId')?.value;
+          if (currentBuId) {
+            this.selectedBusinessUnit = businessUnits.find((bu) => bu.id === currentBuId) || null;
+          }
+        }
       },
       error: (error) => {
         console.error('Error fetching business units:', error);
@@ -836,6 +870,7 @@ export class AddTenderPopupComponent implements OnInit {
               ...response.data,
               projectDescriptionAndLocation: response.data.projectDescription,
               standardResponsePriorityLevel: response.data.standardResponsePriorityLevel,
+              estimatedTenderValue: response.data.estimatedTenderValue ? response.data.estimatedTenderValue / 1000000 : undefined,
             });
             const ta = response.data.tenderAttachments;
             if (Array.isArray(ta)) {
@@ -918,7 +953,7 @@ export class AddTenderPopupComponent implements OnInit {
           currencyId: this.tenderForm.get('currencyId')?.value || null,
           customerName: this.tenderForm.get('customerName')?.value || '',
           division: this.tenderForm.get('division')?.value || null,
-          estimatedTenderValue: this.tenderForm.get('estimatedTenderValue')?.value || 0,
+          estimatedTenderValue: (this.tenderForm.get('estimatedTenderValue')?.value || 0) * 1000000,
           expectedTenderIssueDate: this.tenderForm.get('expectedTenderIssueDate')?.value || null,
           expectedTenderSubmissionDate:
             this.tenderForm.get('expectedTenderSubmissionDate')?.value || null,
@@ -1161,5 +1196,33 @@ export class AddTenderPopupComponent implements OnInit {
   getStandardResponseTitle(): string {
     const standardResponse = this.tenderForm.get('standardResponsePriorityLevel')?.value;
     return standardResponse?.title || 'Not set';
+  }
+
+  isRegionDisabled(region: string): boolean {
+    if (!this.selectedBusinessUnit) {
+      return false; // No business unit selected, allow all regions
+    }
+
+    const buName = this.selectedBusinessUnit.name?.toUpperCase() || '';
+    
+    // Check if the business unit is SGP
+    const isSgp = buName.includes('SGP') || buName === 'SINGAPORE';
+    
+    if (isSgp) {
+      // SGP business unit: only Singapore (SG) region is available
+      return region !== 'SG';
+    } else {
+      // Non-SGP business unit: all regions except Singapore are available
+      return region === 'SG';
+    }
+  }
+
+  formatActualValue(millions: number | null | undefined): string {
+    if (!millions) return '0';
+    const actualValue = millions * 1000000;
+    return new Intl.NumberFormat('en-US', { 
+      minimumFractionDigits: 0, 
+      maximumFractionDigits: 0 
+    }).format(Math.round(actualValue));
   }
 }
