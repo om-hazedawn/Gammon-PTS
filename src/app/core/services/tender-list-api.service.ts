@@ -12,9 +12,13 @@ import { UpdateTenderStatusRequest } from '../../model/entity/pts-risk/UpdateTen
 })
 export class TenderListApiService {
   private baseUrl: string;
+  private baseUrl2: string;
+  private baseUrl3: string;
 
   constructor(private http: HttpClient) {
     this.baseUrl = '/api/ptsrisk/Tender/api';
+    this.baseUrl2 = '/api/ptsrisk/Authorize';
+    this.baseUrl3 = '/api/ptsrisk/Snapshot';
   }
 
   getTenderPageSorted(request: TenderSorted): Observable<any> {
@@ -30,11 +34,9 @@ export class TenderListApiService {
     id: number
   ): Observable<{ data: TenderItem; code: number; message: string | null }> {
     const url = `${this.baseUrl}/tender/${id}`;
-    console.log('Fetching tenders from:', url);
 
     return this.http.get<{ data: TenderItem; code: number; message: string | null }>(url).pipe(
       tap((response) => {
-        console.log('Tender details fetched successfully:', response.data);
         if (!response.data) {
           console.error('No data property in response:', response);
         }
@@ -63,7 +65,6 @@ export class TenderListApiService {
       excomDecisionNotes: excomDecisionNotes,
     };
     return this.http.put(url, body).pipe(
-      tap((response) => console.log('Response:', response)),
       catchError((error) => {
         console.error('Request failed:', error);
         console.error('Full URL:', url);
@@ -77,10 +78,7 @@ export class TenderListApiService {
     request: UpdateTenderMarketIntelligenceRequest
   ): Observable<any> {
     const url = `${this.baseUrl}/tenderMarketIntelligence`;
-    console.log('Request body:', request); // Debug log
-    console.log('Full URL:', url); // Debug log
     return this.http.put(url, request).pipe(
-      tap((response) => console.log('Response:', response)),
       catchError((error) => {
         console.error('Request failed:', error);
         console.error('Full URL:', url);
@@ -92,11 +90,9 @@ export class TenderListApiService {
 
   putandaddTender(data: { tender: any }): Observable<any> {
     const url = `${this.baseUrl}/tender`;
-    console.log('Sending tender data:', data);
 
     return this.http.put(url, data).pipe(
       tap((response) => {
-        console.log('Tender saved successfully:', response);
       }),
       catchError((error) => {
         console.error('Error saving tender:', error);
@@ -111,9 +107,6 @@ export class TenderListApiService {
     const url = `${this.baseUrl}/tender/${id}`;
 
     return this.http.delete(url).pipe(
-      tap((response) => 
-        console.log('Tender deleted successfully:', response
-        )),
       catchError((error) => {
         console.error('Error deleting tender:', error);
         throw error;
@@ -141,4 +134,89 @@ export class TenderListApiService {
       request
     );
   }
-}
+
+  generateSnapshotDivisionList(): Observable<any> {
+    const url = `${this.baseUrl2}/generateSnapshotDivisionList`;
+    return this.http.get(url).pipe(
+      catchError((error) => {
+        console.error('Error fetching division list:', error);
+        throw error;
+      })
+    );
+  }
+  periodDropdown() : Observable<any> {
+    const url = `${this.baseUrl3}/periodDropdown`;
+    return this.http.get(url).pipe(
+      catchError((error) => {
+        console.error('Error fetching period dropdown:', error);
+        throw error;
+      })
+    );
+  }
+
+  generateSnapshot(period: any, division: string): Observable<any> {
+    const url = `${this.baseUrl3}/generateSnapshot`;
+    const body = {
+      period: period,
+      division: division,
+    };
+    return this.http.post(url, body).pipe(
+      catchError((error) => {
+        console.error('Error generating snapshot:', error);
+        throw error;
+      })
+    );
+  }
+
+  periodDropdownMonthly(): Observable<any> {
+    const url = `${this.baseUrl3}/periodDropdownMonthly`;
+    return this.http.get(url).pipe(
+      catchError((error) => {
+        console.error('Error fetching period dropdown monthly:', error);
+        throw error;
+      })
+    );
+  }
+
+  generateMonthlySnapshot(period: any, division: string): Observable<any> {
+    const url = `${this.baseUrl3}/generateMonthlySnapshot`;
+    const body = {
+      period: period,
+      division: division,
+    };
+    return this.http.post(url, body).pipe(
+      catchError((error) => {
+        console.error('Error generating snapshot:', error);
+        throw error;
+      })
+    );
+  }
+  generateWeeklySnapshotForTender(period: string, tenderId: number): Observable<any> {
+    const url = `${this.baseUrl3}/generateSnapshot`;
+    const body = {
+      period: period,
+      division: '',
+      tenderId: tenderId,
+    };
+    return this.http.post(url, body).pipe(
+      catchError((error) => {
+        console.error('Error generating weekly snapshot for tender:', error);
+        throw error;
+      })
+    );
+  }
+
+  generateMonthlySnapshotForTender(period: string, tenderId: number): Observable<any> {
+    const url = `${this.baseUrl3}/generateMonthlySnapshot`;
+    const body = {
+      period: period,
+      division: '',
+      tenderId: tenderId,
+    };
+    return this.http.post(url, body).pipe(
+      catchError((error) => {
+        console.error('Error generating monthly snapshot for tender:', error);
+        throw error;
+      })
+    );
+  }}

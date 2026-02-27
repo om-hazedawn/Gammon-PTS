@@ -31,6 +31,8 @@ import { TenderKeyDateListComponent } from '../tender-key-date-list/tender-key-d
 import { ReportDateWithMarketIntelDialog } from '../report-date-with-market-intel/report-date-with-market-intel.component';
 import { Form20ControlsComponent } from '../form20-controls/form20-controls.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { GenerateSnapshotDialogComponent } from '../generate-snapshot-dialog/generate-snapshot-dialog.component';
+import { GenerateMonthlySnapshotDialogComponent } from '../generate-monthly-snapshot-dialog/generate-monthly-snapshot-dialog.component';
 
 @Component({
   selector: 'app-tender-list',
@@ -410,8 +412,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
                         Expired
                       </button>
                     }
-                    <button mat-raised-button class="action-btn green">Weekly Snapshot</button>
-                    <button mat-raised-button class="action-btn green">Monthly Snapshot</button>
+                    <button mat-raised-button class="action-btn green" (click)="$event.stopPropagation(); openWeeklySnapshotForTender(element)">Weekly Snapshot</button>
+                    <button mat-raised-button class="action-btn green" (click)="$event.stopPropagation(); openMonthlySnapshotForTender(element)">Monthly Snapshot</button>
                   </div>
                   } @else {
                     <button 
@@ -488,8 +490,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
             style="display: flex; justify-content: flex-end; align-items: center; margin-top: 24px; gap: 24px;"
           >
             <div style="flex: 1; display: flex; justify-content: center; gap: 12px;">
-              <button mat-raised-button color="accent" class="action-btn">Generate Snapshot</button>
-              <button mat-raised-button color="primary" class="action-btn">
+              <button mat-raised-button color="accent" class="action-btn" (click)="openGenerateSnapshotDialog()">Generate Snapshot</button>
+              <button mat-raised-button color="primary" class="action-btn" (click)="openGenerateMonthlySnapshotDialog()">
                 Generate Monthly Snapshot
               </button>
             </div>
@@ -907,6 +909,154 @@ export class TenderListComponent implements OnInit, AfterViewInit {
       if (result) {
         // Refresh the table
         this.refreshDataSource();
+      }
+    });
+  }
+
+  openGenerateSnapshotDialog(): void {
+    console.log('Opening GenerateSnapshotDialog');
+    const dialogRef = this.dialog.open(GenerateSnapshotDialogComponent, {
+      width: '500px',
+      maxWidth: '90vw',
+      disableClose: false,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('GenerateSnapshotDialog closed with result:', result);
+      if (result) {
+        const { asOfDate, division } = result;
+        console.log('Generate snapshot for division:', division, 'period:', asOfDate);
+        // Call API to generate snapshot
+        this.tenderListApiService.generateSnapshot(asOfDate, division).subscribe({
+          next: (response) => {
+            console.log('Snapshot generated successfully:', response);
+            this.dialog.open(AlertDialog, {
+              data: {
+                message: `Snapshot generated successfully for ${division} as of ${asOfDate}`,
+              },
+            });
+          },
+          error: (error) => {
+            console.error('Error generating snapshot:', error);
+            this.dialog.open(AlertDialog, {
+              data: {
+                title: 'Error',
+                message: 'Failed to generate snapshot. Please try again.',
+              },
+            });
+          },
+        });
+      }
+    });
+  }
+
+  openGenerateMonthlySnapshotDialog(): void {
+    console.log('Opening GenerateMonthlySnapshotDialog');
+    const dialogRef = this.dialog.open(GenerateMonthlySnapshotDialogComponent, {
+      width: '500px',
+      maxWidth: '90vw',
+      disableClose: false,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('GenerateMonthlySnapshotDialog closed with result:', result);
+      if (result) {
+        const { asOfDate, division } = result;
+        console.log('Generate monthly snapshot for division:', division, 'period:', asOfDate);
+        // Call API to generate monthly snapshot
+        this.tenderListApiService.generateMonthlySnapshot(asOfDate, division).subscribe({
+          next: (response) => {
+            console.log('Monthly snapshot generated successfully:', response);
+            this.dialog.open(AlertDialog, {
+              data: {
+                message: `Monthly snapshot generated successfully for ${division} as of ${asOfDate}`,
+              },
+            });
+          },
+          error: (error) => {
+            console.error('Error generating monthly snapshot:', error);
+            this.dialog.open(AlertDialog, {
+              data: {
+                title: 'Error',
+                message: 'Failed to generate monthly snapshot. Please try again.',
+              },
+            });
+          },
+        });
+      }
+    });
+  }
+
+  openWeeklySnapshotForTender(element: TenderItem): void {
+    console.log('Opening Weekly Snapshot for tender:', element.id);
+    const dialogRef = this.dialog.open(GenerateSnapshotDialogComponent, {
+      width: '500px',
+      maxWidth: '90vw',
+      disableClose: false,
+      data: { hideDivision: true },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const { asOfDate } = result;
+        console.log('Generate weekly snapshot for tender ID:', element.id, 'period:', asOfDate);
+        // Call API to generate weekly snapshot for specific tender
+        this.tenderListApiService.generateWeeklySnapshotForTender(asOfDate, element.id).subscribe({
+          next: (response) => {
+            console.log('Weekly snapshot generated successfully:', response);
+            this.dialog.open(AlertDialog, {
+              data: {
+                message: `Weekly snapshot generated successfully for tender ${element.id} with period ${asOfDate}`,
+              },
+            });
+          },
+          error: (error) => {
+            console.error('Error generating weekly snapshot:', error);
+            this.dialog.open(AlertDialog, {
+              data: {
+                title: 'Error',
+                message: 'Failed to generate weekly snapshot. Please try again.',
+              },
+            });
+          },
+        });
+      }
+    });
+  }
+
+  openMonthlySnapshotForTender(element: TenderItem): void {
+    console.log('Opening Monthly Snapshot for tender:', element.id);
+    const dialogRef = this.dialog.open(GenerateMonthlySnapshotDialogComponent, {
+      width: '500px',
+      maxWidth: '90vw',
+      disableClose: false,
+      data: { hideDivision: true },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const { asOfDate } = result;
+        console.log('Generate monthly snapshot for tender ID:', element.id, 'period:', asOfDate);
+        // Call API to generate monthly snapshot for specific tender
+        this.tenderListApiService.generateMonthlySnapshotForTender(asOfDate, element.id).subscribe({
+          next: (response) => {
+            console.log('Monthly snapshot generated successfully:', response);
+            this.dialog.open(AlertDialog, {
+              data: {
+                message: `Monthly snapshot generated successfully for tender ${element.id} with period ${asOfDate}`,
+              },
+            });
+          },
+          error: (error) => {
+            console.error('Error generating monthly snapshot:', error);
+            this.dialog.open(AlertDialog, {
+              data: {
+                title: 'Error',
+                message: 'Failed to generate monthly snapshot. Please try again.',
+              },
+            });
+          },
+        });
       }
     });
   }
