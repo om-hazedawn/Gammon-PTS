@@ -56,7 +56,7 @@ import { GenerateMonthlySnapshotDialogComponent } from '../generate-monthly-snap
     MatCheckboxModule,
   ],
   template: `
-    <div class="form-list-container">
+    <div class="form-list-container" style="padding: 0 10px; overflow-x: auto;">
       <mat-card>
         <mat-card-header>
           <mat-card-title>Tender Risk Management</mat-card-title>
@@ -593,8 +593,8 @@ import { GenerateMonthlySnapshotDialogComponent } from '../generate-monthly-snap
         min-width: 55px;
       }
       .mat-column-projectName {
-        width: 150px;
-        min-width: 150px;
+        width: 200px;
+        min-width: 200px;
       }
       
       .mat-column-response {
