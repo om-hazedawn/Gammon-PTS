@@ -10,6 +10,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { FormApprovalComponent } from './form-Approval/form-approval.component';
+import { forkJoin, catchError, of } from 'rxjs';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {
   Form20DetailsService,
@@ -80,24 +81,29 @@ import { PopupKeyDateComponent } from './popup-KeyDate/popup-KeyDate.component';
           <h3>{{ isEditMode ? 'Edit Form 20' : 'New Form 20' }}</h3>
           <button class="draft-btn">{{ formStatus }}</button>
           <div class="header-icons">
-            @if (formId && formId !== 0 && formGroup.value.tenderNo && formGroup.value.tenderNo !==
-            'NEW' && hasEditRight()) {
-            <button
-              mat-raised-button
-              color="primary"
-              aria-label="Copy Tender"
-              (click)="openFormCopyDialog()"
-            >
-              <mat-icon>content_copy</mat-icon>
-              Copy Tender
-            </button>
-            } 
-             <!-- canRejectForm this form -->
+            @if (
+              formId &&
+              formId !== 0 &&
+              formGroup.value.tenderNo &&
+              formGroup.value.tenderNo !== 'NEW' &&
+              hasEditRight()
+            ) {
+              <button
+                mat-raised-button
+                color="primary"
+                aria-label="Copy Tender"
+                (click)="openFormCopyDialog()"
+              >
+                <mat-icon>content_copy</mat-icon>
+                Copy Tender
+              </button>
+            }
+            <!-- canRejectForm this form -->
             <button mat-icon-button aria-label="rejected">
               <mat-icon>report_problem</mat-icon>
             </button>
 
-             <!-- @if (hasEditRight() && (!formId || formId < 1) && formGroup.value.tenderNo == 'NEW') {} -->
+            <!-- @if (hasEditRight() && (!formId || formId < 1) && formGroup.value.tenderNo == 'NEW') {} -->
             <button mat-icon-button aria-label="Delete" (click)="deleteForm()">
               <mat-icon>delete</mat-icon>
             </button>
@@ -107,109 +113,141 @@ import { PopupKeyDateComponent } from './popup-KeyDate/popup-KeyDate.component';
             </button>
 
             @if (formStatus == 'BID') {
-            <button 
-              mat-icon-button aria-label="Key Dates" 
-              (click)="openKeyDateDialog()"
-            >
-              <mat-icon>event</mat-icon>
-            </button>
+              <button mat-icon-button aria-label="Key Dates" (click)="openKeyDateDialog()">
+                <mat-icon>event</mat-icon>
+              </button>
             }
-            
-             @if(formId && formId !== 0) {
-            <button mat-icon-button aria-label="print">
-              <mat-icon>print</mat-icon>
-            </button>
+
+            @if (formId && formId !== 0) {
+              <button mat-icon-button aria-label="print">
+                <mat-icon>print</mat-icon>
+              </button>
             }
           </div>
         </mat-card-header>
         <mat-card-content>
           @if (formDeleted) {
-          <div class="form-deleted-message">
-            <mat-icon class="icon">warning</mat-icon>
-            <span>This form has been <strong>Deleted</strong>.</span>
-          </div>
-          } @if (isLoading) {
-          <div class="flex flex-col items-center justify-center py-16 px-4">
-            <div class="relative">
-              <div class="w-16 h-16 border-4 border-blue-200 rounded-full"></div>
-              <div class="w-16 h-16 border-4 border-[#1976d2] rounded-full absolute top-0 left-0 animate-spin border-t-transparent"></div>
+            <div class="form-deleted-message">
+              <mat-icon class="icon">warning</mat-icon>
+              <span>This form has been <strong>Deleted</strong>.</span>
             </div>
-            <div class="mt-6 text-center">
-              <p class="text-lg font-semibold text-gray-700 mb-2">Loading Form Details</p>
-              <p class="text-sm text-gray-500">Please wait while we fetch your data...</p>
+          }
+          @if (isLoading) {
+            <div class="flex flex-col items-center justify-center py-16 px-4">
+              <div class="relative">
+                <div class="w-16 h-16 border-4 border-blue-200 rounded-full"></div>
+                <div
+                  class="w-16 h-16 border-4 border-[#1976d2] rounded-full absolute top-0 left-0 animate-spin border-t-transparent"
+                ></div>
+              </div>
+              <div class="mt-6 text-center">
+                <p class="text-lg font-semibold text-gray-700 mb-2">Loading Form Details</p>
+                <p class="text-sm text-gray-500">Please wait while we fetch your data...</p>
+              </div>
             </div>
-          </div>
           } @else if (loadError) {
-          <div class="error-container">
-            <mat-icon color="warn">error</mat-icon>
-            <p>{{ loadError }}</p>
-            <button mat-raised-button color="primary" (click)="loadForm(formId!)">Retry</button>
-          </div>
-          } @else if (formGroup) {
-          <div class="form-navigation">
-            @for (step of steps; track step; let i = $index) {
-            <div class="step-item" [class.active]="currentStep === i + 1" (click)="goToStep(i + 1)">
-              <span class="step-number">{{ i + 1 }}</span>
-              <span class="step-label">{{ step }}</span>
+            <div class="error-container">
+              <mat-icon color="warn">error</mat-icon>
+              <p>{{ loadError }}</p>
+              <button mat-raised-button color="primary" (click)="loadForm(formId!)">Retry</button>
             </div>
-            }
-          </div>
-
-          <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-            @if (currentStep === 1) {
-            <app-form-detail-project-step
-              [isEditMode]="isEditMode"
-              [formId]="formId"
-              (allocateTenderNoRequest)="onAllocateTenderNoRequest()"
-            ></app-form-detail-project-step>
-            } @if (currentStep === 2) {
-            <app-form-detail-contract-step></app-form-detail-contract-step>
-            } @if (currentStep === 3) {
-            <app-form-detail-payment-step></app-form-detail-payment-step>
-            } @if (currentStep === 4) {
-            <app-form-detail-bonds-step></app-form-detail-bonds-step>
-            } @if (currentStep === 5) {
-            <app-form-detail-warranties-step></app-form-detail-warranties-step>
-            } @if (currentStep === 6) {
-            <app-form-detail-insurance-step></app-form-detail-insurance-step>
-            } @if (currentStep === 7) {
-            <app-form-detail-other-issues-step></app-form-detail-other-issues-step>
-            } @if (currentStep === 8) {
-            <app-form-detail-consultant-step></app-form-detail-consultant-step>
-            } @if (currentStep === 9) {
-            <app-form-detail-evaluation-step></app-form-detail-evaluation-step>
-            } @if (currentStep === 10) {
-            <app-form-detail-distribution-step></app-form-detail-distribution-step>
-            } @if (currentStep === 11) {
-            <app-form-detail-attachment-step [formId]="formId"></app-form-detail-attachment-step>
-            }
-
-            <div class="actions">
-              <button
-                type="button"
-                mat-button
-                (click)="previousStep()"
-                [disabled]="currentStep === 1 || isLoading"
-              >
-                Previous
-              </button>
-              @if (currentStep < 10) {
-              <button type="button" mat-raised-button color="primary" (click)="nextStep()" [disabled]="isLoading">
-                @if (isLoading) { Saving... } @else { Next }
-              </button>
-              } @if (currentStep === 10) {
-              <button type="submit" mat-raised-button color="primary" [disabled]="!formGroup.valid || isLoading">
-                @if (isLoading) { 
-                  Submitting... 
-                } @else if (canSubmit() && hasEditRight()) { 
-                  Submit 
-                } @else { 
-                  Approvers 
-                }
-              </button>
+          } @else if (formGroup) {
+            <div class="form-navigation">
+              @for (step of steps; track step; let i = $index) {
+                <div
+                  class="step-item"
+                  [class.active]="currentStep === i + 1"
+                  (click)="goToStep(i + 1)"
+                >
+                  <span class="step-number">{{ i + 1 }}</span>
+                  <span class="step-label">{{ step }}</span>
+                </div>
               }
             </div>
-          </form>
+
+            <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+              @if (currentStep === 1) {
+                <app-form-detail-project-step
+                  [isEditMode]="isEditMode"
+                  [formId]="formId"
+                  (allocateTenderNoRequest)="onAllocateTenderNoRequest()"
+                ></app-form-detail-project-step>
+              }
+              @if (currentStep === 2) {
+                <app-form-detail-contract-step></app-form-detail-contract-step>
+              }
+              @if (currentStep === 3) {
+                <app-form-detail-payment-step></app-form-detail-payment-step>
+              }
+              @if (currentStep === 4) {
+                <app-form-detail-bonds-step></app-form-detail-bonds-step>
+              }
+              @if (currentStep === 5) {
+                <app-form-detail-warranties-step></app-form-detail-warranties-step>
+              }
+              @if (currentStep === 6) {
+                <app-form-detail-insurance-step></app-form-detail-insurance-step>
+              }
+              @if (currentStep === 7) {
+                <app-form-detail-other-issues-step></app-form-detail-other-issues-step>
+              }
+              @if (currentStep === 8) {
+                <app-form-detail-consultant-step></app-form-detail-consultant-step>
+              }
+              @if (currentStep === 9) {
+                <app-form-detail-evaluation-step></app-form-detail-evaluation-step>
+              }
+              @if (currentStep === 10) {
+                <app-form-detail-distribution-step></app-form-detail-distribution-step>
+              }
+              @if (currentStep === 11) {
+                <app-form-detail-attachment-step
+                  [formId]="formId"
+                ></app-form-detail-attachment-step>
+              }
+
+              <div class="actions">
+                <button
+                  type="button"
+                  mat-button
+                  (click)="previousStep()"
+                  [disabled]="currentStep === 1 || isLoading"
+                >
+                  Previous
+                </button>
+                @if (currentStep < 10) {
+                  <button
+                    type="button"
+                    mat-raised-button
+                    color="primary"
+                    (click)="nextStep()"
+                    [disabled]="isLoading"
+                  >
+                    @if (isLoading) {
+                      Saving...
+                    } @else {
+                      Next
+                    }
+                  </button>
+                }
+                @if (currentStep === 10) {
+                  <button
+                    type="submit"
+                    mat-raised-button
+                    color="primary"
+                    [disabled]="!formGroup.valid || isLoading"
+                  >
+                    @if (isLoading) {
+                      Submitting...
+                    } @else if (canSubmit() && hasEditRight()) {
+                      Submit
+                    } @else {
+                      Approvers
+                    }
+                  </button>
+                }
+              </div>
+            </form>
           }
         </mat-card-content>
       </mat-card>
@@ -332,7 +370,7 @@ export class FormDetailComponent implements OnInit {
     private router: Router,
     private form20Service: Form20DetailsService,
     private dialog: MatDialog,
-    private form20ListDropdownService: Form20ListDropdownService
+    private form20ListDropdownService: Form20ListDropdownService,
   ) {
     this.initializeForm();
   }
@@ -395,15 +433,15 @@ export class FormDetailComponent implements OnInit {
       width: '900px',
       disableClose: true,
       data: {
-        currentFormId: this.formId
-      }
+        currentFormId: this.formId,
+      },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         // Copy ALL fields FROM current form TO selected tender EXCEPT: id, tenderNo, title, businessUnitCode, status
         console.log('Selected tender:', result);
-        
+
         // Load the selected form details
         if (result.id) {
           this.form20Service.getForm20Details(result.id).subscribe({
@@ -429,62 +467,65 @@ export class FormDetailComponent implements OnInit {
                 evaluationCashFlow: selectedFormData.evaluationCashFlow,
                 evaluationIsCashFlow: selectedFormData.evaluationIsCashFlow,
                 evaluationClientFinancialStatus: selectedFormData.evaluationClientFinancialStatus,
-                evaluationIsClientFinancialStatus: selectedFormData.evaluationIsClientFinancialStatus,
-                evaluationEstimatingDepartmentWorkload: selectedFormData.evaluationEstimatingDepartmentWorkload,
-                evaluationIsEstimatingDepartmentWorkload: selectedFormData.evaluationIsEstimatingDepartmentWorkload
+                evaluationIsClientFinancialStatus:
+                  selectedFormData.evaluationIsClientFinancialStatus,
+                evaluationEstimatingDepartmentWorkload:
+                  selectedFormData.evaluationEstimatingDepartmentWorkload,
+                evaluationIsEstimatingDepartmentWorkload:
+                  selectedFormData.evaluationIsEstimatingDepartmentWorkload,
               };
-              
+
               // Store current form data temporarily
               const currentFormData = { ...this.formGroup.value };
-              
+
               // Patch the selected form data into formGroup temporarily
               this.patchFormValues(selectedFormData);
-              
+
               // Update with current form's data, but exclude the preserved fields
-              Object.keys(currentFormData).forEach(key => {
+              Object.keys(currentFormData).forEach((key) => {
                 if (!preservedFields.hasOwnProperty(key)) {
                   this.formGroup.patchValue({ [key]: currentFormData[key] });
                 }
               });
-              
+
               // Normalize the form values for saving
               const normalizedSelectedValue = this.normalizeFormValues(this.formGroup.value);
               normalizedSelectedValue.id = result.id; // Use selected form's ID
-              
+
               this.isLoading = true;
-              
+
               // Save the selected form with copied data
               this.form20Service.saveForm20(normalizedSelectedValue).subscribe({
                 next: (response) => {
                   this.isLoading = false;
                   this.loadError = `Copied all data to ${result.tenderNo} (${result.title}) and saved successfully`;
-                  
+
                   // Reload current form to restore original data
                   if (this.formId) {
                     this.loadForm(this.formId);
                   }
-                  
+
                   setTimeout(() => (this.loadError = null), 3000);
                 },
                 error: (error) => {
                   this.isLoading = false;
                   console.error('Error saving selected form:', error);
                   this.loadError = `Failed to save data to ${result.tenderNo}`;
-                  
+
                   // Reload current form to restore original data
                   if (this.formId) {
                     this.loadForm(this.formId);
                   }
-                  
+
                   setTimeout(() => (this.loadError = null), 3000);
-                }
+                },
               });
             },
             error: (error) => {
               console.error('Error loading selected form:', error);
               this.loadError = 'Failed to load selected tender';
               setTimeout(() => (this.loadError = null), 3000);
-            }
+            },
           });
         }
       }
@@ -916,7 +957,7 @@ export class FormDetailComponent implements OnInit {
     console.log('Loading form data - contractFormRiskCode:', formData.contractFormRiskCode);
     console.log(
       'Loading form data - paymentCertificationPeriod:',
-      formData.paymentCertificationPeriod
+      formData.paymentCertificationPeriod,
     );
     console.log('Loading form data - paymentPeriod:', formData.paymentPeriod);
 
@@ -1056,7 +1097,7 @@ export class FormDetailComponent implements OnInit {
         ParentCompanyRisk: formData.warrantGuranteeParentCompanyGuaranteeRiskCode,
 
         ParentCompanyUndertaking: normalizeYesNo(
-          formData.warrantGuranteeIsParentCompanyUnderTaking
+          formData.warrantGuranteeIsParentCompanyUnderTaking,
         ),
         ParentCompanyUndertakingDetails: formData.warrantGuranteeParentCompanyUnderTaking,
         ParentCompanyUndertakingRisk: formData.warrantGuranteeParentCompanyUnderTakingRiskCode,
@@ -1202,7 +1243,7 @@ export class FormDetailComponent implements OnInit {
               'Validation failed for field:',
               field,
               'Errors:',
-              this.validationErrors[field]
+              this.validationErrors[field],
             );
           }
         }
@@ -1286,35 +1327,9 @@ export class FormDetailComponent implements OnInit {
         }
         let normalizedValue = this.normalizeFormValues(this.formGroup.value);
         this.isLoading = true;
-        // Page 1: create new form
+        // Page 1: create new form - fetch CE options first, then save once
         if (this.currentStep === 1 && (!this.formId || this.formId === 0)) {
-          normalizedValue = { ...normalizedValue, id: 0 };
-          this.form20Service.saveForm20(normalizedValue).subscribe({
-            next: (response: number) => {
-              console.log('API response formId:', response);
-              if (response) {
-                this.formId = response;
-                this.isEditMode = true;
-                this.formGroup.patchValue({ id: this.formId });
-                // Load the form so we have all backend data
-                this.loadForm(this.formId);
-                this.loadError = 'Form created successfully';
-                setTimeout(() => {
-                  this.loadError = null;
-                  this.currentStep++;
-                  this.isLoading = false;
-                }, 1000);
-              } else {
-                this.isLoading = false;
-              }
-            },
-            error: (err: any) => {
-              this.loadError = 'Failed to save form. Please try again.';
-              console.error('Error saving form:', err);
-              this.isLoading = false;
-              setTimeout(() => (this.loadError = null), 5000);
-            },
-          });
+          this.fetchCEOptionsThenSave(normalizedValue);
         } else {
           // All other pages: update form
           normalizedValue = { ...normalizedValue, id: this.formId ?? 0 };
@@ -1322,6 +1337,7 @@ export class FormDetailComponent implements OnInit {
             next: (response: number) => {
               console.log('Form updated, formId:', response);
               this.loadError = 'Form updated successfully';
+              this.loadForm(this.formId!);
               setTimeout(() => {
                 this.loadError = null;
                 this.currentStep++;
@@ -1340,19 +1356,266 @@ export class FormDetailComponent implements OnInit {
     }
   }
 
+  private fetchCEOptionsThenSave(normalizedValue: SaveForm20, targetStep?: number): void {
+    forkJoin({
+      ce: this.form20ListDropdownService.FORM20_CE().pipe(
+        catchError((error) => {
+          return of([]);
+        }),
+      ),
+      bdgDcm: this.form20ListDropdownService.FORM20_BDG_DCM().pipe(
+        catchError((error) => {
+          return of([]);
+        }),
+      ),
+      allEd: this.form20ListDropdownService.FORM20_ALL_ED().pipe(
+        catchError((error) => {
+          return of([]);
+        }),
+      ),
+      insMgr: this.form20ListDropdownService.FORM20_INS_MGR().pipe(
+        catchError((error) => {
+          return of([]);
+        }),
+      ),
+      dir: this.form20ListDropdownService.FORM20_BDG_DIR().pipe(
+        catchError((error) => {
+          return of([]);
+        }),
+      ),
+      lambeth: this.form20ListDropdownService.FORM20_LAM().pipe(
+        catchError((error) => {
+          return of([]);
+        }),
+      ),
+      proc: this.form20ListDropdownService.FORM20_PRO().pipe(
+        catchError((error) => {
+          return of([]);
+        }),
+      ),
+      finDir: this.form20ListDropdownService.FORM20_FIN_DIR().pipe(
+        catchError((error) => {
+          return of([]);
+        }),
+      ),
+      riskOpp: this.form20ListDropdownService.FORM20_RISK_OPP().pipe(
+        catchError((error) => {
+          return of([]);
+        }),
+      ),
+      comDir: this.form20ListDropdownService.FORM20_COM_DIR().pipe(
+        catchError((error) => {
+          return of([]);
+        }),
+      ),
+      hseq: this.form20ListDropdownService.FORM20_HSEQ().pipe(
+        catchError((error) => {
+          return of([]);
+        }),
+      ),
+      genCoun: this.form20ListDropdownService.FORM20_GEN_COUN().pipe(
+        catchError((error) => {
+          return of([]);
+        }),
+      ),
+    }).subscribe({
+      next: (results) => {
+        if (results.ce && results.ce.length > 0) {
+          const ceEmployeeNumbers = results.ce.map((user) => user.employeeNo);
+          normalizedValue.distributionCE = ceEmployeeNumbers;
+        }
+
+        if (results.bdgDcm && results.bdgDcm.length > 0) {
+          const bdgDcmEmployeeNumbers = results.bdgDcm.map((user) => user.employeeNo);
+          normalizedValue.distributionDivComM = bdgDcmEmployeeNumbers;
+        }
+
+        if (results.allEd && results.allEd.length > 0) {
+          const allEdEmployeeNumbers = results.allEd.map((user) => user.employeeNo);
+          normalizedValue.distributionExeDir = allEdEmployeeNumbers;
+        }
+
+        if (results.insMgr && results.insMgr.length > 0) {
+          const insMgrEmployeeNumbers = results.insMgr.map((user) => user.employeeNo);
+          normalizedValue.distributionInsMgr = insMgrEmployeeNumbers;
+        }
+
+        if (results.dir && results.dir.length > 0) {
+          const dirEmployeeNumbers = results.dir.map((user) => user.employeeNo);
+          normalizedValue.distributionDir = dirEmployeeNumbers;
+        }
+
+        if (results.lambeth && results.lambeth.length > 0) {
+          const lambethEmployeeNumbers = results.lambeth.map((user) => user.employeeNo);
+          normalizedValue.distributionLambeth = lambethEmployeeNumbers;
+        }
+
+        if (results.proc && results.proc.length > 0) {
+          const procEmployeeNumbers = results.proc.map((user) => user.employeeNo);
+          normalizedValue.distributionProc = procEmployeeNumbers;
+        }
+
+        if (results.finDir && results.finDir.length > 0) {
+          const finDirEmployeeNumbers = results.finDir.map((user) => user.employeeNo);
+          normalizedValue.distributionFinDir = finDirEmployeeNumbers;
+        }
+
+        if (results.riskOpp && results.riskOpp.length > 0) {
+          const riskOppEmployeeNumbers = results.riskOpp.map((user) => user.employeeNo);
+          normalizedValue.distributionRiskOpp = riskOppEmployeeNumbers;
+        }
+
+        if (results.comDir && results.comDir.length > 0) {
+          const comDirEmployeeNumbers = results.comDir.map((user) => user.employeeNo);
+          normalizedValue.distributionComDir = comDirEmployeeNumbers;
+        }
+
+        if (results.hseq && results.hseq.length > 0) {
+          const hseqEmployeeNumbers = results.hseq.map((user) => user.employeeNo);
+          normalizedValue.distributionHSEQ = hseqEmployeeNumbers;
+        }
+
+        if (results.genCoun && results.genCoun.length > 0) {
+          const genCounEmployeeNumbers = results.genCoun.map((user) => user.employeeNo);
+          normalizedValue.distributionGenC = genCounEmployeeNumbers;
+        }
+
+        this.performInitialFormSave(normalizedValue, targetStep);
+      },
+      error: (error) => {
+        this.performInitialFormSave(normalizedValue, targetStep);
+      },
+    });
+  }
+
+  private performInitialFormSave(normalizedValue: SaveForm20, targetStep?: number): void {
+    normalizedValue = { ...normalizedValue, id: 0 };
+    this.form20Service.saveForm20(normalizedValue).subscribe({
+      next: (response: number) => {
+        if (response) {
+          this.formId = response;
+          this.isEditMode = true;
+          this.formGroup.patchValue({ id: this.formId });
+          this.loadError = 'Form created successfully';
+          this.loadForm(this.formId!);
+          setTimeout(() => {
+            this.loadError = null;
+            this.currentStep = targetStep ? targetStep : this.currentStep + 1;
+            this.isLoading = false;
+          }, 1000);
+        } else {
+          this.isLoading = false;
+        }
+      },
+      error: (err: any) => {
+        this.loadError = 'Failed to save form. Please try again.';
+        console.error('Error saving form:', err);
+        this.isLoading = false;
+        setTimeout(() => (this.loadError = null), 5000);
+      },
+    });
+  }
+
   previousStep(): void {
     if (this.currentStep > 1) {
-      this.currentStep--;
+      if (this.formDeleted) {
+        this.currentStep--;
+        return;
+      }
+
+      let normalizedValue = this.normalizeFormValues(this.formGroup.value);
+      this.isLoading = true;
+
+      // Page 1: create new form (if not yet saved)
+      if (this.currentStep === 2 && (!this.formId || this.formId === 0)) {
+        normalizedValue = { ...normalizedValue, id: 0 };
+        this.form20Service.saveForm20(normalizedValue).subscribe({
+          next: (response: number) => {
+            console.log('API response formId:', response);
+            if (response) {
+              this.formId = response;
+              this.isEditMode = true;
+              this.formGroup.patchValue({ id: this.formId });
+              this.loadForm(this.formId);
+              this.currentStep--;
+              this.isLoading = false;
+            } else {
+              this.isLoading = false;
+            }
+          },
+          error: (err: any) => {
+            console.error('Error saving form:', err);
+            this.isLoading = false;
+          },
+        });
+      } else {
+        // All other pages: update form
+        normalizedValue = { ...normalizedValue, id: this.formId ?? 0 };
+        this.form20Service.saveForm20(normalizedValue).subscribe({
+          next: (response: number) => {
+            console.log('Form updated, formId:', response);
+
+            this.loadForm(this.formId!);
+            this.currentStep--;
+            this.isLoading = false;
+          },
+          error: (err: any) => {
+            console.error('Error saving form:', err);
+            this.isLoading = false;
+          },
+        });
+      }
     }
   }
 
   goToStep(step: number): void {
     if (step >= 1 && step <= this.steps.length) {
-      if (step > this.currentStep && !this.validateCurrentStep()) {
-        return;
+      // Only validate and save if navigating forward
+      if (step > this.currentStep) {
+        if (!this.validateCurrentStep()) {
+          return;
+        }
+
+        // Auto-save before navigating to next step
+        if (this.formDeleted) {
+          this.currentStep = step;
+          this.loadError = null;
+          return;
+        }
+
+        let normalizedValue = this.normalizeFormValues(this.formGroup.value);
+        this.isLoading = true;
+
+        // Page 1: create new form - fetch CE options first, then save once
+        if (this.currentStep === 1 && (!this.formId || this.formId === 0)) {
+          this.fetchCEOptionsThenSave(normalizedValue, step);
+        } else {
+          // All other pages: update form
+          normalizedValue = { ...normalizedValue, id: this.formId ?? 0 };
+          this.form20Service.saveForm20(normalizedValue).subscribe({
+            next: (response: number) => {
+              console.log('Form updated, formId:', response);
+              this.loadError = 'Form updated successfully';
+              this.loadForm(this.formId!);
+              setTimeout(() => {
+                this.loadError = null;
+                this.currentStep = step;
+                this.isLoading = false;
+              }, 1000);
+            },
+            error: (err: any) => {
+              this.loadError = 'Failed to update form. Please try again.';
+              console.error('Error updating form:', err);
+              this.isLoading = false;
+              setTimeout(() => (this.loadError = null), 5000);
+            },
+          });
+        }
+      } else {
+        // Allow navigating backward without save
+        this.currentStep = step;
+        this.loadError = null;
       }
-      this.currentStep = step;
-      this.loadError = null;
     }
   }
 
@@ -1426,6 +1689,11 @@ export class FormDetailComponent implements OnInit {
       setTimeout(() => (this.loadError = null), 5000);
     }
   }
+
+  /**
+   * Fetch all available Chief Executive options and save them with the form
+   * Only called for new forms (formId = 0)
+   */
 
   private openApprovalDialog(): void {
     // Pass ceApproval array to dialog for CEO field pre-population
@@ -1637,7 +1905,9 @@ export class FormDetailComponent implements OnInit {
       periodUnit: formValue.contractPeriodUnit,
       period: toNumberOrNull(formValue.contractPeriodValue),
       periodDetail: formValue.ComplexContractPeriod || '',
-      isMarkingScheme: formValue.TenderMarketScheme ? formValue.TenderMarketScheme.toUpperCase() : '',
+      isMarkingScheme: formValue.TenderMarketScheme
+        ? formValue.TenderMarketScheme.toUpperCase()
+        : '',
       splitValueId: this.ensureNumber(formValue.FinancialTechnicalSplitValue),
       bidTypeId: this.ensureNumber(formValue.BidType),
       jvSplit: ensureString(formValue.JvSplit),
@@ -2028,30 +2298,30 @@ export class FormDetailComponent implements OnInit {
           : '',
 
         warrantGuranteeParentCompanyGuarantee: ensureString(
-          formValue.Warranties.ParentCompanyDetails
+          formValue.Warranties.ParentCompanyDetails,
         ),
         warrantGuranteeParentCompanyGuaranteeRiskCode: ensureString(
-          formValue.Warranties.ParentCompanyRisk
+          formValue.Warranties.ParentCompanyRisk,
         ),
 
         warrantGuranteeIsParentCompanyUnderTaking: formValue.Warranties.ParentCompanyUndertaking
           ? formValue.Warranties.ParentCompanyUndertaking.toUpperCase()
           : '',
         warrantGuranteeParentCompanyUnderTaking: ensureString(
-          formValue.Warranties.ParentCompanyUndertakingDetails
+          formValue.Warranties.ParentCompanyUndertakingDetails,
         ),
         warrantGuranteeParentCompanyUnderTakingRiskCode: ensureString(
-          formValue.Warranties.ParentCompanyUndertakingRisk
+          formValue.Warranties.ParentCompanyUndertakingRisk,
         ),
 
         warrantGuranteeIsCollateralWarranties: formValue.Warranties.CollateralWarranties
           ? formValue.Warranties.CollateralWarranties.toUpperCase()
           : '',
         warrantGuranteeCollateralWarranties: ensureString(
-          formValue.Warranties.CollateralWarrantiesDetails
+          formValue.Warranties.CollateralWarrantiesDetails,
         ),
         warrantGuranteeCollateralWarrantiesRiskCode: ensureString(
-          formValue.Warranties.CollateralWarrantiesRisk
+          formValue.Warranties.CollateralWarrantiesRisk,
         ),
 
         warrantGuranteeIsOtherLiabilities: formValue.Warranties.OtherContingent
@@ -2059,7 +2329,7 @@ export class FormDetailComponent implements OnInit {
           : '',
         warrantGuranteeOtherLiabilities: ensureString(formValue.Warranties.OtherContingentDetails),
         warrantGuranteeOtherLiabilitiesRiskCode: ensureString(
-          formValue.Warranties.OtherContingentRisk
+          formValue.Warranties.OtherContingentRisk,
         ),
       });
     }
@@ -2072,7 +2342,7 @@ export class FormDetailComponent implements OnInit {
           : '',
         insuranceProvidedByEmployer: ensureString(formValue.Insurance.ProvidedByEmployerDetails),
         insuranceProvidedByEmployerRiskCode: ensureString(
-          formValue.Insurance.ProvidedByEmployerRisk
+          formValue.Insurance.ProvidedByEmployerRisk,
         ),
 
         insuranceThirdPartyAmount: toNumberOrNull(formValue.Insurance.ThirdPartyDetails),
@@ -2083,7 +2353,7 @@ export class FormDetailComponent implements OnInit {
           : '',
         insuranceOnerousRequirement: ensureString(formValue.Insurance.OnerousRequirementsDetails),
         insuranceOnerousRequirementRiskCode: ensureString(
-          formValue.Insurance.OnerousRequirementsRisk
+          formValue.Insurance.OnerousRequirementsRisk,
         ),
 
         insuranceIsShortFallInCover: formValue.Insurance.ShortfallInCover
@@ -2118,22 +2388,22 @@ export class FormDetailComponent implements OnInit {
     if (formValue['Consultant & Competitor']) {
       Object.assign(baseForm, {
         consultantCivilStructure: ensureString(
-          formValue['Consultant & Competitor'].CivilStructuralDetails
+          formValue['Consultant & Competitor'].CivilStructuralDetails,
         ),
         consultantCivilStructureRiskCode: ensureString(
-          formValue['Consultant & Competitor'].CivilStructuralRisk
+          formValue['Consultant & Competitor'].CivilStructuralRisk,
         ),
         consultantArchitect: ensureString(formValue['Consultant & Competitor'].ArchitectDetails),
         consultantArchitectRiskCode: ensureString(
-          formValue['Consultant & Competitor'].ArchitectRisk
+          formValue['Consultant & Competitor'].ArchitectRisk,
         ),
         consultantEM: ensureString(formValue['Consultant & Competitor'].EMDetails),
         consultantEMRiskCode: ensureString(formValue['Consultant & Competitor'].EMRisk),
         consultantQuantitySurveyor: ensureString(
-          formValue['Consultant & Competitor'].QuantitySurveyorDetails
+          formValue['Consultant & Competitor'].QuantitySurveyorDetails,
         ),
         consultantQuantitySurveyorRiskCode: ensureString(
-          formValue['Consultant & Competitor'].QuantitySurveyorRisk
+          formValue['Consultant & Competitor'].QuantitySurveyorRisk,
         ),
         consultantOthers: ensureString(formValue['Consultant & Competitor'].OtherDetails),
         consultantOthersRiskCode: ensureString(formValue['Consultant & Competitor'].OtherRisk),
@@ -2197,7 +2467,7 @@ export class FormDetailComponent implements OnInit {
           ? formValue.Evaluation.HealthSafetyEnvironmentRadio.toUpperCase()
           : '',
         evaluationHealthSafetyEnvironment: ensureString(
-          formValue.Evaluation.HealthSafetyEnvironmentRemark
+          formValue.Evaluation.HealthSafetyEnvironmentRemark,
         ),
 
         evaluationComments: ensureString(formValue.Evaluation.EvaluationComments),

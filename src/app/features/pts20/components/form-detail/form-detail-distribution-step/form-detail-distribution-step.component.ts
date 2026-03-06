@@ -17,7 +17,6 @@ import {
   ApprovalUser,
 } from '../../../../../core/services/Form20/form20listdropdown.service';
 
-
 @Component({
   selector: 'app-form-detail-distribution-step',
 
@@ -45,15 +44,15 @@ export class FormDetailDistributionStepComponent implements OnInit {
   Form20_CE: ApprovalUser[] = [];
   selectedCE: ApprovalUser[] = [];
   ceSearchCtrl = new FormControl('');
-  filteredCE!: Observable<ApprovalUser[]>; 
-  
+  filteredCE!: Observable<ApprovalUser[]>;
+
   // division commercial Manager
 
   FORM20_BDG_DCM: ApprovalUser[] = [];
   selectedBDGDCM: ApprovalUser[] = [];
   bdgDcmSearchCtrl = new FormControl('');
-  filteredBDGDCM!: Observable<ApprovalUser[]>; 
-  
+  filteredBDGDCM!: Observable<ApprovalUser[]>;
+
   // Executive director Selection
   Form20_ALL_ED: ApprovalUser[] = [];
   selectedED: ApprovalUser[] = [];
@@ -74,46 +73,45 @@ export class FormDetailDistributionStepComponent implements OnInit {
 
   //head of lembth
   FORM20_LAM: ApprovalUser[] = [];
-  selectedLAM: ApprovalUser[] = []
+  selectedLAM: ApprovalUser[] = [];
   lamSearchCtrl = new FormControl('');
   filteredLAM!: Observable<ApprovalUser[]>;
 
   // head of procurement
   FORM20_PRO: ApprovalUser[] = [];
-  selectedPRO: ApprovalUser[] = []
+  selectedPRO: ApprovalUser[] = [];
   proSearchCtrl = new FormControl('');
   filteredPRO!: Observable<ApprovalUser[]>;
 
   //finance director
   FORM20_FIN_DIR: ApprovalUser[] = [];
-  selectedFIN_DIR: ApprovalUser[] = []
+  selectedFIN_DIR: ApprovalUser[] = [];
   finDirSearchCtrl = new FormControl('');
   filteredFIN_DIR!: Observable<ApprovalUser[]>;
 
   //Risk oppprtunity
   FORM20_RISK_OPP: ApprovalUser[] = [];
-  selectedRISK_OPP: ApprovalUser[] = []
-  riskOppSearchCtrl = new FormControl('')
+  selectedRISK_OPP: ApprovalUser[] = [];
+  riskOppSearchCtrl = new FormControl('');
   filteredRISK_OPP!: Observable<ApprovalUser[]>;
 
   //commercial director
   FORM20_COM_DIR: ApprovalUser[] = [];
-  selectedCOM_DIR: ApprovalUser[] = []
-  comDirSearchCtrl = new FormControl('')
+  selectedCOM_DIR: ApprovalUser[] = [];
+  comDirSearchCtrl = new FormControl('');
   filteredCOM_DIR!: Observable<ApprovalUser[]>;
 
   //HSEQ
   FORM20_HSEQ: ApprovalUser[] = [];
-  selectedHSEQ: ApprovalUser[] = []
-  hseqSearchCtrl = new FormControl('')
+  selectedHSEQ: ApprovalUser[] = [];
+  hseqSearchCtrl = new FormControl('');
   filteredHSEQ!: Observable<ApprovalUser[]>;
 
   //general counsel
   FORM20_GEN_COUN: ApprovalUser[] = [];
-  selectedGEN_COUN: ApprovalUser[] = []
-  genCounSearchCtrl = new FormControl('')
+  selectedGEN_COUN: ApprovalUser[] = [];
+  genCounSearchCtrl = new FormControl('');
   filteredGEN_COUN!: Observable<ApprovalUser[]>;
-
 
   // Bid Managers
   FORM20_BID_MGR: ApprovalUser[] = [];
@@ -121,74 +119,73 @@ export class FormDetailDistributionStepComponent implements OnInit {
   bidManagerSearchCtrl = new FormControl('');
   filteredBidManagers!: Observable<ApprovalUser[]>;
 
-
   constructor(
     private form20ListDropdownService: Form20ListDropdownService,
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
-    private formGroupDirective: FormGroupDirective
+    private formGroupDirective: FormGroupDirective,
   ) {
     this.filteredCE = this.ceSearchCtrl.valueChanges.pipe(
       startWith(''),
 
-      map((value) => this._filterCE(value))
+      map((value) => this._filterCE(value)),
     );
 
     this.filteredBDGDCM = this.bdgDcmSearchCtrl.valueChanges.pipe(
       startWith(''),
 
-      map((value) => this._filterBDGDCM(value))
+      map((value) => this._filterBDGDCM(value)),
     );
 
     this.filteredED = this.edSearchCtrl.valueChanges.pipe(
       startWith(''),
 
-      map((value) => this._filterED(value))
+      map((value) => this._filterED(value)),
     );
 
     this.filteredINS_MGR = this.insMgrSearchCtrl.valueChanges.pipe(
       startWith(''),
 
-      map((value) => this._filteredINS_MGR(value))
+      map((value) => this._filteredINS_MGR(value)),
     );
 
     this.filteredDIR = this.dirSearchCtrl.valueChanges.pipe(
       startWith(''),
-      map((value) => this._filterDIR(value))
+      map((value) => this._filterDIR(value)),
     );
 
     this.filteredLAM = this.lamSearchCtrl.valueChanges.pipe(
       startWith(''),
-      map((value) => this._filterLAM(value))
+      map((value) => this._filterLAM(value)),
     );
 
     this.filteredPRO = this.proSearchCtrl.valueChanges.pipe(
       startWith(''),
-      map((value) => this._filterPRO(value))
+      map((value) => this._filterPRO(value)),
     );
     this.filteredFIN_DIR = this.finDirSearchCtrl.valueChanges.pipe(
       startWith(''),
-      map((value) => this._filterFIN_DIR(value))
+      map((value) => this._filterFIN_DIR(value)),
     );
 
     this.filteredRISK_OPP = this.riskOppSearchCtrl.valueChanges.pipe(
       startWith(''),
-      map((value) => this._filterRISK_OPP(value))
+      map((value) => this._filterRISK_OPP(value)),
     );
 
     this.filteredCOM_DIR = this.comDirSearchCtrl.valueChanges.pipe(
       startWith(''),
-      map((value) => this._filterCOM_DIR(value))
+      map((value) => this._filterCOM_DIR(value)),
     );
 
     this.filteredHSEQ = this.hseqSearchCtrl.valueChanges.pipe(
       startWith(''),
-      map((value) => this._filterHSEQ(value))
+      map((value) => this._filterHSEQ(value)),
     );
 
     this.filteredGEN_COUN = this.genCounSearchCtrl.valueChanges.pipe(
       startWith(''),
-      map((value) => this._filterGEN_COUN(value))
+      map((value) => this._filterGEN_COUN(value)),
     );
   }
 
@@ -207,53 +204,105 @@ export class FormDetailDistributionStepComponent implements OnInit {
     this.loadFORM20_GEN_COUN();
     this.loadInitialBidManagers();
     // Only trigger Bid Manager search when user types at least 4 characters
-    this.bidManagerSearchCtrl.valueChanges
-      .subscribe((searchTerm: string | null) => {
-        const value = searchTerm ? searchTerm.trim() : '';
-        if (value.length >= 4) {
-          this.loadBidManager(value);
-        } else {
-          this.FORM20_BID_MGR = [];
-        }
-      });
-  }
-
-  
-  private loadForm20_CE(): void {
-    this.form20ListDropdownService.FORM20_CE().subscribe({
-      next: (data: ApprovalUser[]) => {
-        this.Form20_CE = data; // Get current values if any
-
-        const currentValues = this.formGroupDirective.form.get(
-          'Distribution.ChiefExecutive'
-        )?.value;
-
-        if (currentValues && Array.isArray(currentValues)) {
-          this.selectedCE = this.Form20_CE.filter((user) =>
-            currentValues.includes(user.employeeNo)
-          );
-        }
-        this.cdr.markForCheck();
-      },
-
-      error: (error: unknown) => {
-        console.error('Error loading FORM20_CE:', error);
-      },
+    this.bidManagerSearchCtrl.valueChanges.subscribe((searchTerm: string | null) => {
+      const value = searchTerm ? searchTerm.trim() : '';
+      if (value.length >= 4) {
+        this.loadBidManager(value);
+      } else {
+        this.FORM20_BID_MGR = [];
+      }
     });
   }
 
+  private loadForm20_CE(): void {
+    // Check if form has pre-fetched CE options (for new forms)
+    // First check under Distribution object (primary location)
+    const distributionCEValues = this.formGroupDirective.form.get(
+      'Distribution.ChiefExecutive',
+    )?.value;
+    const preFetchedCEEmployeeNumbers =
+      distributionCEValues || this.formGroupDirective.form.get('distributionCE')?.value;
+
+    if (
+      preFetchedCEEmployeeNumbers &&
+      Array.isArray(preFetchedCEEmployeeNumbers) &&
+      preFetchedCEEmployeeNumbers.length > 0
+    ) {
+      // Use pre-fetched data - still fetch full user objects for filtering/display
+      this.form20ListDropdownService.FORM20_CE().subscribe({
+        next: (data: ApprovalUser[]) => {
+          this.Form20_CE = data;
+
+          const currentValues = this.formGroupDirective.form.get(
+            'Distribution.ChiefExecutive',
+          )?.value;
+
+          if (currentValues && Array.isArray(currentValues)) {
+            this.selectedCE = this.Form20_CE.filter((user) =>
+              currentValues.includes(user.employeeNo),
+            );
+          }
+          this.cdr.markForCheck();
+        },
+
+        error: (error: unknown) => {
+          console.error('Error loading FORM20_CE:', error);
+          this.cdr.markForCheck();
+        },
+      });
+    } else {
+      // Original behavior: fetch from API
+      this.form20ListDropdownService.FORM20_CE().subscribe({
+        next: (data: ApprovalUser[]) => {
+          this.Form20_CE = data; // Get current values if any
+
+          const currentValues = this.formGroupDirective.form.get(
+            'Distribution.ChiefExecutive',
+          )?.value;
+
+          if (currentValues && Array.isArray(currentValues)) {
+            this.selectedCE = this.Form20_CE.filter((user) =>
+              currentValues.includes(user.employeeNo),
+            );
+          }
+          this.cdr.markForCheck();
+        },
+
+        error: (error: unknown) => {
+          console.error('Error loading FORM20_CE:', error);
+          this.cdr.markForCheck();
+        },
+      });
+    }
+  }
+
   private loadFORM20_ALL_ED(): void {
+    // Check if form has pre-fetched ED options (for new forms)
+    const distributionEDValues = this.formGroupDirective.form.get(
+      'Distribution.ExecutiveDirector',
+    )?.value;
+    const preFetchedEDEmployeeNumbers =
+      distributionEDValues || this.formGroupDirective.form.get('distributionExeDir')?.value;
+
+    if (
+      preFetchedEDEmployeeNumbers &&
+      Array.isArray(preFetchedEDEmployeeNumbers) &&
+      preFetchedEDEmployeeNumbers.length > 0
+    ) {
+      // Pre-fetched ED options available
+    }
+
     this.form20ListDropdownService.FORM20_ALL_ED().subscribe({
       next: (data: ApprovalUser[]) => {
         this.Form20_ALL_ED = data;
 
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.ExecutiveDirector'
+          'Distribution.ExecutiveDirector',
         )?.value;
 
         if (currentValues && Array.isArray(currentValues)) {
           this.selectedED = this.Form20_ALL_ED.filter((user) =>
-            currentValues.includes(user.employeeNo)
+            currentValues.includes(user.employeeNo),
           );
         }
         this.cdr.markForCheck();
@@ -266,17 +315,32 @@ export class FormDetailDistributionStepComponent implements OnInit {
   }
 
   private loadFORM20_BDG_DCM(): void {
+    // Check if form has pre-fetched DCM options (for new forms)
+    const distributionDCMValues = this.formGroupDirective.form.get(
+      'Distribution.DivisionCommercialManager',
+    )?.value;
+    const preFetchedDCMEmployeeNumbers =
+      distributionDCMValues || this.formGroupDirective.form.get('distributionDivComM')?.value;
+
+    if (
+      preFetchedDCMEmployeeNumbers &&
+      Array.isArray(preFetchedDCMEmployeeNumbers) &&
+      preFetchedDCMEmployeeNumbers.length > 0
+    ) {
+      // Pre-fetched DCM options available
+    }
+
     this.form20ListDropdownService.FORM20_BDG_DCM().subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_BDG_DCM = data;
 
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.DivisionCommercialManager'
+          'Distribution.DivisionCommercialManager',
         )?.value;
 
         if (currentValues && Array.isArray(currentValues)) {
           this.selectedBDGDCM = this.FORM20_BDG_DCM.filter((user) =>
-            currentValues.includes(user.employeeNo)
+            currentValues.includes(user.employeeNo),
           );
         }
         this.cdr.markForCheck();
@@ -289,17 +353,32 @@ export class FormDetailDistributionStepComponent implements OnInit {
   }
 
   private loadFORM20_INS_MGR(): void {
+    // Check if form has pre-fetched Insurance Manager options (for new forms)
+    const distributionInsMgrValues = this.formGroupDirective.form.get(
+      'Distribution.InsuranceManager',
+    )?.value;
+    const preFetchedInsMgrEmployeeNumbers =
+      distributionInsMgrValues || this.formGroupDirective.form.get('distributionInsMgr')?.value;
+
+    if (
+      preFetchedInsMgrEmployeeNumbers &&
+      Array.isArray(preFetchedInsMgrEmployeeNumbers) &&
+      preFetchedInsMgrEmployeeNumbers.length > 0
+    ) {
+      // Pre-fetched Insurance Manager options available
+    }
+
     this.form20ListDropdownService.FORM20_INS_MGR().subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_INS_MGR = data;
 
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.InsuranceManager'
+          'Distribution.InsuranceManager',
         )?.value;
 
         if (currentValues && Array.isArray(currentValues)) {
           this.selectedINS_MGR = this.FORM20_INS_MGR.filter((user) =>
-            currentValues.includes(user.employeeNo)
+            currentValues.includes(user.employeeNo),
           );
         }
         this.cdr.markForCheck();
@@ -311,18 +390,29 @@ export class FormDetailDistributionStepComponent implements OnInit {
     });
   }
 
-  private loadFORM20_DIR(): void { 
+  private loadFORM20_DIR(): void {
+    // Check if form has pre-fetched Director options (for new forms)
+    const distributionDirValues = this.formGroupDirective.form.get('Distribution.Director')?.value;
+    const preFetchedDirEmployeeNumbers =
+      distributionDirValues || this.formGroupDirective.form.get('distributionDir')?.value;
+
+    if (
+      preFetchedDirEmployeeNumbers &&
+      Array.isArray(preFetchedDirEmployeeNumbers) &&
+      preFetchedDirEmployeeNumbers.length > 0
+    ) {
+      // Pre-fetched Director options available
+    }
+
     this.form20ListDropdownService.FORM20_BDG_DIR().subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_BDG_DIR = data;
 
-        const currentValues = this.formGroupDirective.form.get(
-          'Distribution.Director'
-        )?.value;
+        const currentValues = this.formGroupDirective.form.get('Distribution.Director')?.value;
 
         if (currentValues && Array.isArray(currentValues)) {
           this.selectedDIR = this.FORM20_BDG_DIR.filter((user) =>
-            currentValues.includes(user.employeeNo)
+            currentValues.includes(user.employeeNo),
           );
         }
         this.cdr.markForCheck();
@@ -335,16 +425,29 @@ export class FormDetailDistributionStepComponent implements OnInit {
   }
 
   private loadFORM20_LAM(): void {
+    // Check if form has pre-fetched Head of Lambeth options (for new forms)
+    const distributionLambethValues = this.formGroupDirective.form.get(
+      'Distribution.HeadofLambeth',
+    )?.value;
+    const preFetchedLambethEmployeeNumbers =
+      distributionLambethValues || this.formGroupDirective.form.get('distributionLambeth')?.value;
+
+    if (
+      preFetchedLambethEmployeeNumbers &&
+      Array.isArray(preFetchedLambethEmployeeNumbers) &&
+      preFetchedLambethEmployeeNumbers.length > 0
+    ) {
+      // Pre-fetched Head of Lambeth options available
+    }
+
     this.form20ListDropdownService.FORM20_LAM().subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_LAM = data;
-        const currentValues = this.formGroupDirective.form.get(
-          'Distribution.HeadofLambeth'
-        )?.value;
+        const currentValues = this.formGroupDirective.form.get('Distribution.HeadofLambeth')?.value;
 
         if (currentValues && Array.isArray(currentValues)) {
           this.selectedLAM = this.FORM20_LAM.filter((user) =>
-            currentValues.includes(user.employeeNo)
+            currentValues.includes(user.employeeNo),
           );
         }
         this.cdr.markForCheck();
@@ -357,15 +460,29 @@ export class FormDetailDistributionStepComponent implements OnInit {
   }
 
   private loadFORM20_PRO(): void {
+    const distributionProcValues = this.formGroupDirective.form.get(
+      'Distribution.HeadOfProcurement',
+    )?.value;
+    const preFetchedProcEmployeeNumbers =
+      distributionProcValues || this.formGroupDirective.form.get('distributionProc')?.value;
+
+    if (
+      preFetchedProcEmployeeNumbers &&
+      Array.isArray(preFetchedProcEmployeeNumbers) &&
+      preFetchedProcEmployeeNumbers.length > 0
+    ) {
+      // Pre-fetched Head of Procurement options available
+    }
+
     this.form20ListDropdownService.FORM20_PRO().subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_PRO = data;
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.HeadOfProcurement'
+          'Distribution.HeadOfProcurement',
         )?.value;
         if (currentValues && Array.isArray(currentValues)) {
           this.selectedPRO = this.FORM20_PRO.filter((user) =>
-            currentValues.includes(user.employeeNo)
+            currentValues.includes(user.employeeNo),
           );
         }
         this.cdr.markForCheck();
@@ -378,15 +495,28 @@ export class FormDetailDistributionStepComponent implements OnInit {
   }
 
   private loadFORM20_FIN_DIR(): void {
+    const distributionFinDirValues = this.formGroupDirective.form.get(
+      'Distribution.FinanceDirector',
+    )?.value;
+    const preFetchedFinDirEmployeeNumbers =
+      distributionFinDirValues || this.formGroupDirective.form.get('distributionFinDir')?.value;
+
+    if (
+      preFetchedFinDirEmployeeNumbers &&
+      Array.isArray(preFetchedFinDirEmployeeNumbers) &&
+      preFetchedFinDirEmployeeNumbers.length > 0
+    ) {
+    }
+
     this.form20ListDropdownService.FORM20_FIN_DIR().subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_FIN_DIR = data;
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.FinanceDirector'
+          'Distribution.FinanceDirector',
         )?.value;
         if (currentValues && Array.isArray(currentValues)) {
           this.selectedFIN_DIR = this.FORM20_FIN_DIR.filter((user) =>
-            currentValues.includes(user.employeeNo)
+            currentValues.includes(user.employeeNo),
           );
         }
         this.cdr.markForCheck();
@@ -399,15 +529,28 @@ export class FormDetailDistributionStepComponent implements OnInit {
   }
 
   private loadFORM20_RISK_OPP(): void {
+    const distributionRiskOppValues = this.formGroupDirective.form.get(
+      'Distribution.RiskOpportunityManager',
+    )?.value;
+    const preFetchedRiskOppEmployeeNumbers =
+      distributionRiskOppValues || this.formGroupDirective.form.get('distributionRiskOpp')?.value;
+
+    if (
+      preFetchedRiskOppEmployeeNumbers &&
+      Array.isArray(preFetchedRiskOppEmployeeNumbers) &&
+      preFetchedRiskOppEmployeeNumbers.length > 0
+    ) {
+    }
+
     this.form20ListDropdownService.FORM20_RISK_OPP().subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_RISK_OPP = data;
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.RiskOpportunityManager'
+          'Distribution.RiskOpportunityManager',
         )?.value;
         if (currentValues && Array.isArray(currentValues)) {
           this.selectedRISK_OPP = this.FORM20_RISK_OPP.filter((user) =>
-            currentValues.includes(user.employeeNo)
+            currentValues.includes(user.employeeNo),
           );
         }
         this.cdr.markForCheck();
@@ -419,15 +562,28 @@ export class FormDetailDistributionStepComponent implements OnInit {
   }
 
   private loadFORM20_COM_DIR(): void {
+    const distributionComDirValues = this.formGroupDirective.form.get(
+      'Distribution.CommercialDirector',
+    )?.value;
+    const preFetchedComDirEmployeeNumbers =
+      distributionComDirValues || this.formGroupDirective.form.get('distributionComDir')?.value;
+
+    if (
+      preFetchedComDirEmployeeNumbers &&
+      Array.isArray(preFetchedComDirEmployeeNumbers) &&
+      preFetchedComDirEmployeeNumbers.length > 0
+    ) {
+    }
+
     this.form20ListDropdownService.FORM20_COM_DIR().subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_COM_DIR = data;
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.CommercialDirector'
+          'Distribution.CommercialDirector',
         )?.value;
         if (currentValues && Array.isArray(currentValues)) {
           this.selectedCOM_DIR = this.FORM20_COM_DIR.filter((user) =>
-            currentValues.includes(user.employeeNo)
+            currentValues.includes(user.employeeNo),
           );
         }
         this.cdr.markForCheck();
@@ -439,15 +595,24 @@ export class FormDetailDistributionStepComponent implements OnInit {
   }
 
   private loadFORM20_HSEQ(): void {
+    const distributionHSEQValues = this.formGroupDirective.form.get('Distribution.HSEQ')?.value;
+    const preFetchedHSEQEmployeeNumbers =
+      distributionHSEQValues || this.formGroupDirective.form.get('distributionHSEQ')?.value;
+
+    if (
+      preFetchedHSEQEmployeeNumbers &&
+      Array.isArray(preFetchedHSEQEmployeeNumbers) &&
+      preFetchedHSEQEmployeeNumbers.length > 0
+    ) {
+    }
+
     this.form20ListDropdownService.FORM20_HSEQ().subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_HSEQ = data;
-        const currentValues = this.formGroupDirective.form.get(
-          'Distribution.HSEQ'
-        )?.value;
+        const currentValues = this.formGroupDirective.form.get('Distribution.HSEQ')?.value;
         if (currentValues && Array.isArray(currentValues)) {
           this.selectedHSEQ = this.FORM20_HSEQ.filter((user) =>
-            currentValues.includes(user.employeeNo)
+            currentValues.includes(user.employeeNo),
           );
         }
         this.cdr.markForCheck();
@@ -459,15 +624,28 @@ export class FormDetailDistributionStepComponent implements OnInit {
   }
 
   private loadFORM20_GEN_COUN(): void {
+    const distributionGenCounValues = this.formGroupDirective.form.get(
+      'Distribution.GeneralCounselLegal',
+    )?.value;
+    const preFetchedGenCounEmployeeNumbers =
+      distributionGenCounValues || this.formGroupDirective.form.get('distributionGenC')?.value;
+
+    if (
+      preFetchedGenCounEmployeeNumbers &&
+      Array.isArray(preFetchedGenCounEmployeeNumbers) &&
+      preFetchedGenCounEmployeeNumbers.length > 0
+    ) {
+    }
+
     this.form20ListDropdownService.FORM20_GEN_COUN().subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_GEN_COUN = data;
         const currentValues = this.formGroupDirective.form.get(
-          'Distribution.GeneralCounselLegal'
+          'Distribution.GeneralCounselLegal',
         )?.value;
         if (currentValues && Array.isArray(currentValues)) {
           this.selectedGEN_COUN = this.FORM20_GEN_COUN.filter((user) =>
-            currentValues.includes(user.employeeNo)
+            currentValues.includes(user.employeeNo),
           );
         }
         this.cdr.markForCheck();
@@ -478,44 +656,45 @@ export class FormDetailDistributionStepComponent implements OnInit {
     });
   }
 
-private loadInitialBidManagers(): void {
-  const currentValues = this.formGroupDirective.form.get('Distribution.distributionBidMgr')?.value;
-  
-  if (currentValues && Array.isArray(currentValues) && currentValues.length > 0) {
-    // For each employee number, search for their details
-    currentValues.forEach((employeeNo: string) => {
-      this.form20ListDropdownService.searchPeople(employeeNo).subscribe({
-        next: (data: ApprovalUser[]) => {
-          if (data && data.length > 0) {
-            const user = data[0];
-            if (!this.selectedBidManagers.some((u) => u.employeeNo === user.employeeNo)) {
-              this.selectedBidManagers.push(user);
+  private loadInitialBidManagers(): void {
+    const currentValues = this.formGroupDirective.form.get(
+      'Distribution.distributionBidMgr',
+    )?.value;
+
+    if (currentValues && Array.isArray(currentValues) && currentValues.length > 0) {
+      currentValues.forEach((employeeNo: string) => {
+        this.form20ListDropdownService.searchPeople(employeeNo).subscribe({
+          next: (data: ApprovalUser[]) => {
+            if (data && data.length > 0) {
+              const user = data[0];
+              if (!this.selectedBidManagers.some((u) => u.employeeNo === user.employeeNo)) {
+                this.selectedBidManagers.push(user);
+              }
+              this.cdr.markForCheck();
             }
-            this.cdr.markForCheck();
-          }
-        },
-        error: (error: unknown) => {
-          console.error('Error loading bid manager details:', error);
-        }
+          },
+          error: (error: unknown) => {
+            console.error('Error loading bid manager details:', error);
+          },
+        });
       });
+    }
+  }
+
+  private loadBidManager(searchTerm: string): void {
+    this.form20ListDropdownService.searchPeople(searchTerm).subscribe({
+      next: (data: ApprovalUser[]) => {
+        this.FORM20_BID_MGR = data || [];
+        this.cdr.markForCheck();
+      },
+      error: (error: unknown) => {
+        console.error('Error loading Bid Managers:', error);
+
+        this.FORM20_BID_MGR = [];
+        this.cdr.markForCheck();
+      },
     });
   }
-}
-
-private loadBidManager(searchTerm: string): void {
-  this.form20ListDropdownService.searchPeople(searchTerm).subscribe({
-    next: (data: ApprovalUser[]) => {
-      this.FORM20_BID_MGR = data || [];
-      this.cdr.markForCheck();
-    },
-    error: (error: unknown) => {
-      console.error('Error loading Bid Managers:', error);
-      // Set empty array on error to prevent UI issues
-      this.FORM20_BID_MGR = [];
-      this.cdr.markForCheck();
-    },
-  });
-}
 
   private _filterCE(value: string | ApprovalUser | null): ApprovalUser[] {
     if (!value) return this.Form20_CE;
@@ -526,7 +705,7 @@ private loadBidManager(searchTerm: string): void {
     return this.Form20_CE.filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue)
+        user.title.toLowerCase().includes(searchValue),
     );
   }
 
@@ -539,7 +718,7 @@ private loadBidManager(searchTerm: string): void {
     return this.Form20_ALL_ED.filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue)
+        user.title.toLowerCase().includes(searchValue),
     );
   }
 
@@ -552,7 +731,7 @@ private loadBidManager(searchTerm: string): void {
     return this.FORM20_BDG_DCM.filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue)
+        user.title.toLowerCase().includes(searchValue),
     );
   }
 
@@ -565,7 +744,7 @@ private loadBidManager(searchTerm: string): void {
     return this.FORM20_INS_MGR.filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue)
+        user.title.toLowerCase().includes(searchValue),
     );
   }
 
@@ -577,7 +756,7 @@ private loadBidManager(searchTerm: string): void {
     return this.FORM20_BDG_DIR.filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue)
+        user.title.toLowerCase().includes(searchValue),
     );
   }
 
@@ -588,7 +767,7 @@ private loadBidManager(searchTerm: string): void {
     return this.FORM20_PRO.filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue)
+        user.title.toLowerCase().includes(searchValue),
     );
   }
 
@@ -599,7 +778,7 @@ private loadBidManager(searchTerm: string): void {
     return this.FORM20_LAM.filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue)
+        user.title.toLowerCase().includes(searchValue),
     );
   }
 
@@ -610,7 +789,7 @@ private loadBidManager(searchTerm: string): void {
     return this.FORM20_FIN_DIR.filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue)
+        user.title.toLowerCase().includes(searchValue),
     );
   }
 
@@ -621,7 +800,7 @@ private loadBidManager(searchTerm: string): void {
     return this.FORM20_RISK_OPP.filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue)
+        user.title.toLowerCase().includes(searchValue),
     );
   }
 
@@ -632,7 +811,7 @@ private loadBidManager(searchTerm: string): void {
     return this.FORM20_COM_DIR.filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue)
+        user.title.toLowerCase().includes(searchValue),
     );
   }
 
@@ -643,7 +822,7 @@ private loadBidManager(searchTerm: string): void {
     return this.FORM20_HSEQ.filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue)
+        user.title.toLowerCase().includes(searchValue),
     );
   }
 
@@ -654,7 +833,7 @@ private loadBidManager(searchTerm: string): void {
     return this.FORM20_GEN_COUN.filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue)
+        user.title.toLowerCase().includes(searchValue),
     );
   }
 
@@ -662,7 +841,7 @@ private loadBidManager(searchTerm: string): void {
     const selectedUser = event.option.value as ApprovalUser;
 
     if (!this.selectedCE.some((user) => user.employeeNo === selectedUser.employeeNo)) {
-      this.selectedCE.push(selectedUser); // Update form control with array of employee numbers
+      this.selectedCE.push(selectedUser);
 
       const currentValue = this.selectedCE.map((user) => user.employeeNo);
 
@@ -676,7 +855,7 @@ private loadBidManager(searchTerm: string): void {
     const selectedUser = event.option.value as ApprovalUser;
 
     if (!this.selectedED.some((user) => user.employeeNo === selectedUser.employeeNo)) {
-      this.selectedED.push(selectedUser); // Update form control with array of employee numbers
+      this.selectedED.push(selectedUser);
 
       const currentValue = this.selectedED.map((user) => user.employeeNo);
 
@@ -689,7 +868,7 @@ private loadBidManager(searchTerm: string): void {
   selectBDGDCM(event: MatAutocompleteSelectedEvent): void {
     const selectedUser = event.option.value as ApprovalUser;
     if (!this.selectedBDGDCM.some((user) => user.employeeNo === selectedUser.employeeNo)) {
-      this.selectedBDGDCM.push(selectedUser); // Update form control with array of employee numbers
+      this.selectedBDGDCM.push(selectedUser);
 
       const currentValue = this.selectedBDGDCM.map((user) => user.employeeNo);
       this.formGroupDirective.form
@@ -702,12 +881,9 @@ private loadBidManager(searchTerm: string): void {
   selectINS_MGR(event: MatAutocompleteSelectedEvent): void {
     const selectedUser = event.option.value as ApprovalUser;
     if (!this.selectedINS_MGR.some((user) => user.employeeNo === selectedUser.employeeNo)) {
-      this.selectedINS_MGR.push(selectedUser); // Update form control with array of employee numbers
-
+      this.selectedINS_MGR.push(selectedUser);
       const currentValue = this.selectedINS_MGR.map((user) => user.employeeNo);
-      this.formGroupDirective.form
-        .get('Distribution.InsuranceManager')
-        ?.setValue(currentValue);
+      this.formGroupDirective.form.get('Distribution.InsuranceManager')?.setValue(currentValue);
     }
     this.insMgrSearchCtrl.setValue('');
   }
@@ -715,12 +891,10 @@ private loadBidManager(searchTerm: string): void {
   selectDIR(event: MatAutocompleteSelectedEvent): void {
     const selectedUser = event.option.value as ApprovalUser;
     if (!this.selectedDIR.some((user) => user.employeeNo === selectedUser.employeeNo)) {
-      this.selectedDIR.push(selectedUser); // Update form control with array of employee numbers
+      this.selectedDIR.push(selectedUser);
 
       const currentValue = this.selectedDIR.map((user) => user.employeeNo);
-      this.formGroupDirective.form
-        .get('Distribution.Director')
-        ?.setValue(currentValue);
+      this.formGroupDirective.form.get('Distribution.Director')?.setValue(currentValue);
     }
     this.dirSearchCtrl.setValue('');
   }
@@ -728,11 +902,9 @@ private loadBidManager(searchTerm: string): void {
   selectLAM(event: MatAutocompleteSelectedEvent): void {
     const selectedUser = event.option.value as ApprovalUser;
     if (!this.selectedLAM.some((user) => user.employeeNo === selectedUser.employeeNo)) {
-      this.selectedLAM.push(selectedUser); // Update form control with array of employee numbers
+      this.selectedLAM.push(selectedUser);
       const currentValue = this.selectedLAM.map((user) => user.employeeNo);
-      this.formGroupDirective.form
-        .get('Distribution.HeadofLambeth')
-        ?.setValue(currentValue);
+      this.formGroupDirective.form.get('Distribution.HeadofLambeth')?.setValue(currentValue);
     }
     this.lamSearchCtrl.setValue('');
   }
@@ -742,9 +914,7 @@ private loadBidManager(searchTerm: string): void {
     if (!this.selectedFIN_DIR.some((user) => user.employeeNo === selectedUser.employeeNo)) {
       this.selectedFIN_DIR.push(selectedUser);
       const currentValue = this.selectedFIN_DIR.map((user) => user.employeeNo);
-      this.formGroupDirective.form
-        .get('Distribution.FinanceDirector')
-        ?.setValue(currentValue);
+      this.formGroupDirective.form.get('Distribution.FinanceDirector')?.setValue(currentValue);
     }
     this.finDirSearchCtrl.setValue('');
   }
@@ -753,7 +923,7 @@ private loadBidManager(searchTerm: string): void {
     const index = this.selectedCE.indexOf(user);
 
     if (index >= 0) {
-      this.selectedCE.splice(index, 1); // Update form control with remaining employee numbers
+      this.selectedCE.splice(index, 1);
 
       const currentValue = this.selectedCE.map((u) => u.employeeNo);
 
@@ -769,7 +939,7 @@ private loadBidManager(searchTerm: string): void {
     const index = this.selectedED.indexOf(user);
 
     if (index >= 0) {
-      this.selectedED.splice(index, 1); // Update form control with remaining employee numbers
+      this.selectedED.splice(index, 1);
 
       const currentValue = this.selectedED.map((u) => u.employeeNo);
 
@@ -785,7 +955,7 @@ private loadBidManager(searchTerm: string): void {
     const index = this.selectedBDGDCM.indexOf(user);
 
     if (index >= 0) {
-      this.selectedBDGDCM.splice(index, 1); // Update form control with remaining employee numbers
+      this.selectedBDGDCM.splice(index, 1);
       const currentValue = this.selectedBDGDCM.map((u) => u.employeeNo);
       this.formGroupDirective.form
 
@@ -797,7 +967,7 @@ private loadBidManager(searchTerm: string): void {
   removeINS_MGR(user: ApprovalUser): void {
     const index = this.selectedINS_MGR.indexOf(user);
     if (index >= 0) {
-      this.selectedINS_MGR.splice(index, 1); // Update form control with remaining employee numbers
+      this.selectedINS_MGR.splice(index, 1);
       const currentValue = this.selectedINS_MGR.map((u) => u.employeeNo);
       this.formGroupDirective.form
         .get('Distribution.InsuranceManager')
@@ -808,7 +978,7 @@ private loadBidManager(searchTerm: string): void {
   removeDIR(user: ApprovalUser): void {
     const index = this.selectedDIR.indexOf(user);
     if (index >= 0) {
-      this.selectedDIR.splice(index, 1); // Update form control with remaining employee numbers
+      this.selectedDIR.splice(index, 1);
       const currentValue = this.selectedDIR.map((u) => u.employeeNo);
       this.formGroupDirective.form
         .get('Distribution.Director')
@@ -819,7 +989,7 @@ private loadBidManager(searchTerm: string): void {
   removeLAM(user: ApprovalUser): void {
     const index = this.selectedLAM.indexOf(user);
     if (index >= 0) {
-      this.selectedLAM.splice(index, 1); // Update form control with remaining employee numbers
+      this.selectedLAM.splice(index, 1);
       const currentValue = this.selectedLAM.map((u) => u.employeeNo);
       this.formGroupDirective.form
         .get('Distribution.HeadofLambeth')
@@ -843,9 +1013,7 @@ private loadBidManager(searchTerm: string): void {
     if (!this.selectedPRO.some((user) => user.employeeNo === selectedUser.employeeNo)) {
       this.selectedPRO.push(selectedUser);
       const currentValue = this.selectedPRO.map((user) => user.employeeNo);
-      this.formGroupDirective.form
-        .get('Distribution.HeadOfProcurement')
-        ?.setValue(currentValue);
+      this.formGroupDirective.form.get('Distribution.HeadOfProcurement')?.setValue(currentValue);
     }
     this.proSearchCtrl.setValue('');
   }
@@ -878,9 +1046,7 @@ private loadBidManager(searchTerm: string): void {
     if (!this.selectedCOM_DIR.some((user) => user.employeeNo === selectedUser.employeeNo)) {
       this.selectedCOM_DIR.push(selectedUser);
       const currentValue = this.selectedCOM_DIR.map((user) => user.employeeNo);
-      this.formGroupDirective.form
-        .get('Distribution.CommercialDirector')
-        ?.setValue(currentValue);
+      this.formGroupDirective.form.get('Distribution.CommercialDirector')?.setValue(currentValue);
     }
     this.comDirSearchCtrl.setValue('');
   }
@@ -890,9 +1056,7 @@ private loadBidManager(searchTerm: string): void {
     if (!this.selectedHSEQ.some((user) => user.employeeNo === selectedUser.employeeNo)) {
       this.selectedHSEQ.push(selectedUser);
       const currentValue = this.selectedHSEQ.map((user) => user.employeeNo);
-      this.formGroupDirective.form
-        .get('Distribution.HSEQ')
-        ?.setValue(currentValue);
+      this.formGroupDirective.form.get('Distribution.HSEQ')?.setValue(currentValue);
     }
     this.hseqSearchCtrl.setValue('');
   }
@@ -902,9 +1066,7 @@ private loadBidManager(searchTerm: string): void {
     if (!this.selectedGEN_COUN.some((user) => user.employeeNo === selectedUser.employeeNo)) {
       this.selectedGEN_COUN.push(selectedUser);
       const currentValue = this.selectedGEN_COUN.map((user) => user.employeeNo);
-      this.formGroupDirective.form
-        .get('Distribution.GeneralCounselLegal')
-        ?.setValue(currentValue);
+      this.formGroupDirective.form.get('Distribution.GeneralCounselLegal')?.setValue(currentValue);
     }
     this.genCounSearchCtrl.setValue('');
   }
@@ -956,30 +1118,32 @@ private loadBidManager(searchTerm: string): void {
   displayFn = (user: ApprovalUser): string => {
     return user ? user.fullName : '';
   };
-  
-    selectBidManager(event: MatAutocompleteSelectedEvent): void {
-      const selectedUser = event.option.value as ApprovalUser;
-      // Add to selected list if not already present
-      if (!this.selectedBidManagers.some((user) => user.employeeNo === selectedUser.employeeNo)) {
-        this.selectedBidManagers.push(selectedUser);
-      }
-      // Save all employee numbers to the form
-      const employeeNumbers = this.selectedBidManagers.map(u => u.employeeNo);
-      console.log('Setting distributionBidMgr:', employeeNumbers);
-      this.formGroupDirective.form.get('Distribution.distributionBidMgr')?.setValue(employeeNumbers);
-      console.log('Form value after set:', this.formGroupDirective.form.get('Distribution.distributionBidMgr')?.value);
-      // Clear the search input and dropdown
-      this.bidManagerSearchCtrl.setValue('', { emitEvent: false });
-      this.FORM20_BID_MGR = [];
-      this.cdr.markForCheck();
-    }
 
-    removeBidManager(user: ApprovalUser): void {
-      const index = this.selectedBidManagers.indexOf(user);
-      if (index >= 0) {
-        this.selectedBidManagers.splice(index, 1);
-        const currentValue = this.selectedBidManagers.map((u) => u.employeeNo);
-        this.formGroupDirective.form.get('Distribution.distributionBidMgr')?.setValue(currentValue.length ? currentValue : null);
-      }
+  selectBidManager(event: MatAutocompleteSelectedEvent): void {
+    const selectedUser = event.option.value as ApprovalUser;
+    if (!this.selectedBidManagers.some((user) => user.employeeNo === selectedUser.employeeNo)) {
+      this.selectedBidManagers.push(selectedUser);
     }
+    const employeeNumbers = this.selectedBidManagers.map((u) => u.employeeNo);
+    console.log('Setting distributionBidMgr:', employeeNumbers);
+    this.formGroupDirective.form.get('Distribution.distributionBidMgr')?.setValue(employeeNumbers);
+    console.log(
+      'Form value after set:',
+      this.formGroupDirective.form.get('Distribution.distributionBidMgr')?.value,
+    );
+    this.bidManagerSearchCtrl.setValue('', { emitEvent: false });
+    this.FORM20_BID_MGR = [];
+    this.cdr.markForCheck();
+  }
+
+  removeBidManager(user: ApprovalUser): void {
+    const index = this.selectedBidManagers.indexOf(user);
+    if (index >= 0) {
+      this.selectedBidManagers.splice(index, 1);
+      const currentValue = this.selectedBidManagers.map((u) => u.employeeNo);
+      this.formGroupDirective.form
+        .get('Distribution.distributionBidMgr')
+        ?.setValue(currentValue.length ? currentValue : null);
+    }
+  }
 }
