@@ -149,7 +149,11 @@ import { PopupKeyDateComponent } from './popup-KeyDate/popup-KeyDate.component';
             <div class="error-container">
               <mat-icon color="warn">error</mat-icon>
               <p>{{ loadError }}</p>
-              <button mat-raised-button color="primary" (click)="loadForm(formId!)">Retry</button>
+              @if (formId && formId > 0) {
+                <button mat-raised-button color="primary" (click)="loadForm(formId!)">Retry</button>
+              } @else {
+                <button mat-raised-button color="primary" (click)="clearError()">OK</button>
+              }
             </div>
           } @else if (formGroup) {
             <div class="form-navigation">
@@ -2503,5 +2507,9 @@ export class FormDetailComponent implements OnInit {
     if (this.formId) {
       this.loadForm(this.formId);
     }
+  }
+
+  clearError(): void {
+    this.loadError = null;
   }
 }
