@@ -696,145 +696,102 @@ export class FormDetailDistributionStepComponent implements OnInit {
     });
   }
 
+  private getSearchValue(value: string | ApprovalUser | null): string {
+    if (!value) return '';
+
+    const rawValue = typeof value === 'string' ? value : value.fullName ?? '';
+    return rawValue.toLowerCase();
+  }
+
+  private matchesSearchUser(user: ApprovalUser, searchValue: string): boolean {
+    const fullName = (user.fullName ?? '').toLowerCase();
+    const title = (user.title ?? '').toLowerCase();
+
+    return fullName.includes(searchValue) || title.includes(searchValue);
+  }
+
   private _filterCE(value: string | ApprovalUser | null): ApprovalUser[] {
-    if (!value) return this.Form20_CE;
+    const searchValue = this.getSearchValue(value);
+    if (!searchValue) return this.Form20_CE;
 
-    const searchValue =
-      typeof value === 'string' ? value.toLowerCase() : value.fullName.toLowerCase();
-
-    return this.Form20_CE.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue),
-    );
+    return this.Form20_CE.filter((user) => this.matchesSearchUser(user, searchValue));
   }
 
   private _filterED(value: string | ApprovalUser | null): ApprovalUser[] {
-    if (!value) return this.Form20_ALL_ED;
+    const searchValue = this.getSearchValue(value);
+    if (!searchValue) return this.Form20_ALL_ED;
 
-    const searchValue =
-      typeof value === 'string' ? value.toLowerCase() : value.fullName.toLowerCase();
-
-    return this.Form20_ALL_ED.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue),
-    );
+    return this.Form20_ALL_ED.filter((user) => this.matchesSearchUser(user, searchValue));
   }
 
   private _filterBDGDCM(value: string | ApprovalUser | null): ApprovalUser[] {
-    if (!value) return this.FORM20_BDG_DCM;
+    const searchValue = this.getSearchValue(value);
+    if (!searchValue) return this.FORM20_BDG_DCM;
 
-    const searchValue =
-      typeof value === 'string' ? value.toLowerCase() : value.fullName.toLowerCase();
-
-    return this.FORM20_BDG_DCM.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue),
-    );
+    return this.FORM20_BDG_DCM.filter((user) => this.matchesSearchUser(user, searchValue));
   }
 
   private _filteredINS_MGR(value: string | ApprovalUser | null): ApprovalUser[] {
-    if (!value) return this.FORM20_INS_MGR;
+    const searchValue = this.getSearchValue(value);
+    if (!searchValue) return this.FORM20_INS_MGR;
 
-    const searchValue =
-      typeof value === 'string' ? value.toLowerCase() : value.fullName.toLowerCase();
-
-    return this.FORM20_INS_MGR.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue),
-    );
+    return this.FORM20_INS_MGR.filter((user) => this.matchesSearchUser(user, searchValue));
   }
 
   private _filterDIR(value: string | ApprovalUser | null): ApprovalUser[] {
-    if (!value) return this.FORM20_BDG_DIR;
-    const searchValue =
-      typeof value === 'string' ? value.toLowerCase() : value.fullName.toLowerCase();
+    const searchValue = this.getSearchValue(value);
+    if (!searchValue) return this.FORM20_BDG_DIR;
 
-    return this.FORM20_BDG_DIR.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue),
-    );
+    return this.FORM20_BDG_DIR.filter((user) => this.matchesSearchUser(user, searchValue));
   }
 
   private _filterPRO(value: string | ApprovalUser | null): ApprovalUser[] {
-    if (!value) return this.FORM20_PRO;
-    const searchValue =
-      typeof value === 'string' ? value.toLowerCase() : value.fullName.toLowerCase();
-    return this.FORM20_PRO.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue),
-    );
+    const searchValue = this.getSearchValue(value);
+    if (!searchValue) return this.FORM20_PRO;
+
+    return this.FORM20_PRO.filter((user) => this.matchesSearchUser(user, searchValue));
   }
 
   private _filterLAM(value: string | ApprovalUser | null): ApprovalUser[] {
-    if (!value) return this.FORM20_LAM;
-    const searchValue =
-      typeof value === 'string' ? value.toLowerCase() : value.fullName.toLowerCase();
-    return this.FORM20_LAM.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue),
-    );
+    const searchValue = this.getSearchValue(value);
+    if (!searchValue) return this.FORM20_LAM;
+
+    return this.FORM20_LAM.filter((user) => this.matchesSearchUser(user, searchValue));
   }
 
   private _filterFIN_DIR(value: string | ApprovalUser | null): ApprovalUser[] {
-    if (!value) return this.FORM20_FIN_DIR;
-    const searchValue =
-      typeof value === 'string' ? value.toLowerCase() : value.fullName.toLowerCase();
-    return this.FORM20_FIN_DIR.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue),
-    );
+    const searchValue = this.getSearchValue(value);
+    if (!searchValue) return this.FORM20_FIN_DIR;
+
+    return this.FORM20_FIN_DIR.filter((user) => this.matchesSearchUser(user, searchValue));
   }
 
   private _filterRISK_OPP(value: string | ApprovalUser | null): ApprovalUser[] {
-    if (!value) return this.FORM20_RISK_OPP;
-    const searchValue =
-      typeof value === 'string' ? value.toLowerCase() : value.fullName.toLowerCase();
-    return this.FORM20_RISK_OPP.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue),
-    );
+    const searchValue = this.getSearchValue(value);
+    if (!searchValue) return this.FORM20_RISK_OPP;
+
+    return this.FORM20_RISK_OPP.filter((user) => this.matchesSearchUser(user, searchValue));
   }
 
   private _filterCOM_DIR(value: string | ApprovalUser | null): ApprovalUser[] {
-    if (!value) return this.FORM20_COM_DIR;
-    const searchValue =
-      typeof value === 'string' ? value.toLowerCase() : value.fullName.toLowerCase();
-    return this.FORM20_COM_DIR.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue),
-    );
+    const searchValue = this.getSearchValue(value);
+    if (!searchValue) return this.FORM20_COM_DIR;
+
+    return this.FORM20_COM_DIR.filter((user) => this.matchesSearchUser(user, searchValue));
   }
 
   private _filterHSEQ(value: string | ApprovalUser | null): ApprovalUser[] {
-    if (!value) return this.FORM20_HSEQ;
-    const searchValue =
-      typeof value === 'string' ? value.toLowerCase() : value.fullName.toLowerCase();
-    return this.FORM20_HSEQ.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue),
-    );
+    const searchValue = this.getSearchValue(value);
+    if (!searchValue) return this.FORM20_HSEQ;
+
+    return this.FORM20_HSEQ.filter((user) => this.matchesSearchUser(user, searchValue));
   }
 
   private _filterGEN_COUN(value: string | ApprovalUser | null): ApprovalUser[] {
-    if (!value) return this.FORM20_GEN_COUN;
-    const searchValue =
-      typeof value === 'string' ? value.toLowerCase() : value.fullName.toLowerCase();
-    return this.FORM20_GEN_COUN.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchValue) ||
-        user.title.toLowerCase().includes(searchValue),
-    );
+    const searchValue = this.getSearchValue(value);
+    if (!searchValue) return this.FORM20_GEN_COUN;
+
+    return this.FORM20_GEN_COUN.filter((user) => this.matchesSearchUser(user, searchValue));
   }
 
   selectChief(event: MatAutocompleteSelectedEvent): void {
