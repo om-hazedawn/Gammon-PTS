@@ -1361,18 +1361,23 @@ export class FormDetailComponent implements OnInit {
   }
 
   private fetchCEOptionsThenSave(normalizedValue: SaveForm20, targetStep?: number): void {
+    const buCode = (normalizedValue.businessUnitCode || '').toUpperCase();
+    const dcmRole = buCode ? `FORM20_${buCode}_DCM` : 'FORM20_ALL_DCM';
+    const edRole  = buCode ? `FORM20_${buCode}_ED`  : 'FORM20_ALL_ED';
+    const dirRole = buCode ? `FORM20_${buCode}_DIR` : 'FORM20_ALL_DIR';
+
     forkJoin({
       ce: this.form20ListDropdownService.FORM20_CE().pipe(
         catchError((error) => {
           return of([]);
         }),
       ),
-      bdgDcm: this.form20ListDropdownService.FORM20_BDG_DCM().pipe(
+      bdgDcm: this.form20ListDropdownService.FORM20_BY_ROLE(dcmRole).pipe(
         catchError((error) => {
           return of([]);
         }),
       ),
-      allEd: this.form20ListDropdownService.FORM20_ALL_ED().pipe(
+      allEd: this.form20ListDropdownService.FORM20_BY_ROLE(edRole).pipe(
         catchError((error) => {
           return of([]);
         }),
@@ -1382,7 +1387,7 @@ export class FormDetailComponent implements OnInit {
           return of([]);
         }),
       ),
-      dir: this.form20ListDropdownService.FORM20_BDG_DIR().pipe(
+      dir: this.form20ListDropdownService.FORM20_BY_ROLE(dirRole).pipe(
         catchError((error) => {
           return of([]);
         }),

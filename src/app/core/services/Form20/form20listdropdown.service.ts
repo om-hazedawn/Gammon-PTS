@@ -181,6 +181,15 @@ export class Form20ListDropdownService {
     );
   }
 
+  FORM20_BY_ROLE(role: string): Observable<ApprovalUser[]> {
+    return this.http.post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/${role}`, {}).pipe(
+      catchError((error) => {
+        console.error(`Error fetching staff for role ${role}:`, error);
+        throw error;
+      })
+    );
+  }
+
   FORM20_ALL_DCM(): Observable<ApprovalUser[]> {
     return this.http
       .post<ApprovalUser[]>(`${this.baseUrl}/obtainStaffByRole/FORM20_ALL_DCM`, {})

@@ -292,7 +292,10 @@ export class FormDetailDistributionStepComponent implements OnInit {
       // Pre-fetched ED options available
     }
 
-    this.form20ListDropdownService.FORM20_ALL_ED().subscribe({
+    const buCode = (this.formGroupDirective.form.get('businessUnit')?.value || '').toUpperCase();
+    const staffRole = buCode ? `FORM20_${buCode}_ED` : 'FORM20_ALL_ED';
+
+    this.form20ListDropdownService.FORM20_BY_ROLE(staffRole).subscribe({
       next: (data: ApprovalUser[]) => {
         this.Form20_ALL_ED = data;
 
@@ -309,7 +312,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
       },
 
       error: (error: unknown) => {
-        console.error('Error loading FORM20_ALL_ED:', error);
+        console.error('Error loading ED staff:', error);
       },
     });
   }
@@ -330,7 +333,10 @@ export class FormDetailDistributionStepComponent implements OnInit {
       // Pre-fetched DCM options available
     }
 
-    this.form20ListDropdownService.FORM20_BDG_DCM().subscribe({
+    const buCode = (this.formGroupDirective.form.get('businessUnit')?.value || '').toUpperCase();
+    const staffRole = buCode ? `FORM20_${buCode}_DCM` : 'FORM20_ALL_DCM';
+
+    this.form20ListDropdownService.FORM20_BY_ROLE(staffRole).subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_BDG_DCM = data;
 
@@ -347,7 +353,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
       },
 
       error: (error: unknown) => {
-        console.error('Error loading FORM20_BDG_DCM:', error);
+        console.error('Error loading DCM staff:', error);
       },
     });
   }
@@ -404,7 +410,10 @@ export class FormDetailDistributionStepComponent implements OnInit {
       // Pre-fetched Director options available
     }
 
-    this.form20ListDropdownService.FORM20_BDG_DIR().subscribe({
+    const buCode = (this.formGroupDirective.form.get('businessUnit')?.value || '').toUpperCase();
+    const staffRole = buCode ? `FORM20_${buCode}_DIR` : 'FORM20_ALL_DIR';
+
+    this.form20ListDropdownService.FORM20_BY_ROLE(staffRole).subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_BDG_DIR = data;
 
@@ -419,7 +428,7 @@ export class FormDetailDistributionStepComponent implements OnInit {
       },
 
       error: (error: unknown) => {
-        console.error('Error loading FORM20_DIR:', error);
+        console.error('Error loading Director staff:', error);
       },
     });
   }

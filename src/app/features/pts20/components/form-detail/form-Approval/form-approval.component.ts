@@ -35,6 +35,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   `]
 })
 export class FormApprovalComponent implements OnInit {
+  private selectedBusinessUnitCode = '';
+
   // Check if user can edit approvers based on form status and edit rights
   get isReadOnly(): boolean {
     const status = this.data?.formData?.status;
@@ -191,6 +193,7 @@ export class FormApprovalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+  this.selectedBusinessUnitCode = this.getBusinessUnitCode();
   // Debug: Log incoming ceApproval data
     this.loadForm20_CSD_HOE();
     
@@ -333,6 +336,17 @@ export class FormApprovalComponent implements OnInit {
     }
   }
 
+  private getBusinessUnitCode(): string {
+    const rawCode =
+      this.data?.formData?.businessUnitCode ??
+      this.data?.formData?.businessUnit ??
+      this.data?.businessUnitCode ??
+      this.data?.businessUnit ??
+      '';
+
+    return String(rawCode).trim().toUpperCase();
+  }
+
   private loadForm20_CEO(): void {
     // Use the correct CEO endpoint
   this.form20ListDropdownService.FORM20_CE().subscribe({
@@ -353,49 +367,65 @@ export class FormApprovalComponent implements OnInit {
   // onOptionSelected removed: not needed for mat-select multiple
 
   private loadForm20_CSD_HOE(): void {
-    this.form20ListDropdownService.FORM20_CSD_HOE().subscribe({
+    const staffRole = this.selectedBusinessUnitCode
+      ? `FORM20_${this.selectedBusinessUnitCode}_HOE`
+      : 'FORM20_CSD_HOE';
+
+    this.form20ListDropdownService.FORM20_BY_ROLE(staffRole).subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_CSD_HOE = data;
         // No need to set filteredHeadOfEstimatingOptions, handled by observable
       },
       error: (error) => {
-        console.error('Error loading Head of Estimating options:', error);
+        console.error(`Error loading Head of Estimating options for role ${staffRole}:`, error);
       }
     });
   }
 
   private loadForm20_CSD_CM(): void {
-    this.form20ListDropdownService.FORM20_CSD_CM().subscribe({
+    const staffRole = this.selectedBusinessUnitCode
+      ? `FORM20_${this.selectedBusinessUnitCode}_CM`
+      : 'FORM20_CSD_CM';
+
+    this.form20ListDropdownService.FORM20_BY_ROLE(staffRole).subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_CSD_CM = data;
         // No need to set filteredContractManagerOptions, handled by observable
       },
       error: (error) => {
-        console.error('Error loading Contract Manager options:', error);
+        console.error(`Error loading Contract Manager options for role ${staffRole}:`, error);
       }
     });
   }
 
   private loadForm20_CSD_DIR(): void {
-    this.form20ListDropdownService.FORM20_CSD_DIR().subscribe({
+    const staffRole = this.selectedBusinessUnitCode
+      ? `FORM20_${this.selectedBusinessUnitCode}_DIR`
+      : 'FORM20_CSD_DIR';
+
+    this.form20ListDropdownService.FORM20_BY_ROLE(staffRole).subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_CSD_DIR = data;
         this.filteredDirectorOptions = data;
       },
       error: (error) => {
-        console.error('Error loading Director options:', error);
+        console.error(`Error loading Director options for role ${staffRole}:`, error);
       }
     });
   }
 
   private loadForm20_CSD_ED(): void {
-    this.form20ListDropdownService.FORM20_CSD_ED().subscribe({
+    const staffRole = this.selectedBusinessUnitCode
+      ? `FORM20_${this.selectedBusinessUnitCode}_ED`
+      : 'FORM20_CSD_ED';
+
+    this.form20ListDropdownService.FORM20_BY_ROLE(staffRole).subscribe({
       next: (data: ApprovalUser[]) => {
         this.FORM20_CSD_ED = data;
         this.filteredExecutiveDirectorOptions = data;
       },
       error: (error) => {
-        console.error('Error loading Executive Director options:', error);
+        console.error(`Error loading Executive Director options for role ${staffRole}:`, error);
       }
     });
   }

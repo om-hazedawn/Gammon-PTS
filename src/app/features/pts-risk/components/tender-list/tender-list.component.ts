@@ -56,7 +56,7 @@ import { GenerateMonthlySnapshotDialogComponent } from '../generate-monthly-snap
     MatCheckboxModule,
   ],
   template: `
-    <div class="form-list-container" style="padding: 0 10px; overflow-x: auto;">
+    <div class="form-list-container" style="padding: 0 10px;">
       <mat-card>
         <mat-card-header>
           <mat-card-title>Tender Risk Management</mat-card-title>
@@ -82,6 +82,7 @@ import { GenerateMonthlySnapshotDialogComponent } from '../generate-monthly-snap
             </div>
           }
           @if (!isLoading && !error) {
+            <div class="table-scroll-container">
             <table
               mat-table
               [dataSource]="dataSource"
@@ -331,7 +332,7 @@ import { GenerateMonthlySnapshotDialogComponent } from '../generate-monthly-snap
                     @if (showNoNeedForExcomReview(element)) {
                       <button
                         mat-raised-button
-                        class="action-btn"
+                        class="action-btn tall-status-btn"
                         (click)="changeStatus($event, 'No need for EXCOM approval', element)"
                       >
                         No need for EXCOM approval
@@ -340,7 +341,7 @@ import { GenerateMonthlySnapshotDialogComponent } from '../generate-monthly-snap
                     @if (showWorkInView(element)) {
                       <button
                         mat-raised-button
-                        class="long-text-btn"
+                        class="long-text-btn tall-status-btn work-in-view-btn"
                         (click)="
                           changeStatus(
                             $event,
@@ -473,6 +474,7 @@ import { GenerateMonthlySnapshotDialogComponent } from '../generate-monthly-snap
                 style="cursor: pointer;"
               ></tr>
             </table>
+            </div>
             <mat-paginator
               [pageSize]="pageSize"
               [pageSizeOptions]="[10, 20, 50, 100]"
@@ -486,10 +488,8 @@ import { GenerateMonthlySnapshotDialogComponent } from '../generate-monthly-snap
             </mat-paginator>
           }
           <!-- Button Row Below Table -->
-          <div
-            style="display: flex; justify-content: flex-end; align-items: center; margin-top: 24px; gap: 24px;"
-          >
-            <div style="flex: 1; display: flex; justify-content: center; gap: 12px;">
+          <div class="table-actions-row">
+            <div class="table-actions-group">
               <button mat-raised-button color="accent" class="action-btn" (click)="openGenerateSnapshotDialog()">Generate Snapshot</button>
               <button mat-raised-button color="primary" class="action-btn" (click)="openGenerateMonthlySnapshotDialog()">
                 Generate Monthly Snapshot
@@ -544,7 +544,7 @@ import { GenerateMonthlySnapshotDialogComponent } from '../generate-monthly-snap
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
-        overflow: hidden;
+        overflow: visible;
         mat-card {
           margin: 0 !important;
           padding: 0 !important;
@@ -655,22 +655,42 @@ import { GenerateMonthlySnapshotDialogComponent } from '../generate-monthly-snap
         padding: 0 !important;
         margin: 0 !important;
         border-radius: 0 0 16px 16px;
-        overflow: hidden;
+        overflow: visible;
       }
       ::ng-deep .mat-mdc-card-content {
         padding: 0 !important;
         margin: 0 !important;
-        overflow: hidden;
+        overflow: visible;
       }
       ::ng-deep .mat-mdc-card-content-container {
         padding: 0 !important;
         margin: 0 !important;
-        overflow: hidden;
+        overflow: visible;
+      }
+      .table-scroll-container {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+      .table-actions-row {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 24px;
+        gap: 16px;
+      }
+      .table-actions-group {
+        flex: 1 1 320px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
       }
       table {
-        width: 100%;
-        min-width: auto;
-        max-width: 100%;
+        width: max-content;
+        min-width: 100%;
+        max-width: none;
         display: table;
         margin: 0;
         margin-left: 0;
@@ -788,12 +808,31 @@ import { GenerateMonthlySnapshotDialogComponent } from '../generate-monthly-snap
       .long-text-btn:hover:not([disabled]) {
         box-shadow: 0 4px 16px rgba(25, 118, 210, 0.15) !important;
       }
+      .tall-status-btn {
+        min-height: 56px !important;
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
+      }
+      .work-in-view-btn {
+        min-height: 64px !important;
+        padding-top: 14px !important;
+        padding-bottom: 14px !important;
+      }
       .custom-paginator {
         margin-top: 12px;
         padding: 8px 12px !important;
         background-color: #f5f7fa;
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+      }
+      @media (max-width: 960px) {
+        .table-actions-row {
+          justify-content: center;
+        }
+
+        .table-actions-group {
+          flex-basis: 100%;
+        }
       }
       .loading-spinner {
         display: flex;
