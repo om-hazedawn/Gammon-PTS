@@ -571,6 +571,11 @@ import { GenerateMonthlySnapshotDialogComponent } from '../generate-monthly-snap
         width: 70px;
         min-width: 70px;
       }
+      th.mat-column-status,
+      td.mat-column-status {
+        padding-left:8px;
+        
+      }
       .mat-column-division {
         width: 45px;
         min-width: 45px;
